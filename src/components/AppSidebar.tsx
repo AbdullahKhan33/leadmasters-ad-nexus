@@ -61,12 +61,12 @@ export function AppSidebar() {
               className={`
                 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group
                 ${item.active 
-                  ? 'bg-gradient-to-r from-purple-600/15 to-pink-500/15 text-purple-700 border-r-2 border-purple-500 shadow-sm' 
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg' 
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }
               `}
             >
-              <item.icon className={`w-5 h-5 ${item.active ? 'text-purple-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
+              <item.icon className={`w-5 h-5 ${item.active ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'}`} />
               <span className="text-sm font-medium">{item.title}</span>
             </a>
           ))}
