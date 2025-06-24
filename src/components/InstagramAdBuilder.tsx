@@ -83,7 +83,7 @@ export function InstagramAdBuilder() {
                   </Button>
                 </div>
               </CardContent>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
