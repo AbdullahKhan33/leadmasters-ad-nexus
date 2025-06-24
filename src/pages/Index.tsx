@@ -13,12 +13,13 @@ import { SmartAutomations } from "@/components/SmartAutomations";
 import { Workspaces } from "@/components/Workspaces";
 import { WorkspaceSettings } from "@/components/WorkspaceSettings";
 import { UserSettings } from "@/components/UserSettings";
+import { CRM } from "@/components/CRM";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm';
 type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings';
 
 function IndexContent() {
@@ -27,14 +28,12 @@ function IndexContent() {
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
   const location = useLocation();
 
-  // Handle navigation from InspirationHub
   useEffect(() => {
     if (location.state?.view) {
       setCurrentView(location.state.view);
     }
   }, [location.state]);
 
-  // When a workspace is selected, automatically navigate to dashboard
   useEffect(() => {
     if (isInWorkspace && activeWorkspace && !location.state?.view) {
       setCurrentView('dashboard');
@@ -83,6 +82,10 @@ function IndexContent() {
     setCurrentView('user-settings');
   };
 
+  const handleCRMClick = () => {
+    setCurrentView('crm');
+  };
+
   const handleWorkspaceSettingsClick = (workspace: any) => {
     setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
@@ -108,6 +111,7 @@ function IndexContent() {
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onUserSettingsClick={handleUserSettingsClick}
+            onCRMClick={handleCRMClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -121,6 +125,7 @@ function IndexContent() {
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
+            onCRMClick={handleCRMClick}
             currentView={currentView as AppSidebarView}
           />
         )}
@@ -147,6 +152,8 @@ function IndexContent() {
               <Schedule />
             ) : currentView === 'smart-automations' ? (
               <SmartAutomations />
+            ) : currentView === 'crm' ? (
+              <CRM />
             ) : (
               <AdBuilder />
             )}

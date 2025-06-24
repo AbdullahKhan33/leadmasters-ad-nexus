@@ -37,6 +37,7 @@ export function WorkspaceSidebar({
   onSmartAutomationsClick,
   onWorkspacesClick,
   onUserSettingsClick,
+  onCRMClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -49,7 +50,8 @@ export function WorkspaceSidebar({
   onSmartAutomationsClick: () => void;
   onWorkspacesClick: () => void;
   onUserSettingsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings';
+  onCRMClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm';
 }) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
@@ -195,15 +197,18 @@ export function WorkspaceSidebar({
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
+            <SidebarMenuButton 
+              onClick={onCRMClick}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'crm')}`}
+            >
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
-                  <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="text-xs font-medium">Leads</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
-                  <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="font-semibold">Leads & CRM</span>
                 </div>
               )}

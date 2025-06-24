@@ -62,6 +62,10 @@ function PostBuilderPage() {
     navigate('/', { state: { view: 'user-settings' } });
   };
 
+  const handleCRMClick = () => {
+    navigate('/crm');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -77,6 +81,7 @@ function PostBuilderPage() {
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onUserSettingsClick={handleUserSettingsClick}
+            onCRMClick={handleCRMClick}
             currentView="post-builder"
           />
         ) : (
@@ -90,6 +95,7 @@ function PostBuilderPage() {
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
+            onCRMClick={handleCRMClick}
             currentView="post-builder"
           />
         )}
