@@ -43,7 +43,7 @@ export function AppSidebar() {
           </div>
           <div>
             <h1 className="text-lg font-semibold text-gray-900">LeadMasters</h1>
-            <p className="text-xs text-gray-500">AI</p>
+            <p className="text-xs text-purple-600 font-medium">AI</p>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ export function AppSidebar() {
                     asChild 
                     className={`
                       w-full justify-start px-3 py-2.5 rounded-lg transition-all duration-200 hover:bg-gray-50
-                      ${item.active ? 'bg-purple-50 text-purple-700 border-r-2 border-purple-600' : 'text-gray-700 hover:text-gray-900'}
+                      ${item.active ? 'bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 border-r-3 border-purple-600 shadow-sm' : 'text-gray-700 hover:text-gray-900'}
                     `}
                   >
                     <a href={item.url} className="flex items-center space-x-3">

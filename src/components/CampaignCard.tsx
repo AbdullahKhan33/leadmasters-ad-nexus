@@ -25,19 +25,32 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
     }
   };
 
+  const getPerformanceColor = (performance: string) => {
+    switch (performance) {
+      case 'Excellent':
+        return 'text-green-600';
+      case 'Good':
+        return 'text-blue-600';
+      default:
+        return 'text-gray-600';
+    }
+  };
+
   return (
-    <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-gray-200 hover:shadow-sm transition-all duration-200 bg-white">
+    <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-purple-200 hover:shadow-sm transition-all duration-200 bg-white group">
       <div className="flex-1">
         <div className="flex items-center space-x-3 mb-2">
-          <h4 className="font-medium text-gray-900">{campaign.name}</h4>
+          <h4 className="font-medium text-gray-900 group-hover:text-purple-700 transition-colors duration-200">{campaign.name}</h4>
           <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(campaign.status)}`}>
             {campaign.status}
           </span>
         </div>
-        <p className="text-sm text-gray-600">Performance: {campaign.performance}</p>
+        <p className={`text-sm font-medium ${getPerformanceColor(campaign.performance)}`}>
+          Performance: {campaign.performance}
+        </p>
       </div>
       
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <Button 
           size="sm" 
           variant="ghost" 

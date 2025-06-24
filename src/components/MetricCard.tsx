@@ -17,10 +17,10 @@ export function MetricCard({ metric }: MetricCardProps) {
   const isPositive = trend.startsWith('+');
 
   return (
-    <div className="p-4 border border-gray-100 rounded-lg bg-white hover:border-gray-200 transition-colors duration-200">
+    <div className="p-4 border border-gray-100 rounded-lg bg-white hover:border-purple-200 hover:shadow-sm transition-all duration-200 group">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg flex items-center justify-center group-hover:from-purple-200 group-hover:to-purple-300 transition-all duration-200">
             <Icon className="w-4 h-4 text-purple-600" />
           </div>
           <span className="text-sm font-medium text-gray-700">{title}</span>
