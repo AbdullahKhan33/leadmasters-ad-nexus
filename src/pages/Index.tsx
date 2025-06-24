@@ -12,6 +12,7 @@ import { Analytics } from "@/components/Analytics";
 import { Schedule } from "@/components/Schedule";
 import { SmartAutomations } from "@/components/SmartAutomations";
 import { Workspaces } from "@/components/Workspaces";
+import { WorkspaceSettings } from "@/components/WorkspaceSettings";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 
