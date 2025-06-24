@@ -11,7 +11,11 @@ import {
   BarChart3, 
   Sparkles,
   ChevronRight,
-  Crown
+  Crown,
+  MessageCircle,
+  Clock,
+  Mail,
+  Lightbulb
 } from "lucide-react";
 
 export function Dashboard() {
@@ -32,48 +36,97 @@ export function Dashboard() {
           </p>
         </div>
 
-        {/* Portfolio Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg bg-gradient-to-br from-white to-blue-50/50">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Active Campaigns</CardTitle>
-              <Target className="h-5 w-5 text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900 mb-2">12</div>
-              <div className="flex items-center space-x-2">
-                <TrendingUp className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-green-600 font-medium">+2 this week</span>
+        {/* WhatsApp Business Control Center Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card 1 - New WhatsApp Leads */}
+          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 shadow-md bg-white rounded-xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
+                </div>
+                <Badge className="bg-green-100 text-green-700 border-0 text-xs">This Week</Badge>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-gray-900">8</div>
+                <div className="text-base font-medium text-gray-700">New Leads on WhatsApp</div>
+                <div className="text-sm text-gray-500">Start a conversation now</div>
+              </div>
+              <div className="mt-4 w-full bg-green-100 rounded-full h-1.5">
+                <div className="bg-green-500 h-1.5 rounded-full w-3/4"></div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg bg-gradient-to-br from-white to-purple-50/50">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Platforms Connected</CardTitle>
-              <Users className="h-5 w-5 text-purple-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900 mb-2">5</div>
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="text-xs">Facebook, Instagram, LinkedIn</Badge>
+          {/* Card 2 - Conversations in Progress */}
+          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 shadow-md bg-white rounded-xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-blue-600" />
+                </div>
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-gray-900">3</div>
+                <div className="text-base font-medium text-gray-700">Chats Happening Right Now</div>
+                <div className="text-sm text-gray-500">Stay responsive to win more leads</div>
+              </div>
+              <div className="mt-4 w-full bg-blue-100 rounded-full h-1.5">
+                <div className="bg-blue-500 h-1.5 rounded-full w-1/2"></div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg bg-gradient-to-br from-white to-green-50/50">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Posts Published</CardTitle>
-              <PenTool className="h-5 w-5 text-green-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-gray-900 mb-2">84</div>
-              <div className="flex items-center space-x-2">
-                <TrendingUp className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-green-600 font-medium">+15 this month</span>
+          {/* Card 3 - Follow-ups Due Today */}
+          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 shadow-md bg-white rounded-xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center">
+                  <Clock className="w-6 h-6 text-orange-600" />
+                </div>
+                <Badge className="bg-orange-100 text-orange-700 border-0 text-xs">Today</Badge>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-gray-900">2</div>
+                <div className="text-base font-medium text-gray-700">People Awaiting Your Reply</div>
+                <div className="text-sm text-gray-500">Don't let hot leads go cold</div>
+              </div>
+              <div className="mt-4 w-full bg-orange-100 rounded-full h-1.5">
+                <div className="bg-orange-500 h-1.5 rounded-full w-full"></div>
               </div>
             </CardContent>
           </Card>
+
+          {/* Card 4 - Messages Sent This Month */}
+          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-0 shadow-md bg-white rounded-xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center">
+                  <Mail className="w-6 h-6 text-purple-600" />
+                </div>
+                <Badge className="bg-purple-100 text-purple-700 border-0 text-xs">This Month</Badge>
+              </div>
+              <div className="space-y-2">
+                <div className="text-4xl font-bold text-gray-900">74</div>
+                <div className="text-base font-medium text-gray-700">Total WhatsApp Messages Sent</div>
+                <div className="text-sm text-gray-500">Your business is staying active</div>
+              </div>
+              <div className="mt-4 w-full bg-purple-100 rounded-full h-1.5">
+                <div className="bg-purple-500 h-1.5 rounded-full w-4/5"></div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Reply Templates CTA */}
+        <div className="flex justify-center">
+          <Button variant="outline" className="bg-white border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 px-6 py-3 rounded-full shadow-sm">
+            <Lightbulb className="w-4 h-4 mr-2" />
+            Create Quick Reply Templates
+          </Button>
         </div>
 
         {/* Quick Action Tiles */}
