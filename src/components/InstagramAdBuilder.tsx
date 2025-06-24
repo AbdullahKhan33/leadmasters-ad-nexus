@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Eye, Heart, DollarSign, BarChart3 } from "lucide-react";
@@ -6,6 +5,7 @@ import { CampaignCard } from "@/components/CampaignCard";
 import { MetricCard } from "@/components/MetricCard";
 import { AdPlatformMenu } from "@/components/AdPlatformMenu";
 import { FacebookAdBuilder } from "@/components/FacebookAdBuilder";
+import { GoogleAdBuilder } from "@/components/GoogleAdBuilder";
 import { useState } from "react";
 
 export function InstagramAdBuilder() {
@@ -21,6 +21,16 @@ export function InstagramAdBuilder() {
       <div className="flex flex-col h-full">
         <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
         <FacebookAdBuilder />
+      </div>
+    );
+  }
+
+  // If Google is selected, render the Google Ad Builder instead
+  if (activePlatform === "google") {
+    return (
+      <div className="flex flex-col h-full">
+        <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
+        <GoogleAdBuilder />
       </div>
     );
   }
