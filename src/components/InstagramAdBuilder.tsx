@@ -7,6 +7,7 @@ import { AdPlatformMenu } from "@/components/AdPlatformMenu";
 import { FacebookAdBuilder } from "@/components/FacebookAdBuilder";
 import { GoogleAdBuilder } from "@/components/GoogleAdBuilder";
 import { LinkedInAdBuilder } from "@/components/LinkedInAdBuilder";
+import { WhatsAppAdBuilder } from "@/components/WhatsAppAdBuilder";
 import { useState } from "react";
 
 export function InstagramAdBuilder() {
@@ -42,6 +43,16 @@ export function InstagramAdBuilder() {
       <div className="flex flex-col h-full">
         <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
         <LinkedInAdBuilder />
+      </div>
+    );
+  }
+
+  // If WhatsApp is selected, render the WhatsApp Ad Builder instead
+  if (activePlatform === "whatsapp") {
+    return (
+      <div className="flex flex-col h-full">
+        <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
+        <WhatsAppAdBuilder />
       </div>
     );
   }

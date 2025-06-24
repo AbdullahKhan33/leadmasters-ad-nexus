@@ -31,7 +31,7 @@ export function AdPlatformMenu({ activePlatform = "instagram", onPlatformChange 
       <div className="flex items-center space-x-2">
         {platforms.map((platform) => {
           const isActive = selectedPlatform === platform.id;
-          const isImplemented = platform.id === "facebook" || platform.id === "instagram" || platform.id === "google" || platform.id === "linkedin";
+          const isImplemented = platform.id === "facebook" || platform.id === "instagram" || platform.id === "google" || platform.id === "linkedin" || platform.id === "whatsapp";
           
           return (
             <Button
