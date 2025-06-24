@@ -156,7 +156,7 @@ export function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white group">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white group">
                   Launch Ad
                   <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -174,7 +174,7 @@ export function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <Button className="w-full bg-green-600 hover:bg-green-700 text-white group">
+                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white group">
                   View Summary
                   <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -199,7 +199,7 @@ export function Dashboard() {
                 </div>
               </div>
               <div className="flex justify-center md:justify-end">
-                <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 px-6 py-2 group">
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 group">
                   Upgrade to Pro
                   <Crown className="w-4 h-4 ml-2 group-hover:scale-110 transition-transform" />
                 </Button>
