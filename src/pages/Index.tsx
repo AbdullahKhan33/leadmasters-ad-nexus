@@ -2,7 +2,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
-import { FacebookAdBuilder } from "@/components/FacebookAdBuilder";
+import { InstagramAdBuilder } from "@/components/InstagramAdBuilder";
 
 const Index = () => {
   console.log("Index page is rendering");
@@ -19,7 +19,7 @@ const Index = () => {
         <div className="flex-1 ml-64 flex flex-col min-h-screen">
           <TopBar />
           <main className="flex-1 bg-gray-50">
-            <FacebookAdBuilder />
+            <InstagramAdBuilder />
           </main>
         </div>
       </div>

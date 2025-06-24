@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Facebook, Instagram, Search, Linkedin, MessageCircle, Twitter } from "lucide-react";
 
 const platforms = [
-  { name: "Facebook Ads", icon: Facebook, active: true },
-  { name: "Instagram Ads", icon: Instagram, active: false },
+  { name: "Facebook Ads", icon: Facebook, active: false },
+  { name: "Instagram Ads", icon: Instagram, active: true },
   { name: "Google Ads", icon: Search, active: false },
   { name: "LinkedIn Ads", icon: Linkedin, active: false },
   { name: "WhatsApp Ads", icon: MessageCircle, active: false },
