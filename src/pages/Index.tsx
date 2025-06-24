@@ -2,24 +2,25 @@
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
-import { WhatsAppAdBuilder } from "@/components/WhatsAppAdBuilder";
+import { AdBuilder } from "@/components/AdBuilder";
 import { PostBuilder } from "@/components/PostBuilder";
 
 export default function Index() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'post-builder'>('dashboard');
+  const [currentView, setCurrentView] = useState<'ad-builder' | 'post-builder'>('ad-builder');
 
   const handlePostBuilderClick = () => {
     setCurrentView('post-builder');
   };
 
-  const handleBackToDashboard = () => {
-    setCurrentView('dashboard');
+  const handleAdBuilderClick = () => {
+    setCurrentView('ad-builder');
   };
 
   return (
     <div className="min-h-screen flex w-full">
       <AppSidebar 
         onPostBuilderClick={handlePostBuilderClick}
+        onAdBuilderClick={handleAdBuilderClick}
         currentView={currentView}
       />
       <div className="flex-1 flex flex-col min-w-0">
@@ -28,7 +29,7 @@ export default function Index() {
           {currentView === 'post-builder' ? (
             <PostBuilder />
           ) : (
-            <WhatsAppAdBuilder />
+            <AdBuilder />
           )}
         </div>
       </div>

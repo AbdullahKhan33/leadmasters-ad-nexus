@@ -22,13 +22,14 @@ import {
 
 interface AppSidebarProps {
   onPostBuilderClick?: () => void;
+  onAdBuilderClick?: () => void;
   currentView?: string;
 }
 
 const menuItems = [
   { title: "Portfolio", icon: FolderOpen, url: "#" },
-  { title: "Ad Builder", icon: Megaphone, url: "#", active: true },
-  { title: "Post Builder", icon: FileText, url: "#", clickable: true },
+  { title: "Ad Builder", icon: Megaphone, url: "#", clickable: true, view: "ad-builder" },
+  { title: "Post Builder", icon: FileText, url: "#", clickable: true, view: "post-builder" },
   { title: "Brainstorm Idea", icon: Lightbulb, url: "#" },
   { title: "Social Logins", icon: LogIn, url: "#" },
   { title: "CRM Dashboard", icon: Users, url: "#" },
@@ -38,12 +39,14 @@ const menuItems = [
   { title: "Workspace", icon: FolderOpen, url: "#" },
 ];
 
-export function AppSidebar({ onPostBuilderClick, currentView }: AppSidebarProps) {
-  console.log("AppSidebar is rendering");
+export function AppSidebar({ onPostBuilderClick, onAdBuilderClick, currentView }: AppSidebarProps) {
+  console.log("AppSidebar is rendering", { currentView });
   
   const handleItemClick = (item: typeof menuItems[0]) => {
     if (item.title === "Post Builder" && onPostBuilderClick) {
       onPostBuilderClick();
+    } else if (item.title === "Ad Builder" && onAdBuilderClick) {
+      onAdBuilderClick();
     }
   };
   
@@ -66,7 +69,8 @@ export function AppSidebar({ onPostBuilderClick, currentView }: AppSidebarProps)
       <div className="px-3 py-6">
         <nav className="space-y-1">
           {menuItems.map((item) => {
-            const isActive = item.active || (item.title === "Post Builder" && currentView === "post-builder");
+            const isActive = (item.title === "Ad Builder" && currentView === "ad-builder") || 
+                            (item.title === "Post Builder" && currentView === "post-builder");
             return (
               <button
                 key={item.title}
