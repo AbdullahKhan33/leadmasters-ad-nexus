@@ -28,7 +28,7 @@ export function FacebookAdBuilder() {
       <div className="flex-1 p-6 bg-gray-50">
         <div className="max-w-7xl mx-auto space-y-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Facebook Ad Builder</h1>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">Facebook Ad Builder</h1>
             <p className="text-gray-600">Create and manage your Facebook advertising campaigns with AI-powered tools</p>
           </div>
 

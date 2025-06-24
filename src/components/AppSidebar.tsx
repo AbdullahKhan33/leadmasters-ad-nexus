@@ -61,7 +61,7 @@ export function AppSidebar() {
               className={`
                 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group
                 ${item.active 
-                  ? 'bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 border-r-2 border-purple-500 shadow-sm' 
+                  ? 'bg-gradient-to-r from-purple-600/15 to-pink-500/15 text-purple-700 border-r-2 border-purple-500 shadow-sm' 
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }
               `}
