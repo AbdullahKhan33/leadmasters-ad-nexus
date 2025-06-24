@@ -40,6 +40,7 @@ export function FacebookPostBuilder() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+  const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
@@ -73,11 +74,19 @@ export function FacebookPostBuilder() {
     const file = event.target.files?.[0];
     if (file) {
       setUploadedMedia(file);
+      
+      // Create preview URL for the uploaded file
+      const url = URL.createObjectURL(file);
+      setMediaPreviewUrl(url);
     }
   };
 
   const removeUploadedMedia = () => {
+    if (mediaPreviewUrl) {
+      URL.revokeObjectURL(mediaPreviewUrl);
+    }
     setUploadedMedia(null);
+    setMediaPreviewUrl(null);
   };
 
   const handleGeneratePost = async () => {
@@ -403,19 +412,21 @@ Ready to take the next step? Comment below or DM us!
                         {generatedPost}
                       </p>
 
-                      {/* Show uploaded media preview if available */}
-                      {uploadedMedia && (
-                        <div className="w-full bg-gray-100 rounded-lg p-4 flex items-center justify-center">
+                      {/* Show actual image preview if available */}
+                      {uploadedMedia && mediaPreviewUrl && (
+                        <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
                           {uploadedMedia.type.startsWith('image/') ? (
-                            <div className="flex items-center space-x-2 text-gray-600">
-                              <ImageIcon className="w-6 h-6" />
-                              <span>Image: {uploadedMedia.name}</span>
-                            </div>
+                            <img 
+                              src={mediaPreviewUrl} 
+                              alt="Uploaded preview" 
+                              className="w-full h-auto object-cover max-h-96"
+                            />
                           ) : (
-                            <div className="flex items-center space-x-2 text-gray-600">
-                              <Video className="w-6 h-6" />
-                              <span>Video: {uploadedMedia.name}</span>
-                            </div>
+                            <video 
+                              src={mediaPreviewUrl} 
+                              className="w-full h-auto object-cover max-h-96"
+                              controls
+                            />
                           )}
                         </div>
                       )}
