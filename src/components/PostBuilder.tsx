@@ -26,7 +26,7 @@ type Platform = 'all' | 'facebook' | 'instagram' | 'threads' | 'twitter' | 'link
 type PostType = 'post' | 'reel' | 'story';
 
 export function PostBuilder() {
-  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('all');
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('facebook');
   const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
   const [postContent, setPostContent] = useState('');
   const [selectedTone, setSelectedTone] = useState('');

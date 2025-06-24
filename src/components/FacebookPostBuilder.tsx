@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -262,7 +261,7 @@ Ready to take the next step? Comment below or DM us!
                     {/* Post Header */}
                     <div className="flex items-center space-x-4 mb-6">
                       <Avatar className="w-12 h-12 shadow-md">
-                        <AvatarImage src="/lovable-uploads/d8e25e5e-65ee-46fe-89aa-a04c326b6362.png" />
+                        <AvatarImage src="/lovable-uploads/e3966193-4894-406f-af40-baf88594caa3.png" />
                         <AvatarFallback className="bg-gradient-to-br from-purple-100 to-pink-100 text-purple-600 font-semibold">
                           {selectedPage?.split(' ').map(word => word[0]).join('') || 'LM'}
                         </AvatarFallback>

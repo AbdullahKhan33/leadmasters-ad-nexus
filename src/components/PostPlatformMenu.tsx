@@ -17,7 +17,7 @@ interface PostPlatformMenuProps {
   onPlatformChange?: (platformId: string) => void;
 }
 
-export function PostPlatformMenu({ activePlatform = "all", onPlatformChange }: PostPlatformMenuProps) {
+export function PostPlatformMenu({ activePlatform = "facebook", onPlatformChange }: PostPlatformMenuProps) {
   const [selectedPlatform, setSelectedPlatform] = useState(activePlatform);
 
   const handlePlatformClick = (platformId: string) => {
