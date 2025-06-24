@@ -207,37 +207,6 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
               </Select>
             </div>
           </div>
-
-          {/* Bottom Actions */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
-            <div className="flex items-center space-x-4">
-              <Button 
-                variant="outline" 
-                onClick={onBack}
-                className="flex items-center space-x-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Back</span>
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                onClick={saveDraft}
-                className="flex items-center space-x-2"
-              >
-                <Save className="w-4 h-4" />
-                <span>Save as Draft</span>
-              </Button>
-            </div>
-            
-            <Button 
-              onClick={publishAd}
-              disabled={!isFormValid()}
-              className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white px-8"
-            >
-              Publish Ad
-            </Button>
-          </div>
         </CardContent>
       </Card>
 
@@ -320,6 +289,43 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Fixed Bottom Actions */}
+      <div className="lg:col-span-2 mt-8">
+        <Card className="border border-gray-200 shadow-sm bg-white">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Button 
+                  variant="outline" 
+                  onClick={onBack}
+                  className="flex items-center space-x-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Back</span>
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  onClick={saveDraft}
+                  className="flex items-center space-x-2"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>Save as Draft</span>
+                </Button>
+              </div>
+              
+              <Button 
+                onClick={publishAd}
+                disabled={!isFormValid()}
+                className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white px-8"
+              >
+                Publish Ad
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
