@@ -22,13 +22,15 @@ export default function Index() {
         onPostBuilderClick={handlePostBuilderClick}
         currentView={currentView}
       />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         <TopBar />
-        {currentView === 'post-builder' ? (
-          <PostBuilder />
-        ) : (
-          <WhatsAppAdBuilder />
-        )}
+        <div className="flex-1 overflow-hidden">
+          {currentView === 'post-builder' ? (
+            <PostBuilder />
+          ) : (
+            <WhatsAppAdBuilder />
+          )}
+        </div>
       </div>
     </div>
   );

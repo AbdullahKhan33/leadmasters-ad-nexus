@@ -34,12 +34,12 @@ export function PostBuilder() {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
 
   const platforms = [
-    { id: 'all', name: 'All Platforms', color: 'from-purple-100 to-pink-100', iconColor: 'text-purple-600' },
-    { id: 'facebook', name: 'Facebook', color: 'from-blue-100 to-blue-200', iconColor: 'text-blue-600' },
-    { id: 'instagram', name: 'Instagram', color: 'from-pink-100 to-orange-100', iconColor: 'text-pink-600' },
-    { id: 'threads', name: 'Threads', color: 'from-gray-100 to-gray-200', iconColor: 'text-gray-700' },
-    { id: 'twitter', name: 'Twitter', color: 'from-blue-100 to-cyan-100', iconColor: 'text-blue-600' },
-    { id: 'linkedin', name: 'LinkedIn', color: 'from-blue-100 to-indigo-100', iconColor: 'text-blue-700' }
+    { id: 'all', name: 'All Platforms' },
+    { id: 'facebook', name: 'Facebook' },
+    { id: 'instagram', name: 'Instagram' },
+    { id: 'threads', name: 'Threads' },
+    { id: 'twitter', name: 'Twitter' },
+    { id: 'linkedin', name: 'LinkedIn' }
   ];
 
   const postTypes = [
@@ -85,77 +85,49 @@ export function PostBuilder() {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-screen">
       {/* Platform Navigation */}
       <PostPlatformMenu 
         activePlatform={selectedPlatform}
         onPlatformChange={(platformId) => setSelectedPlatform(platformId as Platform)}
       />
 
-      <div className="flex-1 p-6 bg-gray-50">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <div className="flex-1 p-4 lg:p-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto space-y-6">
           {/* Header */}
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
+          <div className="text-center lg:text-left">
+            <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
               Create Posts for {currentPlatform?.name}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm lg:text-base">
               Use AI to create engaging posts, reels, or image content for your audience.
             </p>
           </div>
 
-          {/* Platform Tabs */}
-          <Card className="border border-gray-200 shadow-sm bg-white">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {platforms.map((platform) => (
-                  <button
-                    key={platform.id}
-                    onClick={() => setSelectedPlatform(platform.id as Platform)}
-                    className={`
-                      p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
-                      ${selectedPlatform === platform.id
-                        ? 'border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
-                      }
-                    `}
-                  >
-                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${platform.color} flex items-center justify-center mx-auto mb-3`}>
-                      <MessageCircle className={`w-5 h-5 ${platform.iconColor}`} />
-                    </div>
-                    <p className={`text-sm font-medium ${selectedPlatform === platform.id ? 'text-purple-700' : 'text-gray-700'}`}>
-                      {platform.name}
-                    </p>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Column - Post Creation */}
             <div className="lg:col-span-2 space-y-6">
               {/* Post Type Selector */}
               <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader>
+                <CardHeader className="pb-4">
                   <CardTitle className="text-lg font-semibold text-gray-900">Post Type</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-3 gap-4">
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-3">
                     {postTypes.map((type) => (
                       <button
                         key={type.id}
                         onClick={() => setSelectedPostType(type.id as PostType)}
                         className={`
-                          p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
+                          p-3 lg:p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
                           ${selectedPostType === type.id
                             ? 'border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
                             : 'border-gray-200 bg-white hover:border-gray-300'
                           }
                         `}
                       >
-                        <type.icon className={`w-6 h-6 mx-auto mb-2 ${selectedPostType === type.id ? 'text-purple-600' : 'text-gray-500'}`} />
-                        <p className={`text-sm font-medium ${selectedPostType === type.id ? 'text-purple-700' : 'text-gray-700'}`}>
+                        <type.icon className={`w-5 h-5 lg:w-6 lg:h-6 mx-auto mb-2 ${selectedPostType === type.id ? 'text-purple-600' : 'text-gray-500'}`} />
+                        <p className={`text-xs lg:text-sm font-medium ${selectedPostType === type.id ? 'text-purple-700' : 'text-gray-700'}`}>
                           {type.name}
                         </p>
                       </button>
@@ -166,11 +138,11 @@ export function PostBuilder() {
 
               {/* Upload Media */}
               <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader>
+                <CardHeader className="pb-4">
                   <CardTitle className="text-lg font-semibold text-gray-900">Upload Media</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 lg:p-8 text-center hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200">
                     <input
                       type="file"
                       accept="image/*,video/*"
@@ -179,11 +151,11 @@ export function PostBuilder() {
                       id="media-upload"
                     />
                     <label htmlFor="media-upload" className="cursor-pointer">
-                      <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-lg font-medium text-gray-700 mb-2">
+                      <Upload className="w-10 h-10 lg:w-12 lg:h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
                         {uploadedMedia ? uploadedMedia.name : 'Drop your files here, or browse'}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs lg:text-sm text-gray-500">
                         Supports: JPG, PNG, MP4, MOV (max 50MB)
                       </p>
                     </label>
@@ -193,7 +165,7 @@ export function PostBuilder() {
 
               {/* Post Content */}
               <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader>
+                <CardHeader className="pb-4">
                   <CardTitle className="text-lg font-semibold text-gray-900">Post Content</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -245,8 +217,8 @@ export function PostBuilder() {
                               setPostContent(`Generated content based on: ${suggestion}`);
                             }}
                           >
-                            <Sparkles className="w-3 h-3 mr-2 text-purple-500" />
-                            {suggestion}
+                            <Sparkles className="w-3 h-3 mr-2 text-purple-500 shrink-0" />
+                            <span className="truncate">{suggestion}</span>
                           </Button>
                         ))}
                       </div>
@@ -271,7 +243,7 @@ export function PostBuilder() {
             <div className="space-y-6">
               {/* Post Preview */}
               <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader>
+                <CardHeader className="pb-4">
                   <CardTitle className="text-lg font-semibold text-gray-900">Post Preview</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -299,7 +271,7 @@ export function PostBuilder() {
                     
                     {/* Mock engagement buttons */}
                     <div className="flex items-center justify-between border-t pt-3">
-                      <div className="flex space-x-6">
+                      <div className="flex space-x-4 lg:space-x-6">
                         <button className="flex items-center space-x-1 text-gray-500 hover:text-red-500">
                           <Heart className="w-4 h-4" />
                           <span className="text-xs">Like</span>
@@ -321,7 +293,7 @@ export function PostBuilder() {
 
               {/* Action Buttons */}
               <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 lg:p-6 space-y-4">
                   <Button 
                     className="w-full bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
                     size="lg"
@@ -343,7 +315,7 @@ export function PostBuilder() {
 
               {/* AI Prompts Section */}
               <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader>
+                <CardHeader className="pb-4">
                   <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
                     <Target className="w-5 h-5 mr-2 text-purple-600" />
                     Quick AI Prompts
@@ -359,8 +331,8 @@ export function PostBuilder() {
                         setPostContent(`AI-generated content: ${suggestion}`);
                       }}
                     >
-                      <Zap className="w-4 h-4 mr-3 text-purple-500" />
-                      <span className="text-sm">{suggestion}</span>
+                      <Zap className="w-4 h-4 mr-3 text-purple-500 shrink-0" />
+                      <span className="text-sm truncate">{suggestion}</span>
                     </Button>
                   ))}
                 </CardContent>
