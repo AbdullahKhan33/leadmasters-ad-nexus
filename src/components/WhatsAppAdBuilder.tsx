@@ -9,19 +9,29 @@ import {
   List, 
   BarChart3,
   Users,
-  Zap
+  Zap,
+  ArrowRight
 } from "lucide-react";
+import { WhatsAppOnboarding } from "./WhatsAppOnboarding";
+import { useState } from "react";
 
 interface OptionCardProps {
   title: string;
   description: string;
   icon: React.ComponentType<{ className?: string }>;
   accent?: boolean;
+  onClick?: () => void;
+  clickable?: boolean;
 }
 
-function OptionCard({ title, description, icon: Icon, accent = false }: OptionCardProps) {
+function OptionCard({ title, description, icon: Icon, accent = false, onClick, clickable = false }: OptionCardProps) {
   return (
-    <Card className="border border-gray-200 shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-300 bg-white cursor-pointer group">
+    <Card 
+      className={`border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white group ${
+        clickable ? 'cursor-pointer hover:bg-gray-50' : ''
+      }`}
+      onClick={onClick}
+    >
       <CardContent className="p-6">
         <div className="flex items-start space-x-4">
           <div className={`
@@ -41,6 +51,9 @@ function OptionCard({ title, description, icon: Icon, accent = false }: OptionCa
               {description}
             </p>
           </div>
+          {clickable && (
+            <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors flex-shrink-0" />
+          )}
         </div>
       </CardContent>
     </Card>
@@ -48,12 +61,16 @@ function OptionCard({ title, description, icon: Icon, accent = false }: OptionCa
 }
 
 export function WhatsAppAdBuilder() {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
   const mainOptions = [
     {
       title: "WhatsApp Business Setup",
       description: "Onboard your WhatsApp Business Account and get verified to start reaching customers.",
       icon: CheckCircle,
-      accent: true
+      accent: true,
+      clickable: true,
+      onClick: () => setShowOnboarding(true)
     },
     {
       title: "Create Campaign",
@@ -122,6 +139,7 @@ export function WhatsAppAdBuilder() {
               <Button 
                 size="default" 
                 className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
+                onClick={() => setShowOnboarding(true)}
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Start Setup
@@ -141,6 +159,8 @@ export function WhatsAppAdBuilder() {
                 description={option.description}
                 icon={option.icon}
                 accent={option.accent}
+                clickable={option.clickable}
+                onClick={option.onClick}
               />
             ))}
           </div>
@@ -182,6 +202,12 @@ export function WhatsAppAdBuilder() {
           </CardContent>
         </Card>
       </div>
+
+      {/* WhatsApp Onboarding Dialog */}
+      <WhatsAppOnboarding 
+        open={showOnboarding} 
+        onOpenChange={setShowOnboarding} 
+      />
     </div>
   );
 }
