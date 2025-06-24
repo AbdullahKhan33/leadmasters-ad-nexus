@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
 import { TopBar } from "@/components/TopBar";
-import { WorkspaceTopBar } from "@/components/WorkspaceTopBar";
 import { AdBuilder } from "@/components/AdBuilder";
 import { PostBuilder } from "@/components/PostBuilder";
 import { SocialLogins } from "@/components/SocialLogins";
@@ -100,7 +99,7 @@ function IndexContent() {
           />
         )}
         <div className="flex-1 flex flex-col min-w-0">
-          {isInWorkspace ? <WorkspaceTopBar /> : <TopBar />}
+          <TopBar />
           <div className="flex-1 overflow-hidden">
             {currentView === 'workspaces' ? (
               <Workspaces />
