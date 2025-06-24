@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +22,11 @@ import {
   Wand2,
   Edit,
   Repeat2,
-  AtSign
+  AtSign,
+  Upload,
+  X,
+  Image as ImageIcon,
+  Video
 } from "lucide-react";
 
 export function ThreadsPostBuilder() {
@@ -32,6 +37,7 @@ export function ThreadsPostBuilder() {
   const [generatedPost, setGeneratedPost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
+  const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
 
   console.log('ThreadsPostBuilder component rendered');
 
@@ -57,6 +63,17 @@ export function ThreadsPostBuilder() {
     'Gemini Pro',
     'Custom Model'
   ];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedMedia(file);
+    }
+  };
+
+  const removeUploadedMedia = () => {
+    setUploadedMedia(null);
+  };
 
   const handleGeneratePost = async () => {
     if (!selectedAudience || !selectedPage || !selectedModel || !prompt) {
@@ -105,6 +122,66 @@ Drop your thoughts below 👇 Would love to hear your experiences!
             Create authentic, conversation-starting posts for Threads community
           </p>
         </div>
+
+        {/* Media Upload Section */}
+        <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-lg">
+          <CardHeader className="relative pb-4">
+            <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-3">
+              <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
+                <Upload className="w-5 h-5 text-white" />
+              </div>
+              <span>Upload Media</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative">
+            {!uploadedMedia ? (
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200">
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="threads-media-upload"
+                />
+                <label htmlFor="threads-media-upload" className="cursor-pointer">
+                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-lg font-medium text-gray-700 mb-2">
+                    Drop your files here, or browse
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Supports: JPG, PNG, MP4, MOV (max 50MB)
+                  </p>
+                </label>
+              </div>
+            ) : (
+              <div className="border border-gray-200 rounded-xl p-6 bg-gray-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {uploadedMedia.type.startsWith('image/') ? (
+                      <ImageIcon className="w-8 h-8 text-purple-600" />
+                    ) : (
+                      <Video className="w-8 h-8 text-purple-600" />
+                    )}
+                    <div>
+                      <p className="font-medium text-gray-900">{uploadedMedia.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={removeUploadedMedia}
+                    className="text-gray-500 hover:text-red-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-lg">
@@ -284,6 +361,23 @@ Drop your thoughts below 👇 Would love to hear your experiences!
                       <p className="text-gray-100 whitespace-pre-line leading-relaxed text-base">
                         {generatedPost}
                       </p>
+
+                      {/* Show uploaded media preview if available */}
+                      {uploadedMedia && (
+                        <div className="w-full bg-gray-800 rounded-lg p-4 flex items-center justify-center">
+                          {uploadedMedia.type.startsWith('image/') ? (
+                            <div className="flex items-center space-x-2 text-gray-300">
+                              <ImageIcon className="w-6 h-6" />
+                              <span>Image: {uploadedMedia.name}</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center space-x-2 text-gray-300">
+                              <Video className="w-6 h-6" />
+                              <span>Video: {uploadedMedia.name}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                     
                     {/* Threads Engagement Buttons */}

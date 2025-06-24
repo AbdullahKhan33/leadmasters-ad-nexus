@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +22,11 @@ import {
   Bookmark,
   Linkedin,
   ThumbsUp,
-  Repeat2
+  Repeat2,
+  Upload,
+  X,
+  Image as ImageIcon,
+  Video
 } from "lucide-react";
 
 export function LinkedInPostBuilder() {
@@ -34,6 +37,7 @@ export function LinkedInPostBuilder() {
   const [generatedPost, setGeneratedPost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
+  const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
 
   const audiences = [
     'Business Professionals',
@@ -59,6 +63,17 @@ export function LinkedInPostBuilder() {
     'Gemini Pro',
     'Custom Model'
   ];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedMedia(file);
+    }
+  };
+
+  const removeUploadedMedia = () => {
+    setUploadedMedia(null);
+  };
 
   const handleGeneratePost = async () => {
     if (!selectedAudience || !selectedPage || !selectedModel || !prompt) {
@@ -111,6 +126,66 @@ Ready to transform your career trajectory?
             Create professional, engaging LinkedIn posts that drive meaningful business connections
           </p>
         </div>
+
+        {/* Media Upload Section */}
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-blue-500/10">
+          <CardHeader className="relative pb-4">
+            <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-3">
+              <div className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500">
+                <Upload className="w-5 h-5 text-white" />
+              </div>
+              <span>Upload Media</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative">
+            {!uploadedMedia ? (
+              <div className="border-2 border-dashed border-blue-200 rounded-xl p-8 text-center hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200">
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="linkedin-media-upload"
+                />
+                <label htmlFor="linkedin-media-upload" className="cursor-pointer">
+                  <Upload className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                  <p className="text-lg font-medium text-gray-700 mb-2">
+                    Drop your files here, or browse
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Supports: JPG, PNG, MP4, MOV (max 50MB)
+                  </p>
+                </label>
+              </div>
+            ) : (
+              <div className="border border-blue-200 rounded-xl p-6 bg-blue-50/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {uploadedMedia.type.startsWith('image/') ? (
+                      <ImageIcon className="w-8 h-8 text-blue-600" />
+                    ) : (
+                      <Video className="w-8 h-8 text-blue-600" />
+                    )}
+                    <div>
+                      <p className="font-medium text-gray-900">{uploadedMedia.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={removeUploadedMedia}
+                    className="text-gray-500 hover:text-red-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-blue-500/10">
@@ -237,7 +312,6 @@ Ready to transform your career trajectory?
           </CardContent>
         </Card>
 
-        {/* Generated Post Results Section */}
         {(isGenerating || showResponse) && (
           <div className="space-y-6">
             {/* Section Header */}
@@ -290,15 +364,22 @@ Ready to transform your career trajectory?
                       </p>
                     </div>
 
-                    {/* Mock Image Placeholder */}
-                    <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg my-4 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-                          <Linkedin className="w-8 h-8 text-white" />
-                        </div>
-                        <p className="text-gray-600 text-sm">Your professional content here</p>
+                    {/* Show uploaded media preview if available */}
+                    {uploadedMedia && (
+                      <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg my-4 flex items-center justify-center">
+                        {uploadedMedia.type.startsWith('image/') ? (
+                          <div className="text-center">
+                            <ImageIcon className="w-16 h-16 text-blue-600 mx-auto mb-2" />
+                            <p className="text-gray-600 text-sm">{uploadedMedia.name}</p>
+                          </div>
+                        ) : (
+                          <div className="text-center">
+                            <Video className="w-16 h-16 text-blue-600 mx-auto mb-2" />
+                            <p className="text-gray-600 text-sm">{uploadedMedia.name}</p>
+                          </div>
+                        )}
                       </div>
-                    </div>
+                    )}
                     
                     {/* LinkedIn Engagement Buttons */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-200">
