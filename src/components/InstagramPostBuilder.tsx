@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +22,10 @@ import {
   Edit,
   FileText,
   Video,
-  Bookmark
+  Bookmark,
+  Upload,
+  X,
+  Image as ImageIcon
 } from "lucide-react";
 
 type PostType = 'post' | 'reel';
@@ -37,6 +39,8 @@ export function InstagramPostBuilder() {
   const [generatedPost, setGeneratedPost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
+  const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+  const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
@@ -65,6 +69,25 @@ export function InstagramPostBuilder() {
     'Gemini Pro',
     'Custom Model'
   ];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedMedia(file);
+      
+      // Create preview URL for the uploaded file
+      const url = URL.createObjectURL(file);
+      setMediaPreviewUrl(url);
+    }
+  };
+
+  const removeUploadedMedia = () => {
+    if (mediaPreviewUrl) {
+      URL.revokeObjectURL(mediaPreviewUrl);
+    }
+    setUploadedMedia(null);
+    setMediaPreviewUrl(null);
+  };
 
   const handleGeneratePost = async () => {
     if (!selectedAudience || !selectedPage || !selectedModel || !prompt) {
@@ -115,6 +138,66 @@ Ready to level up? Drop a 🔥 in the comments!
             Create stunning, AI-powered Instagram {selectedPostType === 'reel' ? 'reels' : 'posts'} that captivate your audience
           </p>
         </div>
+
+        {/* Media Upload Section */}
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-pink-500/10">
+          <CardHeader className="relative pb-4">
+            <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-3">
+              <div className="p-2 rounded-full bg-gradient-to-r from-pink-500 to-orange-500">
+                <Upload className="w-5 h-5 text-white" />
+              </div>
+              <span>Upload Media</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative">
+            {!uploadedMedia ? (
+              <div className="border-2 border-dashed border-pink-200 rounded-xl p-8 text-center hover:border-pink-300 hover:bg-pink-50/50 transition-all duration-200">
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="instagram-media-upload"
+                />
+                <label htmlFor="instagram-media-upload" className="cursor-pointer">
+                  <Upload className="w-12 h-12 text-pink-400 mx-auto mb-4" />
+                  <p className="text-lg font-medium text-gray-700 mb-2">
+                    Drop your files here, or browse
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Supports: JPG, PNG, MP4, MOV (max 50MB)
+                  </p>
+                </label>
+              </div>
+            ) : (
+              <div className="border border-pink-200 rounded-xl p-6 bg-pink-50/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {uploadedMedia.type.startsWith('image/') ? (
+                      <ImageIcon className="w-8 h-8 text-pink-600" />
+                    ) : (
+                      <Video className="w-8 h-8 text-pink-600" />
+                    )}
+                    <div>
+                      <p className="font-medium text-gray-900">{uploadedMedia.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={removeUploadedMedia}
+                    className="text-gray-500 hover:text-red-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-pink-500/10">
@@ -317,8 +400,24 @@ Ready to level up? Drop a 🔥 in the comments!
                       <MoreHorizontal className="w-5 h-5 text-gray-400" />
                     </div>
                     
-                    {/* Media Placeholder */}
-                    {selectedPostType === 'reel' && (
+                    {/* Media Section */}
+                    {uploadedMedia && mediaPreviewUrl ? (
+                      <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200 mb-4">
+                        {uploadedMedia.type.startsWith('image/') ? (
+                          <img 
+                            src={mediaPreviewUrl} 
+                            alt="Uploaded preview" 
+                            className="w-full h-auto object-cover max-h-96"
+                          />
+                        ) : (
+                          <video 
+                            src={mediaPreviewUrl} 
+                            className="w-full h-auto object-cover max-h-96"
+                            controls
+                          />
+                        )}
+                      </div>
+                    ) : selectedPostType === 'reel' && (
                       <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
                         <Video className="w-16 h-16 text-pink-400" />
                         <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">

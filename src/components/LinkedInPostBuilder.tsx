@@ -38,6 +38,7 @@ export function LinkedInPostBuilder() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+  const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
 
   const audiences = [
     'Business Professionals',
@@ -68,11 +69,19 @@ export function LinkedInPostBuilder() {
     const file = event.target.files?.[0];
     if (file) {
       setUploadedMedia(file);
+      
+      // Create preview URL for the uploaded file
+      const url = URL.createObjectURL(file);
+      setMediaPreviewUrl(url);
     }
   };
 
   const removeUploadedMedia = () => {
+    if (mediaPreviewUrl) {
+      URL.revokeObjectURL(mediaPreviewUrl);
+    }
     setUploadedMedia(null);
+    setMediaPreviewUrl(null);
   };
 
   const handleGeneratePost = async () => {
@@ -365,18 +374,20 @@ Ready to transform your career trajectory?
                     </div>
 
                     {/* Show uploaded media preview if available */}
-                    {uploadedMedia && (
-                      <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg my-4 flex items-center justify-center">
+                    {uploadedMedia && mediaPreviewUrl && (
+                      <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200 my-4">
                         {uploadedMedia.type.startsWith('image/') ? (
-                          <div className="text-center">
-                            <ImageIcon className="w-16 h-16 text-blue-600 mx-auto mb-2" />
-                            <p className="text-gray-600 text-sm">{uploadedMedia.name}</p>
-                          </div>
+                          <img 
+                            src={mediaPreviewUrl} 
+                            alt="Uploaded preview" 
+                            className="w-full h-auto object-cover max-h-96"
+                          />
                         ) : (
-                          <div className="text-center">
-                            <Video className="w-16 h-16 text-blue-600 mx-auto mb-2" />
-                            <p className="text-gray-600 text-sm">{uploadedMedia.name}</p>
-                          </div>
+                          <video 
+                            src={mediaPreviewUrl} 
+                            className="w-full h-auto object-cover max-h-96"
+                            controls
+                          />
                         )}
                       </div>
                     )}
