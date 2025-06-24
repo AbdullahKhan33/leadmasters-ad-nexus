@@ -6,19 +6,17 @@ import { FacebookAdBuilder } from "@/components/FacebookAdBuilder";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <SidebarProvider>
-        <div className="min-h-screen flex w-full">
-          <AppSidebar />
-          <div className="flex-1 flex flex-col">
-            <TopBar />
-            <main className="flex-1">
-              <FacebookAdBuilder />
-            </main>
-          </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AppSidebar />
+        <div className="flex-1 flex flex-col">
+          <TopBar />
+          <main className="flex-1 bg-gray-50">
+            <FacebookAdBuilder />
+          </main>
         </div>
-      </SidebarProvider>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
