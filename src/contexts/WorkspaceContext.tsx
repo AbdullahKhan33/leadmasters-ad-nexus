@@ -23,6 +23,7 @@ interface Workspace {
 interface WorkspaceContextType {
   activeWorkspace: Workspace | null;
   setActiveWorkspace: (workspace: Workspace | null) => void;
+  selectWorkspace: (workspace: any) => void;
   isInWorkspace: boolean;
 }
 
@@ -31,9 +32,14 @@ const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefin
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace | null>(null);
 
+  const selectWorkspace = (workspace: any) => {
+    setActiveWorkspace(workspace);
+  };
+
   const value = {
     activeWorkspace,
     setActiveWorkspace,
+    selectWorkspace,
     isInWorkspace: activeWorkspace !== null,
   };
 
