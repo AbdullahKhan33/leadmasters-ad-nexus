@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 import { WhatsAppOnboarding } from "./WhatsAppOnboarding";
 import { WhatsAppCampaignBuilder } from "./WhatsAppCampaignBuilder";
+import { CampaignManager } from "./campaign/CampaignManager";
 import { useState } from "react";
 
 interface OptionCardProps {
@@ -62,7 +62,7 @@ function OptionCard({ title, description, icon: Icon, accent = false, onClick, c
 }
 
 export function WhatsAppAdBuilder() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager'>('dashboard');
 
   const mainOptions = [
     {
@@ -93,7 +93,8 @@ export function WhatsAppAdBuilder() {
       description: "Track, edit, or duplicate your active and past campaigns with comprehensive controls.",
       icon: List,
       accent: false,
-      clickable: true
+      clickable: true,
+      onClick: () => setCurrentView('campaign-manager')
     },
     {
       title: "Performance & Analytics",
@@ -124,6 +125,10 @@ export function WhatsAppAdBuilder() {
   // Render different views based on current state
   if (currentView === 'campaign') {
     return <WhatsAppCampaignBuilder onBack={() => setCurrentView('dashboard')} />;
+  }
+
+  if (currentView === 'campaign-manager') {
+    return <CampaignManager onBack={() => setCurrentView('dashboard')} />;
   }
 
   return (
