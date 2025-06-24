@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -128,33 +127,30 @@ Ready to level up? Drop a 🔥 in the comments!
             </CardTitle>
           </CardHeader>
           <CardContent className="relative space-y-8">
-            {/* Post Type Selector */}
-            <div className="space-y-4">
-              <Label className="text-sm font-semibold text-gray-700">Content Type</Label>
-              <div className="grid grid-cols-2 gap-4">
-                {postTypes.map((type) => (
-                  <button
-                    key={type.id}
-                    onClick={() => setSelectedPostType(type.id as PostType)}
-                    className={`
-                      p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
-                      ${selectedPostType === type.id
-                        ? 'border-pink-300 bg-gradient-to-br from-pink-50 to-orange-50 shadow-lg'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
-                      }
-                    `}
-                  >
-                    <type.icon className={`w-6 h-6 mx-auto mb-2 ${selectedPostType === type.id ? 'text-pink-600' : 'text-gray-500'}`} />
-                    <p className={`text-sm font-medium ${selectedPostType === type.id ? 'text-pink-700' : 'text-gray-700'}`}>
-                      {type.name}
-                    </p>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* Configuration Grid */}
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-4 gap-8">
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                  <FileText className="w-4 h-4" />
+                  <span>Content Type</span>
+                </Label>
+                <Select value={selectedPostType} onValueChange={(value) => setSelectedPostType(value as PostType)}>
+                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                    <SelectValue placeholder="Select content type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
+                    {postTypes.map((type) => (
+                      <SelectItem key={type.id} value={type.id} className="hover:bg-pink-50/80 flex items-center">
+                        <div className="flex items-center space-x-2">
+                          <type.icon className="w-4 h-4" />
+                          <span>{type.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="space-y-3">
                 <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
                   <User className="w-4 h-4" />
