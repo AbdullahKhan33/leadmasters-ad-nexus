@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -14,6 +15,7 @@ import {
 import { WhatsAppOnboarding } from "./WhatsAppOnboarding";
 import { WhatsAppCampaignBuilder } from "./WhatsAppCampaignBuilder";
 import { CampaignManager } from "./campaign/CampaignManager";
+import { WhatsAppAnalytics } from "./WhatsAppAnalytics";
 import { useState } from "react";
 
 interface OptionCardProps {
