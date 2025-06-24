@@ -14,7 +14,8 @@ import {
   Edit,
   Trash2,
   Globe,
-  Briefcase
+  Briefcase,
+  Settings
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
@@ -82,7 +83,7 @@ const mockWorkspaces: Workspace[] = [
   }
 ];
 
-export function Workspaces() {
+export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsClick?: (workspace: Workspace) => void }) {
   const [workspaces] = useState<Workspace[]>(mockWorkspaces);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
@@ -113,6 +114,13 @@ export function Workspaces() {
       title: "Workspace Selected",
       description: `Switched to ${workspace.name}`,
     });
+  };
+
+  const handleWorkspaceSettings = (workspace: Workspace, event: React.MouseEvent) => {
+    event.stopPropagation();
+    if (onWorkspaceSettingsClick) {
+      onWorkspaceSettingsClick(workspace);
+    }
   };
 
   const isWorkspaceSelected = (workspace: Workspace) => {
@@ -259,16 +267,27 @@ export function Workspaces() {
                           </div>
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-600 hover:text-gray-700"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
+                      <div className="flex space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-200 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg shadow-sm"
+                          onClick={(e) => handleWorkspaceSettings(workspace, e)}
+                          title="Workspace Settings"
+                        >
+                          <Settings className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-600 hover:text-gray-700"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
                   

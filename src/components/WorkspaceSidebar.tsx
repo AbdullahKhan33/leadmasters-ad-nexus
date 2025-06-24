@@ -12,10 +12,10 @@ import {
 import { useSidebar } from "@/components/ui/sidebar";
 import { Logo } from "@/components/ui/logo";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Megaphone,
   PenTool,
-  Settings,
   Users,
   BarChart3,
   Calendar,
@@ -23,6 +23,7 @@ import {
   LayoutDashboard,
   Lightbulb,
   Briefcase,
+  User,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -35,7 +36,7 @@ export function WorkspaceSidebar({
   onScheduleClick,
   onSmartAutomationsClick,
   onWorkspacesClick,
-  onWorkspaceSettingsClick,
+  onUserSettingsClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -47,8 +48,8 @@ export function WorkspaceSidebar({
   onScheduleClick: () => void;
   onSmartAutomationsClick: () => void;
   onWorkspacesClick: () => void;
-  onWorkspaceSettingsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspace-settings' | 'workspaces';
+  onUserSettingsClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings';
 }) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
@@ -281,21 +282,32 @@ export function WorkspaceSidebar({
       </SidebarContent>
 
       <SidebarFooter className="border-t border-gray-200/50 p-4">
-        <SidebarMenu className="space-y-2">
+        <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              onClick={onWorkspaceSettingsClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'workspace-settings')}`}
+              onClick={onUserSettingsClick}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'user-settings')}`}
             >
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
-                  <Settings className={`w-5 h-5 ${getIconStyles(currentView === 'workspace-settings')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Settings</span>
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-semibold">
+                      JD
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-xs font-medium">Account</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
-                  <Settings className={`w-5 h-5 ${getIconStyles(currentView === 'workspace-settings')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Workspace Settings</span>
+                  <Avatar className="w-8 h-8">
+                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-semibold">
+                      JD
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-sm truncate">John Doe</span>
+                    <span className="text-xs text-gray-500 truncate">john@company.com</span>
+                  </div>
                 </div>
               )}
             </SidebarMenuButton>

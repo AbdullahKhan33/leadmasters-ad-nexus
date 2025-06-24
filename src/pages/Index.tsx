@@ -13,16 +13,18 @@ import { Schedule } from "@/components/Schedule";
 import { SmartAutomations } from "@/components/SmartAutomations";
 import { Workspaces } from "@/components/Workspaces";
 import { WorkspaceSettings } from "@/components/WorkspaceSettings";
+import { UserSettings } from "@/components/UserSettings";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspace-settings' | 'workspaces';
-type AllViews = AppSidebarView | 'workspace-settings';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
   const [currentView, setCurrentView] = useState<AllViews>('workspaces');
+  const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
 
   // When a workspace is selected, automatically navigate to dashboard
   useEffect(() => {
@@ -69,7 +71,12 @@ function IndexContent() {
     setCurrentView('workspaces');
   };
 
-  const handleWorkspaceSettingsClick = () => {
+  const handleUserSettingsClick = () => {
+    setCurrentView('user-settings');
+  };
+
+  const handleWorkspaceSettingsClick = (workspace: any) => {
+    setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
   };
 
@@ -87,7 +94,7 @@ function IndexContent() {
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
-            onWorkspaceSettingsClick={handleWorkspaceSettingsClick}
+            onUserSettingsClick={handleUserSettingsClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -108,9 +115,11 @@ function IndexContent() {
           <TopBar />
           <div className="flex-1 overflow-hidden">
             {currentView === 'workspaces' ? (
-              <Workspaces />
+              <Workspaces onWorkspaceSettingsClick={handleWorkspaceSettingsClick} />
             ) : currentView === 'workspace-settings' ? (
               <WorkspaceSettings />
+            ) : currentView === 'user-settings' ? (
+              <UserSettings />
             ) : currentView === 'dashboard' ? (
               <Dashboard />
             ) : currentView === 'social-logins' ? (
