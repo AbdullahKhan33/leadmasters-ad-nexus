@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -8,10 +7,11 @@ import { SocialLogins } from "@/components/SocialLogins";
 import { Dashboard } from "@/components/Dashboard";
 import { InspirationHub } from "@/components/InspirationHub";
 import { Analytics } from "@/components/Analytics";
+import { Schedule } from "@/components/Schedule";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Index() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule'>('dashboard');
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -37,6 +37,10 @@ export default function Index() {
     setCurrentView('analytics');
   };
 
+  const handleScheduleClick = () => {
+    setCurrentView('schedule');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -47,6 +51,7 @@ export default function Index() {
           onSocialLoginsClick={handleSocialLoginsClick}
           onInspirationHubClick={handleInspirationHubClick}
           onAnalyticsClick={handleAnalyticsClick}
+          onScheduleClick={handleScheduleClick}
           currentView={currentView}
         />
         <div className="flex-1 flex flex-col min-w-0">
@@ -62,6 +67,8 @@ export default function Index() {
               <InspirationHub />
             ) : currentView === 'analytics' ? (
               <Analytics />
+            ) : currentView === 'schedule' ? (
+              <Schedule />
             ) : (
               <AdBuilder />
             )}
