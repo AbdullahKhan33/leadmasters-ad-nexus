@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Sidebar,
@@ -36,6 +35,7 @@ export function WorkspaceSidebar({
   onScheduleClick,
   onSmartAutomationsClick,
   onWorkspacesClick,
+  onWorkspaceSettingsClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -47,6 +47,7 @@ export function WorkspaceSidebar({
   onScheduleClick: () => void;
   onSmartAutomationsClick: () => void;
   onWorkspacesClick: () => void;
+  onWorkspaceSettingsClick: () => void;
   currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspace-settings' | 'workspaces';
 }) {
   const { state } = useSidebar();
@@ -283,6 +284,7 @@ export function WorkspaceSidebar({
         <SidebarMenu className="space-y-2">
           <SidebarMenuItem>
             <SidebarMenuButton
+              onClick={onWorkspaceSettingsClick}
               className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'workspace-settings')}`}
             >
               {isCollapsed ? (

@@ -69,6 +69,10 @@ function IndexContent() {
     setCurrentView('workspaces');
   };
 
+  const handleWorkspaceSettingsClick = () => {
+    setCurrentView('workspace-settings');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -83,6 +87,7 @@ function IndexContent() {
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
+            onWorkspaceSettingsClick={handleWorkspaceSettingsClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -104,6 +109,8 @@ function IndexContent() {
           <div className="flex-1 overflow-hidden">
             {currentView === 'workspaces' ? (
               <Workspaces />
+            ) : currentView === 'workspace-settings' ? (
+              <WorkspaceSettings />
             ) : currentView === 'dashboard' ? (
               <Dashboard />
             ) : currentView === 'social-logins' ? (
