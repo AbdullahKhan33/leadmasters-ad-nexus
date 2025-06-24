@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,10 +20,15 @@ import {
   Share,
   MoreHorizontal,
   Wand2,
-  Edit
+  Edit,
+  FileText,
+  Video
 } from "lucide-react";
 
+type PostType = 'post' | 'reel';
+
 export function FacebookPostBuilder() {
+  const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
   const [selectedAudience, setSelectedAudience] = useState('');
   const [selectedPage, setSelectedPage] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
@@ -30,6 +36,11 @@ export function FacebookPostBuilder() {
   const [generatedPost, setGeneratedPost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
+
+  const postTypes = [
+    { id: 'post', name: 'Post', icon: FileText },
+    { id: 'reel', name: 'Reel', icon: Video }
+  ];
 
   const audiences = [
     'Students',
@@ -64,7 +75,8 @@ export function FacebookPostBuilder() {
     
     // Simulate AI generation
     setTimeout(() => {
-      const mockPost = `🚀 Exciting news for ${selectedAudience.toLowerCase()}! 
+      const contentType = selectedPostType === 'reel' ? 'Facebook Reel' : 'Facebook post';
+      const mockPost = `🚀 Exciting ${contentType.toLowerCase()} for ${selectedAudience.toLowerCase()}! 
 
 ${prompt}
 
@@ -78,7 +90,7 @@ Join thousands of professionals who are already transforming their careers with 
 
 Ready to take the next step? Comment below or DM us! 
 
-#LeadMastersAI #CareerGrowth #ProfessionalDevelopment #AI #SkillBuilding`;
+#LeadMastersAI #CareerGrowth #ProfessionalDevelopment #AI #SkillBuilding${selectedPostType === 'reel' ? ' #Reels #FacebookReels' : ''}`;
 
       setGeneratedPost(mockPost);
       setShowResponse(true);
@@ -96,10 +108,10 @@ Ready to take the next step? Comment below or DM us!
             <span className="text-sm font-medium text-gray-700">Powered by AI</span>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF] bg-clip-text text-transparent">
-            Facebook AI Post Generator
+            Facebook AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Generator
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Create engaging, AI-powered Facebook posts that resonate with your audience
+            Create engaging, AI-powered Facebook {selectedPostType === 'reel' ? 'reels' : 'posts'} that resonate with your audience
           </p>
         </div>
 
@@ -111,10 +123,35 @@ Ready to take the next step? Comment below or DM us!
               <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <span>AI Post Configuration</span>
+              <span>AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Configuration</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="relative space-y-8">
+            {/* Post Type Selector */}
+            <div className="space-y-4">
+              <Label className="text-sm font-semibold text-gray-700">Content Type</Label>
+              <div className="grid grid-cols-2 gap-4">
+                {postTypes.map((type) => (
+                  <button
+                    key={type.id}
+                    onClick={() => setSelectedPostType(type.id as PostType)}
+                    className={`
+                      p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
+                      ${selectedPostType === type.id
+                        ? 'border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                      }
+                    `}
+                  >
+                    <type.icon className={`w-6 h-6 mx-auto mb-2 ${selectedPostType === type.id ? 'text-purple-600' : 'text-gray-500'}`} />
+                    <p className={`text-sm font-medium ${selectedPostType === type.id ? 'text-purple-700' : 'text-gray-700'}`}>
+                      {type.name}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Configuration Grid */}
             <div className="grid md:grid-cols-3 gap-8">
               <div className="space-y-3">
@@ -179,11 +216,11 @@ Ready to take the next step? Comment below or DM us!
             <div className="space-y-4">
               <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
                 <Sparkles className="w-4 h-4" />
-                <span>Describe your post idea</span>
+                <span>Describe your {selectedPostType} idea</span>
               </Label>
               <div className="relative">
                 <Textarea
-                  placeholder="e.g., Create an engaging workshop announcement for AI and career development..."
+                  placeholder={`e.g., Create an engaging ${selectedPostType} announcement for AI and career development...`}
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="min-h-[120px] bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20 resize-none text-base"
@@ -219,7 +256,7 @@ Ready to take the next step? Comment below or DM us!
                 ) : (
                   <>
                     <ArrowRight className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
-                    <span>Generate AI Post</span>
+                    <span>Generate AI {selectedPostType === 'reel' ? 'Reel' : 'Post'}</span>
                   </>
                 )}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400/20 to-pink-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -233,7 +270,7 @@ Ready to take the next step? Comment below or DM us!
           <div className="space-y-6">
             {/* Section Header */}
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated Post</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated {selectedPostType === 'reel' ? 'Reel' : 'Post'}</h2>
               <p className="text-gray-600">AI-powered content ready for your Facebook page</p>
             </div>
 
@@ -243,7 +280,7 @@ Ready to take the next step? Comment below or DM us!
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <div className="flex items-center space-x-3 mb-4">
                     <Sparkles className="w-6 h-6 text-purple-600 animate-spin" />
-                    <span className="text-lg font-medium text-gray-700">Generating post...</span>
+                    <span className="text-lg font-medium text-gray-700">Generating {selectedPostType}...</span>
                   </div>
                   <div className="flex space-x-2">
                     <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" />

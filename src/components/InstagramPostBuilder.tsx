@@ -21,10 +21,15 @@ import {
   MoreHorizontal,
   Wand2,
   Edit,
+  FileText,
+  Video,
   Bookmark
 } from "lucide-react";
 
+type PostType = 'post' | 'reel';
+
 export function InstagramPostBuilder() {
+  const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
   const [selectedAudience, setSelectedAudience] = useState('');
   const [selectedPage, setSelectedPage] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
@@ -33,13 +38,18 @@ export function InstagramPostBuilder() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
 
+  const postTypes = [
+    { id: 'post', name: 'Post', icon: FileText },
+    { id: 'reel', name: 'Reel', icon: Video }
+  ];
+
   const audiences = [
-    'Students',
-    'Business Owners',
-    'Job Seekers',
+    'Gen Z (18-24)',
+    'Millennials (25-40)',
+    'Creative Professionals',
     'Entrepreneurs',
-    'Marketing Professionals',
-    'Small Business Owners'
+    'Lifestyle Enthusiasts',
+    'Tech Enthusiasts'
   ];
 
   const pages = [
@@ -66,21 +76,22 @@ export function InstagramPostBuilder() {
     
     // Simulate AI generation
     setTimeout(() => {
-      const mockPost = `🚀 Transform your career with AI! ✨
+      const contentType = selectedPostType === 'reel' ? 'Instagram Reel' : 'Instagram post';
+      const mockPost = `✨ Amazing ${contentType.toLowerCase()} for ${selectedAudience.toLowerCase()}! 
 
 ${prompt}
 
-Join thousands of professionals who are already leveling up their skills with AI-powered solutions. Don't miss this opportunity! 
+Transform your career with AI-powered solutions! 🚀
 
-💡 What you'll discover:
-• Expert-led training sessions
-• Hands-on practical experience  
-• Industry-recognized certification
-• Networking opportunities
+💫 What's included:
+• Expert guidance
+• Hands-on learning
+• Industry certification
+• Community support
 
-Ready to take the next step? Drop a 🔥 in the comments or DM us! 
+Ready to level up? Drop a 🔥 in the comments!
 
-#LeadMastersAI #CareerGrowth #ProfessionalDevelopment #AI #SkillBuilding #InstagramLearning`;
+#LeadMastersAI #CareerGrowth #AI #Innovation #SkillBuilding #ProfessionalDevelopment${selectedPostType === 'reel' ? ' #Reels #InstagramReels #Trending' : ' #InstaPost'}`;
 
       setGeneratedPost(mockPost);
       setShowResponse(true);
@@ -97,11 +108,11 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
             <Zap className="w-4 h-4 text-pink-600" />
             <span className="text-sm font-medium text-gray-700">Powered by AI</span>
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#E1306C] via-[#F56040] to-[#FCAF45] bg-clip-text text-transparent">
-            Instagram AI Post Generator
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#FF9800] bg-clip-text text-transparent">
+            Instagram AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Generator
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Create engaging, AI-powered Instagram posts that captivate your audience
+            Create stunning, AI-powered Instagram {selectedPostType === 'reel' ? 'reels' : 'posts'} that captivate your audience
           </p>
         </div>
 
@@ -113,10 +124,35 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
               <div className="p-2 rounded-full bg-gradient-to-r from-pink-500 to-orange-500">
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <span>AI Post Configuration</span>
+              <span>AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Configuration</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="relative space-y-8">
+            {/* Post Type Selector */}
+            <div className="space-y-4">
+              <Label className="text-sm font-semibold text-gray-700">Content Type</Label>
+              <div className="grid grid-cols-2 gap-4">
+                {postTypes.map((type) => (
+                  <button
+                    key={type.id}
+                    onClick={() => setSelectedPostType(type.id as PostType)}
+                    className={`
+                      p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
+                      ${selectedPostType === type.id
+                        ? 'border-pink-300 bg-gradient-to-br from-pink-50 to-orange-50 shadow-lg'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                      }
+                    `}
+                  >
+                    <type.icon className={`w-6 h-6 mx-auto mb-2 ${selectedPostType === type.id ? 'text-pink-600' : 'text-gray-500'}`} />
+                    <p className={`text-sm font-medium ${selectedPostType === type.id ? 'text-pink-700' : 'text-gray-700'}`}>
+                      {type.name}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Configuration Grid */}
             <div className="grid md:grid-cols-3 gap-8">
               <div className="space-y-3">
@@ -141,11 +177,11 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
               <div className="space-y-3">
                 <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
                   <Wand2 className="w-4 h-4" />
-                  <span>Page Selection</span>
+                  <span>Account Selection</span>
                 </Label>
                 <Select value={selectedPage} onValueChange={setSelectedPage}>
                   <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
-                    <SelectValue placeholder="Choose your page" />
+                    <SelectValue placeholder="Choose your account" />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
                     {pages.map((page) => (
@@ -181,11 +217,11 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
             <div className="space-y-4">
               <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
                 <Sparkles className="w-4 h-4" />
-                <span>Describe your post idea</span>
+                <span>Describe your {selectedPostType} idea</span>
               </Label>
               <div className="relative">
                 <Textarea
-                  placeholder="e.g., Create an engaging workshop announcement for AI and career development..."
+                  placeholder={`e.g., Create a trendy ${selectedPostType} about AI tools for creative professionals...`}
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="min-h-[120px] bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20 resize-none text-base"
@@ -203,7 +239,7 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
               <Button
                 onClick={handleGeneratePost}
                 disabled={!selectedAudience || !selectedPage || !selectedModel || !prompt || isGenerating}
-                className="relative group bg-gradient-to-r from-[#E1306C] to-[#F56040] hover:from-pink-700 hover:to-orange-600 text-white px-12 py-4 text-lg font-semibold rounded-2xl shadow-2xl hover:shadow-pink-500/25 transition-all duration-500 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="relative group bg-gradient-to-r from-[#E91E63] to-[#FF9800] hover:from-pink-700 hover:to-orange-600 text-white px-12 py-4 text-lg font-semibold rounded-2xl shadow-2xl hover:shadow-pink-500/25 transition-all duration-500 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 size="lg"
               >
                 {isGenerating ? (
@@ -221,7 +257,7 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
                 ) : (
                   <>
                     <ArrowRight className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
-                    <span>Generate AI Post</span>
+                    <span>Generate AI {selectedPostType === 'reel' ? 'Reel' : 'Post'}</span>
                   </>
                 )}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -235,8 +271,8 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
           <div className="space-y-6">
             {/* Section Header */}
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated Post</h2>
-              <p className="text-gray-600">AI-powered content ready for your Instagram page</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated {selectedPostType === 'reel' ? 'Reel' : 'Post'}</h2>
+              <p className="text-gray-600">AI-powered content ready for your Instagram account</p>
             </div>
 
             {/* Loading State or Generated Post Card */}
@@ -245,7 +281,7 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <div className="flex items-center space-x-3 mb-4">
                     <Sparkles className="w-6 h-6 text-pink-600 animate-spin" />
-                    <span className="text-lg font-medium text-gray-700">Generating post...</span>
+                    <span className="text-lg font-medium text-gray-700">Generating {selectedPostType}...</span>
                   </div>
                   <div className="flex space-x-2">
                     <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" />
@@ -269,46 +305,50 @@ Ready to take the next step? Drop a 🔥 in the comments or DM us!
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <p className="font-bold text-gray-900 text-base">{selectedPage || 'Your Page'}</p>
+                        <p className="font-bold text-gray-900 text-base">{selectedPage || 'Your Account'}</p>
                         <p className="text-sm text-gray-500">Sponsored</p>
                       </div>
                       <MoreHorizontal className="w-5 h-5 text-gray-400" />
                     </div>
                     
-                    {/* Mock Image Placeholder */}
-                    <div className="w-full h-64 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full mx-auto mb-2 flex items-center justify-center">
-                          <Sparkles className="w-8 h-8 text-white" />
+                    {/* Media Placeholder */}
+                    {selectedPostType === 'reel' && (
+                      <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
+                        <Video className="w-16 h-16 text-pink-400" />
+                        <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                          REEL
                         </div>
-                        <p className="text-gray-600 text-sm">Your visual content here</p>
                       </div>
-                    </div>
-                    
-                    {/* Instagram Engagement Buttons */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex space-x-4">
-                        <Heart className="w-6 h-6 text-gray-700 hover:text-red-500 cursor-pointer" />
-                        <MessageCircle className="w-6 h-6 text-gray-700 hover:text-blue-500 cursor-pointer" />
-                        <Share className="w-6 h-6 text-gray-700 hover:text-green-500 cursor-pointer" />
-                      </div>
-                      <Bookmark className="w-6 h-6 text-gray-700 hover:text-gray-900 cursor-pointer" />
-                    </div>
+                    )}
                     
                     {/* Post Content */}
                     <div className="space-y-4">
-                      <div className="flex items-center text-sm text-gray-500 mb-2">
-                        <span className="font-semibold">87 likes</span>
+                      {/* Engagement buttons */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex space-x-4">
+                          <button className="text-gray-600 hover:text-red-500 transition-colors">
+                            <Heart className="w-6 h-6" />
+                          </button>
+                          <button className="text-gray-600 hover:text-blue-500 transition-colors">
+                            <MessageCircle className="w-6 h-6" />
+                          </button>
+                          <button className="text-gray-600 hover:text-green-500 transition-colors">
+                            <Send className="w-6 h-6" />
+                          </button>
+                        </div>
+                        <button className="text-gray-600 hover:text-yellow-500 transition-colors">
+                          <Bookmark className="w-6 h-6" />
+                        </button>
                       </div>
                       
-                      <p className="text-gray-800 whitespace-pre-line leading-relaxed text-sm">
-                        <span className="font-semibold">{selectedPage || 'your_page'} </span>
-                        {generatedPost}
-                      </p>
-                      
-                      <div className="text-xs text-gray-500 border-t pt-3">
-                        <span>View all 12 comments</span>
-                        <div className="mt-1">Just now</div>
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold">247 likes</p>
+                        <p className="text-sm text-gray-800">
+                          <span className="font-semibold">{selectedPage?.toLowerCase().replace(/\s+/g, '') || 'leadmastersai'}</span>{' '}
+                          {generatedPost}
+                        </p>
+                        <p className="text-sm text-gray-500">View all 12 comments</p>
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">2 hours ago</p>
                       </div>
                     </div>
                   </div>
