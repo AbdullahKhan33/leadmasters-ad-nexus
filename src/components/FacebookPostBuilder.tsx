@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -227,17 +226,17 @@ Ready to take the next step? Comment below or DM us!
                 type="single" 
                 value={selectedPostType} 
                 onValueChange={(value) => value && setSelectedPostType(value as PostType)}
-                className="grid grid-cols-2 gap-2 p-1 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-200/50"
+                className="grid grid-cols-2 gap-3 p-2 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-200/50"
               >
                 {postTypes.map((type) => (
                   <ToggleGroupItem
                     key={type.value}
                     value={type.value}
                     className={`
-                      flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-300
+                      flex items-center justify-center space-x-2 px-6 py-4 rounded-xl font-medium transition-all duration-300 cursor-pointer border-2
                       ${selectedPostType === type.value 
-                        ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-lg hover:shadow-xl hover:scale-105 hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600' 
-                        : 'bg-white/80 text-gray-700 hover:bg-gradient-to-r hover:from-purple-100 hover:to-pink-100 hover:text-purple-700 hover:shadow-md'
+                        ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-lg hover:shadow-xl hover:scale-105 hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600 border-transparent' 
+                        : 'bg-white/90 text-gray-700 hover:bg-gradient-to-r hover:from-purple-100 hover:to-pink-100 hover:text-purple-700 hover:shadow-md hover:scale-102 border-purple-200/60 hover:border-purple-300'
                       }
                     `}
                   >
@@ -361,6 +360,7 @@ Ready to take the next step? Comment below or DM us!
           </CardContent>
         </Card>
 
+        {/* Generated content section */}
         {(isGenerating || showResponse) && (
           <div className="space-y-6">
             {/* Section Header */}
