@@ -1,12 +1,30 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Edit, Copy, Eye, Heart, DollarSign, BarChart3, MoreHorizontal } from "lucide-react";
+import { Plus, Eye, Heart, DollarSign, BarChart3 } from "lucide-react";
 import { CampaignCard } from "@/components/CampaignCard";
 import { MetricCard } from "@/components/MetricCard";
 import { AdPlatformMenu } from "@/components/AdPlatformMenu";
+import { FacebookAdBuilder } from "@/components/FacebookAdBuilder";
+import { useState } from "react";
 
 export function InstagramAdBuilder() {
+  const [activePlatform, setActivePlatform] = useState("instagram");
+
+  const handlePlatformChange = (platformId: string) => {
+    setActivePlatform(platformId);
+  };
+
+  // If Facebook is selected, render the Facebook Ad Builder instead
+  if (activePlatform === "facebook") {
+    return (
+      <div className="flex flex-col h-full">
+        <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
+        <FacebookAdBuilder />
+      </div>
+    );
+  }
+
   const recentCampaigns = [
     { id: 1, name: "Story Ads Campaign", status: "Live", performance: "Excellent" },
     { id: 2, name: "Reel Promotion 2024", status: "Draft", performance: "N/A" },
@@ -23,7 +41,7 @@ export function InstagramAdBuilder() {
   return (
     <div className="flex flex-col h-full">
       {/* Ad Platform Sub-Menu */}
-      <AdPlatformMenu />
+      <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
       
       {/* Main Content */}
       <div className="flex-1 p-6 bg-gray-50">
