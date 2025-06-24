@@ -37,8 +37,11 @@ export function PostBuilder() {
   const [selectedAudience, setSelectedAudience] = useState('');
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
 
+  console.log('PostBuilder rendered with platform:', selectedPlatform);
+
   // If Facebook is selected, show the FacebookPostBuilder
   if (selectedPlatform === 'facebook') {
+    console.log('Rendering FacebookPostBuilder');
     return (
       <div className="flex-1 flex flex-col min-h-screen">
         <PostPlatformMenu 
@@ -52,6 +55,7 @@ export function PostBuilder() {
 
   // If Instagram is selected, show the InstagramPostBuilder
   if (selectedPlatform === 'instagram') {
+    console.log('Rendering InstagramPostBuilder');
     return (
       <div className="flex-1 flex flex-col min-h-screen">
         <PostPlatformMenu 
@@ -65,6 +69,7 @@ export function PostBuilder() {
 
   // If Threads is selected, show the ThreadsPostBuilder
   if (selectedPlatform === 'threads') {
+    console.log('Rendering ThreadsPostBuilder');
     return (
       <div className="flex-1 flex flex-col min-h-screen">
         <PostPlatformMenu 
@@ -78,6 +83,7 @@ export function PostBuilder() {
 
   // If Twitter is selected, show the TwitterPostBuilder
   if (selectedPlatform === 'twitter') {
+    console.log('Rendering TwitterPostBuilder');
     return (
       <div className="flex-1 flex flex-col min-h-screen">
         <PostPlatformMenu 
@@ -91,6 +97,7 @@ export function PostBuilder() {
 
   // If LinkedIn is selected, show the LinkedInPostBuilder
   if (selectedPlatform === 'linkedin') {
+    console.log('Rendering LinkedInPostBuilder');
     return (
       <div className="flex-1 flex flex-col min-h-screen">
         <PostPlatformMenu 
@@ -102,6 +109,7 @@ export function PostBuilder() {
     );
   }
 
+  
   const platforms = [
     { id: 'all', name: 'All Platforms' },
     { id: 'facebook', name: 'Facebook' },
@@ -152,6 +160,8 @@ export function PostBuilder() {
       setUploadedMedia(file);
     }
   };
+
+  console.log('Rendering default all platforms view');
 
   return (
     <div className="flex-1 flex flex-col min-h-screen">

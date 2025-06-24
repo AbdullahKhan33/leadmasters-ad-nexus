@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +33,8 @@ export function ThreadsPostBuilder() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
 
+  console.log('ThreadsPostBuilder component rendered');
+
   const audiences = [
     'Gen Z (18-24)',
     'Millennials (25-40)',
@@ -59,9 +60,11 @@ export function ThreadsPostBuilder() {
 
   const handleGeneratePost = async () => {
     if (!selectedAudience || !selectedPage || !selectedModel || !prompt) {
+      console.log('Missing required fields for post generation');
       return;
     }
 
+    console.log('Starting post generation...');
     setIsGenerating(true);
     setShowResponse(false);
     
@@ -79,6 +82,7 @@ Drop your thoughts below 👇 Would love to hear your experiences!
 
 #AI #TechTalk #Innovation #FutureOfWork #ThreadsConversation`;
 
+      console.log('Post generation completed');
       setGeneratedPost(mockPost);
       setShowResponse(true);
       setIsGenerating(false);
