@@ -29,8 +29,8 @@ import {
   MoreHorizontal,
   X
 } from "lucide-react";
+import { SchedulingModal } from "@/components/SchedulingModal";
 
-// Enhanced mock data for scheduled posts including June 22, 2025 demo posts
 const mockScheduledPosts = [
   // Original posts
   {
@@ -160,6 +160,8 @@ export function Schedule() {
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const [dayViewOpen, setDayViewOpen] = useState(false);
   const [dayViewDate, setDayViewDate] = useState<Date | null>(null);
+  const [schedulingModalOpen, setSchedulingModalOpen] = useState(false);
+  const [scheduledPosts, setScheduledPosts] = useState(mockScheduledPosts);
 
   // Helper function to format time
   const formatTime = (date: Date) => {
@@ -171,7 +173,7 @@ export function Schedule() {
   };
 
   // Filter posts based on selected platform and type
-  const filteredPosts = mockScheduledPosts.filter(post => {
+  const filteredPosts = scheduledPosts.filter(post => {
     const platformMatch = selectedPlatform === 'all' || post.platform === selectedPlatform;
     const typeMatch = selectedPostType === 'all' || post.type === selectedPostType;
     return platformMatch && typeMatch;
@@ -189,6 +191,11 @@ export function Schedule() {
   const handleDateClick = (date: Date) => {
     setDayViewDate(date);
     setDayViewOpen(true);
+  };
+
+  // Handle new post scheduling
+  const handleSchedulePost = (postData: any) => {
+    setScheduledPosts(prev => [...prev, postData]);
   };
 
   const PostPill = ({ post }: { post: any }) => {
@@ -261,6 +268,7 @@ export function Schedule() {
                 No posts match your current filters for this date.
               </p>
               <Button 
+                onClick={() => setSchedulingModalOpen(true)}
                 className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                 size="sm"
               >
@@ -337,6 +345,7 @@ export function Schedule() {
         Get started by creating your first scheduled post!
       </p>
       <Button 
+        onClick={() => setSchedulingModalOpen(true)}
         className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
         size="lg"
       >
@@ -427,6 +436,7 @@ export function Schedule() {
               className="min-w-[120px]"
             />
             <Button 
+              onClick={() => setSchedulingModalOpen(true)}
               className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
               size="lg"
             >
@@ -573,6 +583,13 @@ export function Schedule() {
 
         {/* Day View Panel */}
         {dayViewOpen && <DayViewPanel />}
+
+        {/* Scheduling Modal */}
+        <SchedulingModal
+          isOpen={schedulingModalOpen}
+          onClose={() => setSchedulingModalOpen(false)}
+          onSchedulePost={handleSchedulePost}
+        />
       </div>
     </div>
   );
