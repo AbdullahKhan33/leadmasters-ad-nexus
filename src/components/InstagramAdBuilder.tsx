@@ -6,6 +6,7 @@ import { MetricCard } from "@/components/MetricCard";
 import { AdPlatformMenu } from "@/components/AdPlatformMenu";
 import { FacebookAdBuilder } from "@/components/FacebookAdBuilder";
 import { GoogleAdBuilder } from "@/components/GoogleAdBuilder";
+import { LinkedInAdBuilder } from "@/components/LinkedInAdBuilder";
 import { useState } from "react";
 
 export function InstagramAdBuilder() {
@@ -31,6 +32,16 @@ export function InstagramAdBuilder() {
       <div className="flex flex-col h-full">
         <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
         <GoogleAdBuilder />
+      </div>
+    );
+  }
+
+  // If LinkedIn is selected, render the LinkedIn Ad Builder instead
+  if (activePlatform === "linkedin") {
+    return (
+      <div className="flex flex-col h-full">
+        <AdPlatformMenu activePlatform={activePlatform} onPlatformChange={handlePlatformChange} />
+        <LinkedInAdBuilder />
       </div>
     );
   }
