@@ -152,165 +152,131 @@ const getPlatformColor = (platform: string) => {
   }
 };
 
-export function Schedule() {
-  const [selectedPlatform, setSelectedPlatform] = useState('all');
-  const [selectedPostType, setSelectedPostType] = useState('all');
-  const [viewMode, setViewMode] = useState('month');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [selectedPost, setSelectedPost] = useState<any>(null);
-  const [dayViewOpen, setDayViewOpen] = useState(false);
-  const [dayViewDate, setDayViewDate] = useState<Date | null>(null);
-
-  const filteredPosts = mockScheduledPosts.filter(post => {
-    const platformMatch = selectedPlatform === 'all' || post.platform === selectedPlatform;
-    const typeMatch = selectedPostType === 'all' || post.type === selectedPostType;
-    return platformMatch && typeMatch;
-  });
-
-  const getPostsForDate = (date: Date) => {
-    return filteredPosts.filter(post => 
-      post.scheduledDate.toDateString() === date.toDateString()
-    );
-  };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
-    });
-  };
-
-  const handleDateClick = (date: Date) => {
-    setDayViewDate(date);
-    setDayViewOpen(true);
-  };
-
-  const PostPill = ({ post }: { post: any }) => {
-    const PlatformIcon = getPlatformIcon(post.platform);
-    
-    return (
-      <div
-        onClick={() => setSelectedPost(post)}
-        className={`
-          relative cursor-pointer mb-1 p-1.5 rounded text-xs text-white
-          ${getPlatformColor(post.platform)}
-          hover:shadow-lg hover:scale-105 transition-all duration-200
-          backdrop-blur-sm border border-white/20
-        `}
-      >
-        <div className="flex items-center space-x-1">
-          <PlatformIcon className="w-2.5 h-2.5" />
-          {post.isAIGenerated && <Bot className="w-2.5 h-2.5" />}
-        </div>
-        <div className="truncate mt-0.5 font-medium text-xs">
-          {post.content.substring(0, 25)}...
-        </div>
-        <div className="text-xs opacity-80 mt-0.5">
-          {formatTime(post.scheduledDate)}
-        </div>
+const PostPill = ({ post }: { post: any }) => {
+  const PlatformIcon = getPlatformIcon(post.platform);
+  
+  return (
+    <div
+      onClick={() => setSelectedPost(post)}
+      className={`
+        relative cursor-pointer mb-1 p-1.5 rounded text-xs text-white
+        ${getPlatformColor(post.platform)}
+        hover:shadow-lg hover:scale-105 transition-all duration-200
+        backdrop-blur-sm border border-white/20
+        min-h-[2.5rem]
+      `}
+    >
+      <div className="flex items-center space-x-1">
+        <PlatformIcon className="w-2.5 h-2.5" />
+        {post.isAIGenerated && <Bot className="w-2.5 h-2.5" />}
       </div>
-    );
-  };
+      <div className="mt-0.5 font-medium text-xs leading-tight">
+        {post.content.length > 40 ? `${post.content.substring(0, 40)}...` : post.content}
+      </div>
+      <div className="text-xs opacity-80 mt-0.5">
+        {formatTime(post.scheduledDate)}
+      </div>
+    </div>
+  );
+};
 
-  const DayViewPanel = () => {
-    if (!dayViewDate) return null;
-    
-    const dayPosts = getPostsForDate(dayViewDate);
-    
-    return (
-      <div className="fixed inset-y-0 right-0 w-96 bg-white/95 backdrop-blur-xl border-l border-purple-200/50 shadow-2xl z-50 transform transition-transform duration-300">
-        <div className="flex items-center justify-between p-6 border-b border-purple-200/50">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">
-              {dayViewDate.toLocaleDateString('en-US', { 
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              {dayPosts.length} scheduled {dayPosts.length === 1 ? 'post' : 'posts'}
-            </p>
-          </div>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => setDayViewOpen(false)}
-            className="hover:bg-purple-100"
-          >
-            <X className="w-4 h-4" />
-          </Button>
+const DayViewPanel = () => {
+  if (!dayViewDate) return null;
+  
+  const dayPosts = getPostsForDate(dayViewDate);
+  
+  return (
+    <div className="fixed inset-y-0 right-0 w-96 bg-white/95 backdrop-blur-xl border-l border-purple-200/50 shadow-2xl z-50 transform transition-transform duration-300">
+      <div className="flex items-center justify-between p-6 border-b border-purple-200/50">
+        <div>
+          <h3 className="text-xl font-bold text-gray-900">
+            {dayViewDate.toLocaleDateString('en-US', { 
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </h3>
+          <p className="text-sm text-gray-600 mt-1">
+            {dayPosts.length} scheduled {dayPosts.length === 1 ? 'post' : 'posts'}
+          </p>
         </div>
-        
-        <div className="flex-1 overflow-y-auto p-6">
-          {dayPosts.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                <CalendarIcon className="w-10 h-10 text-purple-400" />
-              </div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                No posts scheduled
-              </h4>
-              <p className="text-gray-600 text-sm mb-6">
-                No posts match your current filters for this date.
-              </p>
-              <Button 
-                className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                size="sm"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Schedule a Post
-              </Button>
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={() => setDayViewOpen(false)}
+          className="hover:bg-purple-100"
+        >
+          <X className="w-4 h-4" />
+        </Button>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto p-6">
+        {dayPosts.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
+              <CalendarIcon className="w-10 h-10 text-purple-400" />
             </div>
-          ) : (
-            <div className="space-y-4">
-              {dayPosts.map(post => {
-                const PlatformIcon = getPlatformIcon(post.platform);
-                return (
-                  <div
-                    key={post.id}
-                    className="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-purple-200/50 hover:shadow-lg transition-all duration-200 cursor-pointer group"
-                    onClick={() => setSelectedPost(post)}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-2">
-                        <div className={`p-2 rounded-lg ${getPlatformColor(post.platform)}`}>
-                          <PlatformIcon className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <h5 className="font-medium text-gray-900 capitalize">
-                            {post.platform} {post.type}
-                          </h5>
-                          <div className="flex items-center space-x-2 text-xs text-gray-500">
-                            <Clock className="w-3 h-3" />
-                            <span>{formatTime(post.scheduledDate)}</span>
-                          </div>
+            <h4 className="text-lg font-semibold text-gray-900 mb-2">
+              No posts scheduled
+            </h4>
+            <p className="text-gray-600 text-sm mb-6">
+              No posts match your current filters for this date.
+            </p>
+            <Button 
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              size="sm"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Schedule a Post
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {dayPosts.map(post => {
+              const PlatformIcon = getPlatformIcon(post.platform);
+              return (
+                <div
+                  key={post.id}
+                  className="p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-purple-200/50 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+                  onClick={() => setSelectedPost(post)}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center space-x-2">
+                      <div className={`p-2 rounded-lg ${getPlatformColor(post.platform)}`}>
+                        <PlatformIcon className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <h5 className="font-medium text-gray-900 capitalize">
+                          {post.platform} {post.type}
+                        </h5>
+                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                          <Clock className="w-3 h-3" />
+                          <span>{formatTime(post.scheduledDate)}</span>
                         </div>
                       </div>
-                      {post.isAIGenerated && (
-                        <Badge variant="secondary" className="bg-purple-100 text-purple-700">
-                          <Bot className="w-3 h-3 mr-1" />
-                          AI
-                        </Badge>
-                      )}
                     </div>
-                    
-                    <p className="text-gray-700 text-sm mb-4 line-clamp-3">
-                      {post.content}
-                    </p>
-                    
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Edit3 className="w-3 h-3 mr-1" />
-                        Edit
-                      </Button>
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <RotateCcw className="w-3 h-3 mr-1" />
-                        Reschedule
-                      </Button>
-                    </div>
+                    {post.isAIGenerated && (
+                      <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                        <Bot className="w-3 h-3 mr-1" />
+                        AI
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <p className="text-gray-700 text-sm mb-4 line-clamp-3">
+                    {post.content}
+                  </p>
+                  
+                  <div className="flex space-x-2">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <Edit3 className="w-3 h-3 mr-1" />
+                      Edit
+                    </Button>
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <RotateCcw className="w-3 h-3 mr-1" />
+                      Reschedule
+                    </Button>
                   </div>
                 );
               })}
@@ -481,9 +447,6 @@ export function Schedule() {
                   components={{
                     Day: ({ date, ...props }) => {
                       const posts = getPostsForDate(date);
-                      const maxVisiblePosts = 2;
-                      const visiblePosts = posts.slice(0, maxVisiblePosts);
-                      const remainingCount = posts.length - maxVisiblePosts;
                       
                       return (
                         <div 
@@ -494,13 +457,15 @@ export function Schedule() {
                             {date.getDate()}
                           </div>
                           <div className="flex-1 space-y-1 overflow-hidden">
-                            {visiblePosts.map(post => (
-                              <PostPill key={post.id} post={post} />
-                            ))}
-                            {remainingCount > 0 && (
-                              <div className="text-xs text-purple-600 font-medium px-1.5 py-0.5 bg-purple-50 rounded">
-                                +{remainingCount} more
-                              </div>
+                            {posts.length > 0 && (
+                              <>
+                                <PostPill post={posts[0]} />
+                                {posts.length > 1 && (
+                                  <div className="text-xs text-purple-600 font-medium px-1.5 py-0.5 bg-purple-50 rounded">
+                                    +{posts.length - 1} more
+                                  </div>
+                                )}
+                              </>
                             )}
                           </div>
                         </div>
