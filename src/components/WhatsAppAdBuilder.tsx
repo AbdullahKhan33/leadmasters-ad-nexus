@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -15,6 +16,7 @@ import { WhatsAppOnboarding } from "./WhatsAppOnboarding";
 import { WhatsAppCampaignBuilder } from "./WhatsAppCampaignBuilder";
 import { CampaignManager } from "./campaign/CampaignManager";
 import { WhatsAppAnalytics } from "./WhatsAppAnalytics";
+import { PostBuilder } from "./PostBuilder";
 import { useState } from "react";
 
 interface OptionCardProps {
@@ -63,7 +65,7 @@ function OptionCard({ title, description, icon: Icon, accent = false, onClick, c
 }
 
 export function WhatsAppAdBuilder() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager' | 'analytics'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager' | 'analytics' | 'post-builder'>('dashboard');
 
   const mainOptions = [
     {
@@ -135,6 +137,10 @@ export function WhatsAppAdBuilder() {
 
   if (currentView === 'analytics') {
     return <WhatsAppAnalytics onBack={() => setCurrentView('dashboard')} />;
+  }
+
+  if (currentView === 'post-builder') {
+    return <PostBuilder onBack={() => setCurrentView('dashboard')} />;
   }
 
   return (
