@@ -87,7 +87,7 @@ export function Workspaces() {
   const [workspaces] = useState<Workspace[]>(mockWorkspaces);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
-  const { selectWorkspace } = useWorkspace();
+  const { selectWorkspace, activeWorkspace } = useWorkspace();
   const { toast } = useToast();
 
   const filteredWorkspaces = workspaces.filter(workspace => {
@@ -106,6 +106,10 @@ export function Workspaces() {
       title: "Workspace Selected",
       description: `Switched to ${workspace.name}`,
     });
+  };
+
+  const isWorkspaceSelected = (workspace: Workspace) => {
+    return activeWorkspace?.id === workspace.id;
   };
 
   const EmptyState = () => (
@@ -200,115 +204,136 @@ export function Workspaces() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredWorkspaces.map((workspace) => (
-              <Card 
-                key={workspace.id} 
-                className="group bg-white/70 backdrop-blur-sm border border-gray-200/50 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:bg-white/90 cursor-pointer h-full"
-                onClick={() => handleWorkspaceSelect(workspace)}
-              >
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      <div className={`p-3 rounded-xl ${workspace.isActive 
-                        ? 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white shadow-lg' 
-                        : 'bg-gray-100 text-gray-500'
-                      } transition-all duration-300`}>
-                        <Building2 className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-xl font-semibold text-gray-800 group-hover:text-gray-900 transition-colors truncate">
-                          {workspace.name}
-                        </CardTitle>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <Badge 
-                            variant={workspace.isActive ? "default" : "secondary"}
-                            className={`text-xs ${workspace.isActive 
-                              ? 'bg-green-100 text-green-700 border-green-200' 
-                              : 'bg-gray-100 text-gray-600 border-gray-200'
-                            }`}
-                          >
-                            {workspace.isActive ? 'Active' : 'Inactive'}
-                          </Badge>
+            {filteredWorkspaces.map((workspace) => {
+              const isSelected = isWorkspaceSelected(workspace);
+              return (
+                <Card 
+                  key={workspace.id} 
+                  className={`group bg-white/70 backdrop-blur-sm border rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:bg-white/90 cursor-pointer h-full ${
+                    isSelected 
+                      ? 'border-blue-500 bg-blue-50/50 ring-2 ring-blue-200' 
+                      : 'border-gray-200/50'
+                  }`}
+                  onClick={() => handleWorkspaceSelect(workspace)}
+                >
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-3 rounded-xl transition-all duration-300 ${
+                          isSelected
+                            ? 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white shadow-lg'
+                            : workspace.isActive 
+                              ? 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white shadow-lg' 
+                              : 'bg-gray-100 text-gray-500'
+                        }`}>
+                          <Building2 className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className={`text-xl font-semibold transition-colors truncate ${
+                            isSelected ? 'text-blue-800' : 'text-gray-800 group-hover:text-gray-900'
+                          }`}>
+                            {workspace.name}
+                          </CardTitle>
+                          <div className="flex items-center space-x-2 mt-2">
+                            <Badge 
+                              variant={workspace.isActive ? "default" : "secondary"}
+                              className={`text-xs ${workspace.isActive 
+                                ? 'bg-green-100 text-green-700 border-green-200' 
+                                : 'bg-gray-100 text-gray-600 border-gray-200'
+                              }`}
+                            >
+                              {workspace.isActive ? 'Active' : 'Inactive'}
+                            </Badge>
+                            {isSelected && (
+                              <Badge className="text-xs bg-blue-100 text-blue-700 border-blue-200">
+                                Selected
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-600 hover:text-gray-700"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <MoreHorizontal className="w-4 h-4" />
+                      </Button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-600 hover:text-gray-700"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4 flex-1 flex flex-col">
-                  <CardDescription className="text-gray-600 leading-relaxed text-sm line-clamp-2">
-                    {workspace.description}
-                  </CardDescription>
+                  </CardHeader>
                   
-                  <div className="space-y-3 flex-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center space-x-2 text-gray-500">
-                        <Globe className="w-4 h-4" />
-                        <span>{workspace.country}</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-gray-500">
-                        <Briefcase className="w-4 h-4" />
-                        <span>{workspace.industry}</span>
-                      </div>
-                    </div>
+                  <CardContent className="space-y-4 flex-1 flex flex-col">
+                    <CardDescription className="text-gray-600 leading-relaxed text-sm line-clamp-2">
+                      {workspace.description}
+                    </CardDescription>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2 text-sm text-gray-500">
-                        <Users className="w-4 h-4" />
-                        <span>{workspace.memberCount} members</span>
+                    <div className="space-y-3 flex-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center space-x-2 text-gray-500">
+                          <Globe className="w-4 h-4" />
+                          <span>{workspace.country}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-gray-500">
+                          <Briefcase className="w-4 h-4" />
+                          <span>{workspace.industry}</span>
+                        </div>
                       </div>
-                      <Badge variant="outline" className="text-xs border-gray-200 text-gray-600">
-                        {workspace.businessType}
-                      </Badge>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                          <Users className="w-4 h-4" />
+                          <span>{workspace.memberCount} members</span>
+                        </div>
+                        <Badge variant="outline" className="text-xs border-gray-200 text-gray-600">
+                          {workspace.businessType}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex space-x-2 pt-4 border-t border-gray-100">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 rounded-lg transition-all duration-200"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleWorkspaceSelect(workspace);
-                      }}
-                    >
-                      Select
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-lg transition-all duration-200"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 rounded-lg transition-all duration-200"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="flex space-x-2 pt-4 border-t border-gray-100">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className={`flex-1 rounded-lg transition-all duration-200 ${
+                          isSelected
+                            ? 'border-blue-500 bg-blue-500 text-white hover:bg-blue-600'
+                            : 'border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300'
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleWorkspaceSelect(workspace);
+                        }}
+                      >
+                        {isSelected ? 'Selected' : 'Select'}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-lg transition-all duration-200"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 rounded-lg transition-all duration-200"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>
