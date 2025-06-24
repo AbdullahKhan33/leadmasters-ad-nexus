@@ -1,11 +1,23 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Eye, Heart, DollarSign, BarChart3 } from "lucide-react";
+import { CustomSelect } from "@/components/ui/custom-select";
+import { Plus, Eye, Heart, DollarSign, BarChart3, FileText, Video } from "lucide-react";
 import { CampaignCard } from "@/components/CampaignCard";
 import { MetricCard } from "@/components/MetricCard";
+import { useState } from "react";
+
+type AdType = 'story' | 'feed' | 'reel';
 
 export function InstagramAdBuilder() {
+  const [selectedAdType, setSelectedAdType] = useState<AdType>('story');
+
+  const adTypes = [
+    { value: 'story', label: 'Story Ad', icon: FileText },
+    { value: 'feed', label: 'Feed Ad', icon: Plus },
+    { value: 'reel', label: 'Reel Ad', icon: Video }
+  ];
+
   const recentCampaigns = [
     { id: 1, name: "Story Ads Campaign", status: "Live", performance: "Excellent" },
     { id: 2, name: "Reel Promotion 2024", status: "Draft", performance: "N/A" },
@@ -36,12 +48,23 @@ export function InstagramAdBuilder() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Create New Campaign</h3>
               <p className="text-gray-600 mb-6">Start building your next Instagram ad campaign with our AI-powered tools and performance insights</p>
+              
+              {/* Ad Type Selection */}
+              <div className="mb-6 max-w-xs mx-auto">
+                <CustomSelect
+                  options={adTypes}
+                  value={selectedAdType}
+                  onValueChange={(value) => setSelectedAdType(value as AdType)}
+                  placeholder="Select ad type"
+                />
+              </div>
+              
               <Button 
                 size="default" 
                 className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Create Campaign
+                Create {adTypes.find(type => type.value === selectedAdType)?.label || 'Campaign'}
               </Button>
             </div>
           </CardContent>

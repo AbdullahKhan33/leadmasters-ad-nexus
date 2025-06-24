@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CustomSelect } from "@/components/ui/custom-select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -37,8 +38,8 @@ export function FacebookPostBuilder() {
   const [showResponse, setShowResponse] = useState(false);
 
   const postTypes = [
-    { id: 'post', name: 'Post', icon: FileText },
-    { id: 'reel', name: 'Reel', icon: Video }
+    { value: 'post', label: 'Post', icon: FileText },
+    { value: 'reel', label: 'Reel', icon: Video }
   ];
 
   const audiences = [
@@ -133,21 +134,12 @@ Ready to take the next step? Comment below or DM us!
                   <FileText className="w-4 h-4" />
                   <span>Content Type</span>
                 </Label>
-                <Select value={selectedPostType} onValueChange={(value) => setSelectedPostType(value as PostType)}>
-                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20">
-                    <SelectValue placeholder="Select content type" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
-                    {postTypes.map((type) => (
-                      <SelectItem key={type.id} value={type.id} className="hover:bg-purple-50/80 flex items-center">
-                        <div className="flex items-center space-x-2">
-                          <type.icon className="w-4 h-4" />
-                          <span>{type.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <CustomSelect
+                  options={postTypes}
+                  value={selectedPostType}
+                  onValueChange={(value) => setSelectedPostType(value as PostType)}
+                  placeholder="Select content type"
+                />
               </div>
 
               <div className="space-y-3">
@@ -156,10 +148,10 @@ Ready to take the next step? Comment below or DM us!
                   <span>Target Audience</span>
                 </Label>
                 <Select value={selectedAudience} onValueChange={setSelectedAudience}>
-                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20">
+                  <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all duration-200">
                     <SelectValue placeholder="Select your audience" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/10">
                     {audiences.map((audience) => (
                       <SelectItem key={audience} value={audience} className="hover:bg-purple-50/80">
                         {audience}
@@ -175,10 +167,10 @@ Ready to take the next step? Comment below or DM us!
                   <span>Page Selection</span>
                 </Label>
                 <Select value={selectedPage} onValueChange={setSelectedPage}>
-                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20">
+                  <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all duration-200">
                     <SelectValue placeholder="Choose your page" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/10">
                     {pages.map((page) => (
                       <SelectItem key={page} value={page} className="hover:bg-purple-50/80">
                         {page}
@@ -194,10 +186,10 @@ Ready to take the next step? Comment below or DM us!
                   <span>AI Model</span>
                 </Label>
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
-                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20">
+                  <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all duration-200">
                     <SelectValue placeholder="Select AI model" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/10">
                     {aiModels.map((model) => (
                       <SelectItem key={model} value={model} className="hover:bg-purple-50/80">
                         {model}
