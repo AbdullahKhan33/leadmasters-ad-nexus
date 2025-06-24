@@ -16,9 +16,13 @@ import { Workspaces } from "@/components/Workspaces";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspace-settings' | 'workspaces';
+type AllViews = AppSidebarView | 'workspace-settings';
+
 function IndexContent() {
   const { isInWorkspace, setActiveWorkspace } = useWorkspace();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'workspace-settings'>('dashboard');
+  const [currentView, setCurrentView] = useState<AllViews>('dashboard');
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -80,7 +84,7 @@ function IndexContent() {
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onBackToWorkspaces={handleBackToWorkspaces}
-            currentView={currentView}
+            currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
           <AppSidebar 
@@ -93,7 +97,7 @@ function IndexContent() {
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
-            currentView={currentView}
+            currentView={currentView as AppSidebarView}
           />
         )}
         <div className="flex-1 flex flex-col min-w-0">

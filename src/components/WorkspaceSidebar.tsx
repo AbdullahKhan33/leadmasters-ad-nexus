@@ -47,7 +47,7 @@ export function WorkspaceSidebar({
   onScheduleClick: () => void;
   onSmartAutomationsClick: () => void;
   onBackToWorkspaces: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspace-settings';
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspace-settings' | 'workspaces';
 }) {
   const { activeWorkspace } = useWorkspace();
   const { state } = useSidebar();
