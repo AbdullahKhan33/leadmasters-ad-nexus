@@ -6,10 +6,11 @@ import { AdBuilder } from "@/components/AdBuilder";
 import { PostBuilder } from "@/components/PostBuilder";
 import { SocialLogins } from "@/components/SocialLogins";
 import { Dashboard } from "@/components/Dashboard";
+import { InspirationHub } from "@/components/InspirationHub";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Index() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub'>('dashboard');
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -27,6 +28,10 @@ export default function Index() {
     setCurrentView('social-logins');
   };
 
+  const handleInspirationHubClick = () => {
+    setCurrentView('inspiration-hub');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -35,6 +40,7 @@ export default function Index() {
           onPostBuilderClick={handlePostBuilderClick}
           onAdBuilderClick={handleAdBuilderClick}
           onSocialLoginsClick={handleSocialLoginsClick}
+          onInspirationHubClick={handleInspirationHubClick}
           currentView={currentView}
         />
         <div className="flex-1 flex flex-col min-w-0">
@@ -46,6 +52,8 @@ export default function Index() {
               <SocialLogins />
             ) : currentView === 'post-builder' ? (
               <PostBuilder />
+            ) : currentView === 'inspiration-hub' ? (
+              <InspirationHub />
             ) : (
               <AdBuilder />
             )}

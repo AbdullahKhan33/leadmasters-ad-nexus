@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Sidebar,
@@ -20,6 +19,7 @@ import {
   Bot,
   Briefcase,
   LayoutDashboard,
+  Lightbulb,
 } from "lucide-react";
 
 export function AppSidebar({ 
@@ -27,13 +27,15 @@ export function AppSidebar({
   onAdBuilderClick, 
   onSocialLoginsClick,
   onDashboardClick,
+  onInspirationHubClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
   onAdBuilderClick: () => void;
   onSocialLoginsClick: () => void;
   onDashboardClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard';
+  onInspirationHubClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
@@ -107,9 +109,12 @@ export function AppSidebar({
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
+            <SidebarMenuButton 
+              onClick={onInspirationHubClick}
+              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'inspiration-hub')}`}
+            >
               <div className="flex items-center space-x-3">
-                <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
                 <span className="font-semibold">Brainstorm Ideas</span>
               </div>
             </SidebarMenuButton>
