@@ -19,7 +19,8 @@ import {
   MessageCircle,
   Share,
   MoreHorizontal,
-  Wand2
+  Wand2,
+  Edit
 } from "lucide-react";
 
 export function FacebookPostBuilder() {
@@ -103,7 +104,7 @@ Ready to take the next step? Comment below or DM us!
           </p>
         </div>
 
-        {/* Floating AI Configuration Card */}
+        {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-purple-500/10">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5" />
           <CardHeader className="relative pb-6">
@@ -228,11 +229,18 @@ Ready to take the next step? Comment below or DM us!
           </CardContent>
         </Card>
 
-        {/* Loading State or AI Response Area */}
+        {/* Generated Post Results Section */}
         {(isGenerating || showResponse) && (
-          <div className="flex justify-center">
+          <div className="space-y-6">
+            {/* Section Header */}
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated Post</h2>
+              <p className="text-gray-600">AI-powered content ready for your Facebook page</p>
+            </div>
+
+            {/* Loading State or Generated Post Card */}
             {isGenerating ? (
-              <Card className="w-full max-w-2xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
+              <Card className="max-w-2xl mx-auto bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <div className="flex items-center space-x-3 mb-4">
                     <Sparkles className="w-6 h-6 text-purple-600 animate-spin" />
@@ -246,31 +254,33 @@ Ready to take the next step? Comment below or DM us!
                 </CardContent>
               </Card>
             ) : (
-              <Card className="w-full max-w-2xl relative overflow-hidden bg-white/80 backdrop-blur-xl border border-white/30 shadow-2xl shadow-purple-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
+              <Card className="max-w-2xl mx-auto relative overflow-hidden bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl shadow-purple-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
                 <CardContent className="p-8">
                   {/* Mock Facebook Post Preview */}
                   <div className="relative p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-200/50 shadow-lg">
+                    {/* Post Header */}
                     <div className="flex items-center space-x-4 mb-6">
                       <Avatar className="w-12 h-12 shadow-md">
-                        <AvatarImage src="" />
+                        <AvatarImage src="/lovable-uploads/d8e25e5e-65ee-46fe-89aa-a04c326b6362.png" />
                         <AvatarFallback className="bg-gradient-to-br from-purple-100 to-pink-100 text-purple-600 font-semibold">
                           {selectedPage?.split(' ').map(word => word[0]).join('') || 'LM'}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <p className="font-bold text-gray-900 text-base">{selectedPage}</p>
+                      <div className="flex-1">
+                        <p className="font-bold text-gray-900 text-base">{selectedPage || 'Your Page'}</p>
                         <p className="text-sm text-gray-500 flex items-center space-x-2">
                           <span>Just now</span>
                           <span>•</span>
                           <span>🌍</span>
                         </p>
                       </div>
-                      <MoreHorizontal className="w-5 h-5 text-gray-400 ml-auto" />
+                      <MoreHorizontal className="w-5 h-5 text-gray-400" />
                     </div>
                     
+                    {/* Post Content */}
                     <div className="space-y-6">
-                      <p className="text-gray-800 whitespace-pre-line leading-relaxed">
+                      <p className="text-gray-800 whitespace-pre-line leading-relaxed text-base">
                         {generatedPost}
                       </p>
                       
@@ -315,18 +325,22 @@ Ready to take the next step? Comment below or DM us!
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="grid sm:grid-cols-3 gap-4 mt-8">
-                    <Button className="group relative h-12 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
+                    <Button className="group relative h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105">
                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                       <span className="font-semibold">Post Now</span>
                     </Button>
-                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105">
+                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-purple-700">
                       <Save className="w-4 h-4 mr-2" />
                       <span className="font-semibold">Save to Draft</span>
                     </Button>
-                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105">
+                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-purple-700">
                       <Calendar className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Schedule for Later</span>
+                      <span className="font-semibold">Schedule</span>
+                    </Button>
+                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-purple-700">
+                      <Edit className="w-4 h-4 mr-2" />
+                      <span className="font-semibold">Edit Post</span>
                     </Button>
                   </div>
                 </CardContent>
