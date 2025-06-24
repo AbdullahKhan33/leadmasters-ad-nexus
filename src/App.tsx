@@ -7,6 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { MyInspirations } from "./components/MyInspirations";
+import { PostBuilder } from "./components/PostBuilder";
+import { WorkspaceProvider } from "./contexts/WorkspaceContext";
+import { SidebarProvider } from "./components/ui/sidebar";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +22,17 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/my-inspirations" element={<MyInspirations />} />
+          <Route path="/post-builder" element={
+            <WorkspaceProvider>
+              <SidebarProvider>
+                <div className="min-h-screen flex w-full">
+                  <div className="flex-1 flex flex-col min-w-0">
+                    <PostBuilder />
+                  </div>
+                </div>
+              </SidebarProvider>
+            </WorkspaceProvider>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
