@@ -25,7 +25,7 @@ export default function Index() {
       <div className="flex-1 flex flex-col">
         <TopBar />
         {currentView === 'post-builder' ? (
-          <PostBuilder onBack={handleBackToDashboard} />
+          <PostBuilder />
         ) : (
           <WhatsAppAdBuilder />
         )}

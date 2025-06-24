@@ -16,7 +16,6 @@ import { WhatsAppOnboarding } from "./WhatsAppOnboarding";
 import { WhatsAppCampaignBuilder } from "./WhatsAppCampaignBuilder";
 import { CampaignManager } from "./campaign/CampaignManager";
 import { WhatsAppAnalytics } from "./WhatsAppAnalytics";
-import { PostBuilder } from "./PostBuilder";
 import { useState } from "react";
 
 interface OptionCardProps {
@@ -65,7 +64,7 @@ function OptionCard({ title, description, icon: Icon, accent = false, onClick, c
 }
 
 export function WhatsAppAdBuilder() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager' | 'analytics' | 'post-builder'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager' | 'analytics'>('dashboard');
 
   const mainOptions = [
     {
@@ -83,14 +82,6 @@ export function WhatsAppAdBuilder() {
       accent: false,
       clickable: true,
       onClick: () => setCurrentView('campaign')
-    },
-    {
-      title: "Post Builder",
-      description: "Create engaging social media posts for all platforms using AI-powered content generation.",
-      icon: FileText,
-      accent: true,
-      clickable: true,
-      onClick: () => setCurrentView('post-builder')
     },
     {
       title: "Templates & Message Library",
@@ -145,10 +136,6 @@ export function WhatsAppAdBuilder() {
 
   if (currentView === 'analytics') {
     return <WhatsAppAnalytics onBack={() => setCurrentView('dashboard')} />;
-  }
-
-  if (currentView === 'post-builder') {
-    return <PostBuilder onBack={() => setCurrentView('dashboard')} />;
   }
 
   return (

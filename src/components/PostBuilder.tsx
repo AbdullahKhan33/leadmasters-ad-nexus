@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { PostPlatformMenu } from "@/components/PostPlatformMenu";
 import {
   Upload,
   Image as ImageIcon,
@@ -14,7 +14,6 @@ import {
   Zap,
   Calendar,
   Send,
-  ArrowLeft,
   Sparkles,
   Target,
   MessageCircle,
@@ -23,14 +22,10 @@ import {
   MoreHorizontal
 } from "lucide-react";
 
-type Platform = 'facebook' | 'instagram' | 'threads' | 'twitter' | 'linkedin' | 'all';
+type Platform = 'all' | 'facebook' | 'instagram' | 'threads' | 'twitter' | 'linkedin';
 type PostType = 'post' | 'reel' | 'story';
 
-interface PostBuilderProps {
-  onBack?: () => void;
-}
-
-export function PostBuilder({ onBack }: PostBuilderProps) {
+export function PostBuilder() {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('all');
   const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
   const [postContent, setPostContent] = useState('');
@@ -39,11 +34,11 @@ export function PostBuilder({ onBack }: PostBuilderProps) {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
 
   const platforms = [
-    { id: 'all', name: 'All Platform Post', color: 'from-purple-100 to-pink-100', iconColor: 'text-purple-600' },
+    { id: 'all', name: 'All Platforms', color: 'from-purple-100 to-pink-100', iconColor: 'text-purple-600' },
     { id: 'facebook', name: 'Facebook', color: 'from-blue-100 to-blue-200', iconColor: 'text-blue-600' },
     { id: 'instagram', name: 'Instagram', color: 'from-pink-100 to-orange-100', iconColor: 'text-pink-600' },
     { id: 'threads', name: 'Threads', color: 'from-gray-100 to-gray-200', iconColor: 'text-gray-700' },
-    { id: 'twitter', name: 'Twitter (X)', color: 'from-blue-100 to-cyan-100', iconColor: 'text-blue-600' },
+    { id: 'twitter', name: 'Twitter', color: 'from-blue-100 to-cyan-100', iconColor: 'text-blue-600' },
     { id: 'linkedin', name: 'LinkedIn', color: 'from-blue-100 to-indigo-100', iconColor: 'text-blue-700' }
   ];
 
@@ -90,20 +85,16 @@ export function PostBuilder({ onBack }: PostBuilderProps) {
   };
 
   return (
-    <div className="flex-1 p-6 bg-gray-50">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header with Back Button */}
-        <div className="flex items-center space-x-4">
-          {onBack && (
-            <Button
-              variant="ghost"
-              onClick={onBack}
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-          )}
+    <div className="flex-1 flex flex-col">
+      {/* Platform Navigation */}
+      <PostPlatformMenu 
+        activePlatform={selectedPlatform}
+        onPlatformChange={(platformId) => setSelectedPlatform(platformId as Platform)}
+      />
+
+      <div className="flex-1 p-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Header */}
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
               Create Posts for {currentPlatform?.name}
@@ -112,270 +103,269 @@ export function PostBuilder({ onBack }: PostBuilderProps) {
               Use AI to create engaging posts, reels, or image content for your audience.
             </p>
           </div>
-        </div>
 
-        {/* Platform Tabs */}
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {platforms.map((platform) => (
-                <button
-                  key={platform.id}
-                  onClick={() => setSelectedPlatform(platform.id as Platform)}
-                  className={`
-                    p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
-                    ${selectedPlatform === platform.id
-                      ? 'border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
-                      : 'border-gray-200 bg-white hover:border-gray-300'
-                    }
-                  `}
-                >
-                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${platform.color} flex items-center justify-center mx-auto mb-3`}>
-                    <MessageCircle className={`w-5 h-5 ${platform.iconColor}`} />
+          {/* Platform Tabs */}
+          <Card className="border border-gray-200 shadow-sm bg-white">
+            <CardContent className="p-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {platforms.map((platform) => (
+                  <button
+                    key={platform.id}
+                    onClick={() => setSelectedPlatform(platform.id as Platform)}
+                    className={`
+                      p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
+                      ${selectedPlatform === platform.id
+                        ? 'border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                      }
+                    `}
+                  >
+                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${platform.color} flex items-center justify-center mx-auto mb-3`}>
+                      <MessageCircle className={`w-5 h-5 ${platform.iconColor}`} />
+                    </div>
+                    <p className={`text-sm font-medium ${selectedPlatform === platform.id ? 'text-purple-700' : 'text-gray-700'}`}>
+                      {platform.name}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Left Column - Post Creation */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Post Type Selector */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Post Type</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-3 gap-4">
+                    {postTypes.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => setSelectedPostType(type.id as PostType)}
+                        className={`
+                          p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
+                          ${selectedPostType === type.id
+                            ? 'border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
+                            : 'border-gray-200 bg-white hover:border-gray-300'
+                          }
+                        `}
+                      >
+                        <type.icon className={`w-6 h-6 mx-auto mb-2 ${selectedPostType === type.id ? 'text-purple-600' : 'text-gray-500'}`} />
+                        <p className={`text-sm font-medium ${selectedPostType === type.id ? 'text-purple-700' : 'text-gray-700'}`}>
+                          {type.name}
+                        </p>
+                      </button>
+                    ))}
                   </div>
-                  <p className={`text-sm font-medium ${selectedPlatform === platform.id ? 'text-purple-700' : 'text-gray-700'}`}>
-                    {platform.name}
-                  </p>
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Post Creation */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Post Type Selector */}
-            <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900">Post Type</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-3 gap-4">
-                  {postTypes.map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => setSelectedPostType(type.id as PostType)}
-                      className={`
-                        p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md
-                        ${selectedPostType === type.id
-                          ? 'border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg'
-                          : 'border-gray-200 bg-white hover:border-gray-300'
-                        }
-                      `}
-                    >
-                      <type.icon className={`w-6 h-6 mx-auto mb-2 ${selectedPostType === type.id ? 'text-purple-600' : 'text-gray-500'}`} />
-                      <p className={`text-sm font-medium ${selectedPostType === type.id ? 'text-purple-700' : 'text-gray-700'}`}>
-                        {type.name}
+              {/* Upload Media */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Upload Media</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200">
+                    <input
+                      type="file"
+                      accept="image/*,video/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="media-upload"
+                    />
+                    <label htmlFor="media-upload" className="cursor-pointer">
+                      <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-lg font-medium text-gray-700 mb-2">
+                        {uploadedMedia ? uploadedMedia.name : 'Drop your files here, or browse'}
                       </p>
-                    </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                      <p className="text-sm text-gray-500">
+                        Supports: JPG, PNG, MP4, MOV (max 50MB)
+                      </p>
+                    </label>
+                  </div>
+                </CardContent>
+              </Card>
 
-            {/* Upload Media */}
-            <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900">Upload Media</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200">
-                  <input
-                    type="file"
-                    accept="image/*,video/*"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    id="media-upload"
-                  />
-                  <label htmlFor="media-upload" className="cursor-pointer">
-                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-lg font-medium text-gray-700 mb-2">
-                      {uploadedMedia ? uploadedMedia.name : 'Drop your files here, or browse'}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Supports: JPG, PNG, MP4, MOV (max 50MB)
-                    </p>
-                  </label>
-                </div>
-              </CardContent>
-            </Card>
+              {/* Post Content */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Post Content</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="tone" className="text-sm font-medium text-gray-700">Tone</Label>
+                        <Select value={selectedTone} onValueChange={setSelectedTone}>
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select tone" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {tones.map((tone) => (
+                              <SelectItem key={tone} value={tone.toLowerCase()}>
+                                {tone}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="audience" className="text-sm font-medium text-gray-700">Target Audience</Label>
+                        <Select value={selectedAudience} onValueChange={setSelectedAudience}>
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Select audience" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {audiences.map((audience) => (
+                              <SelectItem key={audience} value={audience.toLowerCase()}>
+                                {audience}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
 
-            {/* Post Content */}
-            <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900">Post Content</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="tone" className="text-sm font-medium text-gray-700">Tone</Label>
-                      <Select value={selectedTone} onValueChange={setSelectedTone}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select tone" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {tones.map((tone) => (
-                            <SelectItem key={tone} value={tone.toLowerCase()}>
-                              {tone}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    <div className="space-y-4">
+                      <Label className="text-sm font-medium text-gray-700">AI Suggestions</Label>
+                      <div className="grid grid-cols-1 gap-2">
+                        {aiSuggestions.slice(0, 4).map((suggestion, index) => (
+                          <Button
+                            key={index}
+                            variant="outline"
+                            size="sm"
+                            className="justify-start text-left h-auto py-2 px-3 text-xs hover:bg-purple-50 hover:border-purple-300"
+                            onClick={() => {
+                              setPostContent(`Generated content based on: ${suggestion}`);
+                            }}
+                          >
+                            <Sparkles className="w-3 h-3 mr-2 text-purple-500" />
+                            {suggestion}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="content" className="text-sm font-medium text-gray-700">Post Message</Label>
+                    <Textarea
+                      id="content"
+                      placeholder="Write your post content here..."
+                      value={postContent}
+                      onChange={(e) => setPostContent(e.target.value)}
+                      className="mt-1 min-h-[120px] resize-none"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Right Column - Preview and Actions */}
+            <div className="space-y-6">
+              {/* Post Preview */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Post Preview</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="border rounded-lg p-4 bg-gray-50">
+                    {/* Mock Social Media Post */}
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-semibold text-purple-600">L</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm">LeadMasters AI</p>
+                        <p className="text-xs text-gray-500">Just now</p>
+                      </div>
                     </div>
                     
-                    <div>
-                      <Label htmlFor="audience" className="text-sm font-medium text-gray-700">Target Audience</Label>
-                      <Select value={selectedAudience} onValueChange={setSelectedAudience}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select audience" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {audiences.map((audience) => (
-                            <SelectItem key={audience} value={audience.toLowerCase()}>
-                              {audience}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    {uploadedMedia && (
+                      <div className="w-full h-32 bg-gray-200 rounded-lg mb-3 flex items-center justify-center">
+                        <ImageIcon className="w-8 h-8 text-gray-400" />
+                      </div>
+                    )}
+                    
+                    <p className="text-sm text-gray-800 mb-4">
+                      {postContent || "Your post content will appear here..."}
+                    </p>
+                    
+                    {/* Mock engagement buttons */}
+                    <div className="flex items-center justify-between border-t pt-3">
+                      <div className="flex space-x-6">
+                        <button className="flex items-center space-x-1 text-gray-500 hover:text-red-500">
+                          <Heart className="w-4 h-4" />
+                          <span className="text-xs">Like</span>
+                        </button>
+                        <button className="flex items-center space-x-1 text-gray-500 hover:text-blue-500">
+                          <MessageCircle className="w-4 h-4" />
+                          <span className="text-xs">Comment</span>
+                        </button>
+                        <button className="flex items-center space-x-1 text-gray-500 hover:text-green-500">
+                          <Share className="w-4 h-4" />
+                          <span className="text-xs">Share</span>
+                        </button>
+                      </div>
+                      <MoreHorizontal className="w-4 h-4 text-gray-400" />
                     </div>
                   </div>
+                </CardContent>
+              </Card>
 
-                  <div className="space-y-4">
-                    <Label className="text-sm font-medium text-gray-700">AI Suggestions</Label>
-                    <div className="grid grid-cols-1 gap-2">
-                      {aiSuggestions.slice(0, 4).map((suggestion, index) => (
-                        <Button
-                          key={index}
-                          variant="outline"
-                          size="sm"
-                          className="justify-start text-left h-auto py-2 px-3 text-xs hover:bg-purple-50 hover:border-purple-300"
-                          onClick={() => {
-                            // AI suggestion logic would go here
-                            setPostContent(`Generated content based on: ${suggestion}`);
-                          }}
-                        >
-                          <Sparkles className="w-3 h-3 mr-2 text-purple-500" />
-                          {suggestion}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="content" className="text-sm font-medium text-gray-700">Post Message</Label>
-                  <Textarea
-                    id="content"
-                    placeholder="Write your post content here..."
-                    value={postContent}
-                    onChange={(e) => setPostContent(e.target.value)}
-                    className="mt-1 min-h-[120px] resize-none"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Right Column - Preview and Actions */}
-          <div className="space-y-6">
-            {/* Post Preview */}
-            <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900">Post Preview</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="border rounded-lg p-4 bg-gray-50">
-                  {/* Mock Social Media Post */}
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-semibold text-purple-600">L</span>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm">LeadMasters AI</p>
-                      <p className="text-xs text-gray-500">Just now</p>
-                    </div>
-                  </div>
-                  
-                  {uploadedMedia && (
-                    <div className="w-full h-32 bg-gray-200 rounded-lg mb-3 flex items-center justify-center">
-                      <ImageIcon className="w-8 h-8 text-gray-400" />
-                    </div>
-                  )}
-                  
-                  <p className="text-sm text-gray-800 mb-4">
-                    {postContent || "Your post content will appear here..."}
-                  </p>
-                  
-                  {/* Mock engagement buttons */}
-                  <div className="flex items-center justify-between border-t pt-3">
-                    <div className="flex space-x-6">
-                      <button className="flex items-center space-x-1 text-gray-500 hover:text-red-500">
-                        <Heart className="w-4 h-4" />
-                        <span className="text-xs">Like</span>
-                      </button>
-                      <button className="flex items-center space-x-1 text-gray-500 hover:text-blue-500">
-                        <MessageCircle className="w-4 h-4" />
-                        <span className="text-xs">Comment</span>
-                      </button>
-                      <button className="flex items-center space-x-1 text-gray-500 hover:text-green-500">
-                        <Share className="w-4 h-4" />
-                        <span className="text-xs">Share</span>
-                      </button>
-                    </div>
-                    <MoreHorizontal className="w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Action Buttons */}
-            <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardContent className="p-6 space-y-4">
-                <Button 
-                  className="w-full bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
-                  size="lg"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  Publish Now
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
-                  size="lg"
-                >
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Schedule for Later
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* AI Prompts Section */}
-            <Card className="border border-gray-200 shadow-sm bg-white">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
-                  <Target className="w-5 h-5 mr-2 text-purple-600" />
-                  Quick AI Prompts
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {aiSuggestions.slice(2, 4).map((suggestion, index) => (
-                  <Button
-                    key={index}
-                    variant="ghost"
-                    className="w-full justify-start text-left h-auto py-3 px-3 hover:bg-purple-50 transition-colors duration-200"
-                    onClick={() => {
-                      setPostContent(`AI-generated content: ${suggestion}`);
-                    }}
+              {/* Action Buttons */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardContent className="p-6 space-y-4">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+                    size="lg"
                   >
-                    <Zap className="w-4 h-4 mr-3 text-purple-500" />
-                    <span className="text-sm">{suggestion}</span>
+                    <Send className="w-4 h-4 mr-2" />
+                    Publish Now
                   </Button>
-                ))}
-              </CardContent>
-            </Card>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
+                    size="lg"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Schedule for Later
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* AI Prompts Section */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Target className="w-5 h-5 mr-2 text-purple-600" />
+                    Quick AI Prompts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {aiSuggestions.slice(2, 4).map((suggestion, index) => (
+                    <Button
+                      key={index}
+                      variant="ghost"
+                      className="w-full justify-start text-left h-auto py-3 px-3 hover:bg-purple-50 transition-colors duration-200"
+                      onClick={() => {
+                        setPostContent(`AI-generated content: ${suggestion}`);
+                      }}
+                    >
+                      <Zap className="w-4 h-4 mr-3 text-purple-500" />
+                      <span className="text-sm">{suggestion}</span>
+                    </Button>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
