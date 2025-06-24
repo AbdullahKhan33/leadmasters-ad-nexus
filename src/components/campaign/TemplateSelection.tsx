@@ -1,7 +1,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { FileText, Plus, Edit, Copy, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 interface Template {
   id: string;
@@ -21,6 +23,37 @@ interface TemplateSelectionProps {
   onNext: () => void;
 }
 
+// Sample data for demonstration
+const sampleTemplates: Template[] = [
+  {
+    id: "TMP-1001",
+    name: "Order Confirmation",
+    type: "Text",
+    category: "Transactional",
+    language: "English",
+    status: "Approved",
+    createdAt: "2024-07-01 10:15 AM"
+  },
+  {
+    id: "TMP-1002",
+    name: "Promo Offer 20%",
+    type: "Image",
+    category: "Marketing",
+    language: "English",
+    status: "Approved",
+    createdAt: "2024-07-03 11:40 AM"
+  },
+  {
+    id: "TMP-1003",
+    name: "Appointment Reminder",
+    type: "Text",
+    category: "Reminder",
+    language: "Hindi",
+    status: "Pending",
+    createdAt: "2024-07-05 2:00 PM"
+  }
+];
+
 export function TemplateSelection({
   templates,
   selectedTemplate,
@@ -28,7 +61,41 @@ export function TemplateSelection({
   onCreateNewTemplate,
   onNext
 }: TemplateSelectionProps) {
-  if (templates.length === 0) {
+  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  
+  // Use sample data if no templates provided
+  const displayTemplates = templates.length > 0 ? templates : sampleTemplates;
+
+  const getStatusBadge = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'approved':
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 border-green-200">
+            {status}
+          </Badge>
+        );
+      case 'pending':
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 border-yellow-200">
+            {status}
+          </Badge>
+        );
+      case 'rejected':
+        return (
+          <Badge className="bg-red-100 text-red-800 hover:bg-red-100 border-red-200">
+            {status}
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="outline">
+            {status}
+          </Badge>
+        );
+    }
+  };
+
+  if (displayTemplates.length === 0) {
     return (
       <div className="max-w-4xl mx-auto">
         <Card className="border border-gray-200 shadow-sm bg-white">
@@ -85,42 +152,84 @@ export function TemplateSelection({
                 </tr>
               </thead>
               <tbody>
-                {templates.map((template) => (
+                {displayTemplates.map((template) => (
                   <tr 
                     key={template.id} 
-                    className={`border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer ${
-                      selectedTemplate?.id === template.id ? 'bg-purple-50' : ''
+                    className={`border-b border-gray-100 hover:bg-gray-50 transition-all duration-200 cursor-pointer group ${
+                      selectedTemplate?.id === template.id ? 'bg-purple-50 hover:bg-purple-50' : ''
                     }`}
                     onClick={() => onTemplateSelect(template)}
+                    onMouseEnter={() => setHoveredRow(template.id)}
+                    onMouseLeave={() => setHoveredRow(null)}
                   >
-                    <td className="p-4 text-sm text-gray-900">{template.id}</td>
+                    <td className="p-4 text-sm text-gray-900 font-mono">{template.id}</td>
                     <td className="p-4 text-sm text-gray-900 font-medium">{template.name}</td>
                     <td className="p-4 text-sm text-gray-600">{template.type}</td>
                     <td className="p-4 text-sm text-gray-600">{template.category}</td>
                     <td className="p-4 text-sm text-gray-600">{template.language}</td>
                     <td className="p-4">
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                        template.status === 'Approved' 
-                          ? 'bg-green-100 text-green-800' 
-                          : template.status === 'Pending'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {template.status}
-                      </span>
+                      {getStatusBadge(template.status)}
                     </td>
                     <td className="p-4 text-sm text-gray-600">{template.createdAt}</td>
                     <td className="p-4">
-                      <Button
-                        size="sm"
-                        variant={selectedTemplate?.id === template.id ? "default" : "outline"}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onTemplateSelect(template);
-                        }}
-                      >
-                        {selectedTemplate?.id === template.id ? 'Selected' : 'Select'}
-                      </Button>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          size="sm"
+                          variant={selectedTemplate?.id === template.id ? "default" : "outline"}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onTemplateSelect(template);
+                          }}
+                          className={selectedTemplate?.id === template.id ? 
+                            "bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white" : 
+                            "border-gray-200 hover:bg-gray-50"
+                          }
+                        >
+                          {selectedTemplate?.id === template.id ? 'Selected' : 'Select'}
+                        </Button>
+                        
+                        {/* Quick Action Icons - Visible on hover */}
+                        <div className={`flex items-center space-x-1 transition-opacity duration-200 ${
+                          hoveredRow === template.id ? 'opacity-100' : 'opacity-0'
+                        }`}>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle edit action
+                              console.log('Edit template:', template.id);
+                            }}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-8 w-8 p-0 text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle duplicate action
+                              console.log('Duplicate template:', template.id);
+                            }}
+                          >
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-8 w-8 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Handle delete action
+                              console.log('Delete template:', template.id);
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 ))}
