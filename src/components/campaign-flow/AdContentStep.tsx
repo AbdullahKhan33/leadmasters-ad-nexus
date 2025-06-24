@@ -25,6 +25,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
     adFormat: data.adFormat || "single",
     callToAction: data.callToAction || ""
   });
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -36,6 +37,13 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
     const file = event.target.files?.[0];
     if (file) {
       onUpdate({ uploadedImage: file });
+      
+      // Create preview URL for the uploaded image
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -171,6 +179,11 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
                   </p>
                 </label>
               </div>
+              {data.uploadedImage && (
+                <div className="mt-2 text-sm text-green-600">
+                  ✓ Image uploaded: {data.uploadedImage.name}
+                </div>
+              )}
             </div>
 
             {/* Call to Action */}
@@ -260,12 +273,20 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
               )}
             </div>
             
-            {/* Image Placeholder */}
+            {/* Image Preview */}
             <div className="bg-gray-200 h-48 flex items-center justify-center">
-              <div className="text-gray-500 text-center">
-                <Upload className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-sm">Image Preview</p>
-              </div>
+              {imagePreview ? (
+                <img 
+                  src={imagePreview} 
+                  alt="Ad preview" 
+                  className="max-w-full max-h-full object-contain"
+                />
+              ) : (
+                <div className="text-gray-500 text-center">
+                  <Upload className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-sm">Image Preview</p>
+                </div>
+              )}
             </div>
             
             {/* Link Preview */}
