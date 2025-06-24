@@ -20,10 +20,15 @@ import {
   Users
 } from "lucide-react";
 
+interface AppSidebarProps {
+  onPostBuilderClick?: () => void;
+  currentView?: string;
+}
+
 const menuItems = [
   { title: "Portfolio", icon: FolderOpen, url: "#" },
   { title: "Ad Builder", icon: Megaphone, url: "#", active: true },
-  { title: "Post Builder", icon: FileText, url: "#" },
+  { title: "Post Builder", icon: FileText, url: "#", clickable: true },
   { title: "Brainstorm Idea", icon: Lightbulb, url: "#" },
   { title: "Social Logins", icon: LogIn, url: "#" },
   { title: "CRM Dashboard", icon: Users, url: "#" },
@@ -33,8 +38,14 @@ const menuItems = [
   { title: "Workspace", icon: FolderOpen, url: "#" },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ onPostBuilderClick, currentView }: AppSidebarProps) {
   console.log("AppSidebar is rendering");
+  
+  const handleItemClick = (item: typeof menuItems[0]) => {
+    if (item.title === "Post Builder" && onPostBuilderClick) {
+      onPostBuilderClick();
+    }
+  };
   
   return (
     <div className="w-64 h-full bg-white border-r border-gray-200 shadow-sm">
@@ -54,22 +65,25 @@ export function AppSidebar() {
       {/* Navigation Menu */}
       <div className="px-3 py-6">
         <nav className="space-y-1">
-          {menuItems.map((item) => (
-            <a
-              key={item.title}
-              href={item.url}
-              className={`
-                flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group
-                ${item.active 
-                  ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white shadow-lg' 
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }
-              `}
-            >
-              <item.icon className={`w-5 h-5 ${item.active ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'}`} />
-              <span className="text-sm font-medium">{item.title}</span>
-            </a>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = item.active || (item.title === "Post Builder" && currentView === "post-builder");
+            return (
+              <button
+                key={item.title}
+                onClick={() => handleItemClick(item)}
+                className={`
+                  flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group w-full text-left
+                  ${isActive 
+                    ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white shadow-lg' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }
+                `}
+              >
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                <span className="text-sm font-medium">{item.title}</span>
+              </button>
+            );
+          })}
         </nav>
       </div>
     </div>

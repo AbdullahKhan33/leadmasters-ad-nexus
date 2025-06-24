@@ -1,30 +1,35 @@
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
-import { InstagramAdBuilder } from "@/components/InstagramAdBuilder";
+import { WhatsAppAdBuilder } from "@/components/WhatsAppAdBuilder";
+import { PostBuilder } from "@/components/PostBuilder";
 
-const Index = () => {
-  console.log("Index page is rendering");
-  
+export default function Index() {
+  const [currentView, setCurrentView] = useState<'dashboard' | 'post-builder'>('dashboard');
+
+  const handlePostBuilderClick = () => {
+    setCurrentView('post-builder');
+  };
+
+  const handleBackToDashboard = () => {
+    setCurrentView('dashboard');
+  };
+
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen w-full flex bg-gray-50">
-        {/* Fixed width sidebar container */}
-        <div className="w-64 h-screen fixed left-0 top-0 z-40">
-          <AppSidebar />
-        </div>
-        
-        {/* Main content area with left margin to account for fixed sidebar */}
-        <div className="flex-1 ml-64 flex flex-col min-h-screen">
-          <TopBar />
-          <main className="flex-1 bg-gray-50">
-            <InstagramAdBuilder />
-          </main>
-        </div>
+    <div className="min-h-screen flex w-full">
+      <AppSidebar 
+        onPostBuilderClick={handlePostBuilderClick}
+        currentView={currentView}
+      />
+      <div className="flex-1 flex flex-col">
+        <TopBar />
+        {currentView === 'post-builder' ? (
+          <PostBuilder onBack={handleBackToDashboard} />
+        ) : (
+          <WhatsAppAdBuilder />
+        )}
       </div>
-    </SidebarProvider>
+    </div>
   );
-};
-
-export default Index;
+}

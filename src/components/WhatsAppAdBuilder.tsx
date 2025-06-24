@@ -85,6 +85,14 @@ export function WhatsAppAdBuilder() {
       onClick: () => setCurrentView('campaign')
     },
     {
+      title: "Post Builder",
+      description: "Create engaging social media posts for all platforms using AI-powered content generation.",
+      icon: FileText,
+      accent: true,
+      clickable: true,
+      onClick: () => setCurrentView('post-builder')
+    },
+    {
       title: "Templates & Message Library",
       description: "Manage your approved templates and preview message formats for optimal engagement.",
       icon: FileText,
