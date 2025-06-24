@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,11 +18,16 @@ import {
   Plus, 
   Upload,
   Trash2,
-  UserPlus
+  UserPlus,
+  ArrowLeft
 } from "lucide-react";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 
-export function WorkspaceSettings() {
+interface WorkspaceSettingsProps {
+  onBackClick?: () => void;
+}
+
+export function WorkspaceSettings({ onBackClick }: WorkspaceSettingsProps) {
   const { activeWorkspace } = useWorkspace();
   const [workspaceName, setWorkspaceName] = useState(activeWorkspace?.name || "");
   const [description, setDescription] = useState("");
@@ -75,11 +79,23 @@ export function WorkspaceSettings() {
   return (
     <div className="flex-1 p-6 bg-gray-50">
       <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
-            Workspace Settings
-          </h1>
-          <p className="text-gray-600">Manage your workspace configuration and team settings</p>
+        <div className="flex items-center space-x-4">
+          {onBackClick && (
+            <Button
+              variant="outline"
+              onClick={onBackClick}
+              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 border-gray-300 hover:bg-gray-100"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Workspaces</span>
+            </Button>
+          )}
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
+              Workspace Settings
+            </h1>
+            <p className="text-gray-600">Manage your workspace configuration and team settings</p>
+          </div>
         </div>
 
         {/* General Settings */}

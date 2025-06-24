@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -80,6 +79,11 @@ function IndexContent() {
     setCurrentView('workspace-settings');
   };
 
+  const handleBackToWorkspaces = () => {
+    setCurrentView('workspaces');
+    setSelectedWorkspaceForSettings(null);
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -117,7 +121,7 @@ function IndexContent() {
             {currentView === 'workspaces' ? (
               <Workspaces onWorkspaceSettingsClick={handleWorkspaceSettingsClick} />
             ) : currentView === 'workspace-settings' ? (
-              <WorkspaceSettings />
+              <WorkspaceSettings onBackClick={handleBackToWorkspaces} />
             ) : currentView === 'user-settings' ? (
               <UserSettings />
             ) : currentView === 'dashboard' ? (
