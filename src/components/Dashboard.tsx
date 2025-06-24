@@ -212,6 +212,31 @@ export function Dashboard() {
           </div>
         </div>
 
+        {/* CRM Access Card */}
+        <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-gradient-to-r from-green-50 to-blue-50 relative overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-gray-200">
+                  <Users className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg font-semibold text-gray-900 mb-1">WhatsApp CRM & Lead Management</CardTitle>
+                  <p className="text-gray-600 text-sm">
+                    Manage your WhatsApp leads, automate follow-ups, and track your sales pipeline.
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-center md:justify-end">
+                <Button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 group">
+                  Open CRM
+                  <MessageCircle className="w-4 h-4 ml-2 group-hover:scale-110 transition-transform" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Premium Upgrade Teaser */}
         <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-gray-50/50 relative overflow-hidden">
           <CardContent className="p-6">

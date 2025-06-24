@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { MyInspirations } from "./components/MyInspirations";
 import { PostBuilder } from "./components/PostBuilder";
+import { CRM } from "./components/CRM";
 import { WorkspaceProvider } from "./contexts/WorkspaceContext";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
@@ -117,6 +118,7 @@ const App = () => (
               <PostBuilderPage />
             </WorkspaceProvider>
           } />
+          <Route path="/crm" element={<CRM />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
