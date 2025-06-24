@@ -34,85 +34,114 @@ export function Dashboard() {
           </p>
         </div>
 
-        {/* WhatsApp Business Control Center Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Card 1 - New WhatsApp Leads */}
-          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
+        {/* WhatsApp Performance Section */}
+        <div className="space-y-4">
+          {/* Section Title */}
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="w-3 h-3 bg-white rounded-full"></div>
+            </div>
+            <h2 className="text-xl font-semibold text-gray-800">Your WhatsApp Performance</h2>
+          </div>
+
+          {/* WhatsApp Business Control Center Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1 - New WhatsApp Leads */}
+            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    </div>
+                    <Badge className="bg-green-50 text-green-600 border-0 text-xs font-medium">This Week</Badge>
                   </div>
                 </div>
-                <Badge className="bg-green-50 text-green-600 border-0 text-xs font-medium">This Week</Badge>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-gray-900">8</div>
-                <div className="text-sm font-medium text-gray-700">New leads this week — Start the conversation.</div>
-              </div>
-              <div className="mt-4 w-full bg-green-50 rounded-full h-1">
-                <div className="bg-green-400 h-1 rounded-full w-3/4"></div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Card 2 - Chats Happening Right Now */}
-          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center">
-                  <MessageCircle className="w-6 h-6 text-blue-500" />
+                <div className="space-y-2">
+                  <div className="text-3xl font-bold text-gray-900">8</div>
+                  <div className="text-sm font-medium text-gray-700">New leads this week — Start the conversation.</div>
                 </div>
-                <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-gray-900">3</div>
-                <div className="text-sm font-medium text-gray-700">Stay responsive to convert leads.</div>
-              </div>
-              <div className="mt-4 w-full bg-blue-50 rounded-full h-1">
-                <div className="bg-blue-400 h-1 rounded-full w-1/2"></div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Card 3 - People Awaiting Your Reply */}
-          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-orange-500" />
+                <div className="mt-4 w-full bg-green-50 rounded-full h-1">
+                  <div className="bg-green-500 h-1 rounded-full w-3/4"></div>
                 </div>
-                <Badge className="bg-orange-50 text-orange-600 border-0 text-xs font-medium">Today</Badge>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-gray-900">2</div>
-                <div className="text-sm font-medium text-gray-700">2 people waiting for your reply — Don't let leads go cold.</div>
-              </div>
-              <div className="mt-4 w-full bg-orange-50 rounded-full h-1">
-                <div className="bg-orange-400 h-1 rounded-full w-full"></div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* Card 4 - Total WhatsApp Messages Sent */}
-          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center">
-                  <Mail className="w-6 h-6 text-gray-500" />
+            {/* Card 2 - Chats Happening Right Now */}
+            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                    <MessageCircle className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center animate-pulse">
+                      <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    </div>
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  </div>
                 </div>
-                <Badge className="bg-gray-50 text-gray-600 border-0 text-xs font-medium">This Month</Badge>
-              </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold text-gray-900">84</div>
-                <div className="text-sm font-medium text-gray-700">84 messages sent this month — Keep engaging your customers.</div>
-              </div>
-              <div className="mt-4 w-full bg-gray-50 rounded-full h-1">
-                <div className="bg-gray-400 h-1 rounded-full w-4/5"></div>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="space-y-2">
+                  <div className="text-3xl font-bold text-gray-900">3</div>
+                  <div className="text-sm font-medium text-gray-700">Stay responsive to convert leads.</div>
+                </div>
+                <div className="mt-4 w-full bg-green-50 rounded-full h-1">
+                  <div className="bg-green-500 h-1 rounded-full w-1/2"></div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Card 3 - People Awaiting Your Reply */}
+            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    </div>
+                    <Badge className="bg-orange-50 text-orange-600 border-0 text-xs font-medium">Today</Badge>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-3xl font-bold text-gray-900">2</div>
+                  <div className="text-sm font-medium text-gray-700">2 people waiting for your reply — Don't let leads go cold.</div>
+                </div>
+                <div className="mt-4 w-full bg-green-50 rounded-full h-1">
+                  <div className="bg-green-500 h-1 rounded-full w-full"></div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Card 4 - Total WhatsApp Messages Sent */}
+            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                    </div>
+                    <Badge className="bg-green-50 text-green-600 border-0 text-xs font-medium">This Month</Badge>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-3xl font-bold text-gray-900">84</div>
+                  <div className="text-sm font-medium text-gray-700">84 messages sent this month — Keep engaging your customers.</div>
+                </div>
+                <div className="mt-4 w-full bg-green-50 rounded-full h-1">
+                  <div className="bg-green-500 h-1 rounded-full w-4/5"></div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Quick Reply Templates CTA */}
