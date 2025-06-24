@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Sidebar,
@@ -7,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   Megaphone,
@@ -57,16 +59,19 @@ export function AppSidebar({
   return (
     <Sidebar className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
       <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
-        <div className="flex items-center space-x-3 px-4 py-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-            <Zap className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between px-4 py-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Zap className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                LeadMasters
+              </h1>
+              <p className="text-xs text-gray-500 font-medium">AI POWERED</p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-bold text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-              LeadMasters
-            </h1>
-            <p className="text-xs text-gray-500 font-medium">AI POWERED</p>
-          </div>
+          <SidebarTrigger className="ml-auto" />
         </div>
       </SidebarHeader>
 
@@ -115,7 +120,7 @@ export function AppSidebar({
             >
               <div className="flex items-center space-x-3">
                 <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Brainstorm Ideas</span>
+                <span className="font-semibold">Inspiration Hub</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
