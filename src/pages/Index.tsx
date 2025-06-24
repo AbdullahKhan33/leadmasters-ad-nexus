@@ -1,7 +1,9 @@
 
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
+import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
 import { TopBar } from "@/components/TopBar";
+import { WorkspaceTopBar } from "@/components/WorkspaceTopBar";
 import { AdBuilder } from "@/components/AdBuilder";
 import { PostBuilder } from "@/components/PostBuilder";
 import { SocialLogins } from "@/components/SocialLogins";
@@ -12,9 +14,11 @@ import { Schedule } from "@/components/Schedule";
 import { SmartAutomations } from "@/components/SmartAutomations";
 import { Workspaces } from "@/components/Workspaces";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 
-export default function Index() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces'>('dashboard');
+function IndexContent() {
+  const { isInWorkspace, setActiveWorkspace } = useWorkspace();
+  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'workspace-settings'>('dashboard');
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -52,25 +56,52 @@ export default function Index() {
     setCurrentView('workspaces');
   };
 
+  const handleBackToWorkspaces = () => {
+    setActiveWorkspace(null);
+    setCurrentView('workspaces');
+  };
+
+  // If not in workspace, show workspaces list by default
+  if (!isInWorkspace && currentView !== 'workspaces') {
+    setCurrentView('workspaces');
+  }
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AppSidebar 
-          onDashboardClick={handleDashboardClick}
-          onPostBuilderClick={handlePostBuilderClick}
-          onAdBuilderClick={handleAdBuilderClick}
-          onSocialLoginsClick={handleSocialLoginsClick}
-          onInspirationHubClick={handleInspirationHubClick}
-          onAnalyticsClick={handleAnalyticsClick}
-          onScheduleClick={handleScheduleClick}
-          onSmartAutomationsClick={handleSmartAutomationsClick}
-          onWorkspacesClick={handleWorkspacesClick}
-          currentView={currentView}
-        />
+        {isInWorkspace ? (
+          <WorkspaceSidebar 
+            onDashboardClick={handleDashboardClick}
+            onPostBuilderClick={handlePostBuilderClick}
+            onAdBuilderClick={handleAdBuilderClick}
+            onSocialLoginsClick={handleSocialLoginsClick}
+            onInspirationHubClick={handleInspirationHubClick}
+            onAnalyticsClick={handleAnalyticsClick}
+            onScheduleClick={handleScheduleClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
+            onBackToWorkspaces={handleBackToWorkspaces}
+            currentView={currentView}
+          />
+        ) : (
+          <AppSidebar 
+            onDashboardClick={handleDashboardClick}
+            onPostBuilderClick={handlePostBuilderClick}
+            onAdBuilderClick={handleAdBuilderClick}
+            onSocialLoginsClick={handleSocialLoginsClick}
+            onInspirationHubClick={handleInspirationHubClick}
+            onAnalyticsClick={handleAnalyticsClick}
+            onScheduleClick={handleScheduleClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
+            onWorkspacesClick={handleWorkspacesClick}
+            currentView={currentView}
+          />
+        )}
         <div className="flex-1 flex flex-col min-w-0">
-          <TopBar />
+          {isInWorkspace ? <WorkspaceTopBar /> : <TopBar />}
           <div className="flex-1 overflow-hidden">
-            {currentView === 'dashboard' ? (
+            {currentView === 'workspaces' ? (
+              <Workspaces />
+            ) : currentView === 'dashboard' ? (
               <Dashboard />
             ) : currentView === 'social-logins' ? (
               <SocialLogins />
@@ -84,8 +115,6 @@ export default function Index() {
               <Schedule />
             ) : currentView === 'smart-automations' ? (
               <SmartAutomations />
-            ) : currentView === 'workspaces' ? (
-              <Workspaces />
             ) : (
               <AdBuilder />
             )}
@@ -93,5 +122,13 @@ export default function Index() {
         </div>
       </div>
     </SidebarProvider>
+  );
+}
+
+export default function Index() {
+  return (
+    <WorkspaceProvider>
+      <IndexContent />
+    </WorkspaceProvider>
   );
 }

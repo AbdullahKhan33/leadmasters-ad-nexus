@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 
 interface Workspace {
   id: string;
@@ -117,11 +117,13 @@ export function Workspaces() {
   const [filterIndustry, setFilterIndustry] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const { toast } = useToast();
+  const { setActiveWorkspace } = useWorkspace();
 
   const handleViewWorkspace = (workspace: Workspace) => {
+    setActiveWorkspace(workspace);
     toast({
-      title: "Opening Workspace",
-      description: `Switching to ${workspace.name} workspace.`,
+      title: "Entering Workspace",
+      description: `Now working in ${workspace.name} workspace.`,
     });
   };
 
@@ -342,14 +344,14 @@ export function Workspaces() {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
+                  {/* Action Buttons - Updated to use handleViewWorkspace */}
                   <div className="flex space-x-2 pt-2">
                     <Button
                       onClick={() => handleViewWorkspace(workspace)}
                       className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
                     >
                       <Eye className="w-4 h-4 mr-2" />
-                      View Workspace
+                      Enter Workspace
                     </Button>
                     <Button
                       variant="outline"
