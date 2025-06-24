@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -8,10 +9,11 @@ import { Dashboard } from "@/components/Dashboard";
 import { InspirationHub } from "@/components/InspirationHub";
 import { Analytics } from "@/components/Analytics";
 import { Schedule } from "@/components/Schedule";
+import { SmartAutomations } from "@/components/SmartAutomations";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Index() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations'>('dashboard');
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -41,6 +43,10 @@ export default function Index() {
     setCurrentView('schedule');
   };
 
+  const handleSmartAutomationsClick = () => {
+    setCurrentView('smart-automations');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -52,6 +58,7 @@ export default function Index() {
           onInspirationHubClick={handleInspirationHubClick}
           onAnalyticsClick={handleAnalyticsClick}
           onScheduleClick={handleScheduleClick}
+          onSmartAutomationsClick={handleSmartAutomationsClick}
           currentView={currentView}
         />
         <div className="flex-1 flex flex-col min-w-0">
@@ -69,6 +76,8 @@ export default function Index() {
               <Analytics />
             ) : currentView === 'schedule' ? (
               <Schedule />
+            ) : currentView === 'smart-automations' ? (
+              <SmartAutomations />
             ) : (
               <AdBuilder />
             )}
