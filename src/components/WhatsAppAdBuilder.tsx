@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -64,7 +63,7 @@ function OptionCard({ title, description, icon: Icon, accent = false, onClick, c
 }
 
 export function WhatsAppAdBuilder() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager' | 'analytics'>('dashboard');
 
   const mainOptions = [
     {
@@ -103,7 +102,8 @@ export function WhatsAppAdBuilder() {
       description: "View real-time reports on delivery, read rates, and responses with detailed insights.",
       icon: BarChart3,
       accent: false,
-      clickable: true
+      clickable: true,
+      onClick: () => setCurrentView('analytics')
     }
   ];
 
@@ -131,6 +131,10 @@ export function WhatsAppAdBuilder() {
 
   if (currentView === 'campaign-manager') {
     return <CampaignManager onBack={() => setCurrentView('dashboard')} />;
+  }
+
+  if (currentView === 'analytics') {
+    return <WhatsAppAnalytics onBack={() => setCurrentView('dashboard')} />;
   }
 
   return (
