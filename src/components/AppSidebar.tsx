@@ -1,95 +1,127 @@
-
+import React from "react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
+  SidebarFooter,
+  SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { 
-  FolderOpen, 
-  Megaphone, 
-  FileText, 
-  Lightbulb, 
-  LogIn, 
-  BarChart3, 
-  Calendar, 
-  Workflow,
-  Users
+import {
+  Megaphone,
+  PenTool,
+  Settings,
+  CreditCard,
+  Code,
+  Users,
+  Zap,
 } from "lucide-react";
 
-interface AppSidebarProps {
-  onPostBuilderClick?: () => void;
-  onAdBuilderClick?: () => void;
-  currentView?: string;
-}
+export function AppSidebar({ 
+  onPostBuilderClick, 
+  onAdBuilderClick, 
+  onSocialLoginsClick,
+  currentView 
+}: { 
+  onPostBuilderClick: () => void;
+  onAdBuilderClick: () => void;
+  onSocialLoginsClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins';
+}) {
+  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
-const menuItems = [
-  { title: "Portfolio", icon: FolderOpen, url: "#" },
-  { title: "Ad Builder", icon: Megaphone, url: "#", clickable: true, view: "ad-builder" },
-  { title: "Post Builder", icon: FileText, url: "#", clickable: true, view: "post-builder" },
-  { title: "Brainstorm Idea", icon: Lightbulb, url: "#" },
-  { title: "Social Logins", icon: LogIn, url: "#" },
-  { title: "CRM Dashboard", icon: Users, url: "#" },
-  { title: "Analytics", icon: BarChart3, url: "#" },
-  { title: "Schedule", icon: Calendar, url: "#" },
-  { title: "Automations", icon: Workflow, url: "#" },
-  { title: "Workspace", icon: FolderOpen, url: "#" },
-];
-
-export function AppSidebar({ onPostBuilderClick, onAdBuilderClick, currentView }: AppSidebarProps) {
-  console.log("AppSidebar is rendering", { currentView });
-  
-  const handleItemClick = (item: typeof menuItems[0]) => {
-    if (item.title === "Post Builder" && onPostBuilderClick) {
-      onPostBuilderClick();
-    } else if (item.title === "Ad Builder" && onAdBuilderClick) {
-      onAdBuilderClick();
-    }
-  };
-  
   return (
-    <div className="w-64 h-full bg-white border-r border-gray-200 shadow-sm">
-      {/* Logo Section */}
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#7C3AED] to-[#D946EF] rounded-xl flex items-center justify-center shadow-sm">
-            <span className="text-white font-bold text-lg">L</span>
+    <Sidebar className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
+      <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="flex items-center space-x-3 px-4 py-6">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <Zap className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">LeadMasters</h1>
-            <p className="text-sm text-gray-500 font-medium">AI</p>
+            <h1 className="font-bold text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+              LeadMasters
+            </h1>
+            <p className="text-xs text-gray-500 font-medium">AI POWERED</p>
           </div>
         </div>
-      </div>
-      
-      {/* Navigation Menu */}
-      <div className="px-3 py-6">
-        <nav className="space-y-1">
-          {menuItems.map((item) => {
-            const isActive = (item.title === "Ad Builder" && currentView === "ad-builder") || 
-                            (item.title === "Post Builder" && currentView === "post-builder");
-            return (
-              <button
-                key={item.title}
-                onClick={() => handleItemClick(item)}
-                className={`
-                  flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group w-full text-left
-                  ${isActive 
-                    ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white shadow-lg' 
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }
-                `}
-              >
-                <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                <span className="text-sm font-medium">{item.title}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-    </div>
+      </SidebarHeader>
+
+      <SidebarContent className="px-3 py-6">
+        <SidebarMenu className="space-y-2">
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onAdBuilderClick}
+              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-blue-50 hover:shadow-md group ${
+                currentView === 'ad-builder' 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:from-blue-600 hover:to-purple-700' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <Megaphone className={`w-5 h-5 ${currentView === 'ad-builder' ? 'text-white' : 'text-blue-600'} group-hover:scale-110 transition-transform duration-200`} />
+                <span className="font-semibold">Ad Builder</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onPostBuilderClick}
+              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-green-50 hover:shadow-md group ${
+                currentView === 'post-builder' 
+                  ? 'bg-gradient-to-r from-green-500 to-teal-600 text-white shadow-lg hover:from-green-600 hover:to-teal-700' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <PenTool className={`w-5 h-5 ${currentView === 'post-builder' ? 'text-white' : 'text-green-600'} group-hover:scale-110 transition-transform duration-200`} />
+                <span className="font-semibold">Post Builder</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onSocialLoginsClick}
+              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-purple-50 hover:shadow-md group ${
+                currentView === 'social-logins' 
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg hover:from-purple-600 hover:to-pink-700' 
+                  : 'text-gray-700 hover:text-gray-900'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <Users className={`w-5 h-5 ${currentView === 'social-logins' ? 'text-white' : 'text-purple-600'} group-hover:scale-110 transition-transform duration-200`} />
+                <span className="font-semibold">Social Logins</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarContent>
+
+      <SidebarFooter className="border-t border-gray-200/50 p-4">
+        <SidebarMenu className="space-y-2">
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
+              <div className="flex items-center space-x-3">
+                <CreditCard className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">Billing</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => setIsSettingsOpen(true)}
+              className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group"
+            >
+              <div className="flex items-center space-x-3">
+                <Settings className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">Settings</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
