@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Sidebar,
@@ -11,12 +10,12 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useSidebar } from "@/components/ui/sidebar";
+import { Logo } from "@/components/ui/logo";
 import {
   Megaphone,
   PenTool,
   Settings,
   Users,
-  Zap,
   BarChart3,
   Calendar,
   Bot,
@@ -44,32 +43,30 @@ export function AppSidebar({
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  // Consistent platform styles for selected and hover states
+  // Updated platform styles using brand gradient colors
   const getMenuItemStyles = (isSelected: boolean) => {
     if (isSelected) {
-      return 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg hover:from-blue-600 hover:to-purple-700 hover:text-white';
+      return 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-lg hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 hover:text-white';
     }
-    return 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50/80 hover:to-purple-50/80 hover:text-gray-900 hover:shadow-sm';
+    return 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50/80 hover:via-purple-50/80 hover:to-pink-50/80 hover:text-gray-900 hover:shadow-sm';
   };
 
   const getIconStyles = (isSelected: boolean) => {
     if (isSelected) {
       return 'text-white';
     }
-    return 'text-gray-600 group-hover:text-blue-600';
+    return 'text-gray-600 group-hover:text-purple-600';
   };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
-      <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
+      <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80">
         <div className="flex items-center justify-between px-4 py-6">
           {!isCollapsed && (
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
+              <Logo className="w-10 h-10 shadow-lg rounded-xl" />
               <div>
-                <h1 className="font-bold text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                <h1 className="font-bold text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
                   LeadMasters
                 </h1>
                 <p className="text-xs text-gray-500 font-medium">AI POWERED</p>
@@ -77,9 +74,7 @@ export function AppSidebar({
             </div>
           )}
           {isCollapsed && (
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg mx-auto">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
+            <Logo className="w-10 h-10 shadow-lg rounded-xl mx-auto" />
           )}
           <SidebarTrigger className={isCollapsed ? "mx-auto mt-2" : "ml-auto"} />
         </div>
@@ -182,6 +177,7 @@ export function AppSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
+          
           <SidebarMenuItem>
             <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
               {isCollapsed ? (
