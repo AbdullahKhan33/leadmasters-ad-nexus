@@ -41,7 +41,7 @@ export function AppSidebar() {
       {/* Logo Section */}
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-sm">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#7C3AED] to-[#D946EF] rounded-xl flex items-center justify-center shadow-sm">
             <span className="text-white font-bold text-lg">L</span>
           </div>
           <div>
@@ -61,7 +61,7 @@ export function AppSidebar() {
               className={`
                 flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group
                 ${item.active 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg' 
+                  ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white shadow-lg' 
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }
               `}

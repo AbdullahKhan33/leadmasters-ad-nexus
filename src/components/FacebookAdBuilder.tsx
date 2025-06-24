@@ -28,7 +28,7 @@ export function FacebookAdBuilder() {
       <div className="flex-1 p-6 bg-gray-50">
         <div className="max-w-7xl mx-auto space-y-8">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">Facebook Ad Builder</h1>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">Facebook Ad Builder</h1>
             <p className="text-gray-600">Create and manage your Facebook advertising campaigns with AI-powered tools</p>
           </div>
 
@@ -43,7 +43,7 @@ export function FacebookAdBuilder() {
                 <p className="text-gray-600 mb-6">Start building your next Facebook ad campaign with our AI-powered tools and optimization features</p>
                 <Button 
                   size="default" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
+                  className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Campaign
