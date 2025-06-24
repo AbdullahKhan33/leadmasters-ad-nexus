@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PostPlatformMenu } from "@/components/PostPlatformMenu";
 import { FacebookPostBuilder } from "./FacebookPostBuilder";
 import { InstagramPostBuilder } from "./InstagramPostBuilder";
@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { useLocation } from "react-router-dom";
 import {
   Upload,
   Image as ImageIcon,
@@ -36,12 +37,29 @@ type Platform = 'all' | 'facebook' | 'instagram' | 'threads' | 'twitter' | 'link
 type PostType = 'post' | 'reel' | 'story';
 
 export function PostBuilder() {
+  const location = useLocation();
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('facebook');
   const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
   const [postContent, setPostContent] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
   const [selectedAudience, setSelectedAudience] = useState('');
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+
+  // Handle pre-filled content from inspiration
+  useEffect(() => {
+    if (location.state) {
+      const { prefilledContent, tone, platform } = location.state;
+      if (prefilledContent) {
+        setPostContent(prefilledContent);
+      }
+      if (tone) {
+        setSelectedTone(tone);
+      }
+      if (platform && platform !== 'google ads') {
+        setSelectedPlatform(platform as Platform);
+      }
+    }
+  }, [location.state]);
 
   console.log('PostBuilder rendered with platform:', selectedPlatform);
 
@@ -244,6 +262,11 @@ export function PostBuilder() {
                       onChange={(e) => setPostContent(e.target.value)}
                       className="mt-1 min-h-[100px] resize-none"
                     />
+                    {location.state?.prefilledContent && (
+                      <p className="text-xs text-purple-600 mt-1">
+                        ✨ Content pre-filled from inspiration
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
