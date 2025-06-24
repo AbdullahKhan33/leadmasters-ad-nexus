@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   ArrowRight,
   Calendar,
@@ -18,10 +19,7 @@ import {
   MessageCircle,
   Share,
   MoreHorizontal,
-  Wand2,
-  Rocket,
-  Palette,
-  Target
+  Wand2
 } from "lucide-react";
 
 export function FacebookPostBuilder() {
@@ -56,19 +54,13 @@ export function FacebookPostBuilder() {
     'Custom Model'
   ];
 
-  const quickPrompts = [
-    { text: "Instagram Post Idea", icon: Sparkles },
-    { text: "Product Launch Caption", icon: Rocket },
-    { text: "Poster Idea for Digital Marketing", icon: Palette },
-    { text: "Engagement-Focused Content", icon: Target }
-  ];
-
   const handleGeneratePost = async () => {
     if (!selectedAudience || !selectedPage || !selectedModel || !prompt) {
       return;
     }
 
     setIsGenerating(true);
+    setShowResponse(false);
     
     // Simulate AI generation
     setTimeout(() => {
@@ -92,10 +84,6 @@ Ready to take the next step? Comment below or DM us!
       setShowResponse(true);
       setIsGenerating(false);
     }, 2000);
-  };
-
-  const handleQuickPrompt = (promptText: string) => {
-    setPrompt(promptText);
   };
 
   return (
@@ -240,133 +228,111 @@ Ready to take the next step? Comment below or DM us!
           </CardContent>
         </Card>
 
-        {/* Quick AI Prompts */}
-        <Card className="bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-2">
-              <Wand2 className="w-5 h-5 text-purple-600" />
-              <span>Quick AI Prompts</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {quickPrompts.map((prompt, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuickPrompt(prompt.text)}
-                  className="group relative p-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-white/40 shadow-lg hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 hover:scale-105 hover:bg-white/80"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-all duration-300">
-                      <prompt.icon className="w-4 h-4 text-purple-600" />
+        {/* Loading State or AI Response Area */}
+        {(isGenerating || showResponse) && (
+          <div className="flex justify-center">
+            {isGenerating ? (
+              <Card className="w-full max-w-2xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <Sparkles className="w-6 h-6 text-purple-600 animate-spin" />
+                    <span className="text-lg font-medium text-gray-700">Generating post...</span>
+                  </div>
+                  <div className="flex space-x-2">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" />
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="w-full max-w-2xl relative overflow-hidden bg-white/80 backdrop-blur-xl border border-white/30 shadow-2xl shadow-purple-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
+                <CardContent className="p-8">
+                  {/* Mock Facebook Post Preview */}
+                  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-200/50 shadow-lg">
+                    <div className="flex items-center space-x-4 mb-6">
+                      <Avatar className="w-12 h-12 shadow-md">
+                        <AvatarImage src="" />
+                        <AvatarFallback className="bg-gradient-to-br from-purple-100 to-pink-100 text-purple-600 font-semibold">
+                          {selectedPage?.split(' ').map(word => word[0]).join('') || 'LM'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-bold text-gray-900 text-base">{selectedPage}</p>
+                        <p className="text-sm text-gray-500 flex items-center space-x-2">
+                          <span>Just now</span>
+                          <span>•</span>
+                          <span>🌍</span>
+                        </p>
+                      </div>
+                      <MoreHorizontal className="w-5 h-5 text-gray-400 ml-auto" />
                     </div>
-                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                      {prompt.text}
-                    </span>
-                  </div>
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/5 group-hover:to-pink-500/5 transition-all duration-300" />
-                </button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* AI Response Area */}
-        {showResponse && (
-          <Card className="relative overflow-hidden bg-white/80 backdrop-blur-xl border border-white/30 shadow-2xl shadow-purple-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
-            <CardHeader className="pb-6">
-              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center space-x-3">
-                <div className="p-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-500">
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <span>AI Generated Post</span>
-                <div className="flex space-x-1 ml-auto">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }} />
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              {/* Mock Facebook Post Preview */}
-              <div className="relative p-8 rounded-3xl bg-gradient-to-br from-gray-50 to-white border border-gray-200/50 shadow-xl">
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center shadow-lg">
-                    <User className="w-7 h-7 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900 text-lg">{selectedPage}</p>
-                    <p className="text-sm text-gray-500 flex items-center space-x-2">
-                      <span>Just now</span>
-                      <span>•</span>
-                      <span>🌍</span>
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="space-y-6">
-                  <p className="text-gray-800 whitespace-pre-line leading-relaxed text-lg">
-                    {generatedPost}
-                  </p>
-                  
-                  {/* Mock engagement section */}
-                  <div className="border-t pt-6">
-                    <div className="flex items-center justify-between text-gray-500 mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="flex -space-x-2">
-                          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
-                            <span className="text-white text-xs">👍</span>
+                    
+                    <div className="space-y-6">
+                      <p className="text-gray-800 whitespace-pre-line leading-relaxed">
+                        {generatedPost}
+                      </p>
+                      
+                      {/* Mock engagement section */}
+                      <div className="border-t pt-4">
+                        <div className="flex items-center justify-between text-gray-500 mb-3">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex -space-x-1">
+                              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-sm">
+                                <span className="text-white text-xs">👍</span>
+                              </div>
+                              <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center shadow-sm">
+                                <span className="text-white text-xs">❤️</span>
+                              </div>
+                            </div>
+                            <span className="text-sm">24 reactions</span>
                           </div>
-                          <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center shadow-md">
-                            <span className="text-white text-xs">❤️</span>
+                          <div className="flex space-x-4 text-sm">
+                            <span>8 comments</span>
+                            <span>3 shares</span>
                           </div>
                         </div>
-                        <span className="text-sm font-medium">24 reactions</span>
+                        
+                        <Separator className="mb-3" />
+                        
+                        <div className="grid grid-cols-3 gap-1">
+                          <button className="flex items-center justify-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors py-2 rounded-lg hover:bg-blue-50/80">
+                            <Heart className="w-4 h-4" />
+                            <span className="text-sm font-medium">Like</span>
+                          </button>
+                          <button className="flex items-center justify-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors py-2 rounded-lg hover:bg-blue-50/80">
+                            <MessageCircle className="w-4 h-4" />
+                            <span className="text-sm font-medium">Comment</span>
+                          </button>
+                          <button className="flex items-center justify-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors py-2 rounded-lg hover:bg-blue-50/80">
+                            <Share className="w-4 h-4" />
+                            <span className="text-sm font-medium">Share</span>
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex space-x-6 text-sm font-medium">
-                        <span>8 comments</span>
-                        <span>3 shares</span>
-                      </div>
-                    </div>
-                    
-                    <Separator className="mb-4" />
-                    
-                    <div className="grid grid-cols-3 gap-2">
-                      <button className="flex items-center justify-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors py-3 rounded-xl hover:bg-blue-50/80">
-                        <Heart className="w-5 h-5" />
-                        <span className="font-medium">Like</span>
-                      </button>
-                      <button className="flex items-center justify-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors py-3 rounded-xl hover:bg-blue-50/80">
-                        <MessageCircle className="w-5 h-5" />
-                        <span className="font-medium">Comment</span>
-                      </button>
-                      <button className="flex items-center justify-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors py-3 rounded-xl hover:bg-blue-50/80">
-                        <Share className="w-5 h-5" />
-                        <span className="font-medium">Share</span>
-                      </button>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Floating Action Buttons */}
-              <div className="grid sm:grid-cols-3 gap-4">
-                <Button className="group relative h-14 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-2xl shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105">
-                  <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                  <span className="font-semibold">Post Now</span>
-                </Button>
-                <Button variant="outline" className="h-14 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-2xl transition-all duration-300 hover:scale-105">
-                  <Save className="w-5 h-5 mr-2" />
-                  <span className="font-semibold">Save Draft</span>
-                </Button>
-                <Button variant="outline" className="h-14 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-2xl transition-all duration-300 hover:scale-105">
-                  <Calendar className="w-5 h-5 mr-2" />
-                  <span className="font-semibold">Schedule</span>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                  {/* Action Buttons */}
+                  <div className="grid sm:grid-cols-3 gap-4 mt-8">
+                    <Button className="group relative h-12 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105">
+                      <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                      <span className="font-semibold">Post Now</span>
+                    </Button>
+                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105">
+                      <Save className="w-4 h-4 mr-2" />
+                      <span className="font-semibold">Save to Draft</span>
+                    </Button>
+                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      <span className="font-semibold">Schedule for Later</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         )}
       </div>
     </div>
