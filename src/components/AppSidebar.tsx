@@ -60,7 +60,7 @@ export function AppSidebar({
   };
 
   return (
-    <Sidebar className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
+    <Sidebar collapsible="icon" className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
       <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="flex items-center justify-between px-4 py-6">
           {!isCollapsed && (
