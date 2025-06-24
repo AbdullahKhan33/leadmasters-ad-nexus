@@ -223,29 +223,32 @@ Ready to take the next step? Comment below or DM us!
                 <FileText className="w-4 h-4" />
                 <span>Content Type</span>
               </Label>
-              <ToggleGroup 
-                type="single" 
-                value={selectedPostType} 
-                onValueChange={(value) => value && setSelectedPostType(value as PostType)}
-                className="grid grid-cols-2 gap-3 p-2 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-200/50"
-              >
-                {postTypes.map((type) => (
-                  <ToggleGroupItem
-                    key={type.value}
-                    value={type.value}
-                    className={`
-                      flex items-center justify-center space-x-2 px-6 py-4 rounded-xl font-medium transition-all duration-300 cursor-pointer border
-                      ${selectedPostType === type.value 
-                        ? 'bg-white/95 text-purple-700 shadow-lg border-purple-300/60 ring-2 ring-purple-200/50 backdrop-blur-sm hover:shadow-xl hover:scale-105' 
-                        : 'bg-white/70 text-gray-700 hover:bg-white/90 hover:text-purple-600 hover:shadow-md hover:scale-102 border-purple-200/40 hover:border-purple-300/60'
-                      }
-                    `}
-                  >
-                    <span className="text-lg">{type.emoji}</span>
-                    <span className="font-semibold">{type.label}</span>
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
+              <div className="flex items-center space-x-2">
+                {postTypes.map((type) => {
+                  const isActive = selectedPostType === type.value;
+                  
+                  return (
+                    <Button
+                      key={type.value}
+                      variant="ghost"
+                      onClick={() => setSelectedPostType(type.value as PostType)}
+                      className={`
+                        px-5 py-2 rounded-full transition-all duration-200 ease-out flex items-center space-x-2.5 relative group cursor-pointer
+                        ${isActive 
+                          ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white font-semibold shadow-lg hover:from-purple-700 hover:to-pink-600 hover:text-white' 
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium'
+                        }
+                      `}
+                    >
+                      <span className="text-lg">{type.emoji}</span>
+                      <span className="font-semibold">{type.label}</span>
+                      {isActive && (
+                        <div className="absolute -bottom-0.5 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-white rounded-full shadow-sm" />
+                      )}
+                    </Button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Configuration Grid */}
