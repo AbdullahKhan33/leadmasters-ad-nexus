@@ -31,11 +31,11 @@ export function CRM() {
             <p className="text-gray-600 text-sm font-medium">WhatsApp Lead Management</p>
           </div>
           <div className="flex items-center space-x-3">
-            <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-200/50 shadow-sm hover:shadow-md transition-shadow duration-200">
+            <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-200/50 shadow-sm hover:shadow-md hover:from-green-200 hover:to-emerald-200 hover:border-green-300 transition-all duration-200 cursor-pointer">
               <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
               WhatsApp Connected
             </Badge>
-            <Button variant="outline" size="sm" className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-purple-200 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-blue-50/50">
+            <Button variant="outline" size="sm" className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-purple-200 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-blue-50/50 hover:text-purple-700">
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </Button>
@@ -49,28 +49,28 @@ export function CRM() {
           <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
             <TabsTrigger 
               value="inbox" 
-              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm transition-all duration-200 rounded-lg font-semibold"
+              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Inbox</span>
             </TabsTrigger>
             <TabsTrigger 
               value="pipeline" 
-              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm transition-all duration-200 rounded-lg font-semibold"
+              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
             >
               <LayoutGrid className="w-4 h-4" />
               <span>Pipeline</span>
             </TabsTrigger>
             <TabsTrigger 
               value="table" 
-              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm transition-all duration-200 rounded-lg font-semibold"
+              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
             >
               <TableProperties className="w-4 h-4" />
               <span>Table View</span>
             </TabsTrigger>
             <TabsTrigger 
               value="automations" 
-              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm transition-all duration-200 rounded-lg font-semibold"
+              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
             >
               <Settings className="w-4 h-4" />
               <span>Automations</span>

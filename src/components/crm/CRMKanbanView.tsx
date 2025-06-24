@@ -81,9 +81,9 @@ export function CRMKanbanView() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "bg-green-100 text-green-800 border-green-200";
-    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    return "bg-red-100 text-red-800 border-red-200";
+    if (score >= 80) return "bg-green-100 text-green-800 border-green-200 hover:bg-green-200 hover:border-green-300";
+    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200 hover:border-yellow-300";
+    return "bg-red-100 text-red-800 border-red-200 hover:bg-red-200 hover:border-red-300";
   };
 
   const handleDragStart = (e: React.DragEvent, leadId: string) => {
@@ -106,7 +106,7 @@ export function CRMKanbanView() {
   };
 
   return (
-    <div className="h-full bg-gray-50 p-6">
+    <div className="h-full bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-gray-900 mb-2">Pipeline View</h2>
         <p className="text-gray-600">Drag and drop leads to change their stage</p>
@@ -119,10 +119,10 @@ export function CRMKanbanView() {
           return (
             <div key={stage.id} className="flex flex-col">
               {/* Stage Header */}
-              <div className={`${stage.color} rounded-lg p-4 mb-4`}>
+              <div className={`${stage.color} rounded-lg p-4 mb-4 shadow-sm hover:shadow-md transition-shadow duration-200`}>
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium text-gray-900">{stage.title}</h3>
-                  <Badge variant="secondary" className="bg-white text-gray-700">
+                  <Badge variant="secondary" className="bg-white text-gray-700 hover:bg-gray-50 transition-colors duration-200">
                     {stageLeads.length}
                   </Badge>
                 </div>
@@ -139,13 +139,13 @@ export function CRMKanbanView() {
                     key={lead.id}
                     draggable
                     onDragStart={(e) => handleDragStart(e, lead.id)}
-                    className="cursor-move hover:shadow-md transition-shadow bg-white border border-gray-200 rounded-lg"
+                    className="cursor-move hover:shadow-lg transition-all duration-200 bg-white border border-gray-200 rounded-lg hover:border-purple-200 hover:bg-gradient-to-br hover:from-white hover:via-blue-50/20 hover:to-purple-50/20"
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center space-x-3">
                           <Avatar className="w-8 h-8">
-                            <AvatarFallback className="bg-gray-200 text-gray-600 text-xs">
+                            <AvatarFallback className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 text-purple-700 text-xs">
                               {lead.name.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
                           </Avatar>
@@ -154,24 +154,24 @@ export function CRMKanbanView() {
                             <p className="text-xs text-gray-500">{lead.lastInteraction}</p>
                           </div>
                         </div>
-                        <Badge className={`text-xs ${getScoreColor(lead.score)}`}>
+                        <Badge className={`text-xs transition-all duration-200 ${getScoreColor(lead.score)}`}>
                           {lead.score}
                         </Badge>
                       </div>
 
                       <div className="flex items-center justify-between mb-3">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                           {lead.source}
                         </Badge>
                         <span className="text-xs text-gray-500">{lead.assignedAgent}</span>
                       </div>
 
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" className="flex-1 text-xs">
+                        <Button variant="outline" size="sm" className="flex-1 text-xs hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                           <Eye className="w-3 h-3 mr-1" />
                           View
                         </Button>
-                        <Button variant="outline" size="sm" className="flex-1 text-xs">
+                        <Button variant="outline" size="sm" className="flex-1 text-xs hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                           <MessageSquare className="w-3 h-3 mr-1" />
                           Contact
                         </Button>

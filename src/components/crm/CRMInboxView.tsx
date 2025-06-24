@@ -97,9 +97,9 @@ export function CRMInboxView() {
   const sources = ["WhatsApp", "Facebook", "Instagram"];
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "bg-green-100 text-green-800 border-green-200";
-    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    return "bg-red-100 text-red-800 border-red-200";
+    if (score >= 80) return "bg-green-100 text-green-800 border-green-200 hover:bg-green-200 hover:border-green-300";
+    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200 hover:border-yellow-300";
+    return "bg-red-100 text-red-800 border-red-200 hover:bg-red-200 hover:border-red-300";
   };
 
   const aiSuggestions = [
@@ -131,7 +131,11 @@ export function CRMInboxView() {
                 variant={activeFilter === filter ? "default" : "outline"}
                 size="sm"
                 onClick={() => setActiveFilter(filter)}
-                className="text-xs"
+                className={`text-xs transition-all duration-200 ${
+                  activeFilter === filter 
+                    ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-md hover:shadow-lg" 
+                    : "hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 hover:shadow-sm"
+                }`}
               >
                 {filter}
               </Button>
@@ -140,7 +144,11 @@ export function CRMInboxView() {
 
           <div className="flex gap-2">
             {sources.map((source) => (
-              <Badge key={source} variant="outline" className="text-xs">
+              <Badge 
+                key={source} 
+                variant="outline" 
+                className="text-xs cursor-pointer transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 hover:shadow-sm"
+              >
                 {source}
               </Badge>
             ))}
@@ -153,8 +161,8 @@ export function CRMInboxView() {
             <div
               key={lead.id}
               onClick={() => setSelectedLead(lead)}
-              className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
-                selectedLead?.id === lead.id ? 'bg-blue-50 border-r-2 border-r-blue-500' : ''
+              className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gradient-to-r hover:from-gray-50 hover:via-blue-50/30 hover:to-purple-50/30 transition-all duration-200 ${
+                selectedLead?.id === lead.id ? 'bg-gradient-to-r from-blue-50 via-purple-50/50 to-pink-50/30 border-r-2 border-r-blue-500' : ''
               }`}
             >
               <div className="flex items-start space-x-3">
@@ -175,11 +183,11 @@ export function CRMInboxView() {
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <Badge className={`text-xs ${getScoreColor(lead.score)}`}>
+                      <Badge className={`text-xs transition-all duration-200 ${getScoreColor(lead.score)}`}>
                         {lead.score}
                       </Badge>
                       {lead.isUnread && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                       )}
                     </div>
                     
@@ -212,7 +220,7 @@ export function CRMInboxView() {
                     <p className="text-sm text-gray-500">{selectedLead.phone}</p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-gray-50 hover:via-blue-50/30 hover:to-purple-50/30 transition-all duration-200">
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </div>
@@ -229,12 +237,12 @@ export function CRMInboxView() {
                     className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                       message.isFromLead
                         ? 'bg-gray-100 text-gray-900'
-                        : 'bg-blue-500 text-white'
+                        : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-md'
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>
                     <span className={`text-xs ${
-                      message.isFromLead ? 'text-gray-500' : 'text-blue-100'
+                      message.isFromLead ? 'text-gray-500' : 'text-white/80'
                     }`}>
                       {message.timestamp}
                     </span>
@@ -252,7 +260,7 @@ export function CRMInboxView() {
                     variant="outline"
                     size="sm"
                     onClick={() => setMessageText(suggestion)}
-                    className="text-xs bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+                    className="text-xs bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-blue-200 text-blue-700 hover:bg-gradient-to-r hover:from-blue-100 hover:via-purple-100 hover:to-pink-100 hover:border-purple-300 hover:text-purple-800 hover:shadow-md transition-all duration-200"
                   >
                     {suggestion}
                   </Button>
@@ -267,9 +275,9 @@ export function CRMInboxView() {
                   placeholder="Type your message..."
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
-                  className="flex-1 min-h-[40px] max-h-32 resize-none border-gray-200 rounded-lg"
+                  className="flex-1 min-h-[40px] max-h-32 resize-none border-gray-200 rounded-lg focus:border-purple-300 focus:ring-purple-200"
                 />
-                <Button size="sm" className="px-3">
+                <Button size="sm" className="px-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md hover:shadow-lg transition-all duration-200">
                   <Send className="w-4 h-4" />
                 </Button>
               </div>
@@ -287,11 +295,11 @@ export function CRMInboxView() {
         <div className="w-80 border-l border-gray-200 bg-gray-50 p-4 overflow-y-auto">
           <div className="space-y-6">
             {/* Profile Details */}
-            <Card>
+            <Card className="hover:shadow-md transition-shadow duration-200">
               <CardContent className="p-4">
                 <div className="text-center mb-4">
                   <Avatar className="w-16 h-16 mx-auto mb-3">
-                    <AvatarFallback className="bg-gray-200 text-gray-600 text-lg">
+                    <AvatarFallback className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 text-purple-700 text-lg">
                       {selectedLead.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
@@ -302,12 +310,14 @@ export function CRMInboxView() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Source:</span>
-                    <Badge variant="outline">{selectedLead.source}</Badge>
+                    <Badge variant="outline" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
+                      {selectedLead.source}
+                    </Badge>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Score:</span>
-                    <Badge className={getScoreColor(selectedLead.score)}>
+                    <Badge className={`transition-all duration-200 ${getScoreColor(selectedLead.score)}`}>
                       {selectedLead.score}
                     </Badge>
                   </div>
@@ -323,17 +333,17 @@ export function CRMInboxView() {
             </Card>
 
             {/* Tags */}
-            <Card>
+            <Card className="hover:shadow-md transition-shadow duration-200">
               <CardContent className="p-4">
                 <h4 className="font-medium text-gray-900 mb-3">Tags</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedLead.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
+                    <Badge key={tag} variant="secondary" className="text-xs hover:bg-gradient-to-r hover:from-blue-100 hover:via-purple-100 hover:to-pink-100 hover:text-purple-700 hover:shadow-sm transition-all duration-200 cursor-pointer">
                       <Tag className="w-3 h-3 mr-1" />
                       {tag}
                     </Badge>
                   ))}
-                  <Button variant="outline" size="sm" className="text-xs">
+                  <Button variant="outline" size="sm" className="text-xs hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                     + Add Tag
                   </Button>
                 </div>
@@ -341,19 +351,19 @@ export function CRMInboxView() {
             </Card>
 
             {/* Quick Actions */}
-            <Card>
+            <Card className="hover:shadow-md transition-shadow duration-200">
               <CardContent className="p-4">
                 <h4 className="font-medium text-gray-900 mb-3">Quick Actions</h4>
                 <div className="space-y-2">
-                  <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Button variant="outline" size="sm" className="w-full justify-start hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                     <Phone className="w-4 h-4 mr-2" />
                     Call Lead
                   </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Button variant="outline" size="sm" className="w-full justify-start hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                     <Calendar className="w-4 h-4 mr-2" />
                     Schedule Meeting
                   </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Button variant="outline" size="sm" className="w-full justify-start hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                     <Star className="w-4 h-4 mr-2" />
                     Mark as Priority
                   </Button>
@@ -362,14 +372,16 @@ export function CRMInboxView() {
             </Card>
 
             {/* Notes */}
-            <Card>
+            <Card className="hover:shadow-md transition-shadow duration-200">
               <CardContent className="p-4">
                 <h4 className="font-medium text-gray-900 mb-3">Notes</h4>
                 <Textarea
                   placeholder="Add notes about this lead..."
-                  className="min-h-[80px] border-gray-200"
+                  className="min-h-[80px] border-gray-200 focus:border-purple-300 focus:ring-purple-200"
                 />
-                <Button size="sm" className="mt-2">Save Notes</Button>
+                <Button size="sm" className="mt-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md hover:shadow-lg transition-all duration-200">
+                  Save Notes
+                </Button>
               </CardContent>
             </Card>
           </div>

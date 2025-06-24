@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -104,20 +103,20 @@ export function CRMTableView() {
   const [agentFilter, setAgentFilter] = useState("all");
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "bg-green-100 text-green-800 border-green-200";
-    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    return "bg-red-100 text-red-800 border-red-200";
+    if (score >= 80) return "bg-green-100 text-green-800 border-green-200 hover:bg-green-200 hover:border-green-300";
+    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200 hover:border-yellow-300";
+    return "bg-red-100 text-red-800 border-red-200 hover:bg-red-200 hover:border-red-300";
   };
 
   const getStatusColor = (status: string) => {
     const colors = {
-      "New": "bg-gray-100 text-gray-800",
-      "Contacted": "bg-blue-100 text-blue-800",
-      "Hot": "bg-orange-100 text-orange-800",
-      "Follow-Up": "bg-yellow-100 text-yellow-800",
-      "Won": "bg-green-100 text-green-800"
+      "New": "bg-gray-100 text-gray-800 hover:bg-gray-200",
+      "Contacted": "bg-blue-100 text-blue-800 hover:bg-blue-200",
+      "Hot": "bg-orange-100 text-orange-800 hover:bg-orange-200",
+      "Follow-Up": "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
+      "Won": "bg-green-100 text-green-800 hover:bg-green-200"
     };
-    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
+    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800 hover:bg-gray-200";
   };
 
   const handleSelectAll = (checked: boolean) => {
@@ -145,14 +144,14 @@ export function CRMTableView() {
   });
 
   return (
-    <div className="h-full bg-gray-50 p-6">
+    <div className="h-full bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-gray-900 mb-2">Lead Table View</h2>
         <p className="text-gray-600">Manage all your leads in a comprehensive table format</p>
       </div>
 
       {/* Filters and Search */}
-      <Card className="mb-6">
+      <Card className="mb-6 hover:shadow-md transition-shadow duration-200">
         <CardContent className="p-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex-1 min-w-64">
@@ -162,13 +161,13 @@ export function CRMTableView() {
                   placeholder="Search leads..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 focus:border-purple-300 focus:ring-purple-200"
                 />
               </div>
             </div>
             
             <Select value={sourceFilter} onValueChange={setSourceFilter}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 hover:border-purple-200 focus:border-purple-300">
                 <SelectValue placeholder="Source" />
               </SelectTrigger>
               <SelectContent>
@@ -180,7 +179,7 @@ export function CRMTableView() {
             </Select>
 
             <Select value={agentFilter} onValueChange={setAgentFilter}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 hover:border-purple-200 focus:border-purple-300">
                 <SelectValue placeholder="Agent" />
               </SelectTrigger>
               <SelectContent>
@@ -195,22 +194,22 @@ export function CRMTableView() {
 
       {/* Bulk Actions */}
       {selectedLeads.length > 0 && (
-        <Card className="mb-4">
+        <Card className="mb-4 hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">
                 {selectedLeads.length} lead(s) selected
               </span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                   <User className="w-4 h-4 mr-2" />
                   Assign Agent
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                   <Tag className="w-4 h-4 mr-2" />
                   Add Tags
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                   <Send className="w-4 h-4 mr-2" />
                   Send WhatsApp
                 </Button>
@@ -221,7 +220,7 @@ export function CRMTableView() {
       )}
 
       {/* Table */}
-      <Card>
+      <Card className="hover:shadow-md transition-shadow duration-200">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
@@ -244,7 +243,7 @@ export function CRMTableView() {
             </TableHeader>
             <TableBody>
               {filteredLeads.map((lead) => (
-                <TableRow key={lead.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <TableRow key={lead.id} className="border-b border-gray-100 hover:bg-gradient-to-r hover:from-gray-50 hover:via-blue-50/30 hover:to-purple-50/30 transition-all duration-200">
                   <TableCell>
                     <Checkbox
                       checked={selectedLeads.includes(lead.id)}
@@ -254,7 +253,7 @@ export function CRMTableView() {
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-gray-200 text-gray-600 text-xs">
+                        <AvatarFallback className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 text-purple-700 text-xs">
                           {lead.name.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
@@ -262,21 +261,21 @@ export function CRMTableView() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200 cursor-pointer">
                       {lead.source}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {lead.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
+                        <Badge key={tag} variant="secondary" className="text-xs hover:bg-gradient-to-r hover:from-blue-100 hover:via-purple-100 hover:to-pink-100 hover:text-purple-700 transition-all duration-200 cursor-pointer">
                           {tag}
                         </Badge>
                       ))}
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge className={`text-xs ${getScoreColor(lead.score)}`}>
+                    <Badge className={`text-xs transition-all duration-200 cursor-pointer ${getScoreColor(lead.score)}`}>
                       {lead.score}
                     </Badge>
                   </TableCell>
@@ -287,19 +286,19 @@ export function CRMTableView() {
                     <span className="text-sm text-gray-500">{lead.lastActivity}</span>
                   </TableCell>
                   <TableCell>
-                    <Badge className={`text-xs ${getStatusColor(lead.status)}`}>
+                    <Badge className={`text-xs transition-all duration-200 cursor-pointer ${getStatusColor(lead.status)}`}>
                       {lead.status}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex space-x-1">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                         <Eye className="w-3 h-3" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                         <User className="w-3 h-3" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
                         <Archive className="w-3 h-3" />
                       </Button>
                     </div>
