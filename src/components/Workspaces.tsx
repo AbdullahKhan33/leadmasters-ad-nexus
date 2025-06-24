@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { CreateWorkspaceModal } from './CreateWorkspaceModal';
 
 interface Workspace {
   id: string;
@@ -84,9 +86,10 @@ const mockWorkspaces: Workspace[] = [
 ];
 
 export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsClick?: (workspace: Workspace) => void }) {
-  const [workspaces] = useState<Workspace[]>(mockWorkspaces);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>(mockWorkspaces);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { selectWorkspace, activeWorkspace } = useWorkspace();
   const { toast } = useToast();
 
@@ -123,6 +126,29 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     }
   };
 
+  const handleCreateWorkspace = (workspaceData: {
+    name: string;
+    description: string;
+    country: string;
+    industry: string;
+    businessType: string;
+  }) => {
+    const newWorkspace: Workspace = {
+      id: Date.now().toString(),
+      ...workspaceData,
+      memberCount: 1,
+      isActive: true
+    };
+
+    setWorkspaces(prev => [newWorkspace, ...prev]);
+    selectWorkspace(newWorkspace);
+    
+    toast({
+      title: "Workspace Created",
+      description: `${workspaceData.name} has been created successfully.`,
+    });
+  };
+
   const isWorkspaceSelected = (workspace: Workspace) => {
     return activeWorkspace?.id === workspace.id;
   };
@@ -138,7 +164,10 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
       <p className="text-gray-600 mb-8 max-w-md">
         Create your first workspace to start organizing your campaigns and posts by team, client, or project.
       </p>
-      <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-8 py-3 rounded-xl shadow-lg">
+      <Button 
+        onClick={() => setIsCreateModalOpen(true)}
+        className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-8 py-3 rounded-xl shadow-lg"
+      >
         <Plus className="w-5 h-5 mr-2" />
         Create First Workspace
       </Button>
@@ -149,6 +178,11 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     return (
       <div className="flex-1 overflow-auto bg-gradient-to-br from-gray-50/50 via-blue-50/30 to-purple-50/50 p-8">
         <EmptyState />
+        <CreateWorkspaceModal 
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onCreateWorkspace={handleCreateWorkspace}
+        />
       </div>
     );
   }
@@ -166,7 +200,10 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
               Organize your campaigns and posts by team, client, or project.
             </p>
           </div>
-          <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl">
+          <Button 
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
+          >
             <Plus className="w-5 h-5 mr-2" />
             Create Workspace
           </Button>
@@ -363,6 +400,12 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
           </div>
         )}
       </div>
+
+      <CreateWorkspaceModal 
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreateWorkspace={handleCreateWorkspace}
+      />
     </div>
   );
 }
