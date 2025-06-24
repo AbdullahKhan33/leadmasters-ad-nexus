@@ -9,11 +9,14 @@ const Index = () => {
   
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="min-h-screen flex w-full bg-white">
-        <div className="w-64 flex-shrink-0">
+      <div className="min-h-screen w-full flex bg-gray-50">
+        {/* Fixed width sidebar container */}
+        <div className="w-64 h-screen fixed left-0 top-0 z-40">
           <AppSidebar />
         </div>
-        <div className="flex-1 flex flex-col">
+        
+        {/* Main content area with left margin to account for fixed sidebar */}
+        <div className="flex-1 ml-64 flex flex-col min-h-screen">
           <TopBar />
           <main className="flex-1 bg-gray-50">
             <FacebookAdBuilder />

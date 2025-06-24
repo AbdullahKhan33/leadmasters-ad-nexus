@@ -37,43 +37,41 @@ export function AppSidebar() {
   console.log("AppSidebar is rendering");
   
   return (
-    <Sidebar className="border-r border-gray-200 bg-gradient-to-b from-purple-600 via-purple-500 to-pink-500 z-50" style={{ width: '256px', position: 'relative' }}>
-      <div className="p-6">
+    <div className="w-64 h-full bg-gradient-to-b from-purple-600 via-purple-500 to-pink-500 border-r border-purple-400">
+      {/* Logo Section */}
+      <div className="p-6 border-b border-white/10">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">L</span>
+          <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+            <span className="text-white font-bold text-lg">L</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-white">LeadMasters</h1>
-            <p className="text-xs text-white/80 font-medium">AI</p>
+            <h1 className="text-xl font-bold text-white">LeadMasters</h1>
+            <p className="text-sm text-white/80 font-medium">AI</p>
           </div>
         </div>
       </div>
       
-      <SidebarContent className="px-4">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild 
-                    className={`
-                      w-full justify-start px-3 py-2.5 rounded-lg transition-all duration-200 hover:bg-white/10
-                      ${item.active ? 'bg-white/20 text-white border-r-3 border-white shadow-sm backdrop-blur' : 'text-white/80 hover:text-white'}
-                    `}
-                  >
-                    <a href={item.url} className="flex items-center space-x-3">
-                      <item.icon className={`w-4 h-4 ${item.active ? 'text-white' : 'text-white/70'}`} />
-                      <span className="text-sm font-medium">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+      {/* Navigation Menu */}
+      <div className="px-4 py-6">
+        <nav className="space-y-2">
+          {menuItems.map((item) => (
+            <a
+              key={item.title}
+              href={item.url}
+              className={`
+                flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
+                ${item.active 
+                  ? 'bg-white/20 text-white shadow-lg backdrop-blur border border-white/20' 
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
+                }
+              `}
+            >
+              <item.icon className={`w-5 h-5 ${item.active ? 'text-white' : 'text-white/70 group-hover:text-white'}`} />
+              <span className="text-sm font-medium">{item.title}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </div>
   );
 }
