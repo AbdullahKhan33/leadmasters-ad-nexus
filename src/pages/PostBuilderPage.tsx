@@ -1,94 +1,97 @@
 
-import { useState } from "react";
-import { AppSidebar } from "@/components/AppSidebar";
-import { TopBar } from "@/components/TopBar";
-import { AdBuilder } from "@/components/AdBuilder";
+import { useNavigate } from "react-router-dom";
 import { PostBuilder } from "@/components/PostBuilder";
-import { SocialLogins } from "@/components/SocialLogins";
-import { Dashboard } from "@/components/Dashboard";
-import { InspirationHub } from "@/components/InspirationHub";
-import { Analytics } from "@/components/Analytics";
-import { Schedule } from "@/components/Schedule";
-import { SmartAutomations } from "@/components/SmartAutomations";
-import { Workspaces } from "@/components/Workspaces";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
+import { TopBar } from "@/components/TopBar";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 
 export default function PostBuilderPage() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces'>('post-builder');
+  const { isInWorkspace } = useWorkspace();
+  const navigate = useNavigate();
 
   const handleDashboardClick = () => {
-    setCurrentView('dashboard');
+    navigate('/', { state: { view: 'dashboard' } });
   };
 
   const handlePostBuilderClick = () => {
-    setCurrentView('post-builder');
+    // Already on post builder, no need to navigate
   };
 
   const handleAdBuilderClick = () => {
-    setCurrentView('ad-builder');
+    navigate('/', { state: { view: 'ad-builder' } });
   };
 
   const handleSocialLoginsClick = () => {
-    setCurrentView('social-logins');
+    navigate('/', { state: { view: 'social-logins' } });
   };
 
   const handleInspirationHubClick = () => {
-    setCurrentView('inspiration-hub');
+    navigate('/', { state: { view: 'inspiration-hub' } });
   };
 
   const handleAnalyticsClick = () => {
-    setCurrentView('analytics');
+    navigate('/', { state: { view: 'analytics' } });
   };
 
   const handleScheduleClick = () => {
-    setCurrentView('schedule');
+    navigate('/', { state: { view: 'schedule' } });
   };
 
   const handleSmartAutomationsClick = () => {
-    setCurrentView('smart-automations');
+    navigate('/', { state: { view: 'smart-automations' } });
   };
 
   const handleWorkspacesClick = () => {
-    setCurrentView('workspaces');
+    navigate('/', { state: { view: 'workspaces' } });
+  };
+
+  const handleUserSettingsClick = () => {
+    navigate('/', { state: { view: 'user-settings' } });
+  };
+
+  const handleCRMClick = () => {
+    navigate('/crm');
   };
 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
-        <AppSidebar 
-          onDashboardClick={handleDashboardClick}
-          onPostBuilderClick={handlePostBuilderClick}
-          onAdBuilderClick={handleAdBuilderClick}
-          onSocialLoginsClick={handleSocialLoginsClick}
-          onInspirationHubClick={handleInspirationHubClick}
-          onAnalyticsClick={handleAnalyticsClick}
-          onScheduleClick={handleScheduleClick}
-          onSmartAutomationsClick={handleSmartAutomationsClick}
-          onWorkspacesClick={handleWorkspacesClick}
-          currentView={currentView}
-        />
+        {isInWorkspace ? (
+          <WorkspaceSidebar 
+            onDashboardClick={handleDashboardClick}
+            onPostBuilderClick={handlePostBuilderClick}
+            onAdBuilderClick={handleAdBuilderClick}
+            onSocialLoginsClick={handleSocialLoginsClick}
+            onInspirationHubClick={handleInspirationHubClick}
+            onAnalyticsClick={handleAnalyticsClick}
+            onScheduleClick={handleScheduleClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
+            onWorkspacesClick={handleWorkspacesClick}
+            onUserSettingsClick={handleUserSettingsClick}
+            onCRMClick={handleCRMClick}
+            currentView="post-builder"
+          />
+        ) : (
+          <AppSidebar 
+            onDashboardClick={handleDashboardClick}
+            onPostBuilderClick={handlePostBuilderClick}
+            onAdBuilderClick={handleAdBuilderClick}
+            onSocialLoginsClick={handleSocialLoginsClick}
+            onInspirationHubClick={handleInspirationHubClick}
+            onAnalyticsClick={handleAnalyticsClick}
+            onScheduleClick={handleScheduleClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
+            onWorkspacesClick={handleWorkspacesClick}
+            onCRMClick={handleCRMClick}
+            currentView="post-builder"
+          />
+        )}
         <div className="flex-1 flex flex-col min-w-0">
           <TopBar />
           <div className="flex-1 overflow-hidden">
-            {currentView === 'dashboard' ? (
-              <Dashboard />
-            ) : currentView === 'social-logins' ? (
-              <SocialLogins />
-            ) : currentView === 'post-builder' ? (
-              <PostBuilder />
-            ) : currentView === 'inspiration-hub' ? (
-              <InspirationHub />
-            ) : currentView === 'analytics' ? (
-              <Analytics />
-            ) : currentView === 'schedule' ? (
-              <Schedule />
-            ) : currentView === 'smart-automations' ? (
-              <SmartAutomations />
-            ) : currentView === 'workspaces' ? (
-              <Workspaces />
-            ) : (
-              <AdBuilder />
-            )}
+            <PostBuilder />
           </div>
         </div>
       </div>
