@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -88,6 +88,13 @@ export function Workspaces() {
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const { selectWorkspace, activeWorkspace } = useWorkspace();
   const { toast } = useToast();
+
+  // Auto-select the first workspace on component mount
+  useEffect(() => {
+    if (workspaces.length > 0 && !activeWorkspace) {
+      selectWorkspace(workspaces[0]);
+    }
+  }, [workspaces, activeWorkspace, selectWorkspace]);
 
   const filteredWorkspaces = workspaces.filter(workspace => {
     const matchesSearch = workspace.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -234,30 +241,18 @@ export function Workspaces() {
                             {workspace.name}
                           </CardTitle>
                           <div className="flex items-center space-x-2 mt-2">
-                            {isSelected ? (
-                              <>
-                                <Badge 
-                                  variant={workspace.isActive ? "default" : "secondary"}
-                                  className={`text-xs ${workspace.isActive 
-                                    ? 'bg-green-100 text-green-700 border-green-200' 
-                                    : 'bg-gray-100 text-gray-600 border-gray-200'
-                                  }`}
-                                >
-                                  {workspace.isActive ? 'Active' : 'Inactive'}
-                                </Badge>
-                                <Badge className="text-xs bg-blue-100 text-blue-700 border-blue-200">
-                                  Selected
-                                </Badge>
-                              </>
-                            ) : (
-                              <Badge 
-                                variant={workspace.isActive ? "default" : "secondary"}
-                                className={`text-xs ${workspace.isActive 
-                                  ? 'bg-green-100 text-green-700 border-green-200' 
-                                  : 'bg-gray-100 text-gray-600 border-gray-200'
-                                }`}
-                              >
-                                {workspace.isActive ? 'Active' : 'Inactive'}
+                            <Badge 
+                              variant="default"
+                              className={`text-xs ${isSelected 
+                                ? 'bg-green-100 text-green-700 border-green-200' 
+                                : 'bg-gray-100 text-gray-600 border-gray-200'
+                              }`}
+                            >
+                              {isSelected ? 'Active' : 'Inactive'}
+                            </Badge>
+                            {isSelected && (
+                              <Badge className="text-xs bg-blue-100 text-blue-700 border-blue-200">
+                                Selected
                               </Badge>
                             )}
                           </div>

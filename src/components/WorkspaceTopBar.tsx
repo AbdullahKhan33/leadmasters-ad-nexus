@@ -2,7 +2,8 @@
 import React from 'react';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { Badge } from '@/components/ui/badge';
-import { Building2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Building2, Bell, ChevronDown } from 'lucide-react';
 
 export function WorkspaceTopBar() {
   const { activeWorkspace } = useWorkspace();
@@ -34,6 +35,22 @@ export function WorkspaceTopBar() {
               </div>
             </div>
           </div>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+            <Bell className="w-5 h-5" />
+          </Button>
+          <Button variant="outline" size="sm" className="text-gray-700 border-gray-200 hover:bg-gray-50">
+            Business Manager
+            <ChevronDown className="w-4 h-4 ml-2" />
+          </Button>
+          <Button variant="outline" size="sm" className="text-gray-700 border-gray-200 hover:bg-gray-50">
+            Explore Plans
+          </Button>
+          <Button className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white px-4 py-2 rounded-lg">
+            Make Live
+          </Button>
         </div>
       </div>
     </div>
