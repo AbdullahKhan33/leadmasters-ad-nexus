@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PostPlatformMenu } from "@/components/PostPlatformMenu";
 import { FacebookPostBuilder } from "./FacebookPostBuilder";
+import { InstagramPostBuilder } from "./InstagramPostBuilder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -33,7 +34,7 @@ export function PostBuilder() {
   const [selectedAudience, setSelectedAudience] = useState('');
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
 
-  // If Facebook is selected, show the new FacebookPostBuilder
+  // If Facebook is selected, show the FacebookPostBuilder
   if (selectedPlatform === 'facebook') {
     return (
       <div className="flex-1 flex flex-col min-h-screen">
@@ -42,6 +43,19 @@ export function PostBuilder() {
           onPlatformChange={(platformId) => setSelectedPlatform(platformId as Platform)}
         />
         <FacebookPostBuilder />
+      </div>
+    );
+  }
+
+  // If Instagram is selected, show the InstagramPostBuilder
+  if (selectedPlatform === 'instagram') {
+    return (
+      <div className="flex-1 flex flex-col min-h-screen">
+        <PostPlatformMenu 
+          activePlatform={selectedPlatform}
+          onPlatformChange={(platformId) => setSelectedPlatform(platformId as Platform)}
+        />
+        <InstagramPostBuilder />
       </div>
     );
   }
