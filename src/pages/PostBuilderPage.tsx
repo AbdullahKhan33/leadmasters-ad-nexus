@@ -2,11 +2,18 @@
 import { useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
+import { AdBuilder } from "@/components/AdBuilder";
 import { PostBuilder } from "@/components/PostBuilder";
+import { SocialLogins } from "@/components/SocialLogins";
+import { Dashboard } from "@/components/Dashboard";
+import { InspirationHub } from "@/components/InspirationHub";
+import { Analytics } from "@/components/Analytics";
+import { Schedule } from "@/components/Schedule";
+import { SmartAutomations } from "@/components/SmartAutomations";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function PostBuilderPage() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule'>('post-builder');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations'>('post-builder');
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -36,6 +43,10 @@ export default function PostBuilderPage() {
     setCurrentView('schedule');
   };
 
+  const handleSmartAutomationsClick = () => {
+    setCurrentView('smart-automations');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -47,12 +58,29 @@ export default function PostBuilderPage() {
           onInspirationHubClick={handleInspirationHubClick}
           onAnalyticsClick={handleAnalyticsClick}
           onScheduleClick={handleScheduleClick}
+          onSmartAutomationsClick={handleSmartAutomationsClick}
           currentView={currentView}
         />
         <div className="flex-1 flex flex-col min-w-0">
           <TopBar />
           <div className="flex-1 overflow-hidden">
-            <PostBuilder />
+            {currentView === 'dashboard' ? (
+              <Dashboard />
+            ) : currentView === 'social-logins' ? (
+              <SocialLogins />
+            ) : currentView === 'post-builder' ? (
+              <PostBuilder />
+            ) : currentView === 'inspiration-hub' ? (
+              <InspirationHub />
+            ) : currentView === 'analytics' ? (
+              <Analytics />
+            ) : currentView === 'schedule' ? (
+              <Schedule />
+            ) : currentView === 'smart-automations' ? (
+              <SmartAutomations />
+            ) : (
+              <AdBuilder />
+            )}
           </div>
         </div>
       </div>
