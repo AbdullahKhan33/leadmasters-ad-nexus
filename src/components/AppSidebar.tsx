@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Sidebar,
@@ -12,10 +13,12 @@ import {
   Megaphone,
   PenTool,
   Settings,
-  CreditCard,
-  Code,
   Users,
   Zap,
+  BarChart3,
+  Calendar,
+  Bot,
+  Briefcase,
 } from "lucide-react";
 
 export function AppSidebar({ 
@@ -82,6 +85,15 @@ export function AppSidebar({
           </SidebarMenuItem>
 
           <SidebarMenuItem>
+            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
+              <div className="flex items-center space-x-3">
+                <BarChart3 className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">Brainstorm Ideas</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onSocialLoginsClick}
               className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-purple-50 hover:shadow-md group ${
@@ -96,19 +108,56 @@ export function AppSidebar({
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
+              <div className="flex items-center space-x-3">
+                <BarChart3 className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">CRM Dashboard</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
+              <div className="flex items-center space-x-3">
+                <BarChart3 className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">Analytics</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
+              <div className="flex items-center space-x-3">
+                <Calendar className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">Schedule</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
+              <div className="flex items-center space-x-3">
+                <Bot className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">Automations</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
+              <div className="flex items-center space-x-3">
+                <Briefcase className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
+                <span className="font-semibold">Workspace</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-gray-200/50 p-4">
         <SidebarMenu className="space-y-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton className="w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 hover:bg-gray-50 text-gray-700 hover:text-gray-900 group">
-              <div className="flex items-center space-x-3">
-                <CreditCard className="w-5 h-5 text-gray-600 group-hover:scale-110 transition-transform duration-200" />
-                <span className="font-semibold">Billing</span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => setIsSettingsOpen(true)}
