@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -6,9 +5,11 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Bell, Coins, CheckCircle, AlertCircle, Info } from "lucide-react";
 import { useState } from "react";
 import { PricingScreen } from "./PricingScreen";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 
 export function TopBar() {
   const [showPricing, setShowPricing] = useState(false);
+  const { activeWorkspace, isInWorkspace } = useWorkspace();
 
   const sampleNotifications = [
     {
@@ -72,7 +73,9 @@ export function TopBar() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">My Project 123</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                {isInWorkspace && activeWorkspace ? activeWorkspace.name : "My Project 123"}
+              </h2>
             </div>
             
             <div className="flex items-center space-x-4">
