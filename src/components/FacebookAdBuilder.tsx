@@ -36,14 +36,14 @@ export function FacebookAdBuilder() {
           <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
             <CardContent className="p-8 text-center">
               <div className="max-w-md mx-auto">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Plus className="w-8 h-8 text-purple-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Create New Campaign</h3>
                 <p className="text-gray-600 mb-6">Start building your next Facebook ad campaign with our AI-powered tools and optimization features</p>
                 <Button 
                   size="lg" 
-                  className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-8 py-3"
+                  className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-8 py-3"
                 >
                   <Plus className="w-5 h-5 mr-2" />
                   Create Campaign

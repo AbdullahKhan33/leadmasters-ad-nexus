@@ -22,7 +22,7 @@ export function AdPlatformMenu() {
             className={`
               px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2
               ${platform.active 
-                ? 'bg-purple-600 text-white shadow-lg hover:bg-purple-700' 
+                ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg hover:from-purple-700 hover:to-pink-600' 
                 : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50'
               }
             `}

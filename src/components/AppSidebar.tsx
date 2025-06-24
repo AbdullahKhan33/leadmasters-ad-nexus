@@ -35,15 +35,15 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar className="border-r border-gray-200 bg-white">
+    <Sidebar className="border-r border-gray-200 bg-gradient-to-b from-purple-600 via-purple-500 to-pink-500">
       <div className="p-6">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">L</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-gray-900">LeadMasters</h1>
-            <p className="text-xs text-purple-600 font-medium">AI</p>
+            <h1 className="text-lg font-semibold text-white">LeadMasters</h1>
+            <p className="text-xs text-white/80 font-medium">AI</p>
           </div>
         </div>
       </div>
@@ -57,12 +57,12 @@ export function AppSidebar() {
                   <SidebarMenuButton 
                     asChild 
                     className={`
-                      w-full justify-start px-3 py-2.5 rounded-lg transition-all duration-200 hover:bg-gray-50
-                      ${item.active ? 'bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 border-r-3 border-purple-600 shadow-sm' : 'text-gray-700 hover:text-gray-900'}
+                      w-full justify-start px-3 py-2.5 rounded-lg transition-all duration-200 hover:bg-white/10
+                      ${item.active ? 'bg-white/20 text-white border-r-3 border-white shadow-sm backdrop-blur' : 'text-white/80 hover:text-white'}
                     `}
                   >
                     <a href={item.url} className="flex items-center space-x-3">
-                      <item.icon className={`w-4 h-4 ${item.active ? 'text-purple-600' : 'text-gray-500'}`} />
+                      <item.icon className={`w-4 h-4 ${item.active ? 'text-white' : 'text-white/70'}`} />
                       <span className="text-sm font-medium">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
