@@ -34,8 +34,10 @@ const menuItems = [
 ];
 
 export function AppSidebar() {
+  console.log("AppSidebar is rendering");
+  
   return (
-    <Sidebar className="border-r border-gray-200 bg-gradient-to-b from-purple-600 via-purple-500 to-pink-500">
+    <Sidebar className="border-r border-gray-200 bg-gradient-to-b from-purple-600 via-purple-500 to-pink-500 z-50" style={{ width: '256px', position: 'relative' }}>
       <div className="p-6">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
