@@ -13,24 +13,24 @@ const platforms = [
 
 export function AdPlatformMenu() {
   return (
-    <div className="bg-white border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center space-x-1">
+    <div className="bg-white border-b border-gray-200 px-6 py-5">
+      <div className="flex items-center space-x-2">
         {platforms.map((platform) => (
           <Button
             key={platform.name}
             variant="ghost"
             className={`
-              px-4 py-2 rounded-full transition-all duration-200 flex items-center space-x-2 relative
+              px-5 py-2.5 rounded-full transition-all duration-300 ease-out flex items-center space-x-2.5 relative group cursor-pointer
               ${platform.active 
-                ? 'bg-purple-100 text-purple-700 hover:bg-purple-150' 
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'bg-gradient-to-r from-purple-600/15 to-pink-500/15 text-purple-700 font-semibold hover:from-purple-600/20 hover:to-pink-500/20' 
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/60 font-medium'
               }
             `}
           >
-            <platform.icon className="w-4 h-4" />
-            <span className="text-sm font-medium">{platform.name}</span>
+            <platform.icon className={`w-4 h-4 transition-colors duration-300 ${platform.active ? 'text-purple-600' : ''}`} />
+            <span className="text-sm transition-colors duration-300">{platform.name}</span>
             {platform.active && (
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-purple-600 rounded-full" />
+              <div className="absolute -bottom-0.5 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full shadow-sm" />
             )}
           </Button>
         ))}
