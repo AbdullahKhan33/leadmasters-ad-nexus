@@ -1,6 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Bell, Coins } from "lucide-react";
 
 export function TopBar() {
@@ -34,18 +34,32 @@ export function TopBar() {
             size="sm"
             className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 transition-colors duration-200"
           >
-            <Bell className="w-4 h-4 mr-2" />
-            Notifications
+            <Bell className="w-4 h-4" />
           </Button>
           
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:border-orange-300 transition-colors duration-200"
-          >
-            <Coins className="w-4 h-4 mr-2" />
-            Credits
-          </Button>
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:border-orange-300 transition-colors duration-200"
+              >
+                <Coins className="w-4 h-4" />
+              </Button>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-48">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700">Free Credits</span>
+                  <span className="text-sm text-gray-500">5</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700">Premium Credits</span>
+                  <span className="text-sm text-gray-500">25</span>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
           
           <Button 
             variant="outline" 
