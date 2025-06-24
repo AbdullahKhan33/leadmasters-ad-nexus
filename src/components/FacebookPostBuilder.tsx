@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CustomSelect } from "@/components/ui/custom-select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -25,10 +26,11 @@ import {
   Video,
   Upload,
   X,
-  Image as ImageIcon
+  Image as ImageIcon,
+  BookOpen
 } from "lucide-react";
 
-type PostType = 'post' | 'reel';
+type PostType = 'post' | 'reel' | 'story';
 
 export function FacebookPostBuilder() {
   const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
@@ -42,8 +44,9 @@ export function FacebookPostBuilder() {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
 
   const postTypes = [
-    { value: 'post', label: 'Post', icon: FileText },
-    { value: 'reel', label: 'Reel', icon: Video }
+    { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
+    { value: 'reel', label: 'Reel', icon: Video, emoji: '🎬' },
+    { value: 'story', label: 'Story', icon: BookOpen, emoji: '📖' }
   ];
 
   const audiences = [
@@ -90,7 +93,7 @@ export function FacebookPostBuilder() {
     
     // Simulate AI generation
     setTimeout(() => {
-      const contentType = selectedPostType === 'reel' ? 'Facebook Reel' : 'Facebook post';
+      const contentType = selectedPostType === 'reel' ? 'Facebook Reel' : selectedPostType === 'story' ? 'Facebook Story' : 'Facebook post';
       const mockPost = `🚀 Exciting ${contentType.toLowerCase()} for ${selectedAudience.toLowerCase()}! 
 
 ${prompt}
@@ -105,12 +108,20 @@ Join thousands of professionals who are already transforming their careers with 
 
 Ready to take the next step? Comment below or DM us! 
 
-#LeadMastersAI #CareerGrowth #ProfessionalDevelopment #AI #SkillBuilding${selectedPostType === 'reel' ? ' #Reels #FacebookReels' : ''}`;
+#LeadMastersAI #CareerGrowth #ProfessionalDevelopment #AI #SkillBuilding${selectedPostType === 'reel' ? ' #Reels #FacebookReels' : selectedPostType === 'story' ? ' #Stories #FacebookStories' : ''}`;
 
       setGeneratedPost(mockPost);
       setShowResponse(true);
       setIsGenerating(false);
     }, 2000);
+  };
+
+  const getContentTypeLabel = () => {
+    switch (selectedPostType) {
+      case 'reel': return 'Reel';
+      case 'story': return 'Story';
+      default: return 'Post';
+    }
   };
 
   return (
@@ -123,15 +134,15 @@ Ready to take the next step? Comment below or DM us!
             <span className="text-sm font-medium text-gray-700">Powered by AI</span>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF] bg-clip-text text-transparent">
-            Facebook AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Generator
+            Facebook AI {getContentTypeLabel()} Generator
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Create engaging, AI-powered Facebook {selectedPostType === 'reel' ? 'reels' : 'posts'} that resonate with your audience
+            Create engaging, AI-powered Facebook {selectedPostType === 'reel' ? 'reels' : selectedPostType === 'story' ? 'stories' : 'posts'} that resonate with your audience
           </p>
         </div>
 
         {/* Media Upload Section */}
-        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-purple-500/10">
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500">
           <CardHeader className="relative pb-4">
             <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-3">
               <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
@@ -190,45 +201,70 @@ Ready to take the next step? Comment below or DM us!
           </CardContent>
         </Card>
 
-        {/* AI Configuration Card */}
-        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-purple-500/10">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5" />
+        {/* AI Configuration Card with Glassmorphism */}
+        <Card className="relative overflow-hidden backdrop-blur-xl border border-white/40 shadow-2xl shadow-purple-500/20 hover:shadow-purple-500/30 transition-all duration-700">
+          {/* Glassmorphism background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-purple-50/60 to-pink-50/40 backdrop-blur-xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-pink-500/10" />
+          
           <CardHeader className="relative pb-6">
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center space-x-3">
-              <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
+              <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg">
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <span>AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Configuration</span>
+              <span>AI {getContentTypeLabel()} Configuration</span>
+              <div className="ml-auto">
+                <Zap className="w-5 h-5 text-purple-600" />
+              </div>
             </CardTitle>
           </CardHeader>
+          
           <CardContent className="relative space-y-8">
-            {/* Configuration Grid */}
-            <div className="grid md:grid-cols-4 gap-8">
-              <div className="space-y-3">
-                <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
-                  <FileText className="w-4 h-4" />
-                  <span>Content Type</span>
-                </Label>
-                <CustomSelect
-                  options={postTypes}
-                  value={selectedPostType}
-                  onValueChange={(value) => setSelectedPostType(value as PostType)}
-                  placeholder="Select content type"
-                />
-              </div>
+            {/* Content Type Toggle Pills */}
+            <div className="space-y-4">
+              <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                <FileText className="w-4 h-4" />
+                <span>Content Type</span>
+              </Label>
+              <ToggleGroup 
+                type="single" 
+                value={selectedPostType} 
+                onValueChange={(value) => value && setSelectedPostType(value as PostType)}
+                className="grid grid-cols-3 gap-2 p-1 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-200/50"
+              >
+                {postTypes.map((type) => (
+                  <ToggleGroupItem
+                    key={type.value}
+                    value={type.value}
+                    className={`
+                      flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-300
+                      ${selectedPostType === type.value 
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl hover:scale-105' 
+                        : 'bg-white/80 text-gray-700 hover:bg-purple-50 hover:text-purple-700 hover:shadow-md'
+                      }
+                    `}
+                  >
+                    <span className="text-lg">{type.emoji}</span>
+                    <span className="font-semibold">{type.label}</span>
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </div>
 
+            {/* Configuration Grid */}
+            <div className="grid md:grid-cols-3 gap-8">
               <div className="space-y-3">
                 <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
                   <User className="w-4 h-4" />
                   <span>Target Audience</span>
                 </Label>
                 <Select value={selectedAudience} onValueChange={setSelectedAudience}>
-                  <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all duration-200">
+                  <SelectTrigger className="h-11 bg-white/90 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/30 focus:border-purple-400 transition-all duration-300 hover:shadow-lg">
                     <SelectValue placeholder="Select your audience" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/10">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/20">
                     {audiences.map((audience) => (
-                      <SelectItem key={audience} value={audience} className="hover:bg-purple-50/80">
+                      <SelectItem key={audience} value={audience} className="hover:bg-purple-50/80 focus:bg-purple-50">
                         {audience}
                       </SelectItem>
                     ))}
@@ -242,12 +278,12 @@ Ready to take the next step? Comment below or DM us!
                   <span>Page Selection</span>
                 </Label>
                 <Select value={selectedPage} onValueChange={setSelectedPage}>
-                  <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all duration-200">
+                  <SelectTrigger className="h-11 bg-white/90 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/30 focus:border-purple-400 transition-all duration-300 hover:shadow-lg">
                     <SelectValue placeholder="Choose your page" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/10">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/20">
                     {pages.map((page) => (
-                      <SelectItem key={page} value={page} className="hover:bg-purple-50/80">
+                      <SelectItem key={page} value={page} className="hover:bg-purple-50/80 focus:bg-purple-50">
                         {page}
                       </SelectItem>
                     ))}
@@ -261,12 +297,12 @@ Ready to take the next step? Comment below or DM us!
                   <span>AI Model</span>
                 </Label>
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
-                  <SelectTrigger className="h-10 bg-white/80 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-400 transition-all duration-200">
+                  <SelectTrigger className="h-11 bg-white/90 backdrop-blur-sm border-purple-200/60 hover:bg-white hover:border-purple-300 focus:ring-2 focus:ring-purple-500/30 focus:border-purple-400 transition-all duration-300 hover:shadow-lg">
                     <SelectValue placeholder="Select AI model" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/10">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-purple-200/60 shadow-xl shadow-purple-500/20">
                     {aiModels.map((model) => (
-                      <SelectItem key={model} value={model} className="hover:bg-purple-50/80">
+                      <SelectItem key={model} value={model} className="hover:bg-purple-50/80 focus:bg-purple-50">
                         {model}
                       </SelectItem>
                     ))}
@@ -286,7 +322,7 @@ Ready to take the next step? Comment below or DM us!
                   placeholder={`e.g., Create an engaging ${selectedPostType} announcement for AI and career development...`}
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="min-h-[120px] bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20 resize-none text-base"
+                  className="min-h-[120px] bg-white/90 backdrop-blur-sm border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/30 focus:shadow-2xl resize-none text-base"
                 />
                 {prompt && (
                   <div className="absolute top-3 right-3">
@@ -296,12 +332,12 @@ Ready to take the next step? Comment below or DM us!
               </div>
             </div>
 
-            {/* Generate Button */}
+            {/* Generate Button with Enhanced Hover */}
             <div className="flex justify-center pt-6">
               <Button
                 onClick={handleGeneratePost}
                 disabled={!selectedAudience || !selectedPage || !selectedModel || !prompt || isGenerating}
-                className="relative group bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white px-12 py-4 text-lg font-semibold rounded-2xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="relative group bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white px-12 py-4 text-lg font-semibold rounded-2xl shadow-2xl hover:shadow-purple-500/30 transition-all duration-500 hover:scale-105 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
                 size="lg"
               >
                 {isGenerating ? (
@@ -319,7 +355,7 @@ Ready to take the next step? Comment below or DM us!
                 ) : (
                   <>
                     <ArrowRight className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
-                    <span>Generate AI {selectedPostType === 'reel' ? 'Reel' : 'Post'}</span>
+                    <span>Generate AI {getContentTypeLabel()}</span>
                   </>
                 )}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400/20 to-pink-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -332,7 +368,7 @@ Ready to take the next step? Comment below or DM us!
           <div className="space-y-6">
             {/* Section Header */}
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated {selectedPostType === 'reel' ? 'Reel' : 'Post'}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated {getContentTypeLabel()}</h2>
               <p className="text-gray-600">AI-powered content ready for your Facebook page</p>
             </div>
 
@@ -352,7 +388,7 @@ Ready to take the next step? Comment below or DM us!
                 </CardContent>
               </Card>
             ) : (
-              <Card className="max-w-2xl mx-auto relative overflow-hidden bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl shadow-purple-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
+              <Card className="max-w-2xl mx-auto relative overflow-hidden bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl shadow-purple-500/20 animate-in fade-in duration-700 slide-in-from-bottom-8 hover:shadow-3xl hover:shadow-purple-500/30 transition-all duration-500">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
                 <CardContent className="p-8">
                   {/* Mock Facebook Post Preview */}
@@ -439,23 +475,19 @@ Ready to take the next step? Comment below or DM us!
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
-                    <Button className="group relative h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105">
+                  {/* Action Buttons with Enhanced Hover */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                    <Button className="group relative h-12 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1">
                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                       <span className="font-semibold">Post Now</span>
                     </Button>
-                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-purple-700">
+                    <Button variant="outline" className="h-12 bg-white/90 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg hover:border-purple-300 rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-purple-700">
                       <Save className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Save to Draft</span>
+                      <span className="font-semibold">Save Draft</span>
                     </Button>
-                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-purple-700">
+                    <Button variant="outline" className="h-12 bg-white/90 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg hover:border-purple-300 rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-purple-700">
                       <Calendar className="w-4 h-4 mr-2" />
                       <span className="font-semibold">Schedule</span>
-                    </Button>
-                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-purple-700">
-                      <Edit className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Edit Post</span>
                     </Button>
                   </div>
                 </CardContent>
