@@ -18,17 +18,20 @@ export function AdPlatformMenu() {
         {platforms.map((platform) => (
           <Button
             key={platform.name}
-            variant={platform.active ? "default" : "ghost"}
+            variant="ghost"
             className={`
-              px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2
+              px-4 py-2 rounded-full transition-all duration-200 flex items-center space-x-2 relative
               ${platform.active 
-                ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg hover:from-purple-700 hover:to-pink-600' 
-                : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50'
+                ? 'bg-purple-100 text-purple-700 hover:bg-purple-150' 
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }
             `}
           >
             <platform.icon className="w-4 h-4" />
             <span className="text-sm font-medium">{platform.name}</span>
+            {platform.active && (
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-purple-600 rounded-full" />
+            )}
           </Button>
         ))}
       </div>

@@ -32,12 +32,12 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
       case 'Good':
         return 'text-blue-600';
       default:
-        return 'text-gray-600';
+        return 'text-gray-500';
     }
   };
 
   return (
-    <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-purple-200 hover:shadow-sm transition-all duration-200 bg-white group">
+    <div className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:border-purple-200 hover:shadow-sm hover:bg-gray-25 cursor-pointer transition-all duration-200 bg-white group">
       <div className="flex-1">
         <div className="flex items-center space-x-3 mb-2">
           <h4 className="font-medium text-gray-900 group-hover:text-purple-700 transition-colors duration-200">{campaign.name}</h4>
@@ -54,21 +54,21 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
         <Button 
           size="sm" 
           variant="ghost" 
-          className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors duration-200"
+          className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors duration-200 cursor-pointer"
         >
           <Edit className="w-4 h-4" />
         </Button>
         <Button 
           size="sm" 
           variant="ghost" 
-          className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors duration-200"
+          className="text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-colors duration-200 cursor-pointer"
         >
           <Copy className="w-4 h-4" />
         </Button>
         <Button 
           size="sm" 
           variant="ghost" 
-          className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+          className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
         >
           <MoreHorizontal className="w-4 h-4" />
         </Button>
