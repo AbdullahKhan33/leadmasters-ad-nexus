@@ -229,9 +229,6 @@ Ready to take the next step? Comment below or DM us!
                     >
                       <span className="text-lg">{type.emoji}</span>
                       <span className="font-semibold">{type.label}</span>
-                      {isActive && (
-                        <div className="absolute -bottom-0.5 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-white rounded-full shadow-sm" />
-                      )}
                     </Button>
                   );
                 })}
