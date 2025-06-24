@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { AdPlatformMenu } from "./AdPlatformMenu";
-import { FacebookAdBuilder } from "./FacebookAdBuilder";
+import { FacebookPostBuilder } from "./FacebookPostBuilder";
 import { InstagramAdBuilder } from "./InstagramAdBuilder";
 import { GoogleAdBuilder } from "./GoogleAdBuilder";
 import { LinkedInAdBuilder } from "./LinkedInAdBuilder";
@@ -21,8 +21,8 @@ export function AdBuilder() {
   const renderPlatformBuilder = () => {
     switch (selectedPlatform) {
       case 'facebook':
-        console.log("Rendering Facebook builder");
-        return <FacebookAdBuilder />;
+        console.log("Rendering Facebook post builder");
+        return <FacebookPostBuilder />;
       case 'instagram':
         console.log("Rendering Instagram builder");
         return <InstagramAdBuilder />;
@@ -36,7 +36,7 @@ export function AdBuilder() {
         console.log("Rendering WhatsApp builder");
         return <WhatsAppAdBuilder />;
       default:
-        return <FacebookAdBuilder />;
+        return <FacebookPostBuilder />;
     }
   };
 
