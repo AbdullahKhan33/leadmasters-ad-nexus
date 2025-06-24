@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertTriangle, ChevronDown } from "lucide-react";
+import { Bell, Coins } from "lucide-react";
 
 export function TopBar() {
   return (
@@ -25,15 +25,28 @@ export function TopBar() {
                 </SelectContent>
               </Select>
             </div>
-            
-            <div className="flex items-center space-x-2 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200">
-              <AlertTriangle className="w-4 h-4 text-amber-600" />
-              <span className="text-sm font-medium text-amber-700">Pending</span>
-            </div>
           </div>
         </div>
         
         <div className="flex items-center space-x-3">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 transition-colors duration-200"
+          >
+            <Bell className="w-4 h-4 mr-2" />
+            Notifications
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:border-orange-300 transition-colors duration-200"
+          >
+            <Coins className="w-4 h-4 mr-2" />
+            Credits
+          </Button>
+          
           <Button 
             variant="outline" 
             className="border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
