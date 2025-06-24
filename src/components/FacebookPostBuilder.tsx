@@ -26,11 +26,10 @@ import {
   Video,
   Upload,
   X,
-  Image as ImageIcon,
-  BookOpen
+  Image as ImageIcon
 } from "lucide-react";
 
-type PostType = 'post' | 'reel' | 'story';
+type PostType = 'post' | 'reel';
 
 export function FacebookPostBuilder() {
   const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
@@ -45,8 +44,7 @@ export function FacebookPostBuilder() {
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
-    { value: 'reel', label: 'Reel', icon: Video, emoji: '🎬' },
-    { value: 'story', label: 'Story', icon: BookOpen, emoji: '📖' }
+    { value: 'reel', label: 'Reel', icon: Video, emoji: '🎬' }
   ];
 
   const audiences = [
@@ -93,7 +91,7 @@ export function FacebookPostBuilder() {
     
     // Simulate AI generation
     setTimeout(() => {
-      const contentType = selectedPostType === 'reel' ? 'Facebook Reel' : selectedPostType === 'story' ? 'Facebook Story' : 'Facebook post';
+      const contentType = selectedPostType === 'reel' ? 'Facebook Reel' : 'Facebook post';
       const mockPost = `🚀 Exciting ${contentType.toLowerCase()} for ${selectedAudience.toLowerCase()}! 
 
 ${prompt}
@@ -108,7 +106,7 @@ Join thousands of professionals who are already transforming their careers with 
 
 Ready to take the next step? Comment below or DM us! 
 
-#LeadMastersAI #CareerGrowth #ProfessionalDevelopment #AI #SkillBuilding${selectedPostType === 'reel' ? ' #Reels #FacebookReels' : selectedPostType === 'story' ? ' #Stories #FacebookStories' : ''}`;
+#LeadMastersAI #CareerGrowth #ProfessionalDevelopment #AI #SkillBuilding${selectedPostType === 'reel' ? ' #Reels #FacebookReels' : ''}`;
 
       setGeneratedPost(mockPost);
       setShowResponse(true);
@@ -119,7 +117,6 @@ Ready to take the next step? Comment below or DM us!
   const getContentTypeLabel = () => {
     switch (selectedPostType) {
       case 'reel': return 'Reel';
-      case 'story': return 'Story';
       default: return 'Post';
     }
   };
@@ -137,7 +134,7 @@ Ready to take the next step? Comment below or DM us!
             Facebook AI {getContentTypeLabel()} Generator
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Create engaging, AI-powered Facebook {selectedPostType === 'reel' ? 'reels' : selectedPostType === 'story' ? 'stories' : 'posts'} that resonate with your audience
+            Create engaging, AI-powered Facebook {selectedPostType === 'reel' ? 'reels' : 'posts'} that resonate with your audience
           </p>
         </div>
 
@@ -230,7 +227,7 @@ Ready to take the next step? Comment below or DM us!
                 type="single" 
                 value={selectedPostType} 
                 onValueChange={(value) => value && setSelectedPostType(value as PostType)}
-                className="grid grid-cols-3 gap-2 p-1 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-200/50"
+                className="grid grid-cols-2 gap-2 p-1 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-200/50"
               >
                 {postTypes.map((type) => (
                   <ToggleGroupItem
@@ -239,8 +236,8 @@ Ready to take the next step? Comment below or DM us!
                     className={`
                       flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-300
                       ${selectedPostType === type.value 
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl hover:scale-105' 
-                        : 'bg-white/80 text-gray-700 hover:bg-purple-50 hover:text-purple-700 hover:shadow-md'
+                        ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white shadow-lg hover:shadow-xl hover:scale-105 hover:from-violet-600 hover:via-purple-600 hover:to-fuchsia-600' 
+                        : 'bg-white/80 text-gray-700 hover:bg-gradient-to-r hover:from-purple-100 hover:to-pink-100 hover:text-purple-700 hover:shadow-md'
                       }
                     `}
                   >
