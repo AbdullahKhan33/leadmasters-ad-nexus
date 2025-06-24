@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 import {
   Megaphone,
   PenTool,
@@ -40,6 +41,8 @@ export function AppSidebar({
   currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   // Consistent platform styles for selected and hover states
   const getMenuItemStyles = (isSelected: boolean) => {
@@ -60,18 +63,25 @@ export function AppSidebar({
     <Sidebar className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
       <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="flex items-center justify-between px-4 py-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+          {!isCollapsed && (
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Zap className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="font-bold text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                  LeadMasters
+                </h1>
+                <p className="text-xs text-gray-500 font-medium">AI POWERED</p>
+              </div>
+            </div>
+          )}
+          {isCollapsed && (
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg mx-auto">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <div>
-              <h1 className="font-bold text-xl bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-                LeadMasters
-              </h1>
-              <p className="text-xs text-gray-500 font-medium">AI POWERED</p>
-            </div>
-          </div>
-          <SidebarTrigger className="ml-auto" />
+          )}
+          <SidebarTrigger className={isCollapsed ? "mx-auto mt-2" : "ml-auto"} />
         </div>
       </SidebarHeader>
 
@@ -80,105 +90,175 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onDashboardClick}
-              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'dashboard')}`}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'dashboard')}`}
             >
-              <div className="flex items-center space-x-3">
-                <LayoutDashboard className={`w-5 h-5 ${getIconStyles(currentView === 'dashboard')} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Dashboard</span>
-              </div>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <LayoutDashboard className={`w-5 h-5 ${getIconStyles(currentView === 'dashboard')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Dashboard</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <LayoutDashboard className={`w-5 h-5 ${getIconStyles(currentView === 'dashboard')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Dashboard</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onAdBuilderClick}
-              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'ad-builder')}`}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'ad-builder')}`}
             >
-              <div className="flex items-center space-x-3">
-                <Megaphone className={`w-5 h-5 ${getIconStyles(currentView === 'ad-builder')} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Ad Builder</span>
-              </div>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Megaphone className={`w-5 h-5 ${getIconStyles(currentView === 'ad-builder')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Ad Builder</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Megaphone className={`w-5 h-5 ${getIconStyles(currentView === 'ad-builder')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Ad Builder</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onPostBuilderClick}
-              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'post-builder')}`}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'post-builder')}`}
             >
-              <div className="flex items-center space-x-3">
-                <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Post Builder</span>
-              </div>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Post Builder</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Post Builder</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onInspirationHubClick}
-              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'inspiration-hub')}`}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'inspiration-hub')}`}
             >
-              <div className="flex items-center space-x-3">
-                <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Inspiration Hub</span>
-              </div>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Inspiration</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Inspiration Hub</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onSocialLoginsClick}
-              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'social-logins')}`}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'social-logins')}`}
             >
-              <div className="flex items-center space-x-3">
-                <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Social Logins</span>
-              </div>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Social</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Social Logins</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
-              <div className="flex items-center space-x-3">
-                <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">CRM Dashboard</span>
-              </div>
+            <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">CRM</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">CRM Dashboard</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
-              <div className="flex items-center space-x-3">
-                <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Analytics</span>
-              </div>
+            <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Analytics</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Analytics</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
-              <div className="flex items-center space-x-3">
-                <Calendar className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Schedule</span>
-              </div>
+            <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Calendar className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Schedule</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Calendar className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Schedule</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
-              <div className="flex items-center space-x-3">
-                <Bot className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Automations</span>
-              </div>
+            <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Bot className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Automations</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Bot className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Automations</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
-              <div className="flex items-center space-x-3">
-                <Briefcase className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Workspace</span>
-              </div>
+            <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Briefcase className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Workspace</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Briefcase className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Workspace</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -189,12 +269,19 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={() => setIsSettingsOpen(true)}
-              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}
             >
-              <div className="flex items-center space-x-3">
-                <Settings className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                <span className="font-semibold">Settings</span>
-              </div>
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Settings className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Settings</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Settings className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Settings</span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
