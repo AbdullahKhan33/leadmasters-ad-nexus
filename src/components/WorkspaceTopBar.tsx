@@ -2,8 +2,7 @@
 import React from 'react';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, Building2 } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 
 export function WorkspaceTopBar() {
   const { activeWorkspace } = useWorkspace();
@@ -17,11 +16,11 @@ export function WorkspaceTopBar() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-3">
-            <Building2 className="w-5 h-5 text-purple-600" />
+            <Building2 className="w-6 h-6 text-purple-600" />
             <div>
-              <h2 className="text-lg font-semibold text-gray-800">
-                Working in: <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">{activeWorkspace.name}</span>
-              </h2>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                {activeWorkspace.name}
+              </h1>
               <div className="flex items-center space-x-2 mt-1">
                 <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
                   {activeWorkspace.country}
@@ -35,13 +34,6 @@ export function WorkspaceTopBar() {
               </div>
             </div>
           </div>
-        </div>
-        
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" size="sm" className="text-sm">
-            <ChevronDown className="w-4 h-4 mr-2" />
-            Switch Workspace
-          </Button>
         </div>
       </div>
     </div>
