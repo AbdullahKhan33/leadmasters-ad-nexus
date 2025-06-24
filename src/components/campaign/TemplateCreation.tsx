@@ -144,7 +144,7 @@ export function TemplateCreation({ onTemplateCreated, onCancel }: TemplateCreati
                 className="min-h-[120px] resize-none"
               />
               <p className="text-xs text-gray-500">
-                Use variables like {{1}} for personalization
+                Use variables like {`{{1}}`} for personalization
               </p>
             </div>
 
