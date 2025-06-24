@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -204,19 +203,7 @@ Ready to take the next step? Comment below or DM us!
           <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-purple-50/60 to-pink-50/40 backdrop-blur-xl" />
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-pink-500/10" />
           
-          <CardHeader className="relative pb-6">
-            <CardTitle className="text-2xl font-bold text-gray-900 flex items-center space-x-3">
-              <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <span>AI {getContentTypeLabel()} Configuration</span>
-              <div className="ml-auto">
-                <Zap className="w-5 h-5 text-purple-600" />
-              </div>
-            </CardTitle>
-          </CardHeader>
-          
-          <CardContent className="relative space-y-8">
+          <CardContent className="relative space-y-8 pt-8">
             {/* Content Type Toggle Pills */}
             <div className="space-y-4">
               <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
@@ -233,10 +220,10 @@ Ready to take the next step? Comment below or DM us!
                       variant="ghost"
                       onClick={() => setSelectedPostType(type.value as PostType)}
                       className={`
-                        px-5 py-2 rounded-full transition-all duration-200 ease-out flex items-center space-x-2.5 relative group cursor-pointer
+                        px-5 py-2 rounded-full transition-all duration-200 ease-out flex items-center space-x-2.5 relative group cursor-pointer border
                         ${isActive 
-                          ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white font-semibold shadow-lg hover:from-purple-700 hover:to-pink-600 hover:text-white' 
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium'
+                          ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white font-semibold shadow-lg hover:from-purple-700 hover:to-pink-600 hover:text-white border-transparent' 
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 font-medium bg-white/50 border-gray-200 hover:border-gray-300 hover:shadow-md'
                         }
                       `}
                     >
