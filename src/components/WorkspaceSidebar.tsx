@@ -165,12 +165,12 @@ export function WorkspaceSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Inspiration</span>
+                  <span className="text-xs font-medium">Post Ideas</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Inspiration Hub</span>
+                  <span className="font-semibold">Post Ideas</span>
                 </div>
               )}
             </SidebarMenuButton>
@@ -184,12 +184,12 @@ export function WorkspaceSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Social</span>
+                  <span className="text-xs font-medium">Connected</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Social Logins</span>
+                  <span className="font-semibold">Connected Accounts</span>
                 </div>
               )}
             </SidebarMenuButton>
@@ -200,12 +200,12 @@ export function WorkspaceSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">CRM</span>
+                  <span className="text-xs font-medium">Leads</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <BarChart3 className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">CRM Dashboard</span>
+                  <span className="font-semibold">Leads & CRM</span>
                 </div>
               )}
             </SidebarMenuButton>
@@ -219,12 +219,12 @@ export function WorkspaceSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Analytics</span>
+                  <span className="text-xs font-medium">Insights</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Analytics</span>
+                  <span className="font-semibold">Insights</span>
                 </div>
               )}
             </SidebarMenuButton>
@@ -257,12 +257,12 @@ export function WorkspaceSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'smart-automations')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Automations</span>
+                  <span className="text-xs font-medium">Smart Flows</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'smart-automations')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Automations</span>
+                  <span className="font-semibold">Smart Flows</span>
                 </div>
               )}
             </SidebarMenuButton>
