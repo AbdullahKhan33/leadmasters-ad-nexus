@@ -21,7 +21,11 @@ import {
   MoreHorizontal,
   Wand2,
   Edit,
-  Repeat2
+  Repeat2,
+  Upload,
+  X,
+  Image as ImageIcon,
+  Video
 } from "lucide-react";
 
 export function TwitterPostBuilder() {
@@ -32,6 +36,8 @@ export function TwitterPostBuilder() {
   const [generatedPost, setGeneratedPost] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
+  const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+  const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
 
   const audiences = [
     'Students',
@@ -55,6 +61,25 @@ export function TwitterPostBuilder() {
     'Gemini Pro',
     'Custom Model'
   ];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedMedia(file);
+      
+      // Create preview URL for the uploaded file
+      const url = URL.createObjectURL(file);
+      setMediaPreviewUrl(url);
+    }
+  };
+
+  const removeUploadedMedia = () => {
+    if (mediaPreviewUrl) {
+      URL.revokeObjectURL(mediaPreviewUrl);
+    }
+    setUploadedMedia(null);
+    setMediaPreviewUrl(null);
+  };
 
   const handleGeneratePost = async () => {
     if (!selectedAudience || !selectedPage || !selectedModel || !prompt) {
@@ -104,6 +129,66 @@ Ready to transform? Drop a 💯 below or DM us!
             Create viral, AI-powered Twitter posts that spark conversations
           </p>
         </div>
+
+        {/* Media Upload Section */}
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-blue-500/10">
+          <CardHeader className="relative pb-4">
+            <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-3">
+              <div className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500">
+                <Upload className="w-5 h-5 text-white" />
+              </div>
+              <span>Upload Media</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="relative">
+            {!uploadedMedia ? (
+              <div className="border-2 border-dashed border-blue-200 rounded-xl p-8 text-center hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200">
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="twitter-media-upload"
+                />
+                <label htmlFor="twitter-media-upload" className="cursor-pointer">
+                  <Upload className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                  <p className="text-lg font-medium text-gray-700 mb-2">
+                    Drop your files here, or browse
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Supports: JPG, PNG, MP4, MOV (max 50MB)
+                  </p>
+                </label>
+              </div>
+            ) : (
+              <div className="border border-blue-200 rounded-xl p-6 bg-blue-50/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {uploadedMedia.type.startsWith('image/') ? (
+                      <ImageIcon className="w-8 h-8 text-blue-600" />
+                    ) : (
+                      <Video className="w-8 h-8 text-blue-600" />
+                    )}
+                    <div>
+                      <p className="font-medium text-gray-900">{uploadedMedia.name}</p>
+                      <p className="text-sm text-gray-500">
+                        {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={removeUploadedMedia}
+                    className="text-gray-500 hover:text-red-500"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-blue-500/10">
@@ -287,6 +372,25 @@ Ready to transform? Drop a 💯 below or DM us!
                       <p className="text-gray-800 whitespace-pre-line leading-relaxed text-base">
                         {generatedPost}
                       </p>
+                      
+                      {/* Media Section */}
+                      {uploadedMedia && mediaPreviewUrl && (
+                        <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
+                          {uploadedMedia.type.startsWith('image/') ? (
+                            <img 
+                              src={mediaPreviewUrl} 
+                              alt="Uploaded preview" 
+                              className="w-full h-auto object-cover max-h-96"
+                            />
+                          ) : (
+                            <video 
+                              src={mediaPreviewUrl} 
+                              className="w-full h-auto object-cover max-h-96"
+                              controls
+                            />
+                          )}
+                        </div>
+                      )}
                       
                       {/* Mock engagement section */}
                       <div className="text-gray-500 text-sm pt-3">
