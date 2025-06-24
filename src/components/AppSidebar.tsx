@@ -19,18 +19,21 @@ import {
   Calendar,
   Bot,
   Briefcase,
+  LayoutDashboard,
 } from "lucide-react";
 
 export function AppSidebar({ 
   onPostBuilderClick, 
   onAdBuilderClick, 
   onSocialLoginsClick,
+  onDashboardClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
   onAdBuilderClick: () => void;
   onSocialLoginsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins';
+  onDashboardClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
@@ -67,6 +70,18 @@ export function AppSidebar({
 
       <SidebarContent className="px-3 py-6">
         <SidebarMenu className="space-y-2">
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onDashboardClick}
+              className={`w-full justify-start text-left h-12 px-4 rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'dashboard')}`}
+            >
+              <div className="flex items-center space-x-3">
+                <LayoutDashboard className={`w-5 h-5 ${getIconStyles(currentView === 'dashboard')} group-hover:scale-110 transition-transform duration-200`} />
+                <span className="font-semibold">Dashboard</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onAdBuilderClick}
