@@ -10,10 +10,11 @@ import { InspirationHub } from "@/components/InspirationHub";
 import { Analytics } from "@/components/Analytics";
 import { Schedule } from "@/components/Schedule";
 import { SmartAutomations } from "@/components/SmartAutomations";
+import { Workspaces } from "@/components/Workspaces";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Index() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces'>('dashboard');
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -47,6 +48,10 @@ export default function Index() {
     setCurrentView('smart-automations');
   };
 
+  const handleWorkspacesClick = () => {
+    setCurrentView('workspaces');
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -59,6 +64,7 @@ export default function Index() {
           onAnalyticsClick={handleAnalyticsClick}
           onScheduleClick={handleScheduleClick}
           onSmartAutomationsClick={handleSmartAutomationsClick}
+          onWorkspacesClick={handleWorkspacesClick}
           currentView={currentView}
         />
         <div className="flex-1 flex flex-col min-w-0">
@@ -78,6 +84,8 @@ export default function Index() {
               <Schedule />
             ) : currentView === 'smart-automations' ? (
               <SmartAutomations />
+            ) : currentView === 'workspaces' ? (
+              <Workspaces />
             ) : (
               <AdBuilder />
             )}
