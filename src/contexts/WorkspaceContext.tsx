@@ -4,26 +4,18 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface Workspace {
   id: string;
   name: string;
-  clientName: string;
-  industry: string;
+  description: string;
   country: string;
+  industry: string;
   businessType: string;
-  logo?: string;
-  initials: string;
-  metrics: {
-    campaigns: number;
-    scheduledPosts: number;
-    engagementTrend: number;
-    isPositive: boolean;
-  };
+  memberCount: number;
   isActive: boolean;
-  createdAt: string;
 }
 
 interface WorkspaceContextType {
   activeWorkspace: Workspace | null;
   setActiveWorkspace: (workspace: Workspace | null) => void;
-  selectWorkspace: (workspace: any) => void;
+  selectWorkspace: (workspace: Workspace) => void;
   isInWorkspace: boolean;
 }
 
@@ -32,7 +24,7 @@ const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefin
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace | null>(null);
 
-  const selectWorkspace = (workspace: any) => {
+  const selectWorkspace = (workspace: Workspace) => {
     setActiveWorkspace(workspace);
   };
 

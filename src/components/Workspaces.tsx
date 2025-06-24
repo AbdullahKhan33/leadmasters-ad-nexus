@@ -89,10 +89,11 @@ export function Workspaces() {
   const { selectWorkspace, activeWorkspace } = useWorkspace();
   const { toast } = useToast();
 
-  // Auto-select the first workspace on component mount
+  // Auto-select TechCorp Solutions (first workspace) on component mount
   useEffect(() => {
     if (workspaces.length > 0 && !activeWorkspace) {
-      selectWorkspace(workspaces[0]);
+      const techCorpWorkspace = workspaces.find(w => w.name === 'TechCorp Solutions') || workspaces[0];
+      selectWorkspace(techCorpWorkspace);
     }
   }, [workspaces, activeWorkspace, selectWorkspace]);
 
