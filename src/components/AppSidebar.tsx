@@ -37,36 +37,36 @@ export function AppSidebar() {
   console.log("AppSidebar is rendering");
   
   return (
-    <div className="w-64 h-full bg-gradient-to-b from-purple-600 via-purple-500 to-pink-500 border-r border-purple-400">
+    <div className="w-64 h-full bg-white border-r border-gray-200 shadow-sm">
       {/* Logo Section */}
-      <div className="p-6 border-b border-white/10">
+      <div className="p-6 border-b border-gray-100">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-sm">
             <span className="text-white font-bold text-lg">L</span>
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">LeadMasters</h1>
-            <p className="text-sm text-white/80 font-medium">AI</p>
+            <h1 className="text-xl font-bold text-gray-900">LeadMasters</h1>
+            <p className="text-sm text-gray-500 font-medium">AI</p>
           </div>
         </div>
       </div>
       
       {/* Navigation Menu */}
-      <div className="px-4 py-6">
-        <nav className="space-y-2">
+      <div className="px-3 py-6">
+        <nav className="space-y-1">
           {menuItems.map((item) => (
             <a
               key={item.title}
               href={item.url}
               className={`
-                flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
+                flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group
                 ${item.active 
-                  ? 'bg-white/20 text-white shadow-lg backdrop-blur border border-white/20' 
-                  : 'text-white/80 hover:text-white hover:bg-white/10'
+                  ? 'bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 border-r-2 border-purple-500 shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }
               `}
             >
-              <item.icon className={`w-5 h-5 ${item.active ? 'text-white' : 'text-white/70 group-hover:text-white'}`} />
+              <item.icon className={`w-5 h-5 ${item.active ? 'text-purple-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
               <span className="text-sm font-medium">{item.title}</span>
             </a>
           ))}
