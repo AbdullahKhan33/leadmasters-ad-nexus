@@ -13,11 +13,15 @@ import {
   Send,
   Sparkles,
   User,
-  Image as ImageIcon,
+  Zap,
   Heart,
   MessageCircle,
   Share,
-  MoreHorizontal
+  MoreHorizontal,
+  Wand2,
+  Rocket,
+  Palette,
+  Target
 } from "lucide-react";
 
 export function FacebookPostBuilder() {
@@ -53,10 +57,10 @@ export function FacebookPostBuilder() {
   ];
 
   const quickPrompts = [
-    "Provide me a post idea for Instagram",
-    "Suggest a poster idea for digital marketing",
-    "Create an engaging workshop announcement",
-    "Generate a motivational business post"
+    { text: "Instagram Post Idea", icon: Sparkles },
+    { text: "Product Launch Caption", icon: Rocket },
+    { text: "Poster Idea for Digital Marketing", icon: Palette },
+    { text: "Engagement-Focused Content", icon: Target }
   ];
 
   const handleGeneratePost = async () => {
@@ -95,39 +99,48 @@ Ready to take the next step? Comment below or DM us!
   };
 
   return (
-    <div className="flex-1 p-6 bg-gray-50">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="flex-1 min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20 overflow-y-auto">
+      <div className="max-w-5xl mx-auto p-8 space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
-            Facebook Post Builder
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white/20 shadow-lg">
+            <Zap className="w-4 h-4 text-purple-600" />
+            <span className="text-sm font-medium text-gray-700">Powered by AI</span>
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#D946EF] bg-clip-text text-transparent">
+            Facebook AI Post Generator
           </h1>
-          <p className="text-gray-600">
-            Create AI-powered Facebook posts tailored to your audience and objectives
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Create engaging, AI-powered Facebook posts that resonate with your audience
           </p>
         </div>
 
-        {/* User Input Section */}
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
-              <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
-              AI Post Configuration
+        {/* Floating AI Configuration Card */}
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-purple-500/10">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5" />
+          <CardHeader className="relative pb-6">
+            <CardTitle className="text-2xl font-bold text-gray-900 flex items-center space-x-3">
+              <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <span>AI Post Configuration</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="audience" className="text-sm font-medium text-gray-700">
-                  Select Audience/Profession
+          <CardContent className="relative space-y-8">
+            {/* Configuration Grid */}
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                  <User className="w-4 h-4" />
+                  <span>Target Audience</span>
                 </Label>
                 <Select value={selectedAudience} onValueChange={setSelectedAudience}>
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Choose target audience" />
+                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20">
+                    <SelectValue placeholder="Select your audience" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
                     {audiences.map((audience) => (
-                      <SelectItem key={audience} value={audience}>
+                      <SelectItem key={audience} value={audience} className="hover:bg-purple-50/80">
                         {audience}
                       </SelectItem>
                     ))}
@@ -135,17 +148,18 @@ Ready to take the next step? Comment below or DM us!
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="page" className="text-sm font-medium text-gray-700">
-                  Select Page
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                  <Wand2 className="w-4 h-4" />
+                  <span>Page Selection</span>
                 </Label>
                 <Select value={selectedPage} onValueChange={setSelectedPage}>
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Choose page to post from" />
+                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20">
+                    <SelectValue placeholder="Choose your page" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
                     {pages.map((page) => (
-                      <SelectItem key={page} value={page}>
+                      <SelectItem key={page} value={page} className="hover:bg-purple-50/80">
                         {page}
                       </SelectItem>
                     ))}
@@ -153,17 +167,18 @@ Ready to take the next step? Comment below or DM us!
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="model" className="text-sm font-medium text-gray-700">
-                  Select AI Model
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                  <Zap className="w-4 h-4" />
+                  <span>AI Model</span>
                 </Label>
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
-                  <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Choose AI model" />
+                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20">
+                    <SelectValue placeholder="Select AI model" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
                     {aiModels.map((model) => (
-                      <SelectItem key={model} value={model}>
+                      <SelectItem key={model} value={model} className="hover:bg-purple-50/80">
                         {model}
                       </SelectItem>
                     ))}
@@ -172,101 +187,161 @@ Ready to take the next step? Comment below or DM us!
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="prompt" className="text-sm font-medium text-gray-700">
-                What should the post be about?
+            {/* Prompt Input */}
+            <div className="space-y-4">
+              <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                <Sparkles className="w-4 h-4" />
+                <span>Describe your post idea</span>
               </Label>
-              <Textarea
-                id="prompt"
-                placeholder="e.g., Ad for a student workshop on AI and career development"
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="min-h-[100px] resize-none"
-              />
+              <div className="relative">
+                <Textarea
+                  placeholder="e.g., Create an engaging workshop announcement for AI and career development..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  className="min-h-[120px] bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-purple-500/20 resize-none text-base"
+                />
+                {prompt && (
+                  <div className="absolute top-3 right-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex justify-center pt-4">
+            {/* Generate Button */}
+            <div className="flex justify-center pt-6">
               <Button
                 onClick={handleGeneratePost}
                 disabled={!selectedAudience || !selectedPage || !selectedModel || !prompt || isGenerating}
-                className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-8 py-3 text-base font-medium"
+                className="relative group bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white px-12 py-4 text-lg font-semibold rounded-2xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 size="lg"
               >
                 {isGenerating ? (
                   <>
-                    <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                    Generating...
+                    <div className="flex items-center space-x-3">
+                      <Sparkles className="w-5 h-5 animate-spin" />
+                      <span>Generating...</span>
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-1 bg-white rounded-full animate-pulse" />
+                        <div className="w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                        <div className="w-1 h-1 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+                      </div>
+                    </div>
                   </>
                 ) : (
                   <>
-                    <ArrowRight className="w-4 h-4 mr-2" />
-                    Generate Post
+                    <ArrowRight className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
+                    <span>Generate AI Post</span>
                   </>
                 )}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400/20 to-pink-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* AI Response Display Area */}
+        {/* Quick AI Prompts */}
+        <Card className="bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-bold text-gray-900 flex items-center space-x-2">
+              <Wand2 className="w-5 h-5 text-purple-600" />
+              <span>Quick AI Prompts</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {quickPrompts.map((prompt, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleQuickPrompt(prompt.text)}
+                  className="group relative p-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-white/40 shadow-lg hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300 hover:scale-105 hover:bg-white/80"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 rounded-xl bg-gradient-to-r from-purple-500/10 to-pink-500/10 group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-all duration-300">
+                      <prompt.icon className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                      {prompt.text}
+                    </span>
+                  </div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/5 group-hover:to-pink-500/5 transition-all duration-300" />
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* AI Response Area */}
         {showResponse && (
-          <Card className="border border-gray-200 shadow-lg bg-white animate-in fade-in duration-500">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
-                <Sparkles className="w-5 h-5 mr-2 text-green-600" />
-                AI Generated Post
+          <Card className="relative overflow-hidden bg-white/80 backdrop-blur-xl border border-white/30 shadow-2xl shadow-purple-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
+            <CardHeader className="pb-6">
+              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center space-x-3">
+                <div className="p-2 rounded-full bg-gradient-to-r from-green-500 to-emerald-500">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <span>AI Generated Post</span>
+                <div className="flex space-x-1 ml-auto">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }} />
+                </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8">
               {/* Mock Facebook Post Preview */}
-              <div className="border rounded-lg p-6 bg-gray-50">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                    <User className="w-6 h-6 text-purple-600" />
+              <div className="relative p-8 rounded-3xl bg-gradient-to-br from-gray-50 to-white border border-gray-200/50 shadow-xl">
+                <div className="flex items-center space-x-4 mb-6">
+                  <div className="w-14 h-14 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center shadow-lg">
+                    <User className="w-7 h-7 text-purple-600" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">{selectedPage}</p>
-                    <p className="text-sm text-gray-500">Just now • 🌍</p>
+                    <p className="font-bold text-gray-900 text-lg">{selectedPage}</p>
+                    <p className="text-sm text-gray-500 flex items-center space-x-2">
+                      <span>Just now</span>
+                      <span>•</span>
+                      <span>🌍</span>
+                    </p>
                   </div>
                 </div>
                 
-                <div className="space-y-4">
-                  <p className="text-gray-800 whitespace-pre-line leading-relaxed">
+                <div className="space-y-6">
+                  <p className="text-gray-800 whitespace-pre-line leading-relaxed text-lg">
                     {generatedPost}
                   </p>
                   
                   {/* Mock engagement section */}
-                  <div className="border-t pt-4">
-                    <div className="flex items-center justify-between text-gray-500 mb-3">
-                      <div className="flex items-center space-x-2">
-                        <div className="flex -space-x-1">
-                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                  <div className="border-t pt-6">
+                    <div className="flex items-center justify-between text-gray-500 mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex -space-x-2">
+                          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
                             <span className="text-white text-xs">👍</span>
                           </div>
-                          <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                          <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center shadow-md">
                             <span className="text-white text-xs">❤️</span>
                           </div>
                         </div>
-                        <span className="text-sm">24 reactions</span>
+                        <span className="text-sm font-medium">24 reactions</span>
                       </div>
-                      <div className="flex space-x-4 text-sm">
+                      <div className="flex space-x-6 text-sm font-medium">
                         <span>8 comments</span>
                         <span>3 shares</span>
                       </div>
                     </div>
                     
-                    <Separator className="mb-3" />
+                    <Separator className="mb-4" />
                     
-                    <div className="flex items-center justify-between">
-                      <button className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors px-4 py-2 rounded hover:bg-blue-50">
+                    <div className="grid grid-cols-3 gap-2">
+                      <button className="flex items-center justify-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors py-3 rounded-xl hover:bg-blue-50/80">
                         <Heart className="w-5 h-5" />
                         <span className="font-medium">Like</span>
                       </button>
-                      <button className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors px-4 py-2 rounded hover:bg-blue-50">
+                      <button className="flex items-center justify-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors py-3 rounded-xl hover:bg-blue-50/80">
                         <MessageCircle className="w-5 h-5" />
                         <span className="font-medium">Comment</span>
                       </button>
-                      <button className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors px-4 py-2 rounded hover:bg-blue-50">
+                      <button className="flex items-center justify-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors py-3 rounded-xl hover:bg-blue-50/80">
                         <Share className="w-5 h-5" />
                         <span className="font-medium">Share</span>
                       </button>
@@ -275,58 +350,24 @@ Ready to take the next step? Comment below or DM us!
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                <Button
-                  className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl flex-1"
-                  size="lg"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  Post Now
+              {/* Floating Action Buttons */}
+              <div className="grid sm:grid-cols-3 gap-4">
+                <Button className="group relative h-14 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-2xl shadow-xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105">
+                  <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  <span className="font-semibold">Post Now</span>
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 flex-1"
-                  size="lg"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save to Draft
+                <Button variant="outline" className="h-14 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-2xl transition-all duration-300 hover:scale-105">
+                  <Save className="w-5 h-5 mr-2" />
+                  <span className="font-semibold">Save Draft</span>
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 flex-1"
-                  size="lg"
-                >
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Schedule for Later
+                <Button variant="outline" className="h-14 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white hover:shadow-lg rounded-2xl transition-all duration-300 hover:scale-105">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  <span className="font-semibold">Schedule</span>
                 </Button>
               </div>
             </CardContent>
           </Card>
         )}
-
-        {/* Optional Additional AI Prompts */}
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg font-semibold text-gray-900">Quick AI Prompts</CardTitle>
-            <p className="text-sm text-gray-600">Get inspiration with these pre-built prompt suggestions</p>
-          </CardHeader>
-          <CardContent>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {quickPrompts.map((promptText, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  className="justify-start text-left h-auto py-4 px-4 hover:bg-purple-50 hover:border-purple-300 border border-gray-200 transition-all duration-200"
-                  onClick={() => handleQuickPrompt(promptText)}
-                >
-                  <Sparkles className="w-4 h-4 mr-3 text-purple-500 shrink-0" />
-                  <span className="text-sm text-gray-700">{promptText}</span>
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

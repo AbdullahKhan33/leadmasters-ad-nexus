@@ -4,12 +4,12 @@ import { Facebook, Instagram, MessageCircle, Linkedin, Twitter, Globe } from "lu
 import { useState } from "react";
 
 const platforms = [
-  { name: "All Platforms", icon: Globe, id: "all" },
   { name: "Facebook", icon: Facebook, id: "facebook" },
   { name: "Instagram", icon: Instagram, id: "instagram" },
   { name: "Twitter", icon: Twitter, id: "twitter" },
   { name: "LinkedIn", icon: Linkedin, id: "linkedin" },
   { name: "Threads", icon: MessageCircle, id: "threads" },
+  { name: "All Platforms", icon: Globe, id: "all" },
 ];
 
 interface PostPlatformMenuProps {
