@@ -1,16 +1,18 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CustomSelect } from "@/components/ui/custom-select";
-import { Plus, Eye, Heart, DollarSign, BarChart3, FileText, Video } from "lucide-react";
+import { Plus, Eye, Heart, DollarSign, BarChart3, FileText, Video, ArrowLeft } from "lucide-react";
 import { CampaignCard } from "@/components/CampaignCard";
 import { MetricCard } from "@/components/MetricCard";
-import { useState } from "react";
+import { InstagramAdCampaignFlow } from "./InstagramAdCampaignFlow";
 
 type AdType = 'story' | 'feed' | 'reel';
 
 export function InstagramAdBuilder() {
   const [selectedAdType, setSelectedAdType] = useState<AdType>('story');
+  const [showCampaignFlow, setShowCampaignFlow] = useState(false);
 
   const adTypes = [
     { value: 'story', label: 'Story Ad', icon: FileText },
@@ -30,6 +32,25 @@ export function InstagramAdBuilder() {
     { title: "Total Spend", value: "$892", icon: DollarSign, trend: "+8%" },
     { title: "Conversions", value: "124", icon: BarChart3, trend: "+12%" },
   ];
+
+  if (showCampaignFlow) {
+    return (
+      <div className="flex flex-col">
+        {/* Back Button */}
+        <div className="p-4 border-b border-gray-200 bg-white">
+          <Button
+            variant="ghost"
+            onClick={() => setShowCampaignFlow(false)}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Dashboard</span>
+          </Button>
+        </div>
+        <InstagramAdCampaignFlow />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-6 bg-gray-50">
@@ -62,6 +83,7 @@ export function InstagramAdBuilder() {
               <Button 
                 size="default" 
                 className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
+                onClick={() => setShowCampaignFlow(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create {adTypes.find(type => type.value === selectedAdType)?.label || 'Campaign'}
