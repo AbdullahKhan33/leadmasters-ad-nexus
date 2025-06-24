@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Sidebar,
@@ -184,12 +183,12 @@ export function WorkspaceSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Connected</span>
+                  <span className="text-xs font-medium">Social</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Connected Accounts</span>
+                  <span className="font-semibold">Social Logins</span>
                 </div>
               )}
             </SidebarMenuButton>
