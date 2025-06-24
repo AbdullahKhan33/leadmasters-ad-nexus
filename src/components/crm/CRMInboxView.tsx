@@ -1,177 +1,287 @@
 
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { 
-  Search, 
-  Filter, 
-  Send, 
-  MoreVertical,
-  Star,
-  User,
-  MessageSquare,
-  Phone,
-  Tag,
-  Calendar
+  MessageSquare, 
+  Phone, 
+  MoreHorizontal, 
+  Search,
+  Filter,
+  Clock,
+  CheckCircle2,
+  Circle,
+  MessageCircle
 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 interface Lead {
   id: string;
   name: string;
-  phone: string;
   avatar?: string;
   lastMessage: string;
   timestamp: string;
-  score: number;
-  isUnread: boolean;
-  source: string;
-  tags: string[];
-  assignedAgent?: string;
-  messages: {
-    id: string;
-    content: string;
-    timestamp: string;
-    isFromLead: boolean;
-  }[];
+  status: 'new' | 'active' | 'awaitingReply' | 'responded' | 'closed';
+  source: 'whatsapp' | 'facebook' | 'instagram';
+  phone: string;
+  unreadCount: number;
+  isOnline: boolean;
+  priority: 'high' | 'medium' | 'low';
+  dateAdded: string;
 }
 
 const mockLeads: Lead[] = [
   {
     id: "1",
     name: "Ahmed Hassan",
-    phone: "+971 50 123 4567",
-    lastMessage: "Hi, I'm interested in your real estate services",
-    timestamp: "2m ago",
-    score: 85,
-    isUnread: true,
-    source: "WhatsApp",
-    tags: ["Hot", "Dubai"],
-    assignedAgent: "Sarah",
-    messages: [
-      { id: "1", content: "Hi, I'm interested in your real estate services", timestamp: "2m ago", isFromLead: true },
-      { id: "2", content: "Thank you for reaching out! I'd be happy to help you find the perfect property.", timestamp: "1m ago", isFromLead: false }
-    ]
+    lastMessage: "I'm interested in your premium package. Can you tell me more about the pricing?",
+    timestamp: "2 minutes ago",
+    status: "new",
+    source: "whatsapp",
+    phone: "+971501234567",
+    unreadCount: 2,
+    isOnline: true,
+    priority: "high",
+    dateAdded: "2024-01-29"
   },
   {
     id: "2",
     name: "Fatima Al Zahra",
-    phone: "+971 55 987 6543",
-    lastMessage: "What are the payment plans available?",
-    timestamp: "15m ago",
-    score: 72,
-    isUnread: false,
-    source: "Facebook",
-    tags: ["Premium", "Abu Dhabi"],
-    messages: [
-      { id: "3", content: "What are the payment plans available?", timestamp: "15m ago", isFromLead: true }
-    ]
+    lastMessage: "Thank you for the quick response! I'll review the proposal and get back to you.",
+    timestamp: "1 hour ago",
+    status: "active",
+    source: "whatsapp",
+    phone: "+971509876543",
+    unreadCount: 0,
+    isOnline: true,
+    priority: "medium",
+    dateAdded: "2024-01-28"
   },
   {
     id: "3",
     name: "Mohammed Ali",
-    phone: "+971 56 456 7890",
-    lastMessage: "Can we schedule a viewing?",
-    timestamp: "1h ago",
-    score: 90,
-    isUnread: true,
-    source: "Instagram",
-    tags: ["Priority", "Sharjah"],
-    assignedAgent: "Omar",
-    messages: [
-      { id: "4", content: "Can we schedule a viewing?", timestamp: "1h ago", isFromLead: true }
-    ]
+    lastMessage: "Hello, I saw your ad on Facebook. I'm looking for a social media manager for my restaurant.",
+    timestamp: "3 hours ago",
+    status: "awaitingReply",
+    source: "whatsapp",
+    phone: "+971501111222",
+    unreadCount: 1,
+    isOnline: false,
+    priority: "high",
+    dateAdded: "2024-01-27"
+  },
+  {
+    id: "4",
+    name: "Aisha Khan",
+    lastMessage: "Perfect! Let's schedule a call for tomorrow at 2 PM.",
+    timestamp: "5 hours ago",
+    status: "responded",
+    source: "facebook",
+    phone: "+971502222333",
+    unreadCount: 0,
+    isOnline: false,
+    priority: "medium",
+    dateAdded: "2024-01-26"
+  },
+  {
+    id: "5",
+    name: "Hassan Al Maktoum",
+    lastMessage: "Great working with you! The campaign results exceeded our expectations.",
+    timestamp: "1 day ago",
+    status: "closed",
+    source: "instagram",
+    phone: "+971503333444",
+    unreadCount: 0,
+    isOnline: false,
+    priority: "low",
+    dateAdded: "2024-01-25"
   }
 ];
 
 export function CRMInboxView() {
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(mockLeads[0]);
-  const [messageText, setMessageText] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [searchParams] = useSearchParams();
+  const [leads, setLeads] = useState<Lead[]>(mockLeads);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [filteredLeads, setFilteredLeads] = useState<Lead[]>(mockLeads);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [newMessage, setNewMessage] = useState("");
 
-  const filters = ["All", "Unread", "Hot Leads", "Assigned to Me"];
-  const sources = ["WhatsApp", "Facebook", "Instagram"];
+  // Handle URL filters
+  useEffect(() => {
+    const source = searchParams.get('source');
+    const status = searchParams.get('status');
+    const dateRange = searchParams.get('dateRange');
+    const sort = searchParams.get('sort');
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "bg-green-100 text-green-800 border-green-200 hover:bg-green-200 hover:border-green-300";
-    if (score >= 60) return "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200 hover:border-yellow-300";
-    return "bg-red-100 text-red-800 border-red-200 hover:bg-red-200 hover:border-red-300";
+    let filtered = [...leads];
+
+    // Apply source filter
+    if (source) {
+      filtered = filtered.filter(lead => lead.source === source);
+    }
+
+    // Apply status filter
+    if (status) {
+      if (status === 'awaitingReply') {
+        filtered = filtered.filter(lead => lead.status === 'awaitingReply');
+      } else {
+        filtered = filtered.filter(lead => lead.status === status);
+      }
+    }
+
+    // Apply date range filter
+    if (dateRange === 'thisWeek') {
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      filtered = filtered.filter(lead => new Date(lead.dateAdded) >= oneWeekAgo);
+    }
+
+    // Apply sorting
+    if (sort === 'oldestFirst') {
+      filtered.sort((a, b) => new Date(a.dateAdded).getTime() - new Date(b.dateAdded).getTime());
+    }
+
+    setFilteredLeads(filtered);
+  }, [searchParams, leads]);
+
+  // Handle search
+  useEffect(() => {
+    if (searchQuery) {
+      const searched = filteredLeads.filter(lead => 
+        lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lead.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredLeads(searched);
+    }
+  }, [searchQuery]);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'new':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'active':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'awaitingReply':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'responded':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'closed':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
   };
 
-  const aiSuggestions = [
-    "Thanks for your interest! Let me share our latest properties.",
-    "I'd be happy to schedule a viewing for you.",
-    "What's your budget range for this purchase?"
-  ];
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'new':
+        return <Circle className="w-3 h-3" />;
+      case 'active':
+        return <MessageCircle className="w-3 h-3" />;
+      case 'awaitingReply':
+        return <Clock className="w-3 h-3" />;
+      case 'responded':
+        return <CheckCircle2 className="w-3 h-3" />;
+      case 'closed':
+        return <CheckCircle2 className="w-3 h-3" />;
+      default:
+        return <Circle className="w-3 h-3" />;
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case 'new':
+        return 'New Lead';
+      case 'active':
+        return 'Active Chat';
+      case 'awaitingReply':
+        return 'Awaiting Reply';
+      case 'responded':
+        return 'Responded';
+      case 'closed':
+        return 'Closed';
+      default:
+        return status;
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (newMessage.trim() === "" || !selectedLead) return;
+    
+    // Here you would typically send the message to your backend
+    console.log("Sending message:", newMessage, "to lead:", selectedLead.name);
+    setNewMessage("");
+  };
 
   return (
-    <div className="h-full flex bg-white">
-      {/* Left Panel - Lead List */}
-      <div className="w-80 border-r border-gray-200 flex flex-col">
-        {/* Search and Filters */}
-        <div className="p-4 border-b border-gray-100">
-          <div className="relative mb-3">
+    <div className="h-full bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 flex">
+      {/* Left Sidebar - Leads List */}
+      <div className="w-1/3 bg-white/80 backdrop-blur-sm border-r border-gray-200/60 flex flex-col">
+        <div className="p-6 border-b border-gray-200/50">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">WhatsApp Inbox</h2>
+          
+          {/* Active Filters Display */}
+          {(searchParams.get('source') || searchParams.get('status') || searchParams.get('dateRange')) && (
+            <div className="mb-4 space-y-2">
+              <p className="text-sm text-gray-600">Active filters:</p>
+              <div className="flex flex-wrap gap-2">
+                {searchParams.get('source') && (
+                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                    Source: {searchParams.get('source')}
+                  </Badge>
+                )}
+                {searchParams.get('status') && (
+                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    Status: {getStatusLabel(searchParams.get('status') || '')}
+                  </Badge>
+                )}
+                {searchParams.get('dateRange') && (
+                  <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                    Period: This Week
+                  </Badge>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="Search by name or number"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 border-gray-200 rounded-lg"
+              placeholder="Search conversations..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </div>
-          
-          <div className="flex flex-wrap gap-2 mb-3">
-            {filters.map((filter) => (
-              <Button
-                key={filter}
-                variant={activeFilter === filter ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveFilter(filter)}
-                className={`text-xs transition-all duration-200 ${
-                  activeFilter === filter 
-                    ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-md hover:shadow-lg" 
-                    : "hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 hover:shadow-sm"
-                }`}
-              >
-                {filter}
-              </Button>
-            ))}
-          </div>
-
-          <div className="flex gap-2">
-            {sources.map((source) => (
-              <Badge 
-                key={source} 
-                variant="outline" 
-                className="text-xs cursor-pointer transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 hover:shadow-sm"
-              >
-                {source}
-              </Badge>
-            ))}
           </div>
         </div>
 
-        {/* Lead Cards */}
         <div className="flex-1 overflow-y-auto">
-          {mockLeads.map((lead) => (
+          {filteredLeads.map((lead) => (
             <div
               key={lead.id}
               onClick={() => setSelectedLead(lead)}
-              className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gradient-to-r hover:from-gray-50 hover:via-blue-50/30 hover:to-purple-50/30 transition-all duration-200 ${
-                selectedLead?.id === lead.id ? 'bg-gradient-to-r from-blue-50 via-purple-50/50 to-pink-50/30 border-r-2 border-r-blue-500' : ''
+              className={`p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 ${
+                selectedLead?.id === lead.id
+                  ? 'bg-gradient-to-r from-blue-100/80 via-purple-100/80 to-pink-100/80 border-l-4 border-l-purple-500'
+                  : ''
               }`}
             >
               <div className="flex items-start space-x-3">
-                <Avatar className="w-10 h-10">
-                  <AvatarImage src={lead.avatar} />
-                  <AvatarFallback className="bg-gray-200 text-gray-600">
-                    {lead.name.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="w-12 h-12">
+                    <AvatarFallback className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 text-purple-700">
+                      {lead.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  {lead.isOnline && (
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                  )}
+                </div>
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
@@ -179,20 +289,26 @@ export function CRMInboxView() {
                     <span className="text-xs text-gray-500">{lead.timestamp}</span>
                   </div>
                   
-                  <p className="text-sm text-gray-600 truncate mb-2">{lead.lastMessage}</p>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Badge className={`text-xs flex items-center space-x-1 ${getStatusColor(lead.status)}`}>
+                      {getStatusIcon(lead.status)}
+                      <span>{getStatusLabel(lead.status)}</span>
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {lead.source}
+                    </Badge>
+                  </div>
+                  
+                  <p className="text-sm text-gray-600 truncate mb-2">
+                    {lead.lastMessage}
+                  </p>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Badge className={`text-xs transition-all duration-200 ${getScoreColor(lead.score)}`}>
-                        {lead.score}
-                      </Badge>
-                      {lead.isUnread && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                      )}
-                    </div>
-                    
-                    {lead.assignedAgent && (
-                      <span className="text-xs text-gray-500">{lead.assignedAgent}</span>
+                    <span className="text-xs text-gray-500">{lead.phone}</span>
+                    {lead.unreadCount > 0 && (
+                      <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
+                        {lead.unreadCount}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -202,191 +318,93 @@ export function CRMInboxView() {
         </div>
       </div>
 
-      {/* Middle Panel - Chat Window */}
+      {/* Right Side - Chat Area */}
       <div className="flex-1 flex flex-col">
         {selectedLead ? (
           <>
             {/* Chat Header */}
-            <div className="p-4 border-b border-gray-200 bg-white">
+            <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 p-6">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-10 h-10">
-                    <AvatarFallback className="bg-gray-200 text-gray-600">
-                      {selectedLead.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 text-purple-700">
+                        {selectedLead.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    {selectedLead.isOnline && (
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                    )}
+                  </div>
                   <div>
-                    <h2 className="font-medium text-gray-900">{selectedLead.name}</h2>
-                    <p className="text-sm text-gray-500">{selectedLead.phone}</p>
+                    <h3 className="font-semibold text-gray-900">{selectedLead.name}</h3>
+                    <p className="text-sm text-gray-500">
+                      {selectedLead.isOnline ? 'Online now' : `Last seen ${selectedLead.timestamp}`}
+                    </p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="hover:bg-gradient-to-r hover:from-gray-50 hover:via-blue-50/30 hover:to-purple-50/30 transition-all duration-200">
-                  <MoreVertical className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button variant="outline" size="sm">
+                    <Phone className="w-4 h-4 mr-2" />
+                    Call
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <MoreHorizontal className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {selectedLead.messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.isFromLead ? 'justify-start' : 'justify-end'}`}
-                >
-                  <div
-                    className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                      message.isFromLead
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-md'
-                    }`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                    <span className={`text-xs ${
-                      message.isFromLead ? 'text-gray-500' : 'text-white/80'
-                    }`}>
-                      {message.timestamp}
-                    </span>
+            {/* Chat Messages */}
+            <div className="flex-1 p-6 overflow-y-auto bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20">
+              <div className="space-y-4">
+                {/* Sample messages */}
+                <div className="flex justify-start">
+                  <div className="bg-white rounded-lg p-3 max-w-xs shadow-sm">
+                    <p className="text-sm">{selectedLead.lastMessage}</p>
+                    <span className="text-xs text-gray-500 mt-1 block">{selectedLead.timestamp}</span>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            {/* AI Suggestions */}
-            <div className="px-4 py-2 border-t border-gray-100">
-              <div className="flex flex-wrap gap-2">
-                {aiSuggestions.map((suggestion, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setMessageText(suggestion)}
-                    className="text-xs bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-blue-200 text-blue-700 hover:bg-gradient-to-r hover:from-blue-100 hover:via-purple-100 hover:to-pink-100 hover:border-purple-300 hover:text-purple-800 hover:shadow-md transition-all duration-200"
-                  >
-                    {suggestion}
-                  </Button>
-                ))}
+                
+                <div className="flex justify-end">
+                  <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white rounded-lg p-3 max-w-xs">
+                    <p className="text-sm">Thank you for reaching out! I'd be happy to help you with that. Let me get some more details from you.</p>
+                    <span className="text-xs text-blue-100 mt-1 block">5 minutes ago</span>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Message Input */}
-            <div className="p-4 border-t border-gray-200">
-              <div className="flex space-x-2">
+            <div className="bg-white/80 backdrop-blur-sm border-t border-gray-200/60 p-6">
+              <div className="flex space-x-4">
                 <Textarea
                   placeholder="Type your message..."
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  className="flex-1 min-h-[40px] max-h-32 resize-none border-gray-200 rounded-lg focus:border-purple-300 focus:ring-purple-200"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  rows={1}
+                  className="flex-1 resize-none"
                 />
-                <Button size="sm" className="px-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md hover:shadow-lg transition-all duration-200">
-                  <Send className="w-4 h-4" />
+                <Button
+                  onClick={handleSendMessage}
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Send
                 </Button>
               </div>
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
-            Select a lead to view conversation
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-500 mb-2">Select a conversation</h3>
+              <p className="text-gray-400">Choose a lead from the list to start chatting</p>
+            </div>
           </div>
         )}
       </div>
-
-      {/* Right Sidebar - Lead Info */}
-      {selectedLead && (
-        <div className="w-80 border-l border-gray-200 bg-gray-50 p-4 overflow-y-auto">
-          <div className="space-y-6">
-            {/* Profile Details */}
-            <Card className="hover:shadow-md transition-shadow duration-200">
-              <CardContent className="p-4">
-                <div className="text-center mb-4">
-                  <Avatar className="w-16 h-16 mx-auto mb-3">
-                    <AvatarFallback className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 text-purple-700 text-lg">
-                      {selectedLead.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <h3 className="font-medium text-gray-900">{selectedLead.name}</h3>
-                  <p className="text-sm text-gray-500">{selectedLead.phone}</p>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Source:</span>
-                    <Badge variant="outline" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
-                      {selectedLead.source}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Score:</span>
-                    <Badge className={`transition-all duration-200 ${getScoreColor(selectedLead.score)}`}>
-                      {selectedLead.score}
-                    </Badge>
-                  </div>
-                  
-                  {selectedLead.assignedAgent && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Agent:</span>
-                      <span className="text-sm font-medium">{selectedLead.assignedAgent}</span>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Tags */}
-            <Card className="hover:shadow-md transition-shadow duration-200">
-              <CardContent className="p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Tags</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedLead.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs hover:bg-gradient-to-r hover:from-blue-100 hover:via-purple-100 hover:to-pink-100 hover:text-purple-700 hover:shadow-sm transition-all duration-200 cursor-pointer">
-                      <Tag className="w-3 h-3 mr-1" />
-                      {tag}
-                    </Badge>
-                  ))}
-                  <Button variant="outline" size="sm" className="text-xs hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
-                    + Add Tag
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card className="hover:shadow-md transition-shadow duration-200">
-              <CardContent className="p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Quick Actions</h4>
-                <div className="space-y-2">
-                  <Button variant="outline" size="sm" className="w-full justify-start hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Lead
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Schedule Meeting
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
-                    <Star className="w-4 h-4 mr-2" />
-                    Mark as Priority
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Notes */}
-            <Card className="hover:shadow-md transition-shadow duration-200">
-              <CardContent className="p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Notes</h4>
-                <Textarea
-                  placeholder="Add notes about this lead..."
-                  className="min-h-[80px] border-gray-200 focus:border-purple-300 focus:ring-purple-200"
-                />
-                <Button size="sm" className="mt-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md hover:shadow-lg transition-all duration-200">
-                  Save Notes
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

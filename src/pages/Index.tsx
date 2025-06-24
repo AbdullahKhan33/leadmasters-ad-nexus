@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -14,13 +15,15 @@ import { Workspaces } from "@/components/Workspaces";
 import { WorkspaceSettings } from "@/components/WorkspaceSettings";
 import { UserSettings } from "@/components/UserSettings";
 import { CRM } from "@/components/CRM";
+import { InsightsSummary } from "@/components/InsightsSummary";
+import { WhatsAppInsights } from "@/components/WhatsAppInsights";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
@@ -154,6 +157,10 @@ function IndexContent() {
               <SmartAutomations />
             ) : currentView === 'crm' ? (
               <CRM />
+            ) : currentView === 'insights-summary' ? (
+              <InsightsSummary />
+            ) : currentView === 'insights-whatsapp' ? (
+              <WhatsAppInsights />
             ) : (
               <AdBuilder />
             )}

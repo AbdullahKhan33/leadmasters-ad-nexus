@@ -15,8 +15,43 @@ import {
   Lightbulb,
   Users
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function Dashboard() {
+  const navigate = useNavigate();
+
+  const handleNewLeadsClick = () => {
+    navigate('/crm/inbox?source=whatsapp&status=new&dateRange=thisWeek');
+  };
+
+  const handleActiveChatsClick = () => {
+    navigate('/crm/inbox?source=whatsapp&status=active');
+  };
+
+  const handleAwaitingReplyClick = () => {
+    navigate('/crm/inbox?source=whatsapp&status=awaitingReply&sort=oldestFirst');
+  };
+
+  const handleMessagesSentClick = () => {
+    navigate('/insights/whatsapp?scrollTo=messageActivity');
+  };
+
+  const handleCreatePostClick = () => {
+    navigate('/post-builder?platform=facebook');
+  };
+
+  const handleLaunchAdClick = () => {
+    navigate('/ad-builder?platform=facebook');
+  };
+
+  const handleViewSummaryClick = () => {
+    navigate('/insights/summary');
+  };
+
+  const handleCRMClick = () => {
+    navigate('/crm/inbox');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50/30 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -47,7 +82,10 @@ export function Dashboard() {
           {/* WhatsApp Business Control Center Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Card 1 - New WhatsApp Leads */}
-            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+            <Card 
+              className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
+              onClick={handleNewLeadsClick}
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
@@ -71,7 +109,10 @@ export function Dashboard() {
             </Card>
 
             {/* Card 2 - Chats Happening Right Now */}
-            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+            <Card 
+              className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
+              onClick={handleActiveChatsClick}
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
@@ -95,7 +136,10 @@ export function Dashboard() {
             </Card>
 
             {/* Card 3 - People Awaiting Your Reply */}
-            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+            <Card 
+              className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
+              onClick={handleAwaitingReplyClick}
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
@@ -119,7 +163,10 @@ export function Dashboard() {
             </Card>
 
             {/* Card 4 - Total WhatsApp Messages Sent */}
-            <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
+            <Card 
+              className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
+              onClick={handleMessagesSentClick}
+            >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
@@ -167,7 +214,10 @@ export function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white group">
+                <Button 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                  onClick={handleCreatePostClick}
+                >
                   Create Post
                   <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -185,7 +235,10 @@ export function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white group">
+                <Button 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                  onClick={handleLaunchAdClick}
+                >
                   Launch Ad
                   <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -203,7 +256,10 @@ export function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white group">
+                <Button 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                  onClick={handleViewSummaryClick}
+                >
                   View Summary
                   <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -228,7 +284,10 @@ export function Dashboard() {
                 </div>
               </div>
               <div className="flex justify-center md:justify-end">
-                <Button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 group">
+                <Button 
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 group"
+                  onClick={handleCRMClick}
+                >
                   Open CRM
                   <MessageCircle className="w-4 h-4 ml-2 group-hover:scale-110 transition-transform" />
                 </Button>
