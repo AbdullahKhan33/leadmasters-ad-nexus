@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -199,22 +198,20 @@ export function Schedule() {
       <div
         onClick={() => setSelectedPost(post)}
         className={`
-          relative cursor-pointer mb-1 p-1.5 rounded text-xs text-white
+          relative cursor-pointer mb-1 p-2 rounded text-xs text-white
           ${getPlatformColor(post.platform)}
           hover:shadow-lg hover:scale-105 transition-all duration-200
           backdrop-blur-sm border border-white/20
-          min-h-[2.5rem]
+          min-h-[3rem] flex flex-col
         `}
       >
-        <div className="flex items-center space-x-1">
-          <PlatformIcon className="w-2.5 h-2.5" />
-          {post.isAIGenerated && <Bot className="w-2.5 h-2.5" />}
+        <div className="flex items-center space-x-1 mb-1">
+          <PlatformIcon className="w-3 h-3 flex-shrink-0" />
+          {post.isAIGenerated && <Bot className="w-3 h-3 flex-shrink-0" />}
+          <span className="text-xs opacity-80">{formatTime(post.scheduledDate)}</span>
         </div>
-        <div className="mt-0.5 font-medium text-xs leading-tight">
-          {post.content.length > 40 ? `${post.content.substring(0, 40)}...` : post.content}
-        </div>
-        <div className="text-xs opacity-80 mt-0.5">
-          {formatTime(post.scheduledDate)}
+        <div className="flex-1 font-medium text-xs leading-tight line-clamp-2">
+          {post.content.length > 50 ? `${post.content.substring(0, 50)}...` : post.content}
         </div>
       </div>
     );
@@ -478,7 +475,7 @@ export function Schedule() {
                     head_row: "flex w-full",
                     head_cell: "text-muted-foreground rounded-md flex-1 font-normal text-sm py-2 text-center",
                     row: "flex w-full",
-                    cell: "flex-1 p-0 relative h-28 border border-gray-100",
+                    cell: "flex-1 p-0 relative h-32 border border-gray-100",
                     day: "w-full h-full p-2 font-normal hover:bg-purple-50/50 transition-colors cursor-pointer flex flex-col items-start justify-start",
                     day_selected: "bg-purple-100 text-purple-900 hover:bg-purple-100 hover:text-purple-900",
                     day_today: "bg-blue-50 text-blue-900 font-semibold",
@@ -491,10 +488,10 @@ export function Schedule() {
                       
                       return (
                         <div 
-                          className="w-full h-28 p-2 border border-gray-100 hover:bg-purple-50/50 transition-colors cursor-pointer flex flex-col"
+                          className="w-full h-32 p-2 border border-gray-100 hover:bg-purple-50/50 transition-colors cursor-pointer flex flex-col"
                           onClick={() => handleDateClick(date)}
                         >
-                          <div className="text-sm font-medium text-gray-900 mb-1 flex-shrink-0">
+                          <div className="text-sm font-medium text-gray-900 mb-2 flex-shrink-0">
                             {date.getDate()}
                           </div>
                           <div className="flex-1 space-y-1 overflow-hidden">
@@ -502,7 +499,7 @@ export function Schedule() {
                               <>
                                 <PostPill post={posts[0]} />
                                 {posts.length > 1 && (
-                                  <div className="text-xs text-purple-600 font-medium px-1.5 py-0.5 bg-purple-50 rounded">
+                                  <div className="text-xs text-purple-600 font-medium px-2 py-1 bg-purple-50 rounded border border-purple-200">
                                     +{posts.length - 1} more
                                   </div>
                                 )}
