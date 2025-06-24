@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Search, Filter, Sparkles, Bookmark, BookmarkPlus, X, Play, CheckCircle, Zap, TrendingUp, Clock, Brain } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -169,10 +170,11 @@ export function InspirationHub() {
   };
 
   const handleGenerateSimilar = (ad: AdInspiration) => {
-    // Navigate to PostBuilder with pre-filled content
+    // Navigate to home with state to trigger PostBuilder view
     const tone = ad.isAiRecommended ? "inspirational" : "professional";
-    navigate('/post-builder', { 
+    navigate('/', { 
       state: { 
+        view: 'post-builder',
         prefilledContent: ad.caption, 
         tone: tone, 
         platform: ad.platform.toLowerCase() 

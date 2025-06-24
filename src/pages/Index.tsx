@@ -15,6 +15,7 @@ import { WorkspaceSettings } from "@/components/WorkspaceSettings";
 import { UserSettings } from "@/components/UserSettings";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
+import { useLocation } from "react-router-dom";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings';
@@ -24,15 +25,23 @@ function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
   const [currentView, setCurrentView] = useState<AllViews>('workspaces');
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
+  const location = useLocation();
+
+  // Handle navigation from InspirationHub
+  useEffect(() => {
+    if (location.state?.view) {
+      setCurrentView(location.state.view);
+    }
+  }, [location.state]);
 
   // When a workspace is selected, automatically navigate to dashboard
   useEffect(() => {
-    if (isInWorkspace && activeWorkspace) {
+    if (isInWorkspace && activeWorkspace && !location.state?.view) {
       setCurrentView('dashboard');
-    } else if (!isInWorkspace) {
+    } else if (!isInWorkspace && !location.state?.view) {
       setCurrentView('workspaces');
     }
-  }, [isInWorkspace, activeWorkspace]);
+  }, [isInWorkspace, activeWorkspace, location.state]);
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
