@@ -4,6 +4,7 @@ import { FacebookPostBuilder } from "./FacebookPostBuilder";
 import { InstagramPostBuilder } from "./InstagramPostBuilder";
 import { TwitterPostBuilder } from "./TwitterPostBuilder";
 import { LinkedInPostBuilder } from "./LinkedInPostBuilder";
+import { ThreadsPostBuilder } from "./ThreadsPostBuilder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -58,6 +59,19 @@ export function PostBuilder() {
           onPlatformChange={(platformId) => setSelectedPlatform(platformId as Platform)}
         />
         <InstagramPostBuilder />
+      </div>
+    );
+  }
+
+  // If Threads is selected, show the ThreadsPostBuilder
+  if (selectedPlatform === 'threads') {
+    return (
+      <div className="flex-1 flex flex-col min-h-screen">
+        <PostPlatformMenu 
+          activePlatform={selectedPlatform}
+          onPlatformChange={(platformId) => setSelectedPlatform(platformId as Platform)}
+        />
+        <ThreadsPostBuilder />
       </div>
     );
   }
