@@ -240,22 +240,6 @@ export function AppSidebar({
             <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
-                  <Calendar className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Schedule</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-3">
-                  <Calendar className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Schedule</span>
-                </div>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}>
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
                   <Bot className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="text-xs font-medium">Automations</span>
                 </div>

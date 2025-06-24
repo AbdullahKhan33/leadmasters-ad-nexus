@@ -451,34 +451,52 @@ export function Schedule() {
             </div>
           </CardHeader>
           
-          <CardContent>
+          <CardContent className="p-0">
             {filteredPosts.length === 0 ? (
-              <EmptyState />
+              <div className="p-6">
+                <EmptyState />
+              </div>
             ) : viewMode === 'month' ? (
-              <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-purple-100">
+              <div className="w-full h-full">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
                   onSelect={setSelectedDate}
-                  className="rounded-lg"
+                  className="w-full h-full rounded-none border-0"
+                  classNames={{
+                    months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full",
+                    month: "space-y-4 w-full",
+                    caption: "flex justify-center pt-1 relative items-center mb-4",
+                    caption_label: "text-lg font-semibold",
+                    table: "w-full border-collapse",
+                    head_row: "flex w-full",
+                    head_cell: "text-muted-foreground rounded-md flex-1 font-normal text-sm py-2 text-center",
+                    row: "flex w-full",
+                    cell: "flex-1 p-0 relative min-h-[120px] border border-gray-100",
+                    day: "w-full h-full p-2 font-normal hover:bg-purple-50/50 transition-colors cursor-pointer flex flex-col items-start justify-start",
+                    day_selected: "bg-purple-100 text-purple-900 hover:bg-purple-100 hover:text-purple-900",
+                    day_today: "bg-blue-50 text-blue-900 font-semibold",
+                    day_outside: "text-muted-foreground opacity-50",
+                    day_disabled: "text-muted-foreground opacity-50",
+                  }}
                   components={{
                     Day: ({ date, ...props }) => {
                       const posts = getPostsForDate(date);
                       return (
                         <div 
-                          className="relative p-2 min-h-[80px] border border-gray-100 rounded-lg hover:bg-purple-50/50 transition-colors cursor-pointer"
+                          className="w-full h-full p-2 min-h-[120px] border border-gray-100 hover:bg-purple-50/50 transition-colors cursor-pointer flex flex-col"
                           onClick={() => handleDateClick(date)}
                         >
-                          <div className="text-sm font-medium text-gray-900 mb-1">
+                          <div className="text-sm font-medium text-gray-900 mb-2">
                             {date.getDate()}
                           </div>
-                          <div className="space-y-1">
-                            {posts.slice(0, 2).map(post => (
+                          <div className="flex-1 space-y-1 overflow-hidden">
+                            {posts.slice(0, 3).map(post => (
                               <PostPill key={post.id} post={post} />
                             ))}
-                            {posts.length > 2 && (
-                              <div className="text-xs text-purple-600 font-medium">
-                                +{posts.length - 2} more
+                            {posts.length > 3 && (
+                              <div className="text-xs text-purple-600 font-medium px-2 py-1 bg-purple-50 rounded">
+                                +{posts.length - 3} more
                               </div>
                             )}
                           </div>
@@ -489,7 +507,7 @@ export function Schedule() {
                 />
               </div>
             ) : viewMode === 'list' ? (
-              <div className="space-y-3">
+              <div className="space-y-3 p-6">
                 {filteredPosts.map(post => {
                   const PlatformIcon = getPlatformIcon(post.platform);
                   return (
@@ -533,7 +551,7 @@ export function Schedule() {
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-gray-500 p-6">
                 Week view coming soon...
               </div>
             )}
