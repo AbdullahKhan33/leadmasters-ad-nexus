@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,8 +39,8 @@ export function InstagramPostBuilder() {
   const [showResponse, setShowResponse] = useState(false);
 
   const postTypes = [
-    { id: 'post', name: 'Post', icon: FileText },
-    { id: 'reel', name: 'Reel', icon: Video }
+    { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
+    { value: 'reel', label: 'Reel', icon: Video, emoji: '🎬' }
   ];
 
   const audiences = [
@@ -127,30 +128,39 @@ Ready to level up? Drop a 🔥 in the comments!
             </CardTitle>
           </CardHeader>
           <CardContent className="relative space-y-8">
+            {/* Content Type Toggle Pills */}
+            <div className="space-y-4">
+              <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                <FileText className="w-4 h-4" />
+                <span>Content Type</span>
+              </Label>
+              <div className="flex items-center space-x-2">
+                {postTypes.map((type) => {
+                  const isActive = selectedPostType === type.value;
+                  
+                  return (
+                    <Button
+                      key={type.value}
+                      variant="ghost"
+                      onClick={() => setSelectedPostType(type.value as PostType)}
+                      className={`
+                        px-5 py-2 rounded-full transition-all duration-200 ease-out flex items-center space-x-2.5 relative group cursor-pointer border
+                        ${isActive 
+                          ? 'bg-gradient-to-r from-[#E91E63] to-[#FF9800] text-white font-semibold shadow-lg hover:from-pink-700 hover:to-orange-600 hover:text-white border-transparent' 
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 font-medium bg-white/50 border-gray-200 hover:border-gray-300 hover:shadow-md'
+                        }
+                      `}
+                    >
+                      <span className="text-lg">{type.emoji}</span>
+                      <span className="font-semibold">{type.label}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Configuration Grid */}
             <div className="grid md:grid-cols-4 gap-8">
-              <div className="space-y-3">
-                <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
-                  <FileText className="w-4 h-4" />
-                  <span>Content Type</span>
-                </Label>
-                <Select value={selectedPostType} onValueChange={(value) => setSelectedPostType(value as PostType)}>
-                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
-                    <SelectValue placeholder="Select content type" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
-                    {postTypes.map((type) => (
-                      <SelectItem key={type.id} value={type.id} className="hover:bg-pink-50/80 flex items-center">
-                        <div className="flex items-center space-x-2">
-                          <type.icon className="w-4 h-4" />
-                          <span>{type.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="space-y-3">
                 <Label className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
                   <User className="w-4 h-4" />
