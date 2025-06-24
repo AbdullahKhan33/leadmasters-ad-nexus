@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
 import { TopBar } from "@/components/TopBar";
@@ -21,8 +21,17 @@ type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'socia
 type AllViews = AppSidebarView | 'workspace-settings';
 
 function IndexContent() {
-  const { isInWorkspace, setActiveWorkspace } = useWorkspace();
-  const [currentView, setCurrentView] = useState<AllViews>('dashboard');
+  const { isInWorkspace, activeWorkspace } = useWorkspace();
+  const [currentView, setCurrentView] = useState<AllViews>('workspaces');
+
+  // When a workspace is selected, automatically navigate to dashboard
+  useEffect(() => {
+    if (isInWorkspace && activeWorkspace) {
+      setCurrentView('dashboard');
+    } else if (!isInWorkspace) {
+      setCurrentView('workspaces');
+    }
+  }, [isInWorkspace, activeWorkspace]);
 
   const handleDashboardClick = () => {
     setCurrentView('dashboard');
@@ -60,16 +69,6 @@ function IndexContent() {
     setCurrentView('workspaces');
   };
 
-  const handleBackToWorkspaces = () => {
-    setActiveWorkspace(null);
-    setCurrentView('workspaces');
-  };
-
-  // If not in workspace, show workspaces list by default
-  if (!isInWorkspace && currentView !== 'workspaces') {
-    setCurrentView('workspaces');
-  }
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -83,7 +82,7 @@ function IndexContent() {
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
-            onBackToWorkspaces={handleBackToWorkspaces}
+            onWorkspacesClick={handleWorkspacesClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (

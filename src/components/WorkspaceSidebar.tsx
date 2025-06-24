@@ -11,7 +11,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useSidebar } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import {
   Megaphone,
@@ -23,7 +23,7 @@ import {
   Bot,
   LayoutDashboard,
   Lightbulb,
-  ArrowLeft,
+  Briefcase,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -35,7 +35,7 @@ export function WorkspaceSidebar({
   onAnalyticsClick,
   onScheduleClick,
   onSmartAutomationsClick,
-  onBackToWorkspaces,
+  onWorkspacesClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -46,10 +46,9 @@ export function WorkspaceSidebar({
   onAnalyticsClick: () => void;
   onScheduleClick: () => void;
   onSmartAutomationsClick: () => void;
-  onBackToWorkspaces: () => void;
+  onWorkspacesClick: () => void;
   currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspace-settings' | 'workspaces';
 }) {
-  const { activeWorkspace } = useWorkspace();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
@@ -67,50 +66,26 @@ export function WorkspaceSidebar({
     return 'text-gray-600 group-hover:text-purple-600';
   };
 
-  if (!activeWorkspace) {
-    return null;
-  }
-
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
       <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80">
         <div className="flex items-center justify-between px-4 py-6">
           {!isCollapsed && (
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                {activeWorkspace.initials}
-              </div>
-              <div className="flex-1 min-w-0">
-                <h1 className="font-bold text-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent truncate">
-                  {activeWorkspace.name}
+              <Logo className="w-10 h-10 shadow-lg rounded-xl" />
+              <div>
+                <h1 className="font-bold text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                  LeadMasters
                 </h1>
-                <p className="text-xs text-gray-500 font-medium truncate">
-                  {activeWorkspace.country} | {activeWorkspace.industry}
-                </p>
+                <p className="text-xs text-gray-500 font-medium">AI POWERED</p>
               </div>
             </div>
           )}
           {isCollapsed && (
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-lg mx-auto">
-              {activeWorkspace.initials}
-            </div>
+            <Logo className="w-10 h-10 shadow-lg rounded-xl mx-auto" />
           )}
           <SidebarTrigger className={isCollapsed ? "mx-auto mt-2" : "ml-auto"} />
         </div>
-        
-        {!isCollapsed && (
-          <div className="px-4 pb-4">
-            <Button
-              onClick={onBackToWorkspaces}
-              variant="outline"
-              size="sm"
-              className="w-full text-xs border-gray-300 hover:bg-gray-50"
-            >
-              <ArrowLeft className="w-3 h-3 mr-2" />
-              Back to Workspaces
-            </Button>
-          </div>
-        )}
       </SidebarHeader>
 
       <SidebarContent className="px-3 py-6">
@@ -278,6 +253,25 @@ export function WorkspaceSidebar({
                 <div className="flex items-center space-x-3">
                   <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'smart-automations')} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="font-semibold">Automations</span>
+                </div>
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onWorkspacesClick}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'workspaces')}`}
+            >
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Briefcase className={`w-5 h-5 ${getIconStyles(currentView === 'workspaces')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Workspaces</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Briefcase className={`w-5 h-5 ${getIconStyles(currentView === 'workspaces')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Workspaces</span>
                 </div>
               )}
             </SidebarMenuButton>
