@@ -135,7 +135,7 @@ Ready to level up? Drop a 🔥 in the comments!
                   <span>Content Type</span>
                 </Label>
                 <Select value={selectedPostType} onValueChange={(value) => setSelectedPostType(value as PostType)}>
-                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
                     <SelectValue placeholder="Select content type" />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
@@ -157,7 +157,7 @@ Ready to level up? Drop a 🔥 in the comments!
                   <span>Target Audience</span>
                 </Label>
                 <Select value={selectedAudience} onValueChange={setSelectedAudience}>
-                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
                     <SelectValue placeholder="Select your audience" />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
@@ -176,7 +176,7 @@ Ready to level up? Drop a 🔥 in the comments!
                   <span>Account Selection</span>
                 </Label>
                 <Select value={selectedPage} onValueChange={setSelectedPage}>
-                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
                     <SelectValue placeholder="Choose your account" />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
@@ -195,7 +195,7 @@ Ready to level up? Drop a 🔥 in the comments!
                   <span>AI Model</span>
                 </Label>
                 <Select value={selectedModel} onValueChange={setSelectedModel}>
-                  <SelectTrigger className="h-12 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                  <SelectTrigger className="h-8 bg-white/80 backdrop-blur-sm border-white/50 shadow-lg hover:shadow-xl transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
                     <SelectValue placeholder="Select AI model" />
                   </SelectTrigger>
                   <SelectContent className="bg-white/95 backdrop-blur-xl border-white/30 shadow-2xl">
