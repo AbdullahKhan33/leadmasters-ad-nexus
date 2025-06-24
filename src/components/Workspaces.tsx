@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -235,18 +234,30 @@ export function Workspaces() {
                             {workspace.name}
                           </CardTitle>
                           <div className="flex items-center space-x-2 mt-2">
-                            <Badge 
-                              variant={workspace.isActive ? "default" : "secondary"}
-                              className={`text-xs ${workspace.isActive 
-                                ? 'bg-green-100 text-green-700 border-green-200' 
-                                : 'bg-gray-100 text-gray-600 border-gray-200'
-                              }`}
-                            >
-                              {workspace.isActive ? 'Active' : 'Inactive'}
-                            </Badge>
-                            {isSelected && (
-                              <Badge className="text-xs bg-blue-100 text-blue-700 border-blue-200">
-                                Selected
+                            {isSelected ? (
+                              <>
+                                <Badge 
+                                  variant={workspace.isActive ? "default" : "secondary"}
+                                  className={`text-xs ${workspace.isActive 
+                                    ? 'bg-green-100 text-green-700 border-green-200' 
+                                    : 'bg-gray-100 text-gray-600 border-gray-200'
+                                  }`}
+                                >
+                                  {workspace.isActive ? 'Active' : 'Inactive'}
+                                </Badge>
+                                <Badge className="text-xs bg-blue-100 text-blue-700 border-blue-200">
+                                  Selected
+                                </Badge>
+                              </>
+                            ) : (
+                              <Badge 
+                                variant={workspace.isActive ? "default" : "secondary"}
+                                className={`text-xs ${workspace.isActive 
+                                  ? 'bg-green-100 text-green-700 border-green-200' 
+                                  : 'bg-gray-100 text-gray-600 border-gray-200'
+                                }`}
+                              >
+                                {workspace.isActive ? 'Active' : 'Inactive'}
                               </Badge>
                             )}
                           </div>
