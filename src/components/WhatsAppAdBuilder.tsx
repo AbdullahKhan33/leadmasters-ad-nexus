@@ -13,6 +13,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { WhatsAppOnboarding } from "./WhatsAppOnboarding";
+import { WhatsAppCampaignBuilder } from "./WhatsAppCampaignBuilder";
 import { useState } from "react";
 
 interface OptionCardProps {
@@ -27,8 +28,8 @@ interface OptionCardProps {
 function OptionCard({ title, description, icon: Icon, accent = false, onClick, clickable = false }: OptionCardProps) {
   return (
     <Card 
-      className={`border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white group ${
-        clickable ? 'cursor-pointer hover:bg-gray-50' : ''
+      className={`border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-200 bg-white group ${
+        clickable ? 'cursor-pointer hover:bg-gray-50 hover:-translate-y-1' : ''
       }`}
       onClick={onClick}
     >
@@ -61,7 +62,7 @@ function OptionCard({ title, description, icon: Icon, accent = false, onClick, c
 }
 
 export function WhatsAppAdBuilder() {
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign'>('dashboard');
 
   const mainOptions = [
     {
@@ -70,31 +71,36 @@ export function WhatsAppAdBuilder() {
       icon: CheckCircle,
       accent: true,
       clickable: true,
-      onClick: () => setShowOnboarding(true)
+      onClick: () => setCurrentView('onboarding')
     },
     {
       title: "Create Campaign",
       description: "Design and send personalized WhatsApp messages in just 2 steps with AI assistance.",
       icon: Send,
-      accent: false
+      accent: false,
+      clickable: true,
+      onClick: () => setCurrentView('campaign')
     },
     {
       title: "Templates & Message Library",
       description: "Manage your approved templates and preview message formats for optimal engagement.",
       icon: FileText,
-      accent: false
+      accent: false,
+      clickable: true
     },
     {
       title: "Campaigns Manager",
       description: "Track, edit, or duplicate your active and past campaigns with comprehensive controls.",
       icon: List,
-      accent: false
+      accent: false,
+      clickable: true
     },
     {
       title: "Performance & Analytics",
       description: "View real-time reports on delivery, read rates, and responses with detailed insights.",
       icon: BarChart3,
-      accent: false
+      accent: false,
+      clickable: true
     }
   ];
 
@@ -103,15 +109,22 @@ export function WhatsAppAdBuilder() {
       title: "Audience Lists",
       description: "Manage contact groups for targeted messaging and better campaign organization.",
       icon: Users,
-      accent: false
+      accent: false,
+      clickable: true
     },
     {
       title: "Quick Broadcast",
       description: "Instantly send bulk messages without a full campaign setup for urgent communications.",
       icon: Zap,
-      accent: true
+      accent: true,
+      clickable: true
     }
   ];
+
+  // Render different views based on current state
+  if (currentView === 'campaign') {
+    return <WhatsAppCampaignBuilder onBack={() => setCurrentView('dashboard')} />;
+  }
 
   return (
     <div className="flex-1 p-6 bg-gray-50">
@@ -126,8 +139,8 @@ export function WhatsAppAdBuilder() {
         </div>
 
         {/* Quick Start Section */}
-        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
-          <CardContent className="p-8 text-center">
+        <Card className="border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 bg-white cursor-pointer">
+          <CardContent className="p-8 text-center" onClick={() => setCurrentView('onboarding')}>
             <div className="max-w-md mx-auto">
               <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-8 h-8 text-green-600" />
@@ -139,7 +152,10 @@ export function WhatsAppAdBuilder() {
               <Button 
                 size="default" 
                 className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
-                onClick={() => setShowOnboarding(true)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentView('onboarding');
+                }}
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Start Setup
@@ -177,13 +193,14 @@ export function WhatsAppAdBuilder() {
                 description={option.description}
                 icon={option.icon}
                 accent={option.accent}
+                clickable={option.clickable}
               />
             ))}
           </div>
         </div>
 
         {/* Help Section */}
-        <Card className="border border-gray-200 shadow-sm bg-white">
+        <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-gray-900">Need Help?</CardTitle>
           </CardHeader>
@@ -205,8 +222,8 @@ export function WhatsAppAdBuilder() {
 
       {/* WhatsApp Onboarding Dialog */}
       <WhatsAppOnboarding 
-        open={showOnboarding} 
-        onOpenChange={setShowOnboarding} 
+        open={currentView === 'onboarding'} 
+        onOpenChange={(open) => setCurrentView(open ? 'onboarding' : 'dashboard')} 
       />
     </div>
   );
