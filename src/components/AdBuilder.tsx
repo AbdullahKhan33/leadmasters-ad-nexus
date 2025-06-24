@@ -73,20 +73,27 @@ function OptionCard({ title, description, icon: Icon, accent = false, onClick, c
 export function AdBuilder() {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>('overview');
 
+  console.log("AdBuilder rendering, selectedPlatform:", selectedPlatform);
+
   // Render specific platform builders
   if (selectedPlatform === 'whatsapp') {
+    console.log("Rendering WhatsApp builder");
     return <WhatsAppAdBuilder />;
   }
   if (selectedPlatform === 'facebook') {
+    console.log("Rendering Facebook builder");
     return <FacebookAdBuilder />;
   }
   if (selectedPlatform === 'google') {
+    console.log("Rendering Google builder");
     return <GoogleAdBuilder />;
   }
   if (selectedPlatform === 'linkedin') {
+    console.log("Rendering LinkedIn builder");
     return <LinkedInAdBuilder />;
   }
   if (selectedPlatform === 'instagram') {
+    console.log("Rendering Instagram builder");
     return <InstagramAdBuilder />;
   }
 
@@ -150,9 +157,11 @@ export function AdBuilder() {
     }
   ];
 
+  console.log("Rendering Ad Builder overview dashboard");
+
   // Default overview with beautiful navigation structure
   return (
-    <div className="flex-1 p-6 bg-gray-50">
+    <div className="flex-1 p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
