@@ -1,11 +1,11 @@
-
 import { useState } from "react";
+import { PostPlatformMenu } from "@/components/PostPlatformMenu";
+import { FacebookPostBuilder } from "./FacebookPostBuilder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { PostPlatformMenu } from "@/components/PostPlatformMenu";
 import {
   Upload,
   Image as ImageIcon,
@@ -32,6 +32,19 @@ export function PostBuilder() {
   const [selectedTone, setSelectedTone] = useState('');
   const [selectedAudience, setSelectedAudience] = useState('');
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+
+  // If Facebook is selected, show the new FacebookPostBuilder
+  if (selectedPlatform === 'facebook') {
+    return (
+      <div className="flex-1 flex flex-col min-h-screen">
+        <PostPlatformMenu 
+          activePlatform={selectedPlatform}
+          onPlatformChange={(platformId) => setSelectedPlatform(platformId as Platform)}
+        />
+        <FacebookPostBuilder />
+      </div>
+    );
+  }
 
   const platforms = [
     { id: 'all', name: 'All Platforms' },
