@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Sidebar,
@@ -66,6 +67,13 @@ export function WorkspaceSidebar({
       return 'text-white';
     }
     return 'text-gray-600 group-hover:text-purple-600';
+  };
+
+  const getUserSelectionStyles = (isSelected: boolean) => {
+    if (isSelected) {
+      return 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-lg border-transparent hover:from-blue-600 hover:via-purple-600 hover:to-pink-600';
+    }
+    return 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:text-gray-900 border-gray-200/50 hover:border-purple-200 hover:shadow-sm';
   };
 
   return (
@@ -286,27 +294,27 @@ export function WorkspaceSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={onUserSettingsClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'user-settings')}`}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-20 px-2 flex-col' : 'h-16 px-4'} rounded-xl transition-all duration-300 group border ${getUserSelectionStyles(currentView === 'user-settings')}`}
             >
               {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-semibold">
+                <div className="flex flex-col items-center space-y-2">
+                  <Avatar className="w-10 h-10 ring-2 ring-white/20">
+                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-bold">
                       JD
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-xs font-medium">Account</span>
+                  <span className="text-xs font-semibold leading-tight text-center">Account</span>
                 </div>
               ) : (
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-semibold">
+                <div className="flex items-center space-x-4 w-full">
+                  <Avatar className="w-12 h-12 ring-2 ring-white/20 shadow-sm">
+                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-lg font-bold">
                       JD
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-sm truncate">John Doe</span>
-                    <span className="text-xs text-gray-500 truncate">john@company.com</span>
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="font-bold text-base truncate">John Doe</span>
+                    <span className="text-sm opacity-75 truncate">john@company.com</span>
                   </div>
                 </div>
               )}
