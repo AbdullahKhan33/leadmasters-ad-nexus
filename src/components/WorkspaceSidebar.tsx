@@ -29,6 +29,7 @@ import {
   Mail,
   Zap,
   FileText,
+  UserCheck,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -46,6 +47,7 @@ export function WorkspaceSidebar({
   onDomainSetupClick,
   onCRMAutomationsClick,
   onTemplatesClick,
+  onAgentsClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -62,7 +64,8 @@ export function WorkspaceSidebar({
   onDomainSetupClick: () => void;
   onCRMAutomationsClick: () => void;
   onTemplatesClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates';
+  onAgentsClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
@@ -70,7 +73,7 @@ export function WorkspaceSidebar({
 
   // Keep CRM submenu open when on any CRM-related view
   React.useEffect(() => {
-    if (['crm', 'domain-setup', 'crm-automations', 'templates'].includes(currentView)) {
+    if (['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView)) {
       setIsCRMSubmenuOpen(true);
     }
   }, [currentView]);
@@ -115,7 +118,7 @@ export function WorkspaceSidebar({
   };
 
   // Check if any CRM-related view is active
-  const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates'].includes(currentView);
+  const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView);
 
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
@@ -289,6 +292,16 @@ export function WorkspaceSidebar({
                     <div className="flex items-center space-x-3">
                       <Zap className="w-4 h-4" />
                       <span className="text-sm font-medium">Automations</span>
+                    </div>
+                  </SidebarMenuButton>
+
+                  <SidebarMenuButton 
+                    onClick={onAgentsClick}
+                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'agents')}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <UserCheck className="w-4 h-4" />
+                      <span className="text-sm font-medium">Agents</span>
                     </div>
                   </SidebarMenuButton>
 

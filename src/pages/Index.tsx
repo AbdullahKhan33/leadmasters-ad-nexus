@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -13,6 +14,7 @@ import { Workspaces } from "@/components/Workspaces";
 import { WorkspaceSettings } from "@/components/WorkspaceSettings";
 import { UserSettings } from "@/components/UserSettings";
 import { CRM } from "@/components/CRM";
+import { Agents } from "@/components/Agents";
 import { InsightsSummary } from "@/components/InsightsSummary";
 import { WhatsAppInsights } from "@/components/WhatsAppInsights";
 import { DomainSetup } from "@/components/DomainSetup";
@@ -22,9 +24,9 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
@@ -118,6 +120,11 @@ function IndexContent() {
     setCurrentView('templates');
   };
 
+  const handleAgentsClick = () => {
+    console.log('Agents clicked');
+    setCurrentView('agents');
+  };
+
   const handleWorkspaceSettingsClick = (workspace: any) => {
     setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
@@ -148,6 +155,7 @@ function IndexContent() {
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
+            onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView={currentView as WorkspaceSidebarView}
           />
@@ -166,6 +174,7 @@ function IndexContent() {
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
+            onAgentsClick={handleAgentsClick}
             currentView={currentView as AppSidebarView}
           />
         )}
@@ -192,6 +201,8 @@ function IndexContent() {
               <Schedule />
             ) : currentView === 'crm' ? (
               <CRM />
+            ) : currentView === 'agents' ? (
+              <Agents />
             ) : currentView === 'insights-summary' ? (
               <InsightsSummary />
             ) : currentView === 'insights-whatsapp' ? (
