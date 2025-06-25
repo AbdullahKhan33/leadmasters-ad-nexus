@@ -82,6 +82,10 @@ function PostBuilderPage() {
     navigate('/', { state: { view: 'templates' } });
   };
 
+  const handleAgentsClick = () => {
+    navigate('/', { state: { view: 'agents' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -100,6 +104,7 @@ function PostBuilderPage() {
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
+            onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView="post-builder"
           />
@@ -118,6 +123,7 @@ function PostBuilderPage() {
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
+            onAgentsClick={handleAgentsClick}
             currentView="post-builder"
           />
         )}
@@ -193,6 +199,10 @@ function AdBuilderPage() {
     navigate('/', { state: { view: 'templates' } });
   };
 
+  const handleAgentsClick = () => {
+    navigate('/', { state: { view: 'agents' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -211,6 +221,7 @@ function AdBuilderPage() {
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
+            onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView="ad-builder"
           />
@@ -229,6 +240,7 @@ function AdBuilderPage() {
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
+            onAgentsClick={handleAgentsClick}
             currentView="ad-builder"
           />
         )}
