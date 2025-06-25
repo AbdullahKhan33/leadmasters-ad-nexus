@@ -17,13 +17,14 @@ import { InsightsSummary } from "@/components/InsightsSummary";
 import { WhatsAppInsights } from "@/components/WhatsAppInsights";
 import { DomainSetup } from "@/components/DomainSetup";
 import { CRMAutomations } from "@/components/crm/CRMAutomations";
+import { Templates } from "@/components/Templates";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
@@ -112,6 +113,11 @@ function IndexContent() {
     setCurrentView('crm-automations');
   };
 
+  const handleTemplatesClick = () => {
+    console.log('Templates clicked');
+    setCurrentView('templates');
+  };
+
   const handleWorkspaceSettingsClick = (workspace: any) => {
     setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
@@ -141,6 +147,7 @@ function IndexContent() {
             onCRMClick={handleCRMClick}
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
+            onTemplatesClick={handleTemplatesClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView={currentView as WorkspaceSidebarView}
           />
@@ -158,6 +165,7 @@ function IndexContent() {
             onCRMClick={handleCRMClick}
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
+            onTemplatesClick={handleTemplatesClick}
             currentView={currentView as AppSidebarView}
           />
         )}
@@ -192,6 +200,8 @@ function IndexContent() {
               <DomainSetup />
             ) : currentView === 'crm-automations' ? (
               <CRMAutomations />
+            ) : currentView === 'templates' ? (
+              <Templates />
             ) : (
               <AdBuilder />
             )}

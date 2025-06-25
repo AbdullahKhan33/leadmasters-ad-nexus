@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Sidebar,
@@ -28,6 +29,7 @@ import {
   MessageSquare,
   Mail,
   Zap,
+  FileText,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -44,6 +46,7 @@ export function WorkspaceSidebar({
   onCRMClick,
   onDomainSetupClick,
   onCRMAutomationsClick,
+  onTemplatesClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -59,7 +62,8 @@ export function WorkspaceSidebar({
   onCRMClick: () => void;
   onDomainSetupClick: () => void;
   onCRMAutomationsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations';
+  onTemplatesClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
@@ -276,6 +280,16 @@ export function WorkspaceSidebar({
                     <div className="flex items-center space-x-3">
                       <Zap className="w-4 h-4" />
                       <span className="text-sm font-medium">Automations</span>
+                    </div>
+                  </SidebarMenuButton>
+
+                  <SidebarMenuButton 
+                    onClick={onTemplatesClick}
+                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'templates')}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <FileText className="w-4 h-4" />
+                      <span className="text-sm font-medium">Templates</span>
                     </div>
                   </SidebarMenuButton>
                 </div>

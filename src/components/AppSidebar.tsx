@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ import {
   MessageSquare,
   Mail,
   Zap,
+  FileText,
 } from "lucide-react";
 
 export function AppSidebar({ 
@@ -41,6 +43,7 @@ export function AppSidebar({
   onCRMClick,
   onDomainSetupClick,
   onCRMAutomationsClick,
+  onTemplatesClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -55,7 +58,8 @@ export function AppSidebar({
   onCRMClick: () => void;
   onDomainSetupClick: () => void;
   onCRMAutomationsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations';
+  onTemplatesClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
@@ -266,6 +270,16 @@ export function AppSidebar({
                     <div className="flex items-center space-x-3">
                       <Zap className="w-4 h-4" />
                       <span className="text-sm font-medium">Automations</span>
+                    </div>
+                  </SidebarMenuButton>
+
+                  <SidebarMenuButton 
+                    onClick={onTemplatesClick}
+                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'templates')}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <FileText className="w-4 h-4" />
+                      <span className="text-sm font-medium">Templates</span>
                     </div>
                   </SidebarMenuButton>
                 </div>
