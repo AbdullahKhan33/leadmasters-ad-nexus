@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Sidebar,
@@ -442,10 +441,6 @@ export function WorkspaceSidebar({
                 <DropdownMenuItem onClick={onUserSettingsClick} className="cursor-pointer">
                   <User className="w-4 h-4 mr-2" />
                   Account Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Preferences
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
