@@ -115,7 +115,7 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
         </Button>
         
         {isExpanded && (
-          <div className="space-y-2 p-3 bg-gray-50 rounded-lg border">
+          <div className="space-y-2 p-3 bg-gray-50 rounded-lg border animate-in slide-in-from-top-2 duration-200">
             <div className="text-sm text-gray-600 mb-2 text-center">
               Select your region for checkout:
             </div>
@@ -196,7 +196,7 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
               return (
                 <Card 
                   key={planKey}
-                  className={`relative transition-all duration-300 hover:shadow-xl ${
+                  className={`relative transition-all duration-300 hover:shadow-xl flex flex-col h-full ${
                     isPro ? 'border-purple-200 shadow-lg ring-2 ring-purple-100' : 'border-gray-200 hover:border-purple-200'
                   }`}
                 >
@@ -242,8 +242,8 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="pt-0">
-                    <ul className="space-y-3 mb-6">
+                  <CardContent className="pt-0 flex-1 flex flex-col">
+                    <ul className="space-y-3 mb-6 flex-1">
                       {plan.features.map((feature, index) => (
                         <li key={index} className="flex items-start space-x-3">
                           <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
@@ -252,7 +252,9 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
                       ))}
                     </ul>
 
-                    <PurchaseButtons planKey={planKey as PlanType} />
+                    <div className="mt-auto">
+                      <PurchaseButtons planKey={planKey as PlanType} />
+                    </div>
                   </CardContent>
                 </Card>
               );
