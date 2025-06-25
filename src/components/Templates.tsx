@@ -156,7 +156,7 @@ export function Templates() {
   };
 
   const renderTemplateCard = (template: any, type: "email" | "whatsapp") => (
-    <Card key={template.id} className={`group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${template.color} border overflow-hidden h-fit max-w-sm mx-auto`}>
+    <Card key={template.id} className={`group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${template.color} border overflow-hidden h-fit w-full max-w-xs mx-auto`}>
       <CardHeader className="pb-2 relative">
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <Sparkles className="w-3 h-3 text-yellow-500" />
@@ -173,7 +173,7 @@ export function Templates() {
                   <MessageSquare className="w-2.5 h-2.5 text-white" />
                 </div>
               )}
-              <CardTitle className="text-base font-bold text-gray-900">
+              <CardTitle className="text-sm font-bold text-gray-900">
                 {template.name}
               </CardTitle>
             </div>
@@ -194,10 +194,10 @@ export function Templates() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 px-4 pb-4">
-        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-2.5 mb-3 border border-white/50 shadow-inner">
-          <pre className="text-xs text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-16 overflow-hidden">
-            {template.content.length > 120 ? `${template.content.substring(0, 120)}...` : template.content}
+      <CardContent className="pt-0 px-3 pb-3">
+        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-2 mb-3 border border-white/50 shadow-inner">
+          <pre className="text-xs text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-14 overflow-hidden">
+            {template.content.length > 100 ? `${template.content.substring(0, 100)}...` : template.content}
           </pre>
         </div>
         
@@ -205,7 +205,7 @@ export function Templates() {
           {/* Primary Action - Send Now */}
           <Button
             onClick={() => handleSendNow(template, type)}
-            className={`w-full font-bold py-1 h-7 flex items-center justify-center gap-1.5 text-xs ${
+            className={`w-full font-bold py-1 h-6 flex items-center justify-center gap-1 text-xs ${
               type === "email" 
                 ? "bg-purple-600 hover:bg-purple-700 text-white" 
                 : "bg-green-600 hover:bg-green-700 text-white"
@@ -219,7 +219,7 @@ export function Templates() {
           <Button
             onClick={() => handleMassSend(template, type)}
             variant="outline"
-            className={`w-full font-semibold py-1 h-7 flex items-center justify-center gap-1.5 text-xs ${
+            className={`w-full font-semibold py-1 h-6 flex items-center justify-center gap-1 text-xs ${
               type === "email"
                 ? "border-purple-200 text-purple-700 hover:bg-purple-50"
                 : "border-green-200 text-green-700 hover:bg-green-50"
@@ -230,12 +230,12 @@ export function Templates() {
           </Button>
           
           {/* Ghost Actions - Preview & Edit */}
-          <div className="grid grid-cols-2 gap-1.5">
+          <div className="grid grid-cols-2 gap-1">
             <Button
               size="sm"
               variant="ghost"
               onClick={() => handlePreviewTemplate(template, type)}
-              className="h-6 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-2"
+              className="h-5 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-1.5"
             >
               <Eye className="w-2.5 h-2.5" />
               Preview
@@ -244,7 +244,7 @@ export function Templates() {
               size="sm"
               variant="ghost"
               onClick={() => handleEditTemplate(template, type)}
-              className="h-6 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-2"
+              className="h-5 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-1.5"
             >
               <Edit className="w-2.5 h-2.5" />
               Edit
@@ -257,7 +257,7 @@ export function Templates() {
 
   return (
     <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-gray-50/30 min-h-screen">
-      <div className="max-w-5xl mx-auto p-4 space-y-6">
+      <div className="max-w-4xl mx-auto p-4 space-y-6">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold mb-3">
             <Sparkles className="w-3 h-3" />
@@ -306,21 +306,21 @@ export function Templates() {
               <div className="flex items-center gap-2">
                 <Button 
                   onClick={() => handleCreateTemplate("email")}
-                  className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2 h-8 text-xs"
+                  className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2 h-8 text-xs px-3"
                 >
                   <Plus className="w-3 h-3" />
-                  New Email Template
+                  New Template
                 </Button>
-                <Button variant="outline" size="sm" className="flex items-center gap-2 h-8 text-xs">
+                <Button variant="outline" size="sm" className="flex items-center gap-2 h-8 text-xs px-3">
                   <Filter className="w-3 h-3" />
                   Filter
                 </Button>
-                <Badge variant="outline" className="text-xs px-3 py-1 font-bold">
-                  {emailTemplates.length} templates
+                <Badge variant="outline" className="text-xs px-2 py-1 font-bold">
+                  {emailTemplates.length}
                 </Badge>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {emailTemplates.map((template) => renderTemplateCard(template, "email"))}
             </div>
           </TabsContent>
@@ -334,21 +334,21 @@ export function Templates() {
               <div className="flex items-center gap-2">
                 <Button 
                   onClick={() => handleCreateTemplate("whatsapp")}
-                  className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2 h-8 text-xs"
+                  className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2 h-8 text-xs px-3"
                 >
                   <Plus className="w-3 h-3" />
-                  New WhatsApp Template
+                  New Template
                 </Button>
-                <Button variant="outline" size="sm" className="flex items-center gap-2 h-8 text-xs">
+                <Button variant="outline" size="sm" className="flex items-center gap-2 h-8 text-xs px-3">
                   <Filter className="w-3 h-3" />
                   Filter
                 </Button>
-                <Badge variant="outline" className="text-xs px-3 py-1 font-bold">
-                  {whatsappTemplates.length} templates
+                <Badge variant="outline" className="text-xs px-2 py-1 font-bold">
+                  {whatsappTemplates.length}
                 </Badge>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {whatsappTemplates.map((template) => renderTemplateCard(template, "whatsapp"))}
             </div>
           </TabsContent>
