@@ -1,8 +1,9 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useNavigate, useSearchParams } from "react-router-dom";
+import { Routes, Route, useNavigate, useSearchParams } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { MyInspirations } from "./components/MyInspirations";
@@ -235,27 +236,25 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/my-inspirations" element={<MyInspirations />} />
-          <Route path="/post-builder" element={
-            <WorkspaceProvider>
-              <PostBuilderPage />
-            </WorkspaceProvider>
-          } />
-          <Route path="/ad-builder" element={
-            <WorkspaceProvider>
-              <AdBuilderPage />
-            </WorkspaceProvider>
-          } />
-          <Route path="/crm/*" element={<CRM />} />
-          <Route path="/insights/summary" element={<InsightsSummary />} />
-          <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/my-inspirations" element={<MyInspirations />} />
+        <Route path="/post-builder" element={
+          <WorkspaceProvider>
+            <PostBuilderPage />
+          </WorkspaceProvider>
+        } />
+        <Route path="/ad-builder" element={
+          <WorkspaceProvider>
+            <AdBuilderPage />
+          </WorkspaceProvider>
+        } />
+        <Route path="/crm/*" element={<CRM />} />
+        <Route path="/insights/summary" element={<InsightsSummary />} />
+        <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </TooltipProvider>
   </QueryClientProvider>
 );
