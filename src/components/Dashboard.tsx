@@ -110,69 +110,78 @@ export function Dashboard() {
             </p>
           </div>
 
-          {/* Quick Actions Section */}
+          {/* Quick Actions Section - Enhanced */}
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
-                    <Feather className="w-8 h-8 text-gray-400" />
+              {/* Create Post Card - Enhanced */}
+              <Card className="group relative overflow-hidden bg-gradient-to-br from-white via-purple-50/30 to-pink-50/20 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 hover:scale-[1.02]">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                <CardHeader className="text-center pb-4 relative z-10">
+                  <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl flex items-center justify-center mb-6 group-hover:from-purple-200 group-hover:to-pink-200 transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:scale-110">
+                    <Feather className="w-10 h-10 text-purple-600 group-hover:text-purple-700 transition-colors" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Create Your First Post</CardTitle>
-                  <CardDescription className="text-gray-500">
+                  <CardTitle className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-900 transition-colors">Create Your First Post</CardTitle>
+                  <CardDescription className="text-gray-600 leading-relaxed">
                     Design engaging content with AI assistance
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 relative z-10">
                   <Button 
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl group/btn transition-all duration-300 py-3 font-semibold"
                     onClick={handleCreatePostClick}
                   >
                     Create Post
-                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
-                    <Target className="w-8 h-8 text-gray-400" />
+              {/* Launch Ad Card - Enhanced */}
+              <Card className="group relative overflow-hidden bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 hover:scale-[1.02]">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+                <CardHeader className="text-center pb-4 relative z-10">
+                  <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-100 to-indigo-100 rounded-3xl flex items-center justify-center mb-6 group-hover:from-blue-200 group-hover:to-indigo-200 transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:scale-110">
+                    <Target className="w-10 h-10 text-blue-600 group-hover:text-blue-700 transition-colors" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Launch Your First Ad Campaign</CardTitle>
-                  <CardDescription className="text-gray-500">
+                  <CardTitle className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-900 transition-colors">Launch Your First Ad Campaign</CardTitle>
+                  <CardDescription className="text-gray-600 leading-relaxed">
                     Reach your audience with targeted advertising
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 relative z-10">
                   <Button 
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl group/btn transition-all duration-300 py-3 font-semibold"
                     onClick={handleLaunchAdClick}
                   >
                     Launch Ad
-                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
                   </Button>
                 </CardContent>
               </Card>
 
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
-                    <BarChart3 className="w-8 h-8 text-gray-400" />
+              {/* View Summary Card - Enhanced */}
+              <Card className="group relative overflow-hidden bg-gradient-to-br from-white via-emerald-50/30 to-teal-50/20 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2 hover:scale-[1.02]">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+                <CardHeader className="text-center pb-4 relative z-10">
+                  <div className="w-20 h-20 mx-auto bg-gradient-to-br from-emerald-100 to-teal-100 rounded-3xl flex items-center justify-center mb-6 group-hover:from-emerald-200 group-hover:to-teal-200 transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:scale-110">
+                    <BarChart3 className="w-10 h-10 text-emerald-600 group-hover:text-emerald-700 transition-colors" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">View Posts & Campaign Summary</CardTitle>
-                  <CardDescription className="text-gray-500">
+                  <CardTitle className="text-xl font-bold text-gray-900 mb-2 group-hover:text-emerald-900 transition-colors">View Posts & Campaign Summary</CardTitle>
+                  <CardDescription className="text-gray-600 leading-relaxed">
                     Track performance and insights
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 relative z-10">
                   <Button 
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl group/btn transition-all duration-300 py-3 font-semibold"
                     onClick={handleViewSummaryClick}
                   >
                     View Summary
-                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
                   </Button>
                 </CardContent>
               </Card>
