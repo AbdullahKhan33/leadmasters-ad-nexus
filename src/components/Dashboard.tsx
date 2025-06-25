@@ -1,6 +1,8 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { 
   PenTool, 
   Target, 
@@ -86,7 +88,7 @@ export function Dashboard() {
               <h2 className="text-xl font-semibold text-gray-800">Your WhatsApp Performance</h2>
             </div>
 
-            {/* WhatsApp Business Control Center Cards */}
+            {/* WhatsApp Performance Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Card 1 - New WhatsApp Leads */}
               <Card 
@@ -109,13 +111,15 @@ export function Dashboard() {
                     <div className="text-3xl font-bold text-gray-900">8</div>
                     <div className="text-sm font-medium text-gray-700">New leads this week — Start the conversation.</div>
                   </div>
-                  <div className="mt-4 w-full bg-green-50 rounded-full h-1">
-                    <div className="bg-green-500 h-1 rounded-full w-3/4"></div>
+                  <div className="mt-4">
+                    <Progress value={75} className="h-1 bg-green-50">
+                      <div className="h-full bg-green-500 rounded-full" style={{ width: '75%' }}></div>
+                    </Progress>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Card 2 - Chats Happening Right Now */}
+              {/* Card 2 - Active Conversations */}
               <Card 
                 className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
                 onClick={handleActiveChatsClick}
@@ -136,13 +140,15 @@ export function Dashboard() {
                     <div className="text-3xl font-bold text-gray-900">3</div>
                     <div className="text-sm font-medium text-gray-700">Stay responsive to convert leads.</div>
                   </div>
-                  <div className="mt-4 w-full bg-green-50 rounded-full h-1">
-                    <div className="bg-green-500 h-1 rounded-full w-1/2"></div>
+                  <div className="mt-4">
+                    <Progress value={50} className="h-1 bg-green-50">
+                      <div className="h-full bg-green-500 rounded-full" style={{ width: '50%' }}></div>
+                    </Progress>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Card 3 - People Awaiting Your Reply */}
+              {/* Card 3 - Replies Waiting */}
               <Card 
                 className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
                 onClick={handleAwaitingReplyClick}
@@ -161,15 +167,17 @@ export function Dashboard() {
                   </div>
                   <div className="space-y-2">
                     <div className="text-3xl font-bold text-gray-900">2</div>
-                    <div className="text-sm font-medium text-gray-700">2 people waiting for your reply — Don't let leads go cold.</div>
+                    <div className="text-sm font-medium text-gray-700">People waiting for your reply — Don't let leads go cold.</div>
                   </div>
-                  <div className="mt-4 w-full bg-green-50 rounded-full h-1">
-                    <div className="bg-green-500 h-1 rounded-full w-full"></div>
+                  <div className="mt-4">
+                    <Progress value={100} className="h-1 bg-green-50">
+                      <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
+                    </Progress>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Card 4 - Total WhatsApp Messages Sent */}
+              {/* Card 4 - Messages Sent */}
               <Card 
                 className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
                 onClick={handleMessagesSentClick}
@@ -188,10 +196,12 @@ export function Dashboard() {
                   </div>
                   <div className="space-y-2">
                     <div className="text-3xl font-bold text-gray-900">84</div>
-                    <div className="text-sm font-medium text-gray-700">84 messages sent this month — Keep engaging your customers.</div>
+                    <div className="text-sm font-medium text-gray-700">Messages sent this month — Keep engaging your customers.</div>
                   </div>
-                  <div className="mt-4 w-full bg-green-50 rounded-full h-1">
-                    <div className="bg-green-500 h-1 rounded-full w-4/5"></div>
+                  <div className="mt-4">
+                    <Progress value={80} className="h-1 bg-green-50">
+                      <div className="h-full bg-green-500 rounded-full" style={{ width: '80%' }}></div>
+                    </Progress>
                   </div>
                 </CardContent>
               </Card>
