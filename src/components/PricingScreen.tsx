@@ -231,47 +231,59 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
           </div>
         </div>
 
-        {/* Summary Footer */}
+        {/* Improved Summary Footer */}
         {selectedPlan && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6 rounded-b-2xl">
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Order Summary</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <span className="text-gray-500">Plan:</span>
-                        <div className="font-medium">{plans[selectedPlan].name}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Billing:</span>
-                        <div className="font-medium capitalize">{billingCycle}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Total:</span>
-                        <div className="font-bold text-lg">${getCurrentPrice(selectedPlan)}</div>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Next renewal:</span>
-                        <div className="font-medium">{getRenewalDate()}</div>
-                      </div>
+          <div className="sticky bottom-0 bg-white border-t border-gray-200 rounded-b-2xl">
+            <div className="max-w-6xl mx-auto p-8">
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
+                <div className="space-y-6">
+                  {/* Order Summary Header */}
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Complete Your Purchase</h3>
+                    <p className="text-gray-600">You're one step away from unlocking AI-powered social media automation</p>
+                  </div>
+
+                  {/* Plan Details in Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
+                      <div className="text-sm text-gray-500 mb-1">Selected Plan</div>
+                      <div className="font-bold text-lg text-gray-900">{plans[selectedPlan].name}</div>
+                    </div>
+                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
+                      <div className="text-sm text-gray-500 mb-1">Billing Cycle</div>
+                      <div className="font-bold text-lg text-gray-900 capitalize">{billingCycle}</div>
+                    </div>
+                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
+                      <div className="text-sm text-gray-500 mb-1">Total Amount</div>
+                      <div className="font-bold text-2xl text-gray-900">${getCurrentPrice(selectedPlan)}</div>
+                    </div>
+                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
+                      <div className="text-sm text-gray-500 mb-1">Next Renewal</div>
+                      <div className="font-bold text-sm text-gray-900">{getRenewalDate()}</div>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col sm:flex-row gap-3 lg:ml-6">
-                    <Button 
-                      size="lg"
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8"
-                    >
-                      Purchase Now (International)
-                    </Button>
-                    <Button 
-                      size="lg"
-                      className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white px-8"
-                    >
-                      Purchase Now (Indian Customers)
-                    </Button>
+                  {/* Purchase Buttons - Improved Layout */}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <Button 
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                      >
+                        Purchase Now (International)
+                      </Button>
+                      <Button 
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                      >
+                        Purchase Now (Indian Customers)
+                      </Button>
+                    </div>
+                    
+                    {/* Additional Info */}
+                    <div className="text-center text-sm text-gray-500">
+                      <p>✓ 30-day money-back guarantee • ✓ Cancel anytime • ✓ Secure payment processing</p>
+                    </div>
                   </div>
                 </div>
               </div>
