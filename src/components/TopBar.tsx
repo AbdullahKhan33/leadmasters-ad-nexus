@@ -107,7 +107,7 @@ export function TopBar() {
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[30vw] max-w-none">
+              <SheetContent className="w-[40vw] max-w-none">
                 <SheetHeader className="pb-6 border-b border-gray-100">
                   <SheetTitle className="text-2xl font-bold text-gray-900">Notifications</SheetTitle>
                 </SheetHeader>
