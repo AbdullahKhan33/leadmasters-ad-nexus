@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -191,12 +190,12 @@ export function Dashboard() {
 
             {/* WhatsApp Performance Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Card 1 - New WhatsApp Leads */}
+              {/* Card 1 - New WhatsApp Leads - Blue Theme */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <Users className="w-6 h-6 text-green-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center">
+                      <Users className="w-6 h-6 text-blue-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -204,13 +203,13 @@ export function Dashboard() {
                     <div className="text-sm font-medium text-gray-700">New leads this week — Start the conversation.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={75} className="h-1 bg-green-50">
-                      <div className="h-full bg-green-500 rounded-full" style={{ width: '75%' }}></div>
+                    <Progress value={75} className="h-1 bg-blue-50">
+                      <div className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full" style={{ width: '75%' }}></div>
                     </Progress>
                   </div>
                   <Button 
                     onClick={handleViewLeadsClick}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
+                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white group mt-auto"
                   >
                     View Leads
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -218,12 +217,12 @@ export function Dashboard() {
                 </CardContent>
               </Card>
 
-              {/* Card 2 - Active Conversations */}
+              {/* Card 2 - Active Conversations - Purple Theme */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <MessageSquare className="w-6 h-6 text-green-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-50 to-purple-100 rounded-full flex items-center justify-center">
+                      <MessageSquare className="w-6 h-6 text-purple-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -231,13 +230,13 @@ export function Dashboard() {
                     <div className="text-sm font-medium text-gray-700">Stay responsive to convert leads.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={50} className="h-1 bg-green-50">
-                      <div className="h-full bg-green-500 rounded-full" style={{ width: '50%' }}></div>
+                    <Progress value={50} className="h-1 bg-purple-50">
+                      <div className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full" style={{ width: '50%' }}></div>
                     </Progress>
                   </div>
                   <Button 
                     onClick={handleOpenChatsClick}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
+                    className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white group mt-auto"
                   >
                     Open Chats
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -245,12 +244,12 @@ export function Dashboard() {
                 </CardContent>
               </Card>
 
-              {/* Card 3 - Replies Waiting */}
+              {/* Card 3 - Replies Waiting - Orange Theme */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-green-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-full flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-orange-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -258,13 +257,13 @@ export function Dashboard() {
                     <div className="text-sm font-medium text-gray-700">People waiting for your reply — Don't let leads go cold.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={100} className="h-1 bg-green-50">
-                      <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
+                    <Progress value={100} className="h-1 bg-orange-50">
+                      <div className="h-full bg-gradient-to-r from-orange-500 to-orange-600 rounded-full" style={{ width: '100%' }}></div>
                     </Progress>
                   </div>
                   <Button 
                     onClick={handleReplyNowClick}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white group mt-auto"
                   >
                     Reply Now
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -272,12 +271,12 @@ export function Dashboard() {
                 </CardContent>
               </Card>
 
-              {/* Card 4 - Messages Sent */}
+              {/* Card 4 - Messages Sent - Green Theme (keeping one green for WhatsApp branding) */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-green-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-full flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-emerald-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -285,13 +284,13 @@ export function Dashboard() {
                     <div className="text-sm font-medium text-gray-700">Messages sent this month — Keep engaging your customers.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={80} className="h-1 bg-green-50">
-                      <div className="h-full bg-green-500 rounded-full" style={{ width: '80%' }}></div>
+                    <Progress value={80} className="h-1 bg-emerald-50">
+                      <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full" style={{ width: '80%' }}></div>
                     </Progress>
                   </div>
                   <Button 
                     onClick={handleViewMessageSummaryClick}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white group mt-auto"
                   >
                     View Summary
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
