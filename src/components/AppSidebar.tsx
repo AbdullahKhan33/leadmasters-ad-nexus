@@ -55,7 +55,7 @@ export function AppSidebar({
   onCRMClick: () => void;
   onDomainSetupClick: () => void;
   onCRMAutomationsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm';
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
@@ -76,8 +76,22 @@ export function AppSidebar({
     return 'text-gray-600 group-hover:text-purple-600';
   };
 
-  const handleCRMDashboardClick = () => {
-    onCRMClick();
+  const getSubmenuItemStyles = (isSelected: boolean) => {
+    if (isSelected) {
+      return 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-lg hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 hover:text-white';
+    }
+    return 'text-gray-600 hover:bg-gray-100 hover:text-gray-900';
+  };
+
+  const handleCRMMainClick = () => {
+    if (isCollapsed) {
+      // If collapsed, just navigate to CRM dashboard
+      onCRMClick();
+    } else {
+      // If expanded, toggle submenu and navigate to CRM dashboard
+      setIsCRMSubmenuOpen(!isCRMSubmenuOpen);
+      onCRMClick();
+    }
   };
 
   return (
@@ -203,7 +217,7 @@ export function AppSidebar({
           <SidebarMenuItem>
             <div className="space-y-1">
               <SidebarMenuButton 
-                onClick={() => setIsCRMSubmenuOpen(!isCRMSubmenuOpen)}
+                onClick={handleCRMMainClick}
                 className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'crm')}`}
               >
                 {isCollapsed ? (
@@ -226,8 +240,18 @@ export function AppSidebar({
               {isCRMSubmenuOpen && !isCollapsed && (
                 <div className="ml-6 space-y-1">
                   <SidebarMenuButton 
+                    onClick={onCRMClick}
+                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm')}`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <MessageSquare className="w-4 h-4" />
+                      <span className="text-sm font-medium">Dashboard</span>
+                    </div>
+                  </SidebarMenuButton>
+                  
+                  <SidebarMenuButton 
                     onClick={onDomainSetupClick}
-                    className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'domain-setup')}`}
                   >
                     <div className="flex items-center space-x-3">
                       <Mail className="w-4 h-4" />
@@ -237,7 +261,7 @@ export function AppSidebar({
                   
                   <SidebarMenuButton 
                     onClick={onCRMAutomationsClick}
-                    className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm-automations')}`}
                   >
                     <div className="flex items-center space-x-3">
                       <Zap className="w-4 h-4" />
