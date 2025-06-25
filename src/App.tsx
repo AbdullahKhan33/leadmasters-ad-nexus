@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,7 +11,7 @@ import { CRM } from "./components/CRM";
 import { InsightsSummary } from "./components/InsightsSummary";
 import { WhatsAppInsights } from "./components/WhatsAppInsights";
 import { WorkspaceProvider } from "./contexts/WorkspaceContext";
-import { SidebarProvider } from "./components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { WorkspaceSidebar } from "./components/WorkspaceSidebar";
 import { TopBar } from "./components/TopBar";
@@ -95,6 +94,7 @@ function PostBuilderPage() {
             onCRMClick={handleCRMClick}
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView="post-builder"
           />
         ) : (
@@ -199,6 +199,7 @@ function AdBuilderPage() {
             onCRMClick={handleCRMClick}
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView="ad-builder"
           />
         ) : (

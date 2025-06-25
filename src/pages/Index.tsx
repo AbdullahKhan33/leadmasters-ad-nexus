@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -142,6 +141,7 @@ function IndexContent() {
             onCRMClick={handleCRMClick}
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (

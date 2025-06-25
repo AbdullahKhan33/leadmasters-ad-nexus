@@ -14,7 +14,6 @@ import {
 import { CRMInboxView } from "./crm/CRMInboxView";
 import { CRMKanbanView } from "./crm/CRMKanbanView";
 import { CRMTableView } from "./crm/CRMTableView";
-import { CRMAutomations } from "./crm/CRMAutomations";
 
 export function CRM() {
   const [activeTab, setActiveTab] = useState("inbox");
@@ -46,7 +45,7 @@ export function CRM() {
       {/* Navigation Tabs */}
       <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6 shadow-sm">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
+          <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
             <TabsTrigger 
               value="inbox" 
               className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
@@ -68,13 +67,6 @@ export function CRM() {
               <TableProperties className="w-4 h-4" />
               <span>Table View</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="automations" 
-              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
-            >
-              <Settings className="w-4 h-4" />
-              <span>Automations</span>
-            </TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
@@ -90,9 +82,6 @@ export function CRM() {
           </TabsContent>
           <TabsContent value="table" className="h-full m-0">
             <CRMTableView />
-          </TabsContent>
-          <TabsContent value="automations" className="h-full m-0">
-            <CRMAutomations />
           </TabsContent>
         </Tabs>
       </div>
