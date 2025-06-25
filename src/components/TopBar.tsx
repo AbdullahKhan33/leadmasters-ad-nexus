@@ -58,13 +58,13 @@ export function TopBar() {
   const getNotificationStyles = (type: string) => {
     switch (type) {
       case 'success':
-        return 'text-green-600 bg-green-50';
+        return 'text-green-600 bg-green-50 border-green-100';
       case 'warning':
-        return 'text-orange-600 bg-orange-50';
+        return 'text-orange-600 bg-orange-50 border-orange-100';
       case 'info':
-        return 'text-blue-600 bg-blue-50';
+        return 'text-blue-600 bg-blue-50 border-blue-100';
       default:
-        return 'text-gray-600 bg-gray-50';
+        return 'text-gray-600 bg-gray-50 border-gray-100';
     }
   };
 
@@ -107,37 +107,38 @@ export function TopBar() {
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[1000px] sm:w-[1200px] max-w-[90vw]">
-                <SheetHeader className="pb-6">
-                  <SheetTitle className="text-xl font-bold">Notifications</SheetTitle>
+              <SheetContent className="w-[30vw] max-w-none">
+                <SheetHeader className="pb-6 border-b border-gray-100">
+                  <SheetTitle className="text-2xl font-bold text-gray-900">Notifications</SheetTitle>
                 </SheetHeader>
-                <div className="space-y-6 max-h-[calc(100vh-140px)] overflow-y-auto pr-2">
+                <div className="space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto pr-2 mt-6">
                   {sampleNotifications.map((notification) => {
                     const IconComponent = notification.icon;
                     return (
-                      <div key={notification.id} className="p-6 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                      <div key={notification.id} className="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md hover:border-gray-200">
                         <div className="flex items-start space-x-4">
-                          <div className={`p-3 rounded-full flex-shrink-0 ${getNotificationStyles(notification.type)}`}>
+                          <div className={`flex-shrink-0 p-3 rounded-xl border ${getNotificationStyles(notification.type)}`}>
                             <IconComponent className="w-5 h-5" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-base font-semibold text-gray-900 mb-2">
+                            <h4 className="text-base font-semibold text-gray-900 mb-2 leading-tight">
                               {notification.title}
                             </h4>
-                            <p className="text-base text-gray-600 mb-3 break-words leading-relaxed">
+                            <p className="text-sm text-gray-600 mb-3 break-words leading-relaxed">
                               {notification.message}
                             </p>
-                            <p className="text-sm text-gray-400">
+                            <p className="text-xs text-gray-400 font-medium">
                               {notification.time}
                             </p>
                           </div>
                         </div>
+                        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-gray-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                       </div>
                     );
                   })}
                 </div>
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                  <Button variant="outline" className="w-full h-12 text-base font-medium">
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <Button variant="outline" className="w-full h-12 text-base font-medium border-gray-200 hover:bg-gray-50 transition-colors duration-200">
                     Mark All as Read
                   </Button>
                 </div>
