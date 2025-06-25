@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -40,7 +41,8 @@ import {
   Send,
   Plus,
   Upload,
-  Database
+  Database,
+  Users
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -210,6 +212,15 @@ export function CRMTableView() {
     // This would typically open the HubSpot OAuth flow
   };
 
+  const handleGetStarterLeads = () => {
+    console.log('Getting 50 starter leads...');
+    toast({
+      title: "Starter Leads Package",
+      description: "Fetching 50 high-quality starter leads for your CRM. This may take a few moments.",
+    });
+    // This would typically trigger the starter leads generation process
+  };
+
   const filteredLeads = leads.filter(lead => {
     const matchesSearch = lead.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSource = sourceFilter === "all" || lead.source === sourceFilter;
@@ -226,120 +237,130 @@ export function CRMTableView() {
       </div>
 
       {/* Action Buttons */}
-      <div className="mb-4 flex gap-3">
-        <Dialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Lead
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add New Lead</DialogTitle>
-              <DialogDescription>
-                Enter the lead details to add them to your CRM.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="leadName">Full Name (required)</Label>
-                <Input
-                  id="leadName"
-                  placeholder="John Doe"
-                  value={newLead.name}
-                  onChange={(e) => setNewLead({...newLead, name: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="leadPhone">Phone/WhatsApp Number (required)</Label>
-                <Input
-                  id="leadPhone"
-                  placeholder="+971 50 123 4567"
-                  value={newLead.phone}
-                  onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="leadEmail">Email (optional)</Label>
-                <Input
-                  id="leadEmail"
-                  type="email"
-                  placeholder="john@example.com"
-                  value={newLead.email}
-                  onChange={(e) => setNewLead({...newLead, email: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="leadTags">Tags (comma-separated)</Label>
-                <Input
-                  id="leadTags"
-                  placeholder="Hot, Dubai, Premium"
-                  value={newLead.tags}
-                  onChange={(e) => setNewLead({...newLead, tags: e.target.value})}
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="leadSource">Source</Label>
-                <Select value={newLead.source} onValueChange={(value) => setNewLead({...newLead, source: value})}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="WhatsApp">WhatsApp</SelectItem>
-                    <SelectItem value="Facebook">Facebook</SelectItem>
-                    <SelectItem value="Instagram">Instagram</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label htmlFor="leadAgent">Assign to Agent</Label>
-                <Select value={newLead.assignedAgent} onValueChange={(value) => setNewLead({...newLead, assignedAgent: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select an agent" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {mockAgents.map(agent => (
-                      <SelectItem key={agent} value={agent}>{agent}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button 
-                onClick={handleAddLead}
-                disabled={!newLead.name || !newLead.phone}
-                className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600"
-              >
+      <div className="mb-4 flex justify-between items-center">
+        <div className="flex gap-3">
+          <Dialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+                <Plus className="w-4 h-4 mr-2" />
                 Add Lead
               </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add New Lead</DialogTitle>
+                <DialogDescription>
+                  Enter the lead details to add them to your CRM.
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="leadName">Full Name (required)</Label>
+                  <Input
+                    id="leadName"
+                    placeholder="John Doe"
+                    value={newLead.name}
+                    onChange={(e) => setNewLead({...newLead, name: e.target.value})}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="leadPhone">Phone/WhatsApp Number (required)</Label>
+                  <Input
+                    id="leadPhone"
+                    placeholder="+971 50 123 4567"
+                    value={newLead.phone}
+                    onChange={(e) => setNewLead({...newLead, phone: e.target.value})}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="leadEmail">Email (optional)</Label>
+                  <Input
+                    id="leadEmail"
+                    type="email"
+                    placeholder="john@example.com"
+                    value={newLead.email}
+                    onChange={(e) => setNewLead({...newLead, email: e.target.value})}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="leadTags">Tags (comma-separated)</Label>
+                  <Input
+                    id="leadTags"
+                    placeholder="Hot, Dubai, Premium"
+                    value={newLead.tags}
+                    onChange={(e) => setNewLead({...newLead, tags: e.target.value})}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="leadSource">Source</Label>
+                  <Select value={newLead.source} onValueChange={(value) => setNewLead({...newLead, source: value})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="WhatsApp">WhatsApp</SelectItem>
+                      <SelectItem value="Facebook">Facebook</SelectItem>
+                      <SelectItem value="Instagram">Instagram</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="leadAgent">Assign to Agent</Label>
+                  <Select value={newLead.assignedAgent} onValueChange={(value) => setNewLead({...newLead, assignedAgent: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an agent" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mockAgents.map(agent => (
+                        <SelectItem key={agent} value={agent}>{agent}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button 
+                  onClick={handleAddLead}
+                  disabled={!newLead.name || !newLead.phone}
+                  className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600"
+                >
+                  Add Lead
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Button 
+            variant="outline" 
+            onClick={handleApolloImport}
+            className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200"
+          >
+            <Database className="w-4 h-4 mr-2" />
+            Import from Apollo
+          </Button>
+
+          <Button 
+            variant="outline" 
+            onClick={handleHubSpotImport}
+            className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Import from HubSpot
+          </Button>
+        </div>
 
         <Button 
-          variant="outline" 
-          onClick={handleApolloImport}
-          className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200"
+          onClick={handleGetStarterLeads}
+          className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-500 hover:from-emerald-700 hover:via-green-700 hover:to-teal-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
         >
-          <Database className="w-4 h-4 mr-2" />
-          Import from Apollo
-        </Button>
-
-        <Button 
-          variant="outline" 
-          onClick={handleHubSpotImport}
-          className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200"
-        >
-          <Upload className="w-4 h-4 mr-2" />
-          Import from HubSpot
+          <Users className="w-4 h-4 mr-2" />
+          Get 50 Starter Leads
         </Button>
       </div>
 
