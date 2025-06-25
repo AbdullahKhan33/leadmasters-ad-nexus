@@ -5,7 +5,6 @@ import {
   MessageCircle, 
   CheckCircle, 
   Send, 
-  FileText, 
   List, 
   BarChart3,
   Users,
@@ -82,13 +81,6 @@ export function WhatsAppAdBuilder() {
       accent: false,
       clickable: true,
       onClick: () => setCurrentView('campaign')
-    },
-    {
-      title: "Templates & Message Library",
-      description: "Manage your approved templates and preview message formats for optimal engagement.",
-      icon: FileText,
-      accent: false,
-      clickable: true
     },
     {
       title: "Campaigns Manager",
