@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Sparkles, Zap, Crown, Building2, Users } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, Building2, ChevronDown } from "lucide-react";
 
 interface PricingScreenProps {
   onClose: () => void;
@@ -14,7 +14,7 @@ type PlanType = 'free' | 'basic' | 'pro' | 'enterprise';
 
 export function PricingScreen({ onClose }: PricingScreenProps) {
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
-  const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
+  const [expandedPlan, setExpandedPlan] = useState<PlanType | null>(null);
 
   const plans = {
     free: {
@@ -84,15 +84,60 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
     return plans[planKey].prices[billingCycle];
   };
 
-  const getRenewalDate = () => {
-    const now = new Date();
-    const months = billingCycle === 'monthly' ? 1 : billingCycle === 'quarterly' ? 3 : 12;
-    const renewal = new Date(now.setMonth(now.getMonth() + months));
-    return renewal.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+  const togglePlanExpansion = (planKey: PlanType) => {
+    setExpandedPlan(expandedPlan === planKey ? null : planKey);
+  };
+
+  const PurchaseButtons = ({ planKey }: { planKey: PlanType }) => {
+    const isExpanded = expandedPlan === planKey;
+    const price = getCurrentPrice(planKey);
+    
+    if (planKey === 'free') {
+      return (
+        <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white">
+          Get Started Free
+        </Button>
+      );
+    }
+
+    return (
+      <div className="space-y-3">
+        <Button 
+          onClick={() => togglePlanExpansion(planKey)}
+          className={`w-full transition-all duration-200 flex items-center justify-between ${
+            planKey === 'pro'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white'
+              : 'bg-gray-900 hover:bg-gray-800 text-white'
+          }`}
+        >
+          <span>Choose This Plan</span>
+          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+        </Button>
+        
+        {isExpanded && (
+          <div className="space-y-2 p-3 bg-gray-50 rounded-lg border">
+            <div className="text-sm text-gray-600 mb-2 text-center">
+              Select your region for checkout:
+            </div>
+            <Button 
+              size="sm"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Purchase Now (International) - ${price}
+            </Button>
+            <Button 
+              size="sm"
+              className="w-full bg-green-600 hover:bg-green-700 text-white"
+            >
+              Purchase Now (Indian Customers) - ${price}
+            </Button>
+            <div className="text-xs text-gray-500 text-center mt-2">
+              ✓ 30-day money-back guarantee • ✓ Cancel anytime
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -142,20 +187,18 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
         </div>
 
         {/* Plans Grid */}
-        <div className="p-8">
+        <div className="p-8 pb-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {Object.entries(plans).map(([planKey, plan]) => {
               const IconComponent = plan.icon;
-              const isSelected = selectedPlan === planKey;
               const isPro = planKey === 'pro';
               
               return (
                 <Card 
                   key={planKey}
-                  className={`relative transition-all duration-300 hover:shadow-xl cursor-pointer group ${
+                  className={`relative transition-all duration-300 hover:shadow-xl ${
                     isPro ? 'border-purple-200 shadow-lg ring-2 ring-purple-100' : 'border-gray-200 hover:border-purple-200'
-                  } ${isSelected ? 'ring-2 ring-blue-400 border-blue-300' : ''}`}
-                  onClick={() => setSelectedPlan(planKey as PlanType)}
+                  }`}
                 >
                   {isPro && (
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -209,87 +252,13 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
                       ))}
                     </ul>
 
-                    <Button 
-                      className={`w-full transition-all duration-200 ${
-                        isSelected
-                          ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                          : isPro
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white'
-                          : 'bg-gray-900 hover:bg-gray-800 text-white'
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedPlan(planKey as PlanType);
-                      }}
-                    >
-                      {isSelected ? 'Selected' : 'Choose Plan'}
-                    </Button>
+                    <PurchaseButtons planKey={planKey as PlanType} />
                   </CardContent>
                 </Card>
               );
             })}
           </div>
         </div>
-
-        {/* Improved Summary Footer */}
-        {selectedPlan && (
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 rounded-b-2xl">
-            <div className="max-w-6xl mx-auto p-8">
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
-                <div className="space-y-6">
-                  {/* Order Summary Header */}
-                  <div className="text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Complete Your Purchase</h3>
-                    <p className="text-gray-600">You're one step away from unlocking AI-powered social media automation</p>
-                  </div>
-
-                  {/* Plan Details in Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
-                      <div className="text-sm text-gray-500 mb-1">Selected Plan</div>
-                      <div className="font-bold text-lg text-gray-900">{plans[selectedPlan].name}</div>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
-                      <div className="text-sm text-gray-500 mb-1">Billing Cycle</div>
-                      <div className="font-bold text-lg text-gray-900 capitalize">{billingCycle}</div>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
-                      <div className="text-sm text-gray-500 mb-1">Total Amount</div>
-                      <div className="font-bold text-2xl text-gray-900">${getCurrentPrice(selectedPlan)}</div>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 text-center border border-gray-100">
-                      <div className="text-sm text-gray-500 mb-1">Next Renewal</div>
-                      <div className="font-bold text-sm text-gray-900">{getRenewalDate()}</div>
-                    </div>
-                  </div>
-                  
-                  {/* Purchase Buttons - Improved Layout */}
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      <Button 
-                        size="lg"
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                      >
-                        Purchase Now (International)
-                      </Button>
-                      <Button 
-                        size="lg"
-                        className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                      >
-                        Purchase Now (Indian Customers)
-                      </Button>
-                    </div>
-                    
-                    {/* Additional Info */}
-                    <div className="text-center text-sm text-gray-500">
-                      <p>✓ 30-day money-back guarantee • ✓ Cancel anytime • ✓ Secure payment processing</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
