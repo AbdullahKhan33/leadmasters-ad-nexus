@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,6 +42,7 @@ import {
   Upload,
   Database
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface TableLead {
   id: string;
@@ -128,8 +128,7 @@ export function CRMTableView() {
   const [sourceFilter, setSourceFilter] = useState("all");
   const [agentFilter, setAgentFilter] = useState("all");
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const [importSource, setImportSource] = useState<'apollo' | 'hubspot'>('apollo');
+  const { toast } = useToast();
 
   // Add Lead Form
   const [newLead, setNewLead] = useState({
@@ -193,10 +192,22 @@ export function CRMTableView() {
     setIsAddLeadOpen(false);
   };
 
-  const handleImport = () => {
-    console.log(`Importing from ${importSource}`);
-    // This would typically open the OAuth flow or import interface
-    setIsImportModalOpen(false);
+  const handleApolloImport = () => {
+    console.log('Initiating Apollo import...');
+    toast({
+      title: "Apollo Integration",
+      description: "Opening Apollo connection flow. You'll be redirected to authenticate with Apollo.",
+    });
+    // This would typically open the Apollo OAuth flow
+  };
+
+  const handleHubSpotImport = () => {
+    console.log('Initiating HubSpot import...');
+    toast({
+      title: "HubSpot Integration", 
+      description: "Opening HubSpot connection flow. You'll be redirected to authenticate with HubSpot.",
+    });
+    // This would typically open the HubSpot OAuth flow
   };
 
   const filteredLeads = leads.filter(lead => {
@@ -313,62 +324,20 @@ export function CRMTableView() {
           </DialogContent>
         </Dialog>
 
-        <Dialog open={isImportModalOpen} onOpenChange={setIsImportModalOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
-              <Database className="w-4 h-4 mr-2" />
-              Import from Apollo
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Import Leads</DialogTitle>
-              <DialogDescription>
-                Connect your account to import leads from external sources.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div className="flex gap-2">
-                <Button
-                  variant={importSource === 'apollo' ? 'default' : 'outline'}
-                  onClick={() => setImportSource('apollo')}
-                  className="flex-1"
-                >
-                  <Database className="w-4 h-4 mr-2" />
-                  Apollo
-                </Button>
-                <Button
-                  variant={importSource === 'hubspot' ? 'default' : 'outline'}
-                  onClick={() => setImportSource('hubspot')}
-                  className="flex-1"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  HubSpot
-                </Button>
-              </div>
+        <Button 
+          variant="outline" 
+          onClick={handleApolloImport}
+          className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200"
+        >
+          <Database className="w-4 h-4 mr-2" />
+          Import from Apollo
+        </Button>
 
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium mb-2">Import Process:</h4>
-                <ol className="text-sm text-gray-600 space-y-1">
-                  <li>1. Connect your {importSource} account</li>
-                  <li>2. Preview available leads</li>
-                  <li>3. Select leads to import</li>
-                  <li>4. Bulk assign tags and agents</li>
-                </ol>
-              </div>
-
-              <Button 
-                onClick={handleImport}
-                className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600"
-              >
-                Connect {importSource === 'apollo' ? 'Apollo' : 'HubSpot'}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <Button variant="outline" className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200">
+        <Button 
+          variant="outline" 
+          onClick={handleHubSpotImport}
+          className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:border-purple-200 hover:text-purple-700 transition-all duration-200"
+        >
           <Upload className="w-4 h-4 mr-2" />
           Import from HubSpot
         </Button>
