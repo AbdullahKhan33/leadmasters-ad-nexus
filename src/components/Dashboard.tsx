@@ -60,7 +60,6 @@ export function Dashboard() {
     setShowPricing(true);
   };
 
-  // New handler functions for the CTA buttons
   const handleViewLeadsClick = () => {
     navigate('/', { 
       state: { 
@@ -94,18 +93,18 @@ export function Dashboard() {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900/30 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50/30 p-6">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Welcome Header */}
           <div className="text-center space-y-4 py-8">
             <div className="flex items-center justify-center space-x-3">
               <span className="text-4xl">👋</span>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-gray-200 dark:to-gray-400 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
                 Welcome back, Abdullah!
               </h1>
-              <Sparkles className="w-8 h-8 text-gray-400 dark:text-gray-500 animate-pulse" />
+              <Sparkles className="w-8 h-8 text-gray-400 animate-pulse" />
             </div>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Let's grow your campaigns and posts with AI-powered ease.
             </p>
           </div>
@@ -117,25 +116,25 @@ export function Dashboard() {
               <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                 <MessageSquare className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Your WhatsApp Performance</h2>
+              <h2 className="text-xl font-semibold text-gray-800">Your WhatsApp Performance</h2>
             </div>
 
             {/* WhatsApp Performance Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Card 1 - New WhatsApp Leads */}
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                      <Users className="w-6 h-6 text-green-600 dark:text-green-400" />
+                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                      <Users className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">8</div>
-                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">New leads this week — Start the conversation.</div>
+                    <div className="text-3xl font-bold text-gray-900">8</div>
+                    <div className="text-sm font-medium text-gray-700">New leads this week — Start the conversation.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={75} className="h-1 bg-green-50 dark:bg-green-900/30">
+                    <Progress value={75} className="h-1 bg-green-50">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '75%' }}></div>
                     </Progress>
                   </div>
@@ -150,19 +149,19 @@ export function Dashboard() {
               </Card>
 
               {/* Card 2 - Active Conversations */}
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                      <MessageSquare className="w-6 h-6 text-green-600 dark:text-green-400" />
+                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                      <MessageSquare className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">3</div>
-                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Stay responsive to convert leads.</div>
+                    <div className="text-3xl font-bold text-gray-900">3</div>
+                    <div className="text-sm font-medium text-gray-700">Stay responsive to convert leads.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={50} className="h-1 bg-green-50 dark:bg-green-900/30">
+                    <Progress value={50} className="h-1 bg-green-50">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '50%' }}></div>
                     </Progress>
                   </div>
@@ -177,19 +176,19 @@ export function Dashboard() {
               </Card>
 
               {/* Card 3 - Replies Waiting */}
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-green-600 dark:text-green-400" />
+                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">2</div>
-                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">People waiting for your reply — Don't let leads go cold.</div>
+                    <div className="text-3xl font-bold text-gray-900">2</div>
+                    <div className="text-sm font-medium text-gray-700">People waiting for your reply — Don't let leads go cold.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={100} className="h-1 bg-green-50 dark:bg-green-900/30">
+                    <Progress value={100} className="h-1 bg-green-50">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
                     </Progress>
                   </div>
@@ -204,19 +203,19 @@ export function Dashboard() {
               </Card>
 
               {/* Card 4 - Messages Sent */}
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-green-600 dark:text-green-400" />
+                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
-                    <div className="text-3xl font-bold text-gray-900 dark:text-white">84</div>
-                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Messages sent this month — Keep engaging your customers.</div>
+                    <div className="text-3xl font-bold text-gray-900">84</div>
+                    <div className="text-sm font-medium text-gray-700">Messages sent this month — Keep engaging your customers.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={80} className="h-1 bg-green-50 dark:bg-green-900/30">
+                    <Progress value={80} className="h-1 bg-green-50">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '80%' }}></div>
                     </Progress>
                   </div>
@@ -234,15 +233,15 @@ export function Dashboard() {
 
           {/* Quick Actions Section */}
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Quick Actions</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm cursor-pointer bg-white dark:bg-gray-800">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
                 <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 dark:bg-gray-700 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 dark:group-hover:bg-gray-600 transition-colors duration-300">
-                    <Feather className="w-8 h-8 text-gray-400 dark:text-gray-300" />
+                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
+                    <Feather className="w-8 h-8 text-gray-400" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Create Your First Post</CardTitle>
-                  <CardDescription className="text-gray-500 dark:text-gray-400">
+                  <CardTitle className="text-lg font-semibold text-gray-900">Create Your First Post</CardTitle>
+                  <CardDescription className="text-gray-500">
                     Design engaging content with AI assistance
                   </CardDescription>
                 </CardHeader>
@@ -257,13 +256,13 @@ export function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm cursor-pointer bg-white dark:bg-gray-800">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
                 <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 dark:bg-gray-700 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 dark:group-hover:bg-gray-600 transition-colors duration-300">
-                    <Target className="w-8 h-8 text-gray-400 dark:text-gray-300" />
+                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
+                    <Target className="w-8 h-8 text-gray-400" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">Launch Your First Ad Campaign</CardTitle>
-                  <CardDescription className="text-gray-500 dark:text-gray-400">
+                  <CardTitle className="text-lg font-semibold text-gray-900">Launch Your First Ad Campaign</CardTitle>
+                  <CardDescription className="text-gray-500">
                     Reach your audience with targeted advertising
                   </CardDescription>
                 </CardHeader>
@@ -278,13 +277,13 @@ export function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm cursor-pointer bg-white dark:bg-gray-800">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
                 <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 dark:bg-gray-700 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 dark:group-hover:bg-gray-600 transition-colors duration-300">
-                    <BarChart3 className="w-8 h-8 text-gray-400 dark:text-gray-300" />
+                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
+                    <BarChart3 className="w-8 h-8 text-gray-400" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white">View Posts & Campaign Summary</CardTitle>
-                  <CardDescription className="text-gray-500 dark:text-gray-400">
+                  <CardTitle className="text-lg font-semibold text-gray-900">View Posts & Campaign Summary</CardTitle>
+                  <CardDescription className="text-gray-500">
                     Track performance and insights
                   </CardDescription>
                 </CardHeader>
@@ -302,16 +301,16 @@ export function Dashboard() {
           </div>
 
           {/* CRM Access Card - Simplified without Automations */}
-          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 relative overflow-hidden">
+          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-gradient-to-r from-green-50 to-blue-50 relative overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center border border-gray-200 dark:border-gray-600">
-                    <Users className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-gray-200">
+                    <Users className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white mb-1">WhatsApp CRM & Lead Management</CardTitle>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <CardTitle className="text-lg font-semibold text-gray-900 mb-1">WhatsApp CRM & Lead Management</CardTitle>
+                    <p className="text-gray-600 text-sm">
                       Manage your WhatsApp leads and track your sales pipeline.
                     </p>
                   </div>
@@ -330,16 +329,16 @@ export function Dashboard() {
           </Card>
 
           {/* Premium Upgrade Teaser */}
-          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 shadow-sm bg-gray-50/50 dark:bg-gray-800/50 relative overflow-hidden">
+          <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-gray-50/50 relative overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center border border-gray-200 dark:border-gray-600">
-                    <Crown className="w-6 h-6 text-gray-400 dark:text-gray-500" />
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-gray-200">
+                    <Crown className="w-6 h-6 text-gray-400" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Unlock Premium Features</CardTitle>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    <CardTitle className="text-lg font-semibold text-gray-900 mb-1">Unlock Premium Features</CardTitle>
+                    <p className="text-gray-600 text-sm">
                       Access unlimited campaigns, advanced WhatsApp insights, and priority support.
                     </p>
                   </div>

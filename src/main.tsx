@@ -5,16 +5,13 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import { WorkspaceProvider } from "./contexts/WorkspaceContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
-        <WorkspaceProvider>
-          <App />
-        </WorkspaceProvider>
-      </ThemeProvider>
+      <WorkspaceProvider>
+        <App />
+      </WorkspaceProvider>
     </BrowserRouter>
   </StrictMode>,
 );
