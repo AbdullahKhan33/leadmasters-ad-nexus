@@ -1,16 +1,16 @@
 
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 import { TopBar } from "@/components/TopBar";
 import { PostBuilder } from "@/components/PostBuilder";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
-import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
-import { useNavigate, useSearchParams } from "react-router-dom";
 
 export function PostBuilderPage() {
   const { isInWorkspace } = useWorkspace();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   const handleDashboardClick = () => {
     navigate('/', { state: { view: 'dashboard' } });
@@ -64,6 +64,10 @@ export function PostBuilderPage() {
     navigate('/', { state: { view: 'crm-automations' } });
   };
 
+  const handleTemplatesClick = () => {
+    navigate('/', { state: { view: 'templates' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -81,6 +85,7 @@ export function PostBuilderPage() {
             onCRMClick={handleCRMClick}
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
+            onTemplatesClick={handleTemplatesClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView="post-builder"
           />
@@ -98,6 +103,7 @@ export function PostBuilderPage() {
             onCRMClick={handleCRMClick}
             onDomainSetupClick={handleDomainSetupClick}
             onCRMAutomationsClick={handleCRMAutomationsClick}
+            onTemplatesClick={handleTemplatesClick}
             currentView="post-builder"
           />
         )}
