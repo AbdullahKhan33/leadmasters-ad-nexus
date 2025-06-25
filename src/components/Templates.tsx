@@ -3,9 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Edit, Eye, Mail, MessageSquare, Star, Sparkles, Filter, Zap } from "lucide-react";
-import { UseTemplateModal } from "./templates/UseTemplateModal";
+import { Copy, Edit, Eye, Mail, MessageSquare, Star, Sparkles, Filter, Send, Users } from "lucide-react";
+import { SendNowModal } from "./templates/SendNowModal";
+import { MassSendModal } from "./templates/MassSendModal";
 import { TemplatePreviewModal } from "./templates/TemplatePreviewModal";
+import { TemplateEditorModal } from "./templates/TemplateEditorModal";
 
 const emailTemplates = [
   {
@@ -91,7 +93,12 @@ const whatsappTemplates = [
 
 export function Templates() {
   const [activeTab, setActiveTab] = useState("email");
-  const [useTemplateModal, setUseTemplateModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
+  const [sendNowModal, setSendNowModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
+    isOpen: false,
+    template: null,
+    type: "email"
+  });
+  const [massSendModal, setMassSendModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
     isOpen: false,
     template: null,
     type: "email"
@@ -101,17 +108,26 @@ export function Templates() {
     template: null,
     type: "email"
   });
+  const [editorModal, setEditorModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
+    isOpen: false,
+    template: null,
+    type: "email"
+  });
 
-  const handleUseTemplate = (template: any, type: "email" | "whatsapp") => {
-    setUseTemplateModal({ isOpen: true, template, type });
+  const handleSendNow = (template: any, type: "email" | "whatsapp") => {
+    setSendNowModal({ isOpen: true, template, type });
+  };
+
+  const handleMassSend = (template: any, type: "email" | "whatsapp") => {
+    setMassSendModal({ isOpen: true, template, type });
   };
 
   const handlePreviewTemplate = (template: any, type: "email" | "whatsapp") => {
     setPreviewModal({ isOpen: true, template, type });
   };
 
-  const handleCopyTemplate = (content: string) => {
-    navigator.clipboard.writeText(content);
+  const handleEditTemplate = (template: any, type: "email" | "whatsapp") => {
+    setEditorModal({ isOpen: true, template, type });
   };
 
   const renderTemplateCard = (template: any, type: "email" | "whatsapp") => (
@@ -124,7 +140,7 @@ export function Templates() {
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
               {type === "email" ? (
-                <div className="p-2 bg-blue-600 rounded-lg">
+                <div className="p-2 bg-purple-600 rounded-lg">
                   <Mail className="w-4 h-4 text-white" />
                 </div>
               ) : (
@@ -161,14 +177,34 @@ export function Templates() {
         </div>
         
         <div className="space-y-3">
+          {/* Primary Action - Send Now */}
           <Button
-            onClick={() => handleUseTemplate(template, type)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 flex items-center justify-center gap-2"
+            onClick={() => handleSendNow(template, type)}
+            className={`w-full font-bold py-2.5 flex items-center justify-center gap-2 ${
+              type === "email" 
+                ? "bg-purple-600 hover:bg-purple-700 text-white" 
+                : "bg-green-600 hover:bg-green-700 text-white"
+            }`}
           >
-            <Zap className="w-4 h-4" />
-            Use This Template
+            <Send className="w-4 h-4" />
+            Send Now
           </Button>
           
+          {/* Secondary Action - Mass Send */}
+          <Button
+            onClick={() => handleMassSend(template, type)}
+            variant="outline"
+            className={`w-full font-semibold py-2.5 flex items-center justify-center gap-2 ${
+              type === "email"
+                ? "border-purple-200 text-purple-700 hover:bg-purple-50"
+                : "border-green-200 text-green-700 hover:bg-green-50"
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            Mass Send
+          </Button>
+          
+          {/* Ghost Actions - Preview & Edit */}
           <div className="grid grid-cols-2 gap-2">
             <Button
               size="sm"
@@ -182,6 +218,7 @@ export function Templates() {
             <Button
               size="sm"
               variant="ghost"
+              onClick={() => handleEditTemplate(template, type)}
               className="flex items-center gap-2 hover:bg-white/60 transition-colors border border-gray-200"
             >
               <Edit className="w-4 h-4" />
@@ -277,11 +314,19 @@ export function Templates() {
         </TabsContent>
       </Tabs>
 
-      <UseTemplateModal
-        isOpen={useTemplateModal.isOpen}
-        onClose={() => setUseTemplateModal({ isOpen: false, template: null, type: "email" })}
-        template={useTemplateModal.template}
-        type={useTemplateModal.type}
+      {/* All Modals */}
+      <SendNowModal
+        isOpen={sendNowModal.isOpen}
+        onClose={() => setSendNowModal({ isOpen: false, template: null, type: "email" })}
+        template={sendNowModal.template}
+        type={sendNowModal.type}
+      />
+
+      <MassSendModal
+        isOpen={massSendModal.isOpen}
+        onClose={() => setMassSendModal({ isOpen: false, template: null, type: "email" })}
+        template={massSendModal.template}
+        type={massSendModal.type}
       />
 
       <TemplatePreviewModal
@@ -291,8 +336,15 @@ export function Templates() {
         type={previewModal.type}
         onUseTemplate={() => {
           setPreviewModal({ isOpen: false, template: null, type: "email" });
-          setUseTemplateModal({ isOpen: true, template: previewModal.template, type: previewModal.type });
+          setSendNowModal({ isOpen: true, template: previewModal.template, type: previewModal.type });
         }}
+      />
+
+      <TemplateEditorModal
+        isOpen={editorModal.isOpen}
+        onClose={() => setEditorModal({ isOpen: false, template: null, type: "email" })}
+        template={editorModal.template}
+        type={editorModal.type}
       />
     </div>
   );
