@@ -3,13 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Edit, Eye, Mail, MessageSquare, Star, Sparkles, Filter, Send, Users } from "lucide-react";
+import { Copy, Edit, Eye, Mail, MessageSquare, Star, Sparkles, Filter, Send, Users, Plus } from "lucide-react";
 import { SendNowModal } from "./templates/SendNowModal";
 import { MassSendModal } from "./templates/MassSendModal";
 import { TemplatePreviewModal } from "./templates/TemplatePreviewModal";
 import { TemplateEditorModal } from "./templates/TemplateEditorModal";
 
-const emailTemplates = [
+const initialEmailTemplates = [
   {
     id: 1,
     name: "Welcome Email",
@@ -48,7 +48,7 @@ const emailTemplates = [
   }
 ];
 
-const whatsappTemplates = [
+const initialWhatsappTemplates = [
   {
     id: 1,
     name: "Quick Introduction",
@@ -93,6 +93,9 @@ const whatsappTemplates = [
 
 export function Templates() {
   const [activeTab, setActiveTab] = useState("email");
+  const [emailTemplates, setEmailTemplates] = useState(initialEmailTemplates);
+  const [whatsappTemplates, setWhatsappTemplates] = useState(initialWhatsappTemplates);
+  
   const [sendNowModal, setSendNowModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
     isOpen: false,
     template: null,
@@ -108,10 +111,11 @@ export function Templates() {
     template: null,
     type: "email"
   });
-  const [editorModal, setEditorModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
+  const [editorModal, setEditorModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp", mode: "edit" | "create"}>({
     isOpen: false,
     template: null,
-    type: "email"
+    type: "email",
+    mode: "edit"
   });
 
   const handleSendNow = (template: any, type: "email" | "whatsapp") => {
@@ -127,7 +131,27 @@ export function Templates() {
   };
 
   const handleEditTemplate = (template: any, type: "email" | "whatsapp") => {
-    setEditorModal({ isOpen: true, template, type });
+    setEditorModal({ isOpen: true, template, type, mode: "edit" });
+  };
+
+  const handleCreateTemplate = (type: "email" | "whatsapp") => {
+    setEditorModal({ isOpen: true, template: null, type, mode: "create" });
+  };
+
+  const handleSaveTemplate = (template: any) => {
+    if (editorModal.type === "email") {
+      if (editorModal.mode === "create") {
+        setEmailTemplates(prev => [...prev, template]);
+      } else {
+        setEmailTemplates(prev => prev.map(t => t.id === template.id ? template : t));
+      }
+    } else {
+      if (editorModal.mode === "create") {
+        setWhatsappTemplates(prev => [...prev, template]);
+      } else {
+        setWhatsappTemplates(prev => prev.map(t => t.id === template.id ? template : t));
+      }
+    }
   };
 
   const renderTemplateCard = (template: any, type: "email" | "whatsapp") => (
@@ -278,6 +302,13 @@ export function Templates() {
               <p className="text-gray-600">Professional email templates for every occasion</p>
             </div>
             <div className="flex items-center gap-3">
+              <Button 
+                onClick={() => handleCreateTemplate("email")}
+                className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                New Email Template
+              </Button>
               <Button variant="outline" size="sm" className="flex items-center gap-2">
                 <Filter className="w-4 h-4" />
                 Filter
@@ -299,6 +330,13 @@ export function Templates() {
               <p className="text-gray-600">Engaging WhatsApp messages that get responses</p>
             </div>
             <div className="flex items-center gap-3">
+              <Button 
+                onClick={() => handleCreateTemplate("whatsapp")}
+                className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                New WhatsApp Template
+              </Button>
               <Button variant="outline" size="sm" className="flex items-center gap-2">
                 <Filter className="w-4 h-4" />
                 Filter
@@ -342,9 +380,11 @@ export function Templates() {
 
       <TemplateEditorModal
         isOpen={editorModal.isOpen}
-        onClose={() => setEditorModal({ isOpen: false, template: null, type: "email" })}
+        onClose={() => setEditorModal({ isOpen: false, template: null, type: "email", mode: "edit" })}
         template={editorModal.template}
         type={editorModal.type}
+        mode={editorModal.mode}
+        onSave={handleSaveTemplate}
       />
     </div>
   );

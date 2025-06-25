@@ -14,15 +14,29 @@ interface TemplateEditorModalProps {
   onClose: () => void;
   template: any;
   type: "email" | "whatsapp";
+  mode: "edit" | "create";
+  onSave: (template: any) => void;
 }
 
-export function TemplateEditorModal({ isOpen, onClose, template, type }: TemplateEditorModalProps) {
+export function TemplateEditorModal({ isOpen, onClose, template, type, mode, onSave }: TemplateEditorModalProps) {
   const [editedTemplate, setEditedTemplate] = useState({
     name: template?.name || "",
     subject: template?.subject || "",
     content: template?.content || "",
     category: template?.category || ""
   });
+
+  // Reset form when template changes or modal opens
+  React.useEffect(() => {
+    if (isOpen) {
+      setEditedTemplate({
+        name: template?.name || "",
+        subject: template?.subject || "",
+        content: template?.content || "",
+        category: template?.category || ""
+      });
+    }
+  }, [template, isOpen]);
 
   const categories = [
     "Onboarding",
@@ -50,12 +64,21 @@ export function TemplateEditorModal({ isOpen, onClose, template, type }: Templat
       return;
     }
 
-    // Simulate saving
-    toast.success("Template saved successfully!");
+    // Create the template object with proper structure
+    const templateToSave = {
+      id: template?.id || Date.now(),
+      name: editedTemplate.name,
+      subject: editedTemplate.subject,
+      content: editedTemplate.content,
+      category: editedTemplate.category,
+      rating: template?.rating || 5.0,
+      color: template?.color || (type === "email" ? "bg-blue-50 border-blue-200" : "bg-green-50 border-green-200")
+    };
+
+    onSave(templateToSave);
+    toast.success(`Template ${mode === "create" ? "created" : "saved"} successfully!`);
     onClose();
   };
-
-  if (!template) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -67,10 +90,10 @@ export function TemplateEditorModal({ isOpen, onClose, template, type }: Templat
             ) : (
               <MessageSquare className="w-5 h-5 text-green-600" />
             )}
-            Edit Template
+            {mode === "create" ? "Create New Template" : "Edit Template"}
           </DialogTitle>
           <DialogDescription>
-            Customize your {type === "email" ? "email" : "WhatsApp"} template
+            {mode === "create" ? "Create a new" : "Customize your"} {type === "email" ? "email" : "WhatsApp"} template
           </DialogDescription>
         </DialogHeader>
 
@@ -176,7 +199,7 @@ export function TemplateEditorModal({ isOpen, onClose, template, type }: Templat
           </Button>
           <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white">
             <Save className="w-4 h-4 mr-2" />
-            Save Template
+            {mode === "create" ? "Create Template" : "Save Template"}
           </Button>
         </div>
       </DialogContent>
