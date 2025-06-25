@@ -116,9 +116,6 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
         
         {isExpanded && (
           <div className="space-y-2 p-3 bg-gray-50 rounded-lg border animate-in slide-in-from-top-2 duration-200">
-            <div className="text-sm text-gray-700 mb-2 text-center font-medium">
-              Select your region for checkout:
-            </div>
             <Button 
               size="sm"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium"
