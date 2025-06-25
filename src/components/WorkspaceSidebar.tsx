@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Sidebar,
@@ -9,6 +10,14 @@ import {
   SidebarMenuButton,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Logo } from "@/components/ui/logo";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
@@ -30,6 +39,8 @@ import {
   Zap,
   FileText,
   UserCheck,
+  LogOut,
+  Settings,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -99,13 +110,6 @@ export function WorkspaceSidebar({
     return 'text-gray-600 hover:bg-gray-100 hover:text-gray-900';
   };
 
-  const getUserSelectionStyles = (isSelected: boolean) => {
-    if (isSelected) {
-      return 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-lg border-transparent hover:from-blue-600 hover:via-purple-600 hover:to-pink-600';
-    }
-    return 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:text-gray-900 border-gray-200/50 hover:border-purple-200 hover:shadow-sm';
-  };
-
   const handleCRMMainClick = () => {
     if (isCollapsed) {
       // If collapsed, just navigate to CRM dashboard
@@ -115,6 +119,13 @@ export function WorkspaceSidebar({
       setIsCRMSubmenuOpen(!isCRMSubmenuOpen);
       onCRMClick();
     }
+  };
+
+  const handleLogout = () => {
+    // For now, just redirect to login or refresh
+    // In a real app, this would clear auth tokens and redirect
+    console.log("Logging out...");
+    window.location.reload();
   };
 
   // Check if any CRM-related view is active
@@ -381,33 +392,71 @@ export function WorkspaceSidebar({
       <SidebarFooter className="border-t border-gray-200/50 p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              onClick={onUserSettingsClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-20 px-2 flex-col' : 'h-16 px-4'} rounded-xl transition-all duration-300 group border ${getUserSelectionStyles(currentView === 'user-settings')}`}
-            >
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-2">
-                  <Avatar className="w-10 h-10 ring-2 ring-white/20">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  className={`w-full justify-start text-left ${isCollapsed ? 'h-20 px-2 flex-col' : 'h-16 px-4'} rounded-xl transition-all duration-300 group border border-gray-200/50 hover:border-purple-200 hover:shadow-sm hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50`}
+                >
+                  {isCollapsed ? (
+                    <div className="flex flex-col items-center space-y-2">
+                      <Avatar className="w-10 h-10 ring-2 ring-white/20">
+                        <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-bold">
+                          JD
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-xs font-semibold leading-tight text-center">Account</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-4 w-full">
+                      <Avatar className="w-12 h-12 ring-2 ring-white/20 shadow-sm">
+                        <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-lg font-bold">
+                          JD
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col min-w-0 flex-1">
+                        <span className="font-bold text-base truncate">John Doe</span>
+                        <span className="text-sm opacity-75 truncate">john@company.com</span>
+                      </div>
+                      <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                    </div>
+                  )}
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                className="w-56 mr-4 mb-2" 
+                side="top" 
+                align="end"
+              >
+                <DropdownMenuLabel className="flex items-center space-x-3 p-3">
+                  <Avatar className="w-8 h-8">
                     <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-bold">
                       JD
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-xs font-semibold leading-tight text-center">Account</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-4 w-full">
-                  <Avatar className="w-12 h-12 ring-2 ring-white/20 shadow-sm">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-lg font-bold">
-                      JD
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col min-w-0 flex-1">
-                    <span className="font-bold text-base truncate">John Doe</span>
-                    <span className="text-sm opacity-75 truncate">john@company.com</span>
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-sm">John Doe</span>
+                    <span className="text-xs text-gray-500">john@company.com</span>
                   </div>
-                </div>
-              )}
-            </SidebarMenuButton>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={onUserSettingsClick} className="cursor-pointer">
+                  <User className="w-4 h-4 mr-2" />
+                  Account Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Preferences
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={handleLogout} 
+                  className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
