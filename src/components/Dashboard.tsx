@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -276,7 +275,7 @@ export function Dashboard() {
             </div>
           </div>
 
-          {/* CRM Access Card */}
+          {/* CRM Access Card - Simplified without Automations */}
           <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-gradient-to-r from-green-50 to-blue-50 relative overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -287,7 +286,7 @@ export function Dashboard() {
                   <div>
                     <CardTitle className="text-lg font-semibold text-gray-900 mb-1">WhatsApp CRM & Lead Management</CardTitle>
                     <p className="text-gray-600 text-sm">
-                      Manage your WhatsApp leads, automate follow-ups, and track your sales pipeline.
+                      Manage your WhatsApp leads and track your sales pipeline.
                     </p>
                   </div>
                 </div>
