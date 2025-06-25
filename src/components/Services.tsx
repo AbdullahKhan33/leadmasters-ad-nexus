@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -44,11 +45,11 @@ function GrowthPackageCard({
   };
 
   return (
-    <Card className="relative bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full">
+    <Card className="relative bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full">
       {mostPopular && (
         <Badge 
           variant="default"
-          className="absolute -top-3 left-6 z-10 bg-purple-600 text-white font-semibold px-3 py-1"
+          className="absolute -top-2 left-4 z-10 bg-purple-600 text-white font-semibold px-2 py-0.5 text-xs"
         >
           Most Popular
         </Badge>
@@ -56,39 +57,39 @@ function GrowthPackageCard({
       {savings && !mostPopular && (
         <Badge 
           variant="destructive"
-          className="absolute -top-3 left-6 z-10 bg-red-500 text-white font-semibold px-3 py-1"
+          className="absolute -top-2 left-4 z-10 bg-red-500 text-white font-semibold px-2 py-0.5 text-xs"
         >
           {savings}
         </Badge>
       )}
-      <CardContent className="p-8 h-full flex flex-col">
+      <CardContent className="p-6 h-full flex flex-col">
         <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
+          <h3 className="text-lg font-bold text-gray-900 mb-2">
             {title}
           </h3>
-          <p className="text-gray-600 mb-6 text-lg leading-relaxed">
+          <p className="text-gray-600 mb-4 text-sm leading-relaxed">
             {description}
           </p>
           
-          <div className="space-y-3 mb-8">
+          <div className="space-y-2 mb-6">
             {includes.map((item, index) => (
-              <div key={index} className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-700 font-medium">{item}</span>
+              <div key={index} className="flex items-start space-x-2">
+                <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                <span className="text-gray-700 font-medium text-sm">{item}</span>
               </div>
             ))}
           </div>
           
-          <div className="mb-6">
-            <p className="text-3xl font-bold text-gray-900 mb-1">
+          <div className="mb-4">
+            <p className="text-2xl font-bold text-gray-900 mb-0.5">
               {price}
             </p>
-            <p className="text-sm text-gray-500">All-inclusive package</p>
+            <p className="text-xs text-gray-500">All-inclusive package</p>
           </div>
         </div>
         
         <Button 
-          className={`w-full py-4 text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl ${getButtonStyles()}`}
+          className={`w-full py-3 h-10 text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-xl ${getButtonStyles()}`}
         >
           {buttonText}
         </Button>
@@ -106,15 +107,15 @@ interface OneOffServiceProps {
 function OneOffServiceCard({ icon: Icon, title, price }: OneOffServiceProps) {
   return (
     <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
-      <CardContent className="p-6 text-center">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center mx-auto mb-4">
-          <Icon className="w-6 h-6 text-purple-600" />
+      <CardContent className="p-4 text-center">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center mx-auto mb-3">
+          <Icon className="w-5 h-5 text-purple-600" />
         </div>
-        <h4 className="font-semibold text-gray-900 mb-2">{title}</h4>
-        <p className="text-lg font-bold text-purple-600 mb-4">{price}</p>
+        <h4 className="font-semibold text-gray-900 mb-1 text-sm">{title}</h4>
+        <p className="text-lg font-bold text-purple-600 mb-3">{price}</p>
         <Button 
           variant="outline" 
-          className="w-full border-purple-200 text-purple-600 hover:bg-purple-50"
+          className="w-full border-purple-200 text-purple-600 hover:bg-purple-50 h-8 text-xs"
         >
           Order Now
         </Button>
@@ -187,26 +188,26 @@ export function Services() {
   ];
 
   return (
-    <div className="flex-1 p-6 bg-gray-50">
-      <div className="max-w-7xl mx-auto space-y-12">
+    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-gray-50/30 min-h-screen">
+      <div className="max-w-6xl mx-auto p-4 space-y-8">
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-4">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-3">
             Business Growth Services
           </h1>
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-sm text-gray-600 leading-relaxed">
             No team? No tech skills? No problem. Choose a ready-made package to grow your business with LeadMasters.
           </p>
         </div>
 
         {/* Growth Packages Section */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">🎯 Growth Packages</h2>
-            <p className="text-lg text-gray-600">Complete solutions to launch and scale your business</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">🎯 Growth Packages</h2>
+            <p className="text-sm text-gray-600">Complete solutions to launch and scale your business</p>
           </div>
           
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6">
             {growthPackages.map((pkg, index) => (
               <GrowthPackageCard
                 key={index}
@@ -224,13 +225,13 @@ export function Services() {
         </div>
 
         {/* One-Off Services Section */}
-        <div className="space-y-8">
+        <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">✅ One-Off Services</h2>
-            <p className="text-gray-600">Individual services for specific needs</p>
+            <h2 className="text-lg font-bold text-gray-900 mb-2">✅ One-Off Services</h2>
+            <p className="text-xs text-gray-600">Individual services for specific needs</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {oneOffServices.map((service, index) => (
               <OneOffServiceCard
                 key={index}
@@ -244,14 +245,14 @@ export function Services() {
 
         {/* Help Section */}
         <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardContent className="p-8 text-center">
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">Need a Custom Solution?</h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+          <CardContent className="p-6 text-center">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Need a Custom Solution?</h3>
+            <p className="text-gray-600 mb-4 max-w-2xl mx-auto text-sm">
               Don't see exactly what you need? Contact our team to discuss custom packages tailored to your business requirements.
             </p>
             <Button 
               variant="outline" 
-              className="border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors duration-200"
+              className="border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors duration-200 h-8 text-xs"
             >
               Contact Us
             </Button>
