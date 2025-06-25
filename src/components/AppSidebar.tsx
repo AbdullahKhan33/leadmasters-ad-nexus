@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Sidebar,
@@ -40,6 +39,8 @@ export function AppSidebar({
   onSmartAutomationsClick,
   onWorkspacesClick,
   onCRMClick,
+  onDomainSetupClick,
+  onCRMAutomationsClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -52,6 +53,8 @@ export function AppSidebar({
   onSmartAutomationsClick: () => void;
   onWorkspacesClick: () => void;
   onCRMClick: () => void;
+  onDomainSetupClick: () => void;
+  onCRMAutomationsClick: () => void;
   currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
@@ -75,16 +78,6 @@ export function AppSidebar({
 
   const handleCRMDashboardClick = () => {
     onCRMClick();
-  };
-
-  const handleDomainSetupClick = () => {
-    // Navigate to domain setup
-    window.location.href = '/?view=domain-setup';
-  };
-
-  const handleCRMAutomationsClick = () => {
-    // Navigate to CRM automations
-    window.location.href = '/?view=crm-automations';
   };
 
   return (
@@ -243,7 +236,7 @@ export function AppSidebar({
                   </SidebarMenuButton>
                   
                   <SidebarMenuButton 
-                    onClick={handleDomainSetupClick}
+                    onClick={onDomainSetupClick}
                     className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   >
                     <div className="flex items-center space-x-3">
@@ -253,7 +246,7 @@ export function AppSidebar({
                   </SidebarMenuButton>
                   
                   <SidebarMenuButton 
-                    onClick={handleCRMAutomationsClick}
+                    onClick={onCRMAutomationsClick}
                     className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   >
                     <div className="flex items-center space-x-3">

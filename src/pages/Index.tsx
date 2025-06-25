@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -24,7 +23,7 @@ import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm';
 type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations';
 
 function IndexContent() {
@@ -91,6 +90,14 @@ function IndexContent() {
     setCurrentView('crm');
   };
 
+  const handleDomainSetupClick = () => {
+    setCurrentView('domain-setup');
+  };
+
+  const handleCRMAutomationsClick = () => {
+    setCurrentView('crm-automations');
+  };
+
   const handleWorkspaceSettingsClick = (workspace: any) => {
     setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
@@ -113,10 +120,11 @@ function IndexContent() {
             onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onUserSettingsClick={handleUserSettingsClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -131,6 +139,8 @@ function IndexContent() {
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
             currentView={currentView as AppSidebarView}
           />
         )}
