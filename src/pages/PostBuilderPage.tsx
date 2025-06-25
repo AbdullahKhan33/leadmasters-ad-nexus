@@ -1,15 +1,16 @@
 
-import { useNavigate } from "react-router-dom";
+import { TopBar } from "@/components/TopBar";
 import { PostBuilder } from "@/components/PostBuilder";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
-import { TopBar } from "@/components/TopBar";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-export default function PostBuilderPage() {
+export function PostBuilderPage() {
   const { isInWorkspace } = useWorkspace();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const handleDashboardClick = () => {
     navigate('/', { state: { view: 'dashboard' } });
@@ -55,6 +56,14 @@ export default function PostBuilderPage() {
     navigate('/crm');
   };
 
+  const handleDomainSetupClick = () => {
+    navigate('/', { state: { view: 'domain-setup' } });
+  };
+
+  const handleCRMAutomationsClick = () => {
+    navigate('/', { state: { view: 'crm-automations' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -67,10 +76,12 @@ export default function PostBuilderPage() {
             onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onUserSettingsClick={handleUserSettingsClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
+            onSmartAutomationsClick={handleSmartAutomationsClick}
             currentView="post-builder"
           />
         ) : (
@@ -85,6 +96,8 @@ export default function PostBuilderPage() {
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
             currentView="post-builder"
           />
         )}
