@@ -4,11 +4,11 @@ import { Facebook, Instagram, Search, Linkedin, MessageCircle, Twitter } from "l
 import { useState } from "react";
 
 const platforms = [
+  { name: "WhatsApp Ads", icon: MessageCircle, id: "whatsapp" },
   { name: "Facebook Ads", icon: Facebook, id: "facebook" },
   { name: "Instagram Ads", icon: Instagram, id: "instagram" },
   { name: "Google Ads", icon: Search, id: "google" },
   { name: "LinkedIn Ads", icon: Linkedin, id: "linkedin" },
-  { name: "WhatsApp Ads", icon: MessageCircle, id: "whatsapp" },
   { name: "Twitter Ads", icon: Twitter, id: "twitter" },
 ];
 
