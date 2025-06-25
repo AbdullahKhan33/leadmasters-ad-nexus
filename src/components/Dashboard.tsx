@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
-  PenTool, 
+  Feather, 
   Target, 
   BarChart3, 
   Sparkles,
@@ -127,7 +127,7 @@ export function Dashboard() {
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">👥</span>
+                      <Users className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -154,7 +154,7 @@ export function Dashboard() {
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">💬</span>
+                      <MessageSquare className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -181,7 +181,7 @@ export function Dashboard() {
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">⏰</span>
+                      <Clock className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -208,7 +208,7 @@ export function Dashboard() {
                 <CardContent className="p-6 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <span className="text-2xl">✉️</span>
+                      <Mail className="w-6 h-6 text-green-600" />
                     </div>
                   </div>
                   <div className="flex-1 space-y-3 mb-4">
@@ -232,22 +232,14 @@ export function Dashboard() {
             </div>
           </div>
 
-          {/* Quick Reply Templates CTA */}
-          <div className="flex justify-center">
-            <Button variant="outline" className="bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 px-6 py-3 rounded-full shadow-sm">
-              <Lightbulb className="w-4 h-4 mr-2" />
-              Create Quick Reply Templates
-            </Button>
-          </div>
-
-          {/* Quick Action Tiles */}
+          {/* Quick Actions Section */}
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900">Quick Actions</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
                 <CardHeader className="text-center pb-4">
                   <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
-                    <PenTool className="w-8 h-8 text-gray-400" />
+                    <Feather className="w-8 h-8 text-gray-400" />
                   </div>
                   <CardTitle className="text-lg font-semibold text-gray-900">Create Your First Post</CardTitle>
                   <CardDescription className="text-gray-500">
