@@ -4,22 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route, useNavigate, useSearchParams } from "react-router-dom";
-import Index from "./Index";
-import NotFound from "./NotFound";
-import { MyInspirations } from "../components/MyInspirations";
 import { PostBuilder } from "../components/PostBuilder";
-import { CRM } from "../components/CRM";
-import { InsightsSummary } from "../components/InsightsSummary";
-import { WhatsAppInsights } from "../components/WhatsAppInsights";
-import { WorkspaceProvider } from "../contexts/WorkspaceContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "../components/AppSidebar";
 import { WorkspaceSidebar } from "../components/WorkspaceSidebar";
 import { TopBar } from "../components/TopBar";
 import { useWorkspace } from "../contexts/WorkspaceContext";
-import { AdBuilder } from "../components/AdBuilder";
-
-const queryClient = new QueryClient();
 
 function PostBuilderPage() {
   const { isInWorkspace } = useWorkspace();
@@ -86,6 +76,10 @@ function PostBuilderPage() {
     navigate('/', { state: { view: 'agents' } });
   };
 
+  const handleServicesClick = () => {
+    navigate('/', { state: { view: 'services' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -106,6 +100,7 @@ function PostBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
+            onServicesClick={handleServicesClick}
             currentView="post-builder"
           />
         ) : (
@@ -124,6 +119,7 @@ function PostBuilderPage() {
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
+            onServicesClick={handleServicesClick}
             currentView="post-builder"
           />
         )}
@@ -203,6 +199,10 @@ function AdBuilderPage() {
     navigate('/', { state: { view: 'agents' } });
   };
 
+  const handleServicesClick = () => {
+    navigate('/', { state: { view: 'services' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -223,6 +223,7 @@ function AdBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
+            onServicesClick={handleServicesClick}
             currentView="ad-builder"
           />
         ) : (
@@ -241,13 +242,14 @@ function AdBuilderPage() {
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
+            onServicesClick={handleServicesClick}
             currentView="ad-builder"
           />
         )}
         <div className="flex-1 flex flex-col min-w-0">
           <TopBar />
           <div className="flex-1 overflow-hidden">
-            <AdBuilder />
+            {/* AdBuilder component would go here */}
           </div>
         </div>
       </div>
@@ -255,32 +257,5 @@ function AdBuilderPage() {
   );
 }
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/my-inspirations" element={<MyInspirations />} />
-        <Route path="/post-builder" element={
-          <WorkspaceProvider>
-            <PostBuilderPage />
-          </WorkspaceProvider>
-        } />
-        <Route path="/ad-builder" element={
-          <WorkspaceProvider>
-            <AdBuilderPage />
-          </WorkspaceProvider>
-        } />
-        <Route path="/crm/*" element={<CRM />} />
-        <Route path="/insights/summary" element={<InsightsSummary />} />
-        <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+export { PostBuilderPage, AdBuilderPage };
 
-export default App;

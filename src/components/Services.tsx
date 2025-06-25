@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +19,7 @@ interface GrowthPackageProps {
   buttonText: string;
   buttonVariant?: "default" | "success" | "primary";
   savings?: string;
+  mostPopular?: boolean;
 }
 
 function GrowthPackageCard({ 
@@ -29,7 +29,8 @@ function GrowthPackageCard({
   price, 
   buttonText, 
   buttonVariant = "default",
-  savings
+  savings,
+  mostPopular = false
 }: GrowthPackageProps) {
   const getButtonStyles = () => {
     switch (buttonVariant) {
@@ -44,7 +45,15 @@ function GrowthPackageCard({
 
   return (
     <Card className="relative bg-white border-2 border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full">
-      {savings && (
+      {mostPopular && (
+        <Badge 
+          variant="default"
+          className="absolute -top-3 left-6 z-10 bg-purple-600 text-white font-semibold px-3 py-1"
+        >
+          Most Popular
+        </Badge>
+      )}
+      {savings && !mostPopular && (
         <Badge 
           variant="destructive"
           className="absolute -top-3 left-6 z-10 bg-red-500 text-white font-semibold px-3 py-1"
@@ -127,7 +136,8 @@ export function Services() {
       ],
       price: "₹9,999 or AED 499",
       buttonText: "Get Started",
-      buttonVariant: "success" as const
+      buttonVariant: "success" as const,
+      mostPopular: true
     },
     {
       title: "Lead Generation Starter Pack",
@@ -207,6 +217,7 @@ export function Services() {
                 buttonText={pkg.buttonText}
                 buttonVariant={pkg.buttonVariant}
                 savings={pkg.savings}
+                mostPopular={pkg.mostPopular}
               />
             ))}
           </div>
