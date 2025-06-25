@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Sidebar,
@@ -66,6 +65,13 @@ export function AppSidebar({
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
+  // Keep CRM submenu open when on any CRM-related view
+  React.useEffect(() => {
+    if (['crm', 'domain-setup', 'crm-automations', 'templates'].includes(currentView)) {
+      setIsCRMSubmenuOpen(true);
+    }
+  }, [currentView]);
+
   const getMenuItemStyles = (isSelected: boolean) => {
     if (isSelected) {
       return 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-lg hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 hover:text-white';
@@ -98,6 +104,9 @@ export function AppSidebar({
     }
   };
 
+  // Check if any CRM-related view is active
+  const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates'].includes(currentView);
+
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200/80 bg-white/95 backdrop-blur-sm shadow-sm">
       <SidebarHeader className="border-b border-gray-200/50 bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80">
@@ -122,6 +131,7 @@ export function AppSidebar({
 
       <SidebarContent className="px-3 py-6">
         <SidebarMenu className="space-y-2">
+          
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onDashboardClick}
@@ -141,6 +151,7 @@ export function AppSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
+          
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onAdBuilderClick}
@@ -222,17 +233,17 @@ export function AppSidebar({
             <div className="space-y-1">
               <SidebarMenuButton 
                 onClick={handleCRMMainClick}
-                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'crm')}`}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(isCRMViewActive)}`}
               >
                 {isCollapsed ? (
                   <div className="flex flex-col items-center space-y-1">
-                    <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
+                    <BarChart3 className={`w-5 h-5 ${getIconStyles(isCRMViewActive)} group-hover:scale-110 transition-transform duration-200`} />
                     <span className="text-xs font-medium">Leads</span>
                   </div>
                 ) : (
                   <div className="flex items-center justify-between w-full">
                     <div className="flex items-center space-x-3">
-                      <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
+                      <BarChart3 className={`w-5 h-5 ${getIconStyles(isCRMViewActive)} group-hover:scale-110 transition-transform duration-200`} />
                       <span className="font-semibold">Leads & CRM</span>
                     </div>
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCRMSubmenuOpen ? 'rotate-180' : ''}`} />
@@ -287,6 +298,7 @@ export function AppSidebar({
             </div>
           </SidebarMenuItem>
 
+          
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onAnalyticsClick}
