@@ -1,10 +1,11 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Edit, Eye, Mail, MessageSquare, Star, Sparkles, Filter } from "lucide-react";
+import { Copy, Edit, Eye, Mail, MessageSquare, Star, Sparkles, Filter, Zap } from "lucide-react";
+import { UseTemplateModal } from "./templates/UseTemplateModal";
+import { TemplatePreviewModal } from "./templates/TemplatePreviewModal";
 
 const emailTemplates = [
   {
@@ -90,14 +91,31 @@ const whatsappTemplates = [
 
 export function Templates() {
   const [activeTab, setActiveTab] = useState("email");
+  const [useTemplateModal, setUseTemplateModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
+    isOpen: false,
+    template: null,
+    type: "email"
+  });
+  const [previewModal, setPreviewModal] = useState<{isOpen: boolean, template: any, type: "email" | "whatsapp"}>({
+    isOpen: false,
+    template: null,
+    type: "email"
+  });
+
+  const handleUseTemplate = (template: any, type: "email" | "whatsapp") => {
+    setUseTemplateModal({ isOpen: true, template, type });
+  };
+
+  const handlePreviewTemplate = (template: any, type: "email" | "whatsapp") => {
+    setPreviewModal({ isOpen: true, template, type });
+  };
 
   const handleCopyTemplate = (content: string) => {
     navigator.clipboard.writeText(content);
-    // You could add a toast notification here
   };
 
   const renderTemplateCard = (template: any, type: "email" | "whatsapp") => (
-    <Card key={template.id} className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${template.color} border-2 overflow-hidden`}>
+    <Card key={template.id} className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${template.color} border-2 overflow-hidden h-fit`}>
       <CardHeader className="pb-4 relative">
         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <Sparkles className="w-5 h-5 text-yellow-500" />
@@ -123,7 +141,7 @@ export function Templates() {
                 📧 {template.subject}
               </CardDescription>
             )}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mb-4">
               <Badge variant="secondary" className="text-xs font-semibold px-3 py-1 bg-white/80 backdrop-blur-sm">
                 {template.category}
               </Badge>
@@ -137,36 +155,39 @@ export function Templates() {
       </CardHeader>
       <CardContent className="pt-0">
         <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 mb-5 border border-white/50 shadow-inner">
-          <pre className="text-sm text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-32 overflow-y-auto">
-            {template.content}
+          <pre className="text-sm text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-24 overflow-hidden">
+            {template.content.length > 150 ? `${template.content.substring(0, 150)}...` : template.content}
           </pre>
         </div>
-        <div className="flex gap-2">
+        
+        <div className="space-y-3">
           <Button
-            size="sm"
-            variant="outline"
-            onClick={() => handleCopyTemplate(template.content)}
-            className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300 transition-colors"
+            onClick={() => handleUseTemplate(template, type)}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 flex items-center justify-center gap-2"
           >
-            <Copy className="w-4 h-4" />
-            Copy
+            <Zap className="w-4 h-4" />
+            Use This Template
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex items-center gap-2 hover:bg-green-50 hover:border-green-300 transition-colors"
-          >
-            <Edit className="w-4 h-4" />
-            Edit
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="flex items-center gap-2 hover:bg-purple-50 hover:border-purple-300 transition-colors"
-          >
-            <Eye className="w-4 h-4" />
-            Preview
-          </Button>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => handlePreviewTemplate(template, type)}
+              className="flex items-center gap-2 hover:bg-white/60 transition-colors border border-gray-200"
+            >
+              <Eye className="w-4 h-4" />
+              Preview
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="flex items-center gap-2 hover:bg-white/60 transition-colors border border-gray-200"
+            >
+              <Edit className="w-4 h-4" />
+              Edit
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -255,6 +276,24 @@ export function Templates() {
           </div>
         </TabsContent>
       </Tabs>
+
+      <UseTemplateModal
+        isOpen={useTemplateModal.isOpen}
+        onClose={() => setUseTemplateModal({ isOpen: false, template: null, type: "email" })}
+        template={useTemplateModal.template}
+        type={useTemplateModal.type}
+      />
+
+      <TemplatePreviewModal
+        isOpen={previewModal.isOpen}
+        onClose={() => setPreviewModal({ isOpen: false, template: null, type: "email" })}
+        template={previewModal.template}
+        type={previewModal.type}
+        onUseTemplate={() => {
+          setPreviewModal({ isOpen: false, template: null, type: "email" });
+          setUseTemplateModal({ isOpen: true, template: previewModal.template, type: previewModal.type });
+        }}
+      />
     </div>
   );
 }
