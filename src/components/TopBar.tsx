@@ -107,27 +107,27 @@ export function TopBar() {
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[800px] sm:w-[900px] max-w-[95vw]">
-                <SheetHeader>
-                  <SheetTitle className="text-lg font-semibold">Notifications</SheetTitle>
+              <SheetContent className="w-[1000px] sm:w-[1200px] max-w-[90vw]">
+                <SheetHeader className="pb-6">
+                  <SheetTitle className="text-xl font-bold">Notifications</SheetTitle>
                 </SheetHeader>
-                <div className="mt-6 space-y-4 max-h-[calc(100vh-120px)] overflow-y-auto">
+                <div className="space-y-6 max-h-[calc(100vh-140px)] overflow-y-auto pr-2">
                   {sampleNotifications.map((notification) => {
                     const IconComponent = notification.icon;
                     return (
-                      <div key={notification.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="flex items-start space-x-3">
-                          <div className={`p-2 rounded-full flex-shrink-0 ${getNotificationStyles(notification.type)}`}>
-                            <IconComponent className="w-4 h-4" />
+                      <div key={notification.id} className="p-6 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                        <div className="flex items-start space-x-4">
+                          <div className={`p-3 rounded-full flex-shrink-0 ${getNotificationStyles(notification.type)}`}>
+                            <IconComponent className="w-5 h-5" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium text-gray-900 mb-1">
+                            <h4 className="text-base font-semibold text-gray-900 mb-2">
                               {notification.title}
                             </h4>
-                            <p className="text-sm text-gray-600 mb-2 break-words">
+                            <p className="text-base text-gray-600 mb-3 break-words leading-relaxed">
                               {notification.message}
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-sm text-gray-400">
                               {notification.time}
                             </p>
                           </div>
@@ -136,8 +136,8 @@ export function TopBar() {
                     );
                   })}
                 </div>
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <Button variant="outline" className="w-full">
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <Button variant="outline" className="w-full h-12 text-base font-medium">
                     Mark All as Read
                   </Button>
                 </div>
