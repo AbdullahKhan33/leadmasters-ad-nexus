@@ -13,7 +13,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -426,18 +425,6 @@ export function WorkspaceSidebar({
                 side="top" 
                 align="end"
               >
-                <DropdownMenuLabel className="flex items-center space-x-3 p-3">
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-bold">
-                      JD
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-sm">John Doe</span>
-                    <span className="text-xs text-gray-500">john@company.com</span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={onUserSettingsClick} className="cursor-pointer">
                   <User className="w-4 h-4 mr-2" />
                   Account Settings
