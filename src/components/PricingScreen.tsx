@@ -94,7 +94,7 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
     
     if (planKey === 'free') {
       return (
-        <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white">
+        <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-medium">
           Get Started Free
         </Button>
       );
@@ -104,34 +104,34 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
       <div className="space-y-3">
         <Button 
           onClick={() => togglePlanExpansion(planKey)}
-          className={`w-full transition-all duration-200 flex items-center justify-between ${
+          className={`w-full transition-all duration-200 flex items-center justify-between font-medium ${
             planKey === 'pro'
               ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white'
               : 'bg-gray-900 hover:bg-gray-800 text-white'
           }`}
         >
-          <span>Choose This Plan</span>
-          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+          <span className="text-white font-medium">Choose This Plan</span>
+          <ChevronDown className={`w-4 h-4 text-white transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
         </Button>
         
         {isExpanded && (
           <div className="space-y-2 p-3 bg-gray-50 rounded-lg border animate-in slide-in-from-top-2 duration-200">
-            <div className="text-sm text-gray-600 mb-2 text-center">
+            <div className="text-sm text-gray-700 mb-2 text-center font-medium">
               Select your region for checkout:
             </div>
             <Button 
               size="sm"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
-              Purchase Now (International) - ${price}
+              <span className="text-white">Purchase Now (International) - ${price}</span>
             </Button>
             <Button 
               size="sm"
-              className="w-full bg-green-600 hover:bg-green-700 text-white"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium"
             >
-              Purchase Now (Indian Customers) - ${price}
+              <span className="text-white">Purchase Now (Indian Customers) - ${price}</span>
             </Button>
-            <div className="text-xs text-gray-500 text-center mt-2">
+            <div className="text-xs text-gray-600 text-center mt-2 font-medium">
               ✓ 30-day money-back guarantee • ✓ Cancel anytime
             </div>
           </div>
@@ -147,7 +147,7 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
         <div className="relative p-8 text-center bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl">
           <button 
             onClick={onClose}
-            className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors text-2xl font-bold"
           >
             ✕
           </button>
