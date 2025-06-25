@@ -70,6 +70,14 @@ function PostBuilderPage() {
     navigate('/crm');
   };
 
+  const handleDomainSetupClick = () => {
+    navigate('/', { state: { view: 'domain-setup' } });
+  };
+
+  const handleCRMAutomationsClick = () => {
+    navigate('/', { state: { view: 'crm-automations' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -82,10 +90,11 @@ function PostBuilderPage() {
             onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onUserSettingsClick={handleUserSettingsClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
             currentView="post-builder"
           />
         ) : (
@@ -100,6 +109,8 @@ function PostBuilderPage() {
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
             currentView="post-builder"
           />
         )}
@@ -163,6 +174,14 @@ function AdBuilderPage() {
     navigate('/crm');
   };
 
+  const handleDomainSetupClick = () => {
+    navigate('/', { state: { view: 'domain-setup' } });
+  };
+
+  const handleCRMAutomationsClick = () => {
+    navigate('/', { state: { view: 'crm-automations' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -175,10 +194,11 @@ function AdBuilderPage() {
             onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onUserSettingsClick={handleUserSettingsClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
             currentView="ad-builder"
           />
         ) : (
@@ -193,6 +213,8 @@ function AdBuilderPage() {
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onWorkspacesClick={handleWorkspacesClick}
             onCRMClick={handleCRMClick}
+            onDomainSetupClick={handleDomainSetupClick}
+            onCRMAutomationsClick={handleCRMAutomationsClick}
             currentView="ad-builder"
           />
         )}

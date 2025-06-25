@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -33,7 +34,9 @@ function IndexContent() {
   const location = useLocation();
 
   useEffect(() => {
+    console.log('Location state changed:', location.state);
     if (location.state?.view) {
+      console.log('Setting view to:', location.state.view);
       setCurrentView(location.state.view);
     }
   }, [location.state]);
@@ -47,54 +50,67 @@ function IndexContent() {
   }, [isInWorkspace, activeWorkspace, location.state]);
 
   const handleDashboardClick = () => {
+    console.log('Dashboard clicked');
     setCurrentView('dashboard');
   };
 
   const handlePostBuilderClick = () => {
+    console.log('Post Builder clicked');
     setCurrentView('post-builder');
   };
 
   const handleAdBuilderClick = () => {
+    console.log('Ad Builder clicked');
     setCurrentView('ad-builder');
   };
 
   const handleSocialLoginsClick = () => {
+    console.log('Social Logins clicked');
     setCurrentView('social-logins');
   };
 
   const handleInspirationHubClick = () => {
+    console.log('Inspiration Hub clicked');
     setCurrentView('inspiration-hub');
   };
 
   const handleAnalyticsClick = () => {
+    console.log('Analytics clicked');
     setCurrentView('analytics');
   };
 
   const handleScheduleClick = () => {
+    console.log('Schedule clicked');
     setCurrentView('schedule');
   };
 
   const handleSmartAutomationsClick = () => {
+    console.log('Smart Automations clicked');
     setCurrentView('smart-automations');
   };
 
   const handleWorkspacesClick = () => {
+    console.log('Workspaces clicked');
     setCurrentView('workspaces');
   };
 
   const handleUserSettingsClick = () => {
+    console.log('User Settings clicked');
     setCurrentView('user-settings');
   };
 
   const handleCRMClick = () => {
+    console.log('CRM clicked');
     setCurrentView('crm');
   };
 
   const handleDomainSetupClick = () => {
+    console.log('Domain Setup clicked');
     setCurrentView('domain-setup');
   };
 
   const handleCRMAutomationsClick = () => {
+    console.log('CRM Automations clicked');
     setCurrentView('crm-automations');
   };
 
@@ -107,6 +123,8 @@ function IndexContent() {
     setCurrentView('workspaces');
     setSelectedWorkspaceForSettings(null);
   };
+
+  console.log('Current view:', currentView);
 
   return (
     <SidebarProvider>
