@@ -15,44 +15,46 @@ import {
   Lightbulb,
   Users
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { PricingScreen } from "./PricingScreen";
 
 export function Dashboard() {
-  const navigate = useNavigate();
   const [showPricing, setShowPricing] = useState(false);
 
   const handleNewLeadsClick = () => {
-    navigate('/crm/inbox?source=whatsapp&status=new&dateRange=thisWeek');
+    // Navigate to main CRM view instead of complex route
+    window.location.href = '/crm';
   };
 
   const handleActiveChatsClick = () => {
-    navigate('/crm/inbox?source=whatsapp&status=active');
+    // Navigate to main CRM view instead of complex route
+    window.location.href = '/crm';
   };
 
   const handleAwaitingReplyClick = () => {
-    navigate('/crm/inbox?source=whatsapp&status=awaitingReply&sort=oldestFirst');
+    // Navigate to main CRM view instead of complex route
+    window.location.href = '/crm';
   };
 
   const handleMessagesSentClick = () => {
-    navigate('/insights/whatsapp?scrollTo=messageActivity');
+    // Navigate to WhatsApp insights instead of complex route
+    window.location.href = '/insights/whatsapp';
   };
 
   const handleCreatePostClick = () => {
-    navigate('/post-builder?platform=facebook');
+    window.location.href = '/post-builder';
   };
 
   const handleLaunchAdClick = () => {
-    navigate('/ad-builder?platform=facebook');
+    window.location.href = '/ad-builder';
   };
 
   const handleViewSummaryClick = () => {
-    navigate('/insights/summary');
+    window.location.href = '/insights/summary';
   };
 
   const handleCRMClick = () => {
-    navigate('/crm/inbox');
+    window.location.href = '/crm';
   };
 
   const handleUpgradeToProClick = () => {
