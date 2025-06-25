@@ -60,6 +60,38 @@ export function Dashboard() {
     setShowPricing(true);
   };
 
+  // New handler functions for the CTA buttons
+  const handleViewLeadsClick = () => {
+    navigate('/', { 
+      state: { 
+        view: 'crm',
+        filter: { status: 'new' }
+      } 
+    });
+  };
+
+  const handleOpenChatsClick = () => {
+    navigate('/', { 
+      state: { 
+        view: 'crm',
+        filter: { status: 'active' }
+      } 
+    });
+  };
+
+  const handleReplyNowClick = () => {
+    navigate('/', { 
+      state: { 
+        view: 'crm',
+        filter: { status: 'awaitingReply' }
+      } 
+    });
+  };
+
+  const handleViewMessageSummaryClick = () => {
+    navigate('/', { state: { view: 'insights-whatsapp' } });
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50/30 p-6">
@@ -91,118 +123,110 @@ export function Dashboard() {
             {/* WhatsApp Performance Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Card 1 - New WhatsApp Leads */}
-              <Card 
-                className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
-                onClick={handleNewLeadsClick}
-              >
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <Users className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                      </div>
-                      <Badge className="bg-green-50 text-green-600 border-0 text-xs font-medium">This Week</Badge>
+                      <span className="text-2xl">👥</span>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">8</div>
                     <div className="text-sm font-medium text-gray-700">New leads this week — Start the conversation.</div>
                   </div>
-                  <div className="mt-4">
+                  <div className="mb-4">
                     <Progress value={75} className="h-1 bg-green-50">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '75%' }}></div>
                     </Progress>
                   </div>
+                  <Button 
+                    onClick={handleViewLeadsClick}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white group"
+                  >
+                    View Leads
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
                 </CardContent>
               </Card>
 
               {/* Card 2 - Active Conversations */}
-              <Card 
-                className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
-                onClick={handleActiveChatsClick}
-              >
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <MessageCircle className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center animate-pulse">
-                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                      </div>
-                      <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-2xl">💬</span>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">3</div>
                     <div className="text-sm font-medium text-gray-700">Stay responsive to convert leads.</div>
                   </div>
-                  <div className="mt-4">
+                  <div className="mb-4">
                     <Progress value={50} className="h-1 bg-green-50">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '50%' }}></div>
                     </Progress>
                   </div>
+                  <Button 
+                    onClick={handleOpenChatsClick}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white group"
+                  >
+                    Open Chats
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
                 </CardContent>
               </Card>
 
               {/* Card 3 - Replies Waiting */}
-              <Card 
-                className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
-                onClick={handleAwaitingReplyClick}
-              >
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                      </div>
-                      <Badge className="bg-orange-50 text-orange-600 border-0 text-xs font-medium">Today</Badge>
+                    <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">⏰</span>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">2</div>
                     <div className="text-sm font-medium text-gray-700">People waiting for your reply — Don't let leads go cold.</div>
                   </div>
-                  <div className="mt-4">
-                    <Progress value={100} className="h-1 bg-green-50">
-                      <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
+                  <div className="mb-4">
+                    <Progress value={100} className="h-1 bg-orange-50">
+                      <div className="h-full bg-orange-500 rounded-full" style={{ width: '100%' }}></div>
                     </Progress>
                   </div>
+                  <Button 
+                    onClick={handleReplyNowClick}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white group"
+                  >
+                    Reply Now
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
                 </CardContent>
               </Card>
 
               {/* Card 4 - Messages Sent */}
-              <Card 
-                className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden cursor-pointer"
-                onClick={handleMessagesSentClick}
-              >
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                      </div>
-                      <Badge className="bg-green-50 text-green-600 border-0 text-xs font-medium">This Month</Badge>
+                      <span className="text-2xl">✉️</span>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">84</div>
                     <div className="text-sm font-medium text-gray-700">Messages sent this month — Keep engaging your customers.</div>
                   </div>
-                  <div className="mt-4">
+                  <div className="mb-4">
                     <Progress value={80} className="h-1 bg-green-50">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: '80%' }}></div>
                     </Progress>
                   </div>
+                  <Button 
+                    onClick={handleViewMessageSummaryClick}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white group"
+                  >
+                    View Summary
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
                 </CardContent>
               </Card>
             </div>
