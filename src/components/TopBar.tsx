@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -107,24 +106,24 @@ export function TopBar() {
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[40vw] max-w-none">
-                <SheetHeader className="pb-6 border-b border-gray-100">
-                  <SheetTitle className="text-2xl font-bold text-gray-900">Notifications</SheetTitle>
+              <SheetContent className="w-[50vw] max-w-none">
+                <SheetHeader className="pb-4 border-b border-gray-100">
+                  <SheetTitle className="text-xl font-bold text-gray-900">Notifications</SheetTitle>
                 </SheetHeader>
-                <div className="space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto pr-2 mt-6">
+                <div className="space-y-3 max-h-[calc(100vh-160px)] overflow-y-auto pr-2 mt-4">
                   {sampleNotifications.map((notification) => {
                     const IconComponent = notification.icon;
                     return (
-                      <div key={notification.id} className="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md hover:border-gray-200">
-                        <div className="flex items-start space-x-4">
-                          <div className={`flex-shrink-0 p-3 rounded-xl border ${getNotificationStyles(notification.type)}`}>
-                            <IconComponent className="w-5 h-5" />
+                      <div key={notification.id} className="group relative overflow-hidden rounded-lg border border-gray-100 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:border-gray-200">
+                        <div className="flex items-start space-x-3">
+                          <div className={`flex-shrink-0 p-2 rounded-lg border ${getNotificationStyles(notification.type)}`}>
+                            <IconComponent className="w-4 h-4" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-base font-semibold text-gray-900 mb-2 leading-tight">
+                            <h4 className="text-sm font-semibold text-gray-900 mb-1 leading-tight">
                               {notification.title}
                             </h4>
-                            <p className="text-sm text-gray-600 mb-3 break-words leading-relaxed">
+                            <p className="text-sm text-gray-600 mb-2 break-words leading-relaxed">
                               {notification.message}
                             </p>
                             <p className="text-xs text-gray-400 font-medium">
@@ -137,8 +136,8 @@ export function TopBar() {
                     );
                   })}
                 </div>
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <Button variant="outline" className="w-full h-12 text-base font-medium border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <Button variant="outline" className="w-full h-10 text-sm font-medium border-gray-200 hover:bg-gray-50 transition-colors duration-200">
                     Mark All as Read
                   </Button>
                 </div>
