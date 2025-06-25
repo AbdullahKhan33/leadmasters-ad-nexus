@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -71,18 +72,18 @@ export function TopBar() {
     <>
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
+          <div className="flex items-center space-x-6 flex-1">
+            <div className="min-w-0">
+              <h2 className="text-lg font-semibold text-gray-900 truncate">
                 {isInWorkspace && activeWorkspace ? activeWorkspace.name : "My Project 123"}
               </h2>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-gray-700">Business Manager:</span>
+            <div className="flex items-center space-x-4 flex-1 max-w-md">
+              <div className="flex items-center space-x-2 min-w-0 flex-1">
+                <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Business Manager:</span>
                 <Select defaultValue="bot-campus">
-                  <SelectTrigger className="w-40 h-8 text-sm border-gray-300">
+                  <SelectTrigger className="flex-1 min-w-0 h-8 text-sm border-gray-300">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -94,36 +95,36 @@ export function TopBar() {
             </div>
           </div>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 ml-4">
             <Sheet>
               <SheetTrigger asChild>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 transition-colors duration-200 relative"
+                  className="border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 transition-colors duration-200 relative flex-shrink-0"
                 >
                   <Bell className="w-4 h-4" />
-                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-xs"></span>
+                  <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-80">
+              <SheetContent className="w-80 sm:w-96">
                 <SheetHeader>
                   <SheetTitle className="text-lg font-semibold">Notifications</SheetTitle>
                 </SheetHeader>
-                <div className="mt-6 space-y-4">
+                <div className="mt-6 space-y-4 max-h-[calc(100vh-120px)] overflow-y-auto">
                   {sampleNotifications.map((notification) => {
                     const IconComponent = notification.icon;
                     return (
                       <div key={notification.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                         <div className="flex items-start space-x-3">
-                          <div className={`p-2 rounded-full ${getNotificationStyles(notification.type)}`}>
+                          <div className={`p-2 rounded-full flex-shrink-0 ${getNotificationStyles(notification.type)}`}>
                             <IconComponent className="w-4 h-4" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="text-sm font-medium text-gray-900 mb-1">
                               {notification.title}
                             </h4>
-                            <p className="text-sm text-gray-600 mb-2">
+                            <p className="text-sm text-gray-600 mb-2 break-words">
                               {notification.message}
                             </p>
                             <p className="text-xs text-gray-400">
@@ -148,7 +149,7 @@ export function TopBar() {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:border-orange-300 transition-colors duration-200"
+                  className="border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 hover:border-orange-300 transition-colors duration-200 flex-shrink-0"
                 >
                   <Coins className="w-4 h-4" />
                 </Button>
@@ -169,13 +170,13 @@ export function TopBar() {
             
             <Button 
               variant="outline" 
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200 whitespace-nowrap flex-shrink-0"
               onClick={() => setShowPricing(true)}
             >
               Explore Plans
             </Button>
             <Button 
-              className="bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="bg-purple-600 hover:bg-purple-700 text-white transition-all duration-200 shadow-lg hover:shadow-xl whitespace-nowrap flex-shrink-0"
             >
               Make Live
             </Button>

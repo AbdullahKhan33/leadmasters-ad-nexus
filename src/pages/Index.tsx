@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -9,7 +10,6 @@ import { Dashboard } from "@/components/Dashboard";
 import { InspirationHub } from "@/components/InspirationHub";
 import { Analytics } from "@/components/Analytics";
 import { Schedule } from "@/components/Schedule";
-import { SmartAutomations } from "@/components/SmartAutomations";
 import { Workspaces } from "@/components/Workspaces";
 import { WorkspaceSettings } from "@/components/WorkspaceSettings";
 import { UserSettings } from "@/components/UserSettings";
@@ -22,7 +22,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm';
 type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations';
 
@@ -85,7 +85,7 @@ function IndexContent() {
 
   const handleSmartAutomationsClick = () => {
     console.log('Smart Automations clicked');
-    setCurrentView('smart-automations');
+    // Remove this functionality - no longer navigate to smart-automations
   };
 
   const handleWorkspacesClick = () => {
@@ -182,8 +182,6 @@ function IndexContent() {
               <Analytics />
             ) : currentView === 'schedule' ? (
               <Schedule />
-            ) : currentView === 'smart-automations' ? (
-              <SmartAutomations />
             ) : currentView === 'crm' ? (
               <CRM />
             ) : currentView === 'insights-summary' ? (
