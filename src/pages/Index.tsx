@@ -20,13 +20,14 @@ import { WhatsAppInsights } from "@/components/WhatsAppInsights";
 import { DomainSetup } from "@/components/DomainSetup";
 import { CRMAutomations } from "@/components/crm/CRMAutomations";
 import { Templates } from "@/components/Templates";
+import { Services } from "@/components/Services";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
@@ -125,6 +126,11 @@ function IndexContent() {
     setCurrentView('agents');
   };
 
+  const handleServicesClick = () => {
+    console.log('Services clicked');
+    setCurrentView('services');
+  };
+
   const handleWorkspaceSettingsClick = (workspace: any) => {
     setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
@@ -157,6 +163,7 @@ function IndexContent() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
+            onServicesClick={handleServicesClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -175,6 +182,7 @@ function IndexContent() {
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
+            onServicesClick={handleServicesClick}
             currentView={currentView as AppSidebarView}
           />
         )}
@@ -213,6 +221,8 @@ function IndexContent() {
               <CRMAutomations />
             ) : currentView === 'templates' ? (
               <Templates />
+            ) : currentView === 'services' ? (
+              <Services />
             ) : (
               <AdBuilder />
             )}

@@ -86,6 +86,10 @@ function PostBuilderPage() {
     navigate('/', { state: { view: 'agents' } });
   };
 
+  const handleServicesClick = () => {
+    navigate('/', { state: { view: 'services' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -106,6 +110,7 @@ function PostBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
+            onServicesClick={handleServicesClick}
             currentView="post-builder"
           />
         ) : (
@@ -124,6 +129,7 @@ function PostBuilderPage() {
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
+            onServicesClick={handleServicesClick}
             currentView="post-builder"
           />
         )}
@@ -203,6 +209,10 @@ function AdBuilderPage() {
     navigate('/', { state: { view: 'agents' } });
   };
 
+  const handleServicesClick = () => {
+    navigate('/', { state: { view: 'services' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -223,6 +233,7 @@ function AdBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
+            onServicesClick={handleServicesClick}
             currentView="ad-builder"
           />
         ) : (
@@ -241,6 +252,7 @@ function AdBuilderPage() {
             onCRMAutomationsClick={handleCRMAutomationsClick}
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
+            onServicesClick={handleServicesClick}
             currentView="ad-builder"
           />
         )}

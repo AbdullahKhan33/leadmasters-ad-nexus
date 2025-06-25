@@ -39,6 +39,7 @@ import {
   UserCheck,
   LogOut,
   Settings,
+  ShoppingBag,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -57,6 +58,7 @@ export function WorkspaceSidebar({
   onCRMAutomationsClick,
   onTemplatesClick,
   onAgentsClick,
+  onServicesClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -74,7 +76,8 @@ export function WorkspaceSidebar({
   onCRMAutomationsClick: () => void;
   onTemplatesClick: () => void;
   onAgentsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents';
+  onServicesClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
@@ -380,6 +383,25 @@ export function WorkspaceSidebar({
                 <div className="flex items-center space-x-3">
                   <Briefcase className={`w-5 h-5 ${getIconStyles(currentView === 'workspaces')} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="font-semibold">Workspaces</span>
+                </div>
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onServicesClick}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'services')}`}
+            >
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <ShoppingBag className={`w-5 h-5 ${getIconStyles(currentView === 'services')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Services</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <ShoppingBag className={`w-5 h-5 ${getIconStyles(currentView === 'services')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Services</span>
                 </div>
               )}
             </SidebarMenuButton>
