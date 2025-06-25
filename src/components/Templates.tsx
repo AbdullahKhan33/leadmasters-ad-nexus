@@ -156,62 +156,62 @@ export function Templates() {
   };
 
   const renderTemplateCard = (template: any, type: "email" | "whatsapp") => (
-    <Card key={template.id} className={`group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${template.color} border overflow-hidden h-fit`}>
-      <CardHeader className="pb-3 relative">
-        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <Sparkles className="w-4 h-4 text-yellow-500" />
+    <Card key={template.id} className={`group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${template.color} border overflow-hidden h-fit max-w-sm mx-auto`}>
+      <CardHeader className="pb-2 relative">
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <Sparkles className="w-3 h-3 text-yellow-500" />
         </div>
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-1.5 mb-1">
               {type === "email" ? (
-                <div className="p-1.5 bg-purple-600 rounded-lg">
-                  <Mail className="w-3 h-3 text-white" />
+                <div className="p-1 bg-purple-600 rounded-md">
+                  <Mail className="w-2.5 h-2.5 text-white" />
                 </div>
               ) : (
-                <div className="p-1.5 bg-green-600 rounded-lg">
-                  <MessageSquare className="w-3 h-3 text-white" />
+                <div className="p-1 bg-green-600 rounded-md">
+                  <MessageSquare className="w-2.5 h-2.5 text-white" />
                 </div>
               )}
-              <CardTitle className="text-lg font-bold text-gray-900">
+              <CardTitle className="text-base font-bold text-gray-900">
                 {template.name}
               </CardTitle>
             </div>
             {type === "email" && (
-              <CardDescription className="text-xs text-gray-700 mb-2 font-medium">
+              <CardDescription className="text-xs text-gray-700 mb-1.5 font-medium">
                 📧 {template.subject}
               </CardDescription>
             )}
-            <div className="flex items-center gap-2 mb-3">
-              <Badge variant="secondary" className="text-xs font-semibold px-2 py-0.5 bg-white/80 backdrop-blur-sm">
+            <div className="flex items-center gap-1.5 mb-2">
+              <Badge variant="secondary" className="text-xs font-semibold px-1.5 py-0.5 bg-white/80 backdrop-blur-sm">
                 {template.category}
               </Badge>
-              <div className="flex items-center gap-1 bg-yellow-100 rounded-full px-2 py-0.5">
-                <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+              <div className="flex items-center gap-1 bg-yellow-100 rounded-full px-1.5 py-0.5">
+                <Star className="w-2.5 h-2.5 fill-yellow-500 text-yellow-500" />
                 <span className="text-xs font-bold text-yellow-700">{template.rating}</span>
               </div>
             </div>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 mb-4 border border-white/50 shadow-inner">
-          <pre className="text-xs text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-20 overflow-hidden">
-            {template.content.length > 150 ? `${template.content.substring(0, 150)}...` : template.content}
+      <CardContent className="pt-0 px-4 pb-4">
+        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-2.5 mb-3 border border-white/50 shadow-inner">
+          <pre className="text-xs text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-16 overflow-hidden">
+            {template.content.length > 120 ? `${template.content.substring(0, 120)}...` : template.content}
           </pre>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           {/* Primary Action - Send Now */}
           <Button
             onClick={() => handleSendNow(template, type)}
-            className={`w-full font-bold py-2 h-8 flex items-center justify-center gap-2 text-xs ${
+            className={`w-full font-bold py-1 h-7 flex items-center justify-center gap-1.5 text-xs ${
               type === "email" 
                 ? "bg-purple-600 hover:bg-purple-700 text-white" 
                 : "bg-green-600 hover:bg-green-700 text-white"
             }`}
           >
-            <Send className="w-3 h-3" />
+            <Send className="w-2.5 h-2.5" />
             Send Now
           </Button>
           
@@ -219,34 +219,34 @@ export function Templates() {
           <Button
             onClick={() => handleMassSend(template, type)}
             variant="outline"
-            className={`w-full font-semibold py-2 h-8 flex items-center justify-center gap-2 text-xs ${
+            className={`w-full font-semibold py-1 h-7 flex items-center justify-center gap-1.5 text-xs ${
               type === "email"
                 ? "border-purple-200 text-purple-700 hover:bg-purple-50"
                 : "border-green-200 text-green-700 hover:bg-green-50"
             }`}
           >
-            <Users className="w-3 h-3" />
+            <Users className="w-2.5 h-2.5" />
             Mass Send
           </Button>
           
           {/* Ghost Actions - Preview & Edit */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
             <Button
               size="sm"
               variant="ghost"
               onClick={() => handlePreviewTemplate(template, type)}
-              className="h-7 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs"
+              className="h-6 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-2"
             >
-              <Eye className="w-3 h-3" />
+              <Eye className="w-2.5 h-2.5" />
               Preview
             </Button>
             <Button
               size="sm"
               variant="ghost"
               onClick={() => handleEditTemplate(template, type)}
-              className="h-7 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs"
+              className="h-6 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-2"
             >
-              <Edit className="w-3 h-3" />
+              <Edit className="w-2.5 h-2.5" />
               Edit
             </Button>
           </div>
@@ -257,7 +257,7 @@ export function Templates() {
 
   return (
     <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-gray-50/30 min-h-screen">
-      <div className="max-w-6xl mx-auto p-4 space-y-6">
+      <div className="max-w-5xl mx-auto p-4 space-y-6">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold mb-3">
             <Sparkles className="w-3 h-3" />
@@ -320,7 +320,7 @@ export function Templates() {
                 </Badge>
               </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {emailTemplates.map((template) => renderTemplateCard(template, "email"))}
             </div>
           </TabsContent>
@@ -348,7 +348,7 @@ export function Templates() {
                 </Badge>
               </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {whatsappTemplates.map((template) => renderTemplateCard(template, "whatsapp"))}
             </div>
           </TabsContent>
