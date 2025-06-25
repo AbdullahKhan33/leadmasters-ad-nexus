@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Sidebar,
@@ -24,6 +25,10 @@ import {
   Lightbulb,
   Briefcase,
   User,
+  ChevronDown,
+  MessageSquare,
+  Mail,
+  Zap,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -55,6 +60,7 @@ export function WorkspaceSidebar({
 }) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
 
   const getMenuItemStyles = (isSelected: boolean) => {
     if (isSelected) {
@@ -75,6 +81,20 @@ export function WorkspaceSidebar({
       return 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white shadow-lg border-transparent hover:from-blue-600 hover:via-purple-600 hover:to-pink-600';
     }
     return 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50 hover:text-gray-900 border-gray-200/50 hover:border-purple-200 hover:shadow-sm';
+  };
+
+  const handleCRMDashboardClick = () => {
+    onCRMClick();
+  };
+
+  const handleDomainSetupClick = () => {
+    // Navigate to domain setup
+    window.location.href = '/?view=domain-setup';
+  };
+
+  const handleCRMAutomationsClick = () => {
+    // Navigate to CRM automations
+    window.location.href = '/?view=crm-automations';
   };
 
   return (
@@ -196,23 +216,64 @@ export function WorkspaceSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
+          {/* CRM Menu with Submenu */}
           <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={onCRMClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'crm')}`}
-            >
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
-                  <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Leads</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-3">
-                  <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Leads & CRM</span>
+            <div className="space-y-1">
+              <SidebarMenuButton 
+                onClick={() => setIsCRMSubmenuOpen(!isCRMSubmenuOpen)}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'crm')}`}
+              >
+                {isCollapsed ? (
+                  <div className="flex flex-col items-center space-y-1">
+                    <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">Leads</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-3">
+                      <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'crm')} group-hover:scale-110 transition-transform duration-200`} />
+                      <span className="font-semibold">Leads & CRM</span>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCRMSubmenuOpen ? 'rotate-180' : ''}`} />
+                  </div>
+                )}
+              </SidebarMenuButton>
+              
+              {/* Submenu */}
+              {isCRMSubmenuOpen && !isCollapsed && (
+                <div className="ml-6 space-y-1">
+                  <SidebarMenuButton 
+                    onClick={handleCRMDashboardClick}
+                    className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <MessageSquare className="w-4 h-4" />
+                      <span className="text-sm font-medium">Dashboard</span>
+                    </div>
+                  </SidebarMenuButton>
+                  
+                  <SidebarMenuButton 
+                    onClick={handleDomainSetupClick}
+                    className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Mail className="w-4 h-4" />
+                      <span className="text-sm font-medium">Domain Setup</span>
+                    </div>
+                  </SidebarMenuButton>
+                  
+                  <SidebarMenuButton 
+                    onClick={handleCRMAutomationsClick}
+                    className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <Zap className="w-4 h-4" />
+                      <span className="text-sm font-medium">Automations</span>
+                    </div>
+                  </SidebarMenuButton>
                 </div>
               )}
-            </SidebarMenuButton>
+            </div>
           </SidebarMenuItem>
 
           <SidebarMenuItem>
@@ -248,25 +309,6 @@ export function WorkspaceSidebar({
                 <div className="flex items-center space-x-3">
                   <Calendar className={`w-5 h-5 ${getIconStyles(currentView === 'schedule')} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="font-semibold">Schedule</span>
-                </div>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={onSmartAutomationsClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'smart-automations')}`}
-            >
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
-                  <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'smart-automations')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Smart Flows</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-3">
-                  <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'smart-automations')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Smart Flows</span>
                 </div>
               )}
             </SidebarMenuButton>

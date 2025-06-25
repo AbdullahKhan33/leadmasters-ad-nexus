@@ -17,13 +17,15 @@ import { UserSettings } from "@/components/UserSettings";
 import { CRM } from "@/components/CRM";
 import { InsightsSummary } from "@/components/InsightsSummary";
 import { WhatsAppInsights } from "@/components/WhatsAppInsights";
+import { DomainSetup } from "@/components/DomainSetup";
+import { CRMAutomations } from "@/components/crm/CRMAutomations";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { useLocation } from "react-router-dom";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
@@ -161,6 +163,10 @@ function IndexContent() {
               <InsightsSummary />
             ) : currentView === 'insights-whatsapp' ? (
               <WhatsAppInsights />
+            ) : currentView === 'domain-setup' ? (
+              <DomainSetup />
+            ) : currentView === 'crm-automations' ? (
+              <CRMAutomations />
             ) : (
               <AdBuilder />
             )}
