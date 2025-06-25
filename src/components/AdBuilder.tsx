@@ -41,12 +41,14 @@ export function AdBuilder() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen">
+    <div className="flex-1 flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50/30">
       <AdPlatformMenu 
         activePlatform={selectedPlatform} 
         onPlatformChange={handlePlatformChange} 
       />
-      {renderPlatformBuilder()}
+      <div className="flex-1 max-w-6xl mx-auto w-full px-4 py-6">
+        {renderPlatformBuilder()}
+      </div>
     </div>
   );
 }
