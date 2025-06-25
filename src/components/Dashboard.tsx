@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +13,8 @@ import {
   Clock,
   Mail,
   Lightbulb,
-  Users
+  Users,
+  MessageSquare
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -111,11 +111,11 @@ export function Dashboard() {
           </div>
 
           {/* WhatsApp Performance Section */}
-          <div className="space-y-4">
-            {/* Section Title */}
+          <div className="space-y-6">
+            {/* Section Title with WhatsApp Icon */}
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <MessageSquare className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-xl font-semibold text-gray-800">Your WhatsApp Performance</h2>
             </div>
@@ -124,13 +124,13 @@ export function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Card 1 - New WhatsApp Leads */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
+                <CardContent className="p-6 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
                       <span className="text-2xl">👥</span>
                     </div>
                   </div>
-                  <div className="space-y-3 mb-4">
+                  <div className="flex-1 space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">8</div>
                     <div className="text-sm font-medium text-gray-700">New leads this week — Start the conversation.</div>
                   </div>
@@ -141,7 +141,7 @@ export function Dashboard() {
                   </div>
                   <Button 
                     onClick={handleViewLeadsClick}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white group"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
                   >
                     View Leads
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -151,13 +151,13 @@ export function Dashboard() {
 
               {/* Card 2 - Active Conversations */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
+                <CardContent className="p-6 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
                       <span className="text-2xl">💬</span>
                     </div>
                   </div>
-                  <div className="space-y-3 mb-4">
+                  <div className="flex-1 space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">3</div>
                     <div className="text-sm font-medium text-gray-700">Stay responsive to convert leads.</div>
                   </div>
@@ -168,7 +168,7 @@ export function Dashboard() {
                   </div>
                   <Button 
                     onClick={handleOpenChatsClick}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white group"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
                   >
                     Open Chats
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -178,24 +178,24 @@ export function Dashboard() {
 
               {/* Card 3 - Replies Waiting */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
+                <CardContent className="p-6 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
                       <span className="text-2xl">⏰</span>
                     </div>
                   </div>
-                  <div className="space-y-3 mb-4">
+                  <div className="flex-1 space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">2</div>
                     <div className="text-sm font-medium text-gray-700">People waiting for your reply — Don't let leads go cold.</div>
                   </div>
                   <div className="mb-4">
-                    <Progress value={100} className="h-1 bg-orange-50">
-                      <div className="h-full bg-orange-500 rounded-full" style={{ width: '100%' }}></div>
+                    <Progress value={100} className="h-1 bg-green-50">
+                      <div className="h-full bg-green-500 rounded-full" style={{ width: '100%' }}></div>
                     </Progress>
                   </div>
                   <Button 
                     onClick={handleReplyNowClick}
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white group"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
                   >
                     Reply Now
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -205,13 +205,13 @@ export function Dashboard() {
 
               {/* Card 4 - Messages Sent */}
               <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm bg-white rounded-xl overflow-hidden">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
+                <CardContent className="p-6 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
                       <span className="text-2xl">✉️</span>
                     </div>
                   </div>
-                  <div className="space-y-3 mb-4">
+                  <div className="flex-1 space-y-3 mb-4">
                     <div className="text-3xl font-bold text-gray-900">84</div>
                     <div className="text-sm font-medium text-gray-700">Messages sent this month — Keep engaging your customers.</div>
                   </div>
@@ -222,7 +222,7 @@ export function Dashboard() {
                   </div>
                   <Button 
                     onClick={handleViewMessageSummaryClick}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white group"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
                   >
                     View Summary
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
