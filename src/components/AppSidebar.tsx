@@ -226,16 +226,6 @@ export function AppSidebar({
               {isCRMSubmenuOpen && !isCollapsed && (
                 <div className="ml-6 space-y-1">
                   <SidebarMenuButton 
-                    onClick={handleCRMDashboardClick}
-                    className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <MessageSquare className="w-4 h-4" />
-                      <span className="text-sm font-medium">Dashboard</span>
-                    </div>
-                  </SidebarMenuButton>
-                  
-                  <SidebarMenuButton 
                     onClick={onDomainSetupClick}
                     className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   >
