@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -107,6 +108,75 @@ export function Dashboard() {
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Let's grow your campaigns and posts with AI-powered ease.
             </p>
+          </div>
+
+          {/* Quick Actions Section */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900">Quick Actions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
+                    <Feather className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Create Your First Post</CardTitle>
+                  <CardDescription className="text-gray-500">
+                    Design engaging content with AI assistance
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <Button 
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                    onClick={handleCreatePostClick}
+                  >
+                    Create Post
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
+                    <Target className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Launch Your First Ad Campaign</CardTitle>
+                  <CardDescription className="text-gray-500">
+                    Reach your audience with targeted advertising
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <Button 
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                    onClick={handleLaunchAdClick}
+                  >
+                    Launch Ad
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
+                    <BarChart3 className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold text-gray-900">View Posts & Campaign Summary</CardTitle>
+                  <CardDescription className="text-gray-500">
+                    Track performance and insights
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <Button 
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
+                    onClick={handleViewSummaryClick}
+                  >
+                    View Summary
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           {/* WhatsApp Performance Section */}
@@ -222,75 +292,6 @@ export function Dashboard() {
                   <Button 
                     onClick={handleViewMessageSummaryClick}
                     className="w-full bg-green-600 hover:bg-green-700 text-white group mt-auto"
-                  >
-                    View Summary
-                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Quick Actions Section */}
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
-                    <Feather className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Create Your First Post</CardTitle>
-                  <CardDescription className="text-gray-500">
-                    Design engaging content with AI assistance
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <Button 
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
-                    onClick={handleCreatePostClick}
-                  >
-                    Create Post
-                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
-                    <Target className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Launch Your First Ad Campaign</CardTitle>
-                  <CardDescription className="text-gray-500">
-                    Reach your audience with targeted advertising
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <Button 
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
-                    onClick={handleLaunchAdClick}
-                  >
-                    Launch Ad
-                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="group hover:shadow-md transition-all duration-300 border border-gray-100 shadow-sm cursor-pointer bg-white">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto bg-gray-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-gray-100 transition-colors duration-300">
-                    <BarChart3 className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">View Posts & Campaign Summary</CardTitle>
-                  <CardDescription className="text-gray-500">
-                    Track performance and insights
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <Button 
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white group"
-                    onClick={handleViewSummaryClick}
                   >
                     View Summary
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
