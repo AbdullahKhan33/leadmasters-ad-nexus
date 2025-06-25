@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -66,14 +65,6 @@ export function WhatsAppAdBuilder() {
   const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager' | 'analytics'>('dashboard');
 
   const mainOptions = [
-    {
-      title: "WhatsApp Business Setup",
-      description: "Onboard your WhatsApp Business Account and get verified to start reaching customers.",
-      icon: CheckCircle,
-      accent: true,
-      clickable: true,
-      onClick: () => setCurrentView('onboarding')
-    },
     {
       title: "Create Campaign",
       description: "Design and send personalized WhatsApp messages in just 2 steps with AI assistance.",
