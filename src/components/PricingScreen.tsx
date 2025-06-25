@@ -123,13 +123,13 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
               size="sm"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium"
             >
-              <span className="text-white">Purchase Now (International) - ${price}</span>
+              <span className="text-white">International Card - ${price}</span>
             </Button>
             <Button 
               size="sm"
               className="w-full bg-green-600 hover:bg-green-700 text-white font-medium"
             >
-              <span className="text-white">Purchase Now (Indian Customers) - ${price}</span>
+              <span className="text-white">Indian Customers - ${price}</span>
             </Button>
             <div className="text-xs text-gray-600 text-center mt-2 font-medium">
               ✓ 30-day money-back guarantee • ✓ Cancel anytime
@@ -143,21 +143,14 @@ export function PricingScreen({ onClose }: PricingScreenProps) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-7xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="relative p-8 text-center bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl">
+        {/* Close Button */}
+        <div className="relative p-6">
           <button 
             onClick={onClose}
             className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors text-2xl font-bold"
           >
             ✕
           </button>
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Sparkles className="w-8 h-8 text-purple-600" />
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Choose Your AI Power Level
-            </h1>
-          </div>
-          <p className="text-gray-600 text-lg">Scale your social media automation with AI-driven precision</p>
         </div>
 
         {/* Billing Cycle Selector */}
