@@ -17,7 +17,7 @@ interface AdPlatformMenuProps {
   onPlatformChange?: (platformId: string) => void;
 }
 
-export function AdPlatformMenu({ activePlatform = "instagram", onPlatformChange }: AdPlatformMenuProps) {
+export function AdPlatformMenu({ activePlatform = "whatsapp", onPlatformChange }: AdPlatformMenuProps) {
   const [selectedPlatform, setSelectedPlatform] = useState(activePlatform);
 
   const handlePlatformClick = (platformId: string) => {

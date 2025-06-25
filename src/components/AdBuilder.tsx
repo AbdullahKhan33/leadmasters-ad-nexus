@@ -10,7 +10,7 @@ import { WhatsAppAdBuilder } from "./WhatsAppAdBuilder";
 type Platform = 'facebook' | 'instagram' | 'google' | 'linkedin' | 'whatsapp';
 
 export function AdBuilder() {
-  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('facebook');
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('whatsapp');
 
   console.log("AdBuilder rendering, selectedPlatform:", selectedPlatform);
 
@@ -36,7 +36,7 @@ export function AdBuilder() {
         console.log("Rendering WhatsApp builder");
         return <WhatsAppAdBuilder />;
       default:
-        return <FacebookAdBuilder />;
+        return <WhatsAppAdBuilder />;
     }
   };
 
