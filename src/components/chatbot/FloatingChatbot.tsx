@@ -59,7 +59,7 @@ const FAQ_DATA = [
     keywords: ['crm', 'leads', 'manage', 'customers'],
     question: "How do I manage my leads?",
     answer: "Use the CRM section to view, organize, and track all your leads in one place.",
-    links: [{ text: "Open CRM", url: "/crm" }]
+    links: [{ text: "Open CRM", url: "/?view=crm" }]
   },
   {
     keywords: ['automations', 'workflow', 'automatic'],
@@ -147,7 +147,7 @@ export function FloatingChatbot() {
   const quickActions = [
     { label: "Connect WhatsApp", action: () => window.location.href = "/?view=social-logins" },
     { label: "Create Post", action: () => window.location.href = "/post-builder" },
-    { label: "View CRM", action: () => window.location.href = "/crm" },
+    { label: "View CRM", action: () => window.location.href = "/?view=crm" },
     { label: "Upgrade Plan", action: () => window.location.href = "/?view=user-settings" }
   ];
 
