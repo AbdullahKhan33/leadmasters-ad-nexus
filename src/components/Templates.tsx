@@ -156,62 +156,69 @@ export function Templates() {
   };
 
   const renderTemplateCard = (template: any, type: "email" | "whatsapp") => (
-    <Card key={template.id} className={`group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${template.color} border overflow-hidden h-fit w-full max-w-xs mx-auto`}>
-      <CardHeader className="pb-2 relative">
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <Sparkles className="w-3 h-3 text-yellow-500" />
-        </div>
+    <Card key={template.id} className={`group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ${template.color} border-0 shadow-lg backdrop-blur-sm bg-white/90`}>
+      {/* Premium Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      {/* Premium Glow Effect */}
+      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      <CardHeader className="pb-3 relative z-10">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-1.5 mb-1">
+            <div className="flex items-center gap-2 mb-2">
               {type === "email" ? (
-                <div className="p-1 bg-purple-600 rounded-md">
-                  <Mail className="w-2.5 h-2.5 text-white" />
+                <div className="p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-lg">
+                  <Mail className="w-4 h-4 text-white" />
                 </div>
               ) : (
-                <div className="p-1 bg-green-600 rounded-md">
-                  <MessageSquare className="w-2.5 h-2.5 text-white" />
+                <div className="p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
+                  <MessageSquare className="w-4 h-4 text-white" />
                 </div>
               )}
-              <CardTitle className="text-sm font-bold text-gray-900">
+              <CardTitle className="text-base font-bold text-gray-900">
                 {template.name}
               </CardTitle>
             </div>
             {type === "email" && (
-              <CardDescription className="text-xs text-gray-700 mb-1.5 font-medium">
-                📧 {template.subject}
+              <CardDescription className="text-sm text-gray-700 mb-2 font-medium">
+                {template.subject}
               </CardDescription>
             )}
-            <div className="flex items-center gap-1.5 mb-2">
-              <Badge variant="secondary" className="text-xs font-semibold px-1.5 py-0.5 bg-white/80 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-3">
+              <Badge variant="secondary" className="text-xs font-bold px-2 py-1 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300">
                 {template.category}
               </Badge>
-              <div className="flex items-center gap-1 bg-yellow-100 rounded-full px-1.5 py-0.5">
-                <Star className="w-2.5 h-2.5 fill-yellow-500 text-yellow-500" />
+              <div className="flex items-center gap-1 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full px-2 py-1 border border-yellow-200">
+                <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
                 <span className="text-xs font-bold text-yellow-700">{template.rating}</span>
               </div>
             </div>
           </div>
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <Sparkles className="w-4 h-4 text-purple-500" />
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="pt-0 px-3 pb-3">
-        <div className="bg-white/70 backdrop-blur-sm rounded-lg p-2 mb-3 border border-white/50 shadow-inner">
-          <pre className="text-xs text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-14 overflow-hidden">
-            {template.content.length > 100 ? `${template.content.substring(0, 100)}...` : template.content}
+      
+      <CardContent className="pt-0 px-4 pb-4 relative z-10">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 mb-4 border border-white/60 shadow-inner">
+          <pre className="text-sm text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-20 overflow-hidden">
+            {template.content.length > 120 ? `${template.content.substring(0, 120)}...` : template.content}
           </pre>
         </div>
         
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {/* Primary Action - Send Now */}
           <Button
             onClick={() => handleSendNow(template, type)}
-            className={`w-full font-bold py-1 h-6 flex items-center justify-center gap-1 text-xs ${
+            className={`w-full font-bold py-2 h-9 flex items-center justify-center gap-2 text-sm shadow-lg transition-all duration-300 hover:shadow-xl ${
               type === "email" 
-                ? "bg-purple-600 hover:bg-purple-700 text-white" 
-                : "bg-green-600 hover:bg-green-700 text-white"
+                ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white" 
+                : "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
             }`}
           >
-            <Send className="w-2.5 h-2.5" />
+            <Send className="w-4 h-4" />
             Send Now
           </Button>
           
@@ -219,34 +226,34 @@ export function Templates() {
           <Button
             onClick={() => handleMassSend(template, type)}
             variant="outline"
-            className={`w-full font-semibold py-1 h-6 flex items-center justify-center gap-1 text-xs ${
+            className={`w-full font-semibold py-2 h-9 flex items-center justify-center gap-2 text-sm transition-all duration-300 hover:shadow-md ${
               type === "email"
-                ? "border-purple-200 text-purple-700 hover:bg-purple-50"
-                : "border-green-200 text-green-700 hover:bg-green-50"
+                ? "border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300"
+                : "border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300"
             }`}
           >
-            <Users className="w-2.5 h-2.5" />
+            <Users className="w-4 h-4" />
             Mass Send
           </Button>
           
           {/* Ghost Actions - Preview & Edit */}
-          <div className="grid grid-cols-2 gap-1">
+          <div className="grid grid-cols-2 gap-2">
             <Button
               size="sm"
               variant="ghost"
               onClick={() => handlePreviewTemplate(template, type)}
-              className="h-5 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-1.5"
+              className="h-8 flex items-center gap-1 hover:bg-white/80 transition-all duration-300 border border-gray-200 text-sm px-3 hover:shadow-sm"
             >
-              <Eye className="w-2.5 h-2.5" />
+              <Eye className="w-3 h-3" />
               Preview
             </Button>
             <Button
               size="sm"
               variant="ghost"
               onClick={() => handleEditTemplate(template, type)}
-              className="h-5 flex items-center gap-1 hover:bg-white/60 transition-colors border border-gray-200 text-xs px-1.5"
+              className="h-8 flex items-center gap-1 hover:bg-white/80 transition-all duration-300 border border-gray-200 text-sm px-3 hover:shadow-sm"
             >
-              <Edit className="w-2.5 h-2.5" />
+              <Edit className="w-3 h-3" />
               Edit
             </Button>
           </div>
@@ -256,99 +263,95 @@ export function Templates() {
   );
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-gray-50/30 min-h-screen">
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
+    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-purple-50/30 min-h-screen">
+      <div className="max-w-7xl mx-auto p-6 space-y-8">
+        {/* Premium Header */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold mb-3">
-            <Sparkles className="w-3 h-3" />
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-sm font-bold mb-4 shadow-lg">
+            <Sparkles className="w-4 h-4" />
             Premium Templates
           </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">
-            Communication Templates
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 bg-clip-text text-transparent mb-3">
+            Professional Communication Templates
           </h1>
-          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-            Professional, ready-to-use templates for emails and WhatsApp to accelerate your communication workflow and boost engagement.
+          <p className="text-gray-600 max-w-3xl mx-auto text-base leading-relaxed">
+            Elevate your communication with our premium collection of professionally crafted templates. 
+            Designed to boost engagement and drive results across all your channels.
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex items-center justify-center mb-6">
-            <TabsList className="grid w-full max-w-md grid-cols-2 h-10 bg-white shadow-lg border">
+          <div className="flex items-center justify-center mb-8">
+            <TabsList className="grid w-full max-w-lg grid-cols-2 h-12 bg-white shadow-xl border-0 p-1">
               <TabsTrigger 
                 value="email" 
-                className="flex items-center gap-2 data-[state=active]:bg-blue-600 data-[state=active]:text-white font-semibold text-xs"
+                className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white font-bold text-sm transition-all duration-300 data-[state=active]:shadow-lg"
               >
-                <Mail className="w-3 h-3" />
+                <Mail className="w-4 h-4" />
                 Email Templates
-                <Badge variant="secondary" className="ml-1 bg-blue-100 text-blue-700 text-xs">
+                <Badge variant="secondary" className="ml-1 bg-purple-100 text-purple-700 text-xs font-bold">
                   {emailTemplates.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger 
                 value="whatsapp" 
-                className="flex items-center gap-2 data-[state=active]:bg-green-600 data-[state=active]:text-white font-semibold text-xs"
+                className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white font-bold text-sm transition-all duration-300 data-[state=active]:shadow-lg"
               >
-                <MessageSquare className="w-3 h-3" />
+                <MessageSquare className="w-4 h-4" />
                 WhatsApp Templates
-                <Badge variant="secondary" className="ml-1 bg-green-100 text-green-700 text-xs">
+                <Badge variant="secondary" className="ml-1 bg-green-100 text-green-700 text-xs font-bold">
                   {whatsappTemplates.length}
                 </Badge>
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="email" className="space-y-6">
-            <div className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm border">
+          <TabsContent value="email" className="space-y-8">
+            <div className="flex items-center justify-between bg-white rounded-xl p-6 shadow-lg border border-gray-100">
               <div>
-                <h2 className="text-lg font-bold text-gray-900 mb-0.5">Email Templates</h2>
-                <p className="text-xs text-gray-600">Professional email templates for every occasion</p>
+                <h2 className="text-xl font-bold text-gray-900 mb-1">Email Templates</h2>
+                <p className="text-sm text-gray-600">Professional email templates for every occasion</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => handleCreateTemplate("email")}
-                  className="bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2 h-8 text-xs px-3"
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white flex items-center gap-2 h-10 text-sm px-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-4 h-4" />
                   New Template
                 </Button>
-                <Button variant="outline" size="sm" className="flex items-center gap-2 h-8 text-xs px-3">
-                  <Filter className="w-3 h-3" />
+                <Button variant="outline" size="sm" className="flex items-center gap-2 h-10 text-sm px-4 border-gray-200 hover:bg-gray-50 transition-all duration-300">
+                  <Filter className="w-4 h-4" />
                   Filter
                 </Button>
-                <Badge variant="outline" className="text-xs px-2 py-1 font-bold">
-                  {emailTemplates.length}
-                </Badge>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {emailTemplates.map((template) => renderTemplateCard(template, "email"))}
             </div>
           </TabsContent>
 
-          <TabsContent value="whatsapp" className="space-y-6">
-            <div className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm border">
+          <TabsContent value="whatsapp" className="space-y-8">
+            <div className="flex items-center justify-between bg-white rounded-xl p-6 shadow-lg border border-gray-100">
               <div>
-                <h2 className="text-lg font-bold text-gray-900 mb-0.5">WhatsApp Templates</h2>
-                <p className="text-xs text-gray-600">Engaging WhatsApp messages that get responses</p>
+                <h2 className="text-xl font-bold text-gray-900 mb-1">WhatsApp Templates</h2>
+                <p className="text-sm text-gray-600">Engaging WhatsApp messages that get responses</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={() => handleCreateTemplate("whatsapp")}
-                  className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2 h-8 text-xs px-3"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white flex items-center gap-2 h-10 text-sm px-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-4 h-4" />
                   New Template
                 </Button>
-                <Button variant="outline" size="sm" className="flex items-center gap-2 h-8 text-xs px-3">
-                  <Filter className="w-3 h-3" />
+                <Button variant="outline" size="sm" className="flex items-center gap-2 h-10 text-sm px-4 border-gray-200 hover:bg-gray-50 transition-all duration-300">
+                  <Filter className="w-4 h-4" />
                   Filter
                 </Button>
-                <Badge variant="outline" className="text-xs px-2 py-1 font-bold">
-                  {whatsappTemplates.length}
-                </Badge>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {whatsappTemplates.map((template) => renderTemplateCard(template, "whatsapp"))}
             </div>
           </TabsContent>
