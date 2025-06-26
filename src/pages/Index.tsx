@@ -22,10 +22,11 @@ import { Templates } from "@/components/Templates";
 import { Services } from "@/components/Services";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
-import { PremiumProvider } from "@/contexts/PremiumContext";
+import { PremiumProvider, usePremium } from "@/contexts/PremiumContext";
 import { useLocation } from "react-router-dom";
 import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
 import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
+import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services';
@@ -33,8 +34,10 @@ type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insig
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
+  const { setIsPremium } = usePremium();
   const [currentView, setCurrentView] = useState<AllViews>('workspaces');
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
+  const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
   const location = useLocation();
   const shouldShowChatbot = useChatbotVisibility();
 
@@ -144,6 +147,16 @@ function IndexContent() {
     setSelectedWorkspaceForSettings(null);
   };
 
+  const handleUpgradeClick = (feature: string) => {
+    setUpgradeModal({ isOpen: true, feature });
+  };
+
+  const handleUpgrade = () => {
+    setIsPremium(true);
+    setUpgradeModal({ isOpen: false, feature: "" });
+    console.log("Premium upgrade successful");
+  };
+
   console.log('Current view:', currentView);
 
   return (
@@ -211,7 +224,7 @@ function IndexContent() {
             ) : currentView === 'schedule' ? (
               <Schedule />
             ) : currentView === 'crm' ? (
-              <CRM />
+              <CRM onUpgradeClick={handleUpgradeClick} />
             ) : currentView === 'agents' ? (
               <Agents />
             ) : currentView === 'insights-summary' ? (
@@ -221,9 +234,9 @@ function IndexContent() {
             ) : currentView === 'domain-setup' ? (
               <DomainSetup />
             ) : currentView === 'crm-automations' ? (
-              <CRMAutomations />
+              <CRMAutomations onUpgradeClick={handleUpgradeClick} />
             ) : currentView === 'templates' ? (
-              <Templates />
+              <Templates onUpgradeClick={handleUpgradeClick} />
             ) : currentView === 'services' ? (
               <Services />
             ) : (
@@ -234,6 +247,14 @@ function IndexContent() {
         
         {/* Floating Chatbot */}
         {shouldShowChatbot && <FloatingChatbot />}
+        
+        {/* Premium Upgrade Modal */}
+        <PremiumUpgradeModal
+          isOpen={upgradeModal.isOpen}
+          onClose={() => setUpgradeModal({ isOpen: false, feature: "" })}
+          feature={upgradeModal.feature}
+          onUpgrade={handleUpgrade}
+        />
       </div>
     </SidebarProvider>
   );
