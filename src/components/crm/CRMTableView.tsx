@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Search, 
   Filter, 
@@ -119,8 +120,8 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
   };
 
   return (
-    <div className="h-full bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20 p-6 flex flex-col">
-      <div className="max-w-7xl mx-auto w-full flex flex-col h-full space-y-6">
+    <div className="h-full bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20 p-4 flex flex-col">
+      <div className="w-full flex flex-col h-full space-y-4 max-w-none">
         {/* Header */}
         <div className="flex items-center justify-between flex-shrink-0">
           <div>
@@ -169,132 +170,134 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
           </Card>
         )}
 
-        {/* Table */}
-        <Card className="border border-gray-200 shadow-sm bg-white flex-1 flex flex-col min-h-0">
+        {/* Table Card - Full width container */}
+        <Card className="border border-gray-200 shadow-sm bg-white flex-1 flex flex-col min-h-0 w-full">
           <CardContent className="p-0 flex-1 flex flex-col min-h-0">
-            <div className="flex-1 overflow-auto">
-              <Table>
-                <TableHeader className="sticky top-0 bg-white z-10">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="min-w-[200px]">Lead</TableHead>
-                    <TableHead className="min-w-[140px]">Contact</TableHead>
-                    <TableHead className="min-w-[100px]">Source</TableHead>
-                    <TableHead className="min-w-[120px]">Status</TableHead>
-                    <TableHead className="min-w-[200px]">Last Message</TableHead>
-                    <TableHead className="min-w-[140px]">
-                      <div className="flex items-center space-x-2">
-                        <span className="whitespace-nowrap">AI Score</span>
-                        {!canShowAIScore && <Lock className="w-3 h-3 text-gray-400 flex-shrink-0" />}
-                      </div>
-                    </TableHead>
-                    <TableHead className="min-w-[200px]">
-                      <div className="flex items-center space-x-2">
-                        <span className="whitespace-nowrap">AI Next Action</span>
-                        {!canShowAIActions && <Lock className="w-3 h-3 text-gray-400 flex-shrink-0" />}
-                      </div>
-                    </TableHead>
-                    <TableHead className="min-w-[120px]">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {mockLeads.map((lead) => (
-                    <TableRow key={lead.id} className="hover:bg-gray-50/50">
-                      <TableCell>
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="w-8 h-8 flex-shrink-0">
-                            <AvatarFallback className="bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 text-xs">
-                              {lead.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0">
-                            <p className="font-medium text-gray-900 truncate">{lead.name}</p>
-                            <p className="text-sm text-gray-500 truncate">{lead.timestamp}</p>
-                          </div>
+            <ScrollArea className="flex-1 w-full">
+              <div className="min-w-[1200px]">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-white z-10 border-b">
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="w-[250px] px-6 py-4">Lead</TableHead>
+                      <TableHead className="w-[180px] px-4 py-4">Contact</TableHead>
+                      <TableHead className="w-[120px] px-4 py-4">Source</TableHead>
+                      <TableHead className="w-[140px] px-4 py-4">Status</TableHead>
+                      <TableHead className="w-[250px] px-4 py-4">Last Message</TableHead>
+                      <TableHead className="w-[180px] px-4 py-4">
+                        <div className="flex items-center space-x-2">
+                          <span className="whitespace-nowrap">AI Score</span>
+                          {!canShowAIScore && <Lock className="w-3 h-3 text-gray-400 flex-shrink-0" />}
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium truncate">{lead.phone}</p>
-                          <p className="text-xs text-gray-500 truncate">{lead.source}</p>
+                      </TableHead>
+                      <TableHead className="w-[220px] px-4 py-4">
+                        <div className="flex items-center space-x-2">
+                          <span className="whitespace-nowrap">AI Next Action</span>
+                          {!canShowAIActions && <Lock className="w-3 h-3 text-gray-400 flex-shrink-0" />}
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className="text-xs whitespace-nowrap">
-                          {lead.source}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {getStatusBadge(lead.status)}
-                      </TableCell>
-                      <TableCell>
-                        <p className="text-sm text-gray-900 truncate max-w-[200px]" title={lead.lastMessage}>
-                          {lead.lastMessage}
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                        {canShowAIScore ? (
-                          <div className="flex items-center space-x-2">
-                            <div className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getScoreColor(lead.aiScore!)}`}>
-                              {lead.aiScore}%
-                            </div>
-                            <PremiumBadge className="flex-shrink-0">AI Score</PremiumBadge>
-                          </div>
-                        ) : (
-                          <div className="flex items-center space-x-2">
-                            <div className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-400 whitespace-nowrap">
-                              --
-                            </div>
-                            <Button
-                              onClick={() => onUpgradeClick("AI Lead Scoring")}
-                              size="sm"
-                              variant="ghost"
-                              className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
-                            >
-                              Upgrade to unlock
-                            </Button>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {canShowAIActions ? (
-                          <div className="min-w-0">
-                            <p className="text-sm text-gray-900 mb-1 truncate max-w-[200px]" title={lead.aiNextAction}>
-                              {lead.aiNextAction}
-                            </p>
-                            <PremiumBadge className="flex-shrink-0">AI Suggested</PremiumBadge>
-                          </div>
-                        ) : (
-                          <div className="min-w-0">
-                            <p className="text-sm text-gray-400 mb-1 whitespace-nowrap">Premium Only</p>
-                            <Button
-                              onClick={() => onUpgradeClick("AI Next Actions")}
-                              size="sm"
-                              variant="ghost"
-                              className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
-                            >
-                              Upgrade
-                            </Button>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center space-x-1">
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-                            <MessageSquare className="w-4 h-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-                            <Phone className="w-4 h-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+                      </TableHead>
+                      <TableHead className="w-[140px] px-4 py-4">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {mockLeads.map((lead) => (
+                      <TableRow key={lead.id} className="hover:bg-gray-50/50">
+                        <TableCell className="px-6 py-4">
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="w-8 h-8 flex-shrink-0">
+                              <AvatarFallback className="bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 text-xs">
+                                {lead.name.split(' ').map(n => n[0]).join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0">
+                              <p className="font-medium text-gray-900 truncate">{lead.name}</p>
+                              <p className="text-sm text-gray-500 truncate">{lead.timestamp}</p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium truncate">{lead.phone}</p>
+                            <p className="text-xs text-gray-500 truncate">{lead.source}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          <Badge variant="outline" className="text-xs whitespace-nowrap">
+                            {lead.source}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          {getStatusBadge(lead.status)}
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          <p className="text-sm text-gray-900 truncate" title={lead.lastMessage}>
+                            {lead.lastMessage}
+                          </p>
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          {canShowAIScore ? (
+                            <div className="flex items-center space-x-2">
+                              <div className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getScoreColor(lead.aiScore!)}`}>
+                                {lead.aiScore}%
+                              </div>
+                              <PremiumBadge className="flex-shrink-0">AI Score</PremiumBadge>
+                            </div>
+                          ) : (
+                            <div className="flex items-center space-x-2">
+                              <div className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-400 whitespace-nowrap">
+                                --
+                              </div>
+                              <Button
+                                onClick={() => onUpgradeClick("AI Lead Scoring")}
+                                size="sm"
+                                variant="ghost"
+                                className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
+                              >
+                                Upgrade to unlock
+                              </Button>
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          {canShowAIActions ? (
+                            <div className="min-w-0">
+                              <p className="text-sm text-gray-900 mb-1 truncate" title={lead.aiNextAction}>
+                                {lead.aiNextAction}
+                              </p>
+                              <PremiumBadge className="flex-shrink-0">AI Suggested</PremiumBadge>
+                            </div>
+                          ) : (
+                            <div className="min-w-0">
+                              <p className="text-sm text-gray-400 mb-1 whitespace-nowrap">Premium Only</p>
+                              <Button
+                                onClick={() => onUpgradeClick("AI Next Actions")}
+                                size="sm"
+                                variant="ghost"
+                                className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
+                              >
+                                Upgrade
+                              </Button>
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell className="px-4 py-4">
+                          <div className="flex items-center space-x-1">
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                              <MessageSquare className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                              <Phone className="w-4 h-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </ScrollArea>
           </CardContent>
         </Card>
       </div>
