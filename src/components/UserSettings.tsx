@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +19,8 @@ import {
   History,
   Sparkles,
   Crown,
-  Lock
+  Lock,
+  MessageCircle
 } from "lucide-react";
 import { usePremium } from "@/contexts/PremiumContext";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
@@ -31,6 +31,9 @@ export function UserSettings() {
   const [name, setName] = useState("John Doe");
   const [email, setEmail] = useState("john@company.com");
   const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
+  const [chatbotEnabled, setChatbotEnabled] = useState(() => {
+    return localStorage.getItem('chatbot-disabled') !== 'true';
+  });
   
   const { isPremium, setIsPremium, premiumFeatures, togglePremiumFeature } = usePremium();
 
@@ -39,6 +42,18 @@ export function UserSettings() {
     setIsPremium(true);
     setUpgradeModal({ isOpen: false, feature: "" });
     console.log("Premium upgrade successful - isPremium set to true");
+  };
+
+  const handleChatbotToggle = (enabled: boolean) => {
+    setChatbotEnabled(enabled);
+    localStorage.setItem('chatbot-disabled', (!enabled).toString());
+    
+    // Trigger the global chatbot functions
+    if (enabled) {
+      (window as any).enableChatbot?.();
+    } else {
+      (window as any).disableChatbot?.();
+    }
   };
 
   return (
@@ -60,6 +75,7 @@ export function UserSettings() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            
             <div className="flex items-center space-x-6">
               <Avatar className="w-20 h-20">
                 <AvatarFallback className="bg-gradient-to-br from-purple-100 to-pink-100 text-purple-600 text-xl font-semibold">
@@ -124,6 +140,33 @@ export function UserSettings() {
           </CardContent>
         </Card>
 
+        {/* Interface & Support Preferences */}
+        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center space-x-2 text-xl font-semibold text-gray-900">
+              <MessageCircle className="w-5 h-5 text-purple-600" />
+              <span>Interface & Support</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-base font-medium">AI Support Chatbot</Label>
+                <p className="text-sm text-gray-500 mt-1">Show the floating chatbot assistant on all pages</p>
+              </div>
+              <Switch checked={chatbotEnabled} onCheckedChange={handleChatbotToggle} />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="text-base font-medium">Email Notifications</Label>
+                <p className="text-sm text-gray-500 mt-1">Receive updates about your account activity</p>
+              </div>
+              <Switch checked={notifications} onCheckedChange={setNotifications} />
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Premium Features */}
         <Card className={`border shadow-sm hover:shadow-md transition-all duration-300 bg-white ${
           isPremium ? 'border-purple-200 bg-gradient-to-r from-purple-50/50 to-pink-50/50' : 'border-gray-200'
@@ -140,6 +183,7 @@ export function UserSettings() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            
             {!isPremium && (
               <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 mb-6">
                 <div className="flex items-center justify-between">
@@ -241,6 +285,7 @@ export function UserSettings() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-gray-900">Current Plan</h3>
@@ -313,14 +358,6 @@ export function UserSettings() {
                 <p className="text-sm text-gray-500 mt-1">Add an extra layer of security to your account</p>
               </div>
               <Switch checked={twoFactorAuth} onCheckedChange={setTwoFactorAuth} />
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-base font-medium">Email Notifications</Label>
-                <p className="text-sm text-gray-500 mt-1">Receive updates about your account activity</p>
-              </div>
-              <Switch checked={notifications} onCheckedChange={setNotifications} />
             </div>
             
             <div className="space-y-3">

@@ -13,7 +13,8 @@ import {
   User, 
   ExternalLink,
   HelpCircle,
-  Sparkles 
+  Sparkles,
+  Minimize2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -170,12 +171,9 @@ export function FloatingChatbot() {
     }
   };
 
-  const quickActions = [
-    { label: "Connect WhatsApp", action: () => window.location.href = "/?view=social-logins" },
-    { label: "Create Post", action: () => window.location.href = "/post-builder" },
-    { label: "View CRM", action: () => window.location.href = "/?view=crm" },
-    { label: "Upgrade Plan", action: () => window.location.href = "/?view=user-settings" }
-  ];
+  const handleClose = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -233,41 +231,30 @@ export function FloatingChatbot() {
                     <p className="text-sm text-white/80">Premium Support</p>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                  className="text-white hover:bg-white/20 h-10 w-10 p-0 rounded-full transition-all duration-300"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleClose}
+                    className="text-white hover:bg-white/20 h-8 w-8 p-0 rounded-full transition-all duration-300"
+                    title="Minimize"
+                  >
+                    <Minimize2 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}
+                    className="text-white hover:bg-white/20 h-8 w-8 p-0 rounded-full transition-all duration-300"
+                    title="Close"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </CardHeader>
 
             <CardContent className="flex-1 flex flex-col p-6 space-y-6 relative z-10">
-              {/* Pale Quick Actions */}
-              {messages.length <= 1 && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-gray-600" />
-                    <p className="text-sm text-gray-700 font-semibold">Quick Actions</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {quickActions.map((action, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        onClick={action.action}
-                        className="text-xs h-12 flex flex-col items-center justify-center gap-1 border-2 border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 transition-all duration-300 text-gray-700"
-                      >
-                        <span className="font-medium">{action.label}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* Premium Messages */}
               <ScrollArea className="flex-1 pr-4">
                 <div className="space-y-4">
