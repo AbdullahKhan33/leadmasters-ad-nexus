@@ -67,6 +67,28 @@ const mockLeads: Lead[] = [
     timestamp: "3 hours ago",
     aiScore: 78,
     aiNextAction: "Share case studies and portfolio"
+  },
+  {
+    id: "4",
+    name: "Sara Al Rashid",
+    phone: "+971502345678",
+    source: "WhatsApp",
+    status: "New",
+    lastMessage: "Need help with digital marketing",
+    timestamp: "5 hours ago",
+    aiScore: 82,
+    aiNextAction: "Schedule consultation call"
+  },
+  {
+    id: "5",
+    name: "Omar Abdullah",
+    phone: "+971503456789",
+    source: "LinkedIn",
+    status: "Active",
+    lastMessage: "Interested in your services package",
+    timestamp: "1 day ago",
+    aiScore: 91,
+    aiNextAction: "Send detailed proposal"
   }
 ];
 
@@ -97,10 +119,10 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
   };
 
   return (
-    <div className="h-full bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="h-full bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20 p-6 flex flex-col">
+      <div className="max-w-7xl mx-auto w-full flex flex-col h-full space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">All Leads</h2>
             <p className="text-gray-600">Complete overview of your lead pipeline</p>
@@ -124,7 +146,7 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
 
         {/* AI Features Banner for Free Users */}
         {!isPremium && (
-          <Card className="border-2 border-dashed border-purple-300 bg-gradient-to-r from-purple-50 to-pink-50">
+          <Card className="border-2 border-dashed border-purple-300 bg-gradient-to-r from-purple-50 to-pink-50 flex-shrink-0">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -148,11 +170,11 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
         )}
 
         {/* Table */}
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
+        <Card className="border border-gray-200 shadow-sm bg-white flex-1 flex flex-col min-h-0">
+          <CardContent className="p-0 flex-1 flex flex-col min-h-0">
+            <div className="flex-1 overflow-auto">
               <Table>
-                <TableHeader>
+                <TableHeader className="sticky top-0 bg-white z-10">
                   <TableRow className="hover:bg-transparent">
                     <TableHead className="min-w-[200px]">Lead</TableHead>
                     <TableHead className="min-w-[140px]">Contact</TableHead>
