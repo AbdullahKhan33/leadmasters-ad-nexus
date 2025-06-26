@@ -224,7 +224,7 @@ function IndexContent() {
             ) : currentView === 'schedule' ? (
               <Schedule />
             ) : currentView === 'crm' ? (
-              <CRM onUpgradeClick={handleUpgradeClick} />
+              <CRM />
             ) : currentView === 'agents' ? (
               <Agents />
             ) : currentView === 'insights-summary' ? (
@@ -234,9 +234,9 @@ function IndexContent() {
             ) : currentView === 'domain-setup' ? (
               <DomainSetup />
             ) : currentView === 'crm-automations' ? (
-              <CRMAutomations onUpgradeClick={handleUpgradeClick} />
+              <CRMAutomations />
             ) : currentView === 'templates' ? (
-              <Templates onUpgradeClick={handleUpgradeClick} />
+              <Templates />
             ) : currentView === 'services' ? (
               <Services />
             ) : (

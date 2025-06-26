@@ -6,7 +6,7 @@ interface UpsellPromptProps {
   message: string;
   onUpgrade: () => void;
   variant?: 'inline' | 'centered' | 'banner';
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'default';
   className?: string;
 }
 
