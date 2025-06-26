@@ -93,7 +93,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
   };
 
   return (
-    <div className="flex-1 p-6 bg-gray-50">
+    <div className="flex-1 p-6 bg-gray-50 overflow-auto">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -138,38 +138,40 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
                 <CardTitle className="text-xl font-semibold text-gray-900">Campaign Performance</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="font-semibold text-gray-700">Campaign Name</TableHead>
-                      <TableHead className="font-semibold text-gray-700">Sent</TableHead>
-                      <TableHead className="font-semibold text-gray-700">Delivered</TableHead>
-                      <TableHead className="font-semibold text-gray-700">Read Rate</TableHead>
-                      <TableHead className="font-semibold text-gray-700">Response Rate</TableHead>
-                      <TableHead className="font-semibold text-gray-700">Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {campaignData.map((campaign, index) => (
-                      <TableRow 
-                        key={index} 
-                        className="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
-                      >
-                        <TableCell className="font-medium text-gray-900">{campaign.name}</TableCell>
-                        <TableCell className="text-gray-700">{campaign.sent.toLocaleString()}</TableCell>
-                        <TableCell className="text-gray-700">{campaign.delivered.toLocaleString()}</TableCell>
-                        <TableCell className="text-gray-700">{campaign.readRate}</TableCell>
-                        <TableCell className="text-gray-700">{campaign.responseRate}</TableCell>
-                        <TableCell>{getStatusBadge(campaign.status)}</TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-semibold text-gray-700">Campaign Name</TableHead>
+                        <TableHead className="font-semibold text-gray-700">Sent</TableHead>
+                        <TableHead className="font-semibold text-gray-700">Delivered</TableHead>
+                        <TableHead className="font-semibold text-gray-700">Read Rate</TableHead>
+                        <TableHead className="font-semibold text-gray-700">Response Rate</TableHead>
+                        <TableHead className="font-semibold text-gray-700">Status</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {campaignData.map((campaign, index) => (
+                        <TableRow 
+                          key={index} 
+                          className="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
+                        >
+                          <TableCell className="font-medium text-gray-900">{campaign.name}</TableCell>
+                          <TableCell className="text-gray-700">{campaign.sent.toLocaleString()}</TableCell>
+                          <TableCell className="text-gray-700">{campaign.delivered.toLocaleString()}</TableCell>
+                          <TableCell className="text-gray-700">{campaign.readRate}</TableCell>
+                          <TableCell className="text-gray-700">{campaign.responseRate}</TableCell>
+                          <TableCell>{getStatusBadge(campaign.status)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Analytics Overview - Now without the chart */}
+          {/* Analytics Overview */}
           <div>
             <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
               <CardHeader className="pb-4">
@@ -198,7 +200,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </div>
         </div>
 
-        {/* Message Delivery Trends Chart - Now standalone */}
+        {/* Message Delivery Trends Chart - Fixed container */}
         <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
@@ -207,7 +209,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
+            <div className="w-full h-64 min-h-0">
               <ChartContainer
                 config={{
                   delivered: {
@@ -215,9 +217,10 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
                     color: "#7C3AED",
                   },
                 }}
+                className="w-full h-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
+                  <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <XAxis 
                       dataKey="day" 
                       tick={{ fontSize: 12 }}
@@ -249,8 +252,6 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
             </div>
           </CardContent>
         </Card>
-
-        {/* Summary Stats - Removed as it's now in Analytics Overview */}
       </div>
     </div>
   );
