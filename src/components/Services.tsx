@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -49,6 +48,21 @@ function GrowthPackageCard({
     }
   };
 
+  const formatIncludeText = (text: string) => {
+    // Split text at parentheses to create line breaks
+    const parts = text.split(/(\([^)]+\))/);
+    return parts.map((part, index) => {
+      if (part.startsWith('(') && part.endsWith(')')) {
+        return (
+          <span key={index} className="block text-xs text-gray-600 mt-0.5">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+
   return (
     <Card className="relative bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full">
       {mostPopular && (
@@ -76,11 +90,13 @@ function GrowthPackageCard({
             {description}
           </p>
           
-          <div className="space-y-2 mb-6">
+          <div className="space-y-3 mb-6">
             {includes.map((item, index) => (
               <div key={index} className="flex items-start space-x-2">
                 <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-700 font-medium text-sm">{item}</span>
+                <div className="text-gray-700 font-medium text-sm leading-relaxed">
+                  {formatIncludeText(item)}
+                </div>
               </div>
             ))}
           </div>
