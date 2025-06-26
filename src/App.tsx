@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,8 +15,10 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { WorkspaceSidebar } from "./components/WorkspaceSidebar";
 import { TopBar } from "./components/TopBar";
-import { useWorkspace } from "./contexts/WorkspaceContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { AdBuilder } from "./components/AdBuilder";
+import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
+import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ function PostBuilderPage() {
   const { isInWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const shouldShowChatbot = useChatbotVisibility();
 
   const handleDashboardClick = () => {
     navigate('/', { state: { view: 'dashboard' } });
@@ -139,6 +141,9 @@ function PostBuilderPage() {
             <PostBuilder />
           </div>
         </div>
+        
+        {/* Floating Chatbot */}
+        {shouldShowChatbot && <FloatingChatbot />}
       </div>
     </SidebarProvider>
   );
@@ -148,6 +153,7 @@ function AdBuilderPage() {
   const { isInWorkspace } = useWorkspace();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const shouldShowChatbot = useChatbotVisibility();
 
   const handleDashboardClick = () => {
     navigate('/', { state: { view: 'dashboard' } });
@@ -262,6 +268,9 @@ function AdBuilderPage() {
             <AdBuilder />
           </div>
         </div>
+        
+        {/* Floating Chatbot */}
+        {shouldShowChatbot && <FloatingChatbot />}
       </div>
     </SidebarProvider>
   );

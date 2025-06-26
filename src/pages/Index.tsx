@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -25,6 +24,8 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { useLocation } from "react-router-dom";
+import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
+import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services';
@@ -35,6 +36,7 @@ function IndexContent() {
   const [currentView, setCurrentView] = useState<AllViews>('workspaces');
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
   const location = useLocation();
+  const shouldShowChatbot = useChatbotVisibility();
 
   useEffect(() => {
     console.log('Location state changed:', location.state);
@@ -229,6 +231,9 @@ function IndexContent() {
             )}
           </div>
         </div>
+        
+        {/* Floating Chatbot */}
+        {shouldShowChatbot && <FloatingChatbot />}
       </div>
     </SidebarProvider>
   );
