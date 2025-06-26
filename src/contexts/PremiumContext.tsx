@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface PremiumFeatures {
   aiLeadScoring: boolean;
@@ -19,13 +19,36 @@ interface PremiumContextType {
 const PremiumContext = createContext<PremiumContextType | undefined>(undefined);
 
 export function PremiumProvider({ children }: { children: ReactNode }) {
-  const [isPremium, setIsPremium] = useState(false); // Default to free user for testing
-  const [premiumFeatures, setPremiumFeaturesState] = useState<PremiumFeatures>({
-    aiLeadScoring: true,
-    aiSuggestedTemplates: true,
-    smartWhatsAppDrips: true,
-    postSaleReviewFlows: true,
+  // Load premium status from localStorage or default to false
+  const [isPremium, setIsPremiumState] = useState(() => {
+    const saved = localStorage.getItem('isPremium');
+    return saved ? JSON.parse(saved) : false;
   });
+
+  // Load premium features from localStorage or default values
+  const [premiumFeatures, setPremiumFeaturesState] = useState<PremiumFeatures>(() => {
+    const saved = localStorage.getItem('premiumFeatures');
+    return saved ? JSON.parse(saved) : {
+      aiLeadScoring: true,
+      aiSuggestedTemplates: true,
+      smartWhatsAppDrips: true,
+      postSaleReviewFlows: true,
+    };
+  });
+
+  // Persist premium status to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('isPremium', JSON.stringify(isPremium));
+  }, [isPremium]);
+
+  // Persist premium features to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('premiumFeatures', JSON.stringify(premiumFeatures));
+  }, [premiumFeatures]);
+
+  const setIsPremium = (premium: boolean) => {
+    setIsPremiumState(premium);
+  };
 
   const setPremiumFeatures = (features: Partial<PremiumFeatures>) => {
     setPremiumFeaturesState(prev => ({ ...prev, ...features }));

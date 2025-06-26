@@ -35,8 +35,10 @@ export function UserSettings() {
   const { isPremium, setIsPremium, premiumFeatures, togglePremiumFeature } = usePremium();
 
   const handleUpgrade = () => {
+    // Simulate successful upgrade - in a real app this would be handled by payment processing
     setIsPremium(true);
     setUpgradeModal({ isOpen: false, feature: "" });
+    console.log("Premium upgrade successful - isPremium set to true");
   };
 
   return (
