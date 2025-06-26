@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ConfirmationModal } from "./services/ConfirmationModal";
+import { CustomSolutionForm } from "./services/CustomSolutionForm";
 
 interface GrowthPackageProps {
   title: string;
@@ -166,7 +166,7 @@ export function Services() {
     setConfirmationModal({
       isOpen: true,
       type: "contact",
-      title: "Custom Solution Inquiry"
+      title: "Custom Solution Request"
     });
   };
 
@@ -290,22 +290,17 @@ export function Services() {
           </div>
         </div>
 
-        {/* Help Section */}
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardContent className="p-6 text-center">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Need a Custom Solution?</h3>
-            <p className="text-gray-600 mb-4 max-w-2xl mx-auto text-sm">
-              Don't see exactly what you need? Contact our team to discuss custom packages tailored to your business requirements.
+        {/* Custom Solution Form Section */}
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Need a Custom Solution?</h2>
+            <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+              Every business is unique. Share your specific requirements and our solutions team will design a custom package tailored to your goals.
             </p>
-            <Button 
-              onClick={handleContactClick}
-              variant="outline" 
-              className="border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors duration-200 h-8 text-xs"
-            >
-              Contact Us
-            </Button>
-          </CardContent>
-        </Card>
+          </div>
+          
+          <CustomSolutionForm onSubmit={handleContactClick} />
+        </div>
       </div>
 
       <ConfirmationModal

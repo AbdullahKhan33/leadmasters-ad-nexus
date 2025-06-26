@@ -42,16 +42,16 @@ export function ConfirmationModal({ isOpen, onClose, type, title, price }: Confi
         };
       case "contact":
         return {
-          icon: <Mail className="w-12 h-12 text-purple-500 mx-auto mb-4" />,
-          heading: "Message Sent",
-          message: "Thank you for your inquiry. We'll create a custom solution tailored to your business needs.",
+          icon: <CheckCircle className="w-12 h-12 text-blue-600 mx-auto mb-4" />,
+          heading: "Request Received",
+          message: "Thank you for your interest in our custom solutions. Your request has been successfully submitted to our solutions team.",
           details: [
-            "Our team will call you within 2 hours",
-            "Discussion of your specific requirements",
-            "Personalized recommendation provided",
-            "Custom quote delivered within 24 hours"
+            "Solutions consultant assigned to your case",
+            "Comprehensive requirements analysis",
+            "Custom proposal with detailed scope and timeline",
+            "Direct consultation call scheduled within 24 hours"
           ],
-          nextSteps: "Please keep your phone available - we'll be calling soon."
+          nextSteps: "Our solutions team will contact you within the next 24 hours to discuss your requirements and present a tailored proposal."
         };
       default:
         return {
@@ -95,8 +95,8 @@ export function ConfirmationModal({ isOpen, onClose, type, title, price }: Confi
               {content.details.map((detail, index) => {
                 const getIcon = () => {
                   if (detail.includes("email")) return <Mail className="w-4 h-4 text-blue-600" />;
-                  if (detail.includes("call") || detail.includes("contact")) return <Phone className="w-4 h-4 text-blue-600" />;
-                  if (detail.includes("report") || detail.includes("delivery")) return <FileText className="w-4 h-4 text-blue-600" />;
+                  if (detail.includes("call") || detail.includes("contact") || detail.includes("consultation")) return <Phone className="w-4 h-4 text-blue-600" />;
+                  if (detail.includes("report") || detail.includes("delivery") || detail.includes("proposal")) return <FileText className="w-4 h-4 text-blue-600" />;
                   return <ArrowRight className="w-4 h-4 text-blue-600" />;
                 };
 
