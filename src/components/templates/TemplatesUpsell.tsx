@@ -138,7 +138,7 @@ export function TemplatesUpsell({ onUpgradeClick }: TemplatesUpsellProps) {
                   message=""
                   onUpgrade={() => onUpgradeClick("AI Suggested Templates")}
                   variant="centered"
-                  size="md"
+                  size="default"
                 />
               </div>
             </CardContent>
