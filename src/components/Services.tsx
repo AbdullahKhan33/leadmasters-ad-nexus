@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -88,7 +89,7 @@ function GrowthPackageCard({
             <p className="text-2xl font-bold text-gray-900 mb-0.5">
               {price}
             </p>
-            <p className="text-xs text-gray-500">All-inclusive package</p>
+            <p className="text-xs text-gray-500">All-inclusive, one-time</p>
           </div>
         </div>
         
@@ -173,40 +174,47 @@ export function Services() {
   const growthPackages = [
     {
       title: "Business Launch Package",
-      description: "Everything you need to get your business online & ready.",
+      description: "Everything to get your business legally online & discoverable.",
       includes: [
-        "Business Registration Assistance",
-        "Simple, mobile-friendly website", 
+        "Business Registration Assistance (via partner)",
+        "Simple, mobile-friendly website (incl. 1-year hosting)",
         "Google My Business setup",
-        "Social Media pages setup"
+        "Social Media Pages setup (FB, Insta, WhatsApp)",
+        "FREE Basic Logo (AI-generated)",
+        "WhatsApp Business Profile setup"
       ],
       price: "₹9,999 or AED 499",
-      buttonText: "Get Started",
+      buttonText: "Get My Business Online",
       buttonVariant: "success" as const,
       mostPopular: true
     },
     {
       title: "Lead Generation Starter Pack",
-      description: "We set up your ads, your posts, your WhatsApp — ready to capture leads.",
+      description: "We set up your ads, content, and CRM — leads ready to capture.",
       includes: [
-        "First Facebook/Instagram ad setup",
-        "5 AI-written social posts",
+        "First Facebook & Instagram Ad setup",
+        "5 AI-written Social Posts (customized for your business)",
         "WhatsApp Chatbot setup",
-        "LeadMasters CRM basic setup & lead import"
+        "LeadMasters CRM basic setup & lead import",
+        "WhatsApp Templates for faster replies",
+        "100 Preloaded CRM Leads (optional from Apollo/HubSpot)",
+        "7-Day WhatsApp Engagement Plan (ready to use)"
       ],
       price: "₹6,999 or AED 349",
       buttonText: "Launch My Leads",
-      buttonVariant: "primary" as const,
-      savings: "Save ₹1,500"
+      buttonVariant: "primary" as const
     },
     {
       title: "Growth & Automation Plan",
-      description: "Advanced content, ads, and automation for scaling your business.",
+      description: "Advanced content, ads, automation — serious business growth.",
       includes: [
-        "Professional ad creatives package",
-        "AI Content Pack (captions, WhatsApp messages, email drafts)",
-        "Basic SEO Starter Kit for your website",
-        "Option to add monthly Done-For-You Marketing"
+        "Professional Ad Creatives Pack (images & captions)",
+        "AI Content Pack (WhatsApp, Social Media, Email)",
+        "SEO Starter Kit for your website",
+        "15 WhatsApp Message Templates (high-converting)",
+        "Monthly Done-For-You Marketing option (add-on)",
+        "CRM Automations Setup (Lead Scoring, Follow-Ups)",
+        "Monthly Performance Insights Report"
       ],
       price: "₹12,999 or AED 649",
       buttonText: "Scale My Business",
@@ -238,17 +246,17 @@ export function Services() {
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-3">
-            Business Growth Services
+            Professional Business Services
           </h1>
           <p className="text-sm text-gray-600 leading-relaxed">
-            No team? No tech skills? No problem. Choose a ready-made package to grow your business with LeadMasters.
+            Enterprise-grade solutions to launch and scale your business with LeadMasters.
           </p>
         </div>
 
         {/* Growth Packages Section */}
         <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">🎯 Growth Packages</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Growth Packages</h2>
             <p className="text-sm text-gray-600">Complete solutions to launch and scale your business</p>
           </div>
           
@@ -262,7 +270,6 @@ export function Services() {
                 price={pkg.price}
                 buttonText={pkg.buttonText}
                 buttonVariant={pkg.buttonVariant}
-                savings={pkg.savings}
                 mostPopular={pkg.mostPopular}
                 onButtonClick={() => handlePackageClick(pkg.title, pkg.price)}
               />
@@ -273,8 +280,8 @@ export function Services() {
         {/* One-Off Services Section */}
         <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">✅ One-Off Services</h2>
-            <p className="text-xs text-gray-600">Individual services for specific needs</p>
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Individual Services</h2>
+            <p className="text-xs text-gray-600">Specialized services for specific business needs</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
