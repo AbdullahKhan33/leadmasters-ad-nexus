@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +14,11 @@ import {
 import { useState } from "react";
 import { ConfirmationModal } from "./services/ConfirmationModal";
 import { CustomSolutionForm } from "./services/CustomSolutionForm";
+import { ServicesBanner } from "./services/ServicesBanner";
+import { PostPurchaseUpsellModal } from "./services/PostPurchaseUpsellModal";
+import { ServicesFooter } from "./services/ServicesFooter";
+import { PremiumUpgradeModal } from "./premium/PremiumUpgradeModal";
+import { usePremium } from "@/contexts/PremiumContext";
 
 interface GrowthPackageProps {
   title: string;
@@ -23,6 +29,7 @@ interface GrowthPackageProps {
   buttonVariant?: "default" | "success" | "primary";
   savings?: string;
   mostPopular?: boolean;
+  isPremiumRequired?: boolean;
   onButtonClick: () => void;
 }
 
@@ -35,8 +42,11 @@ function GrowthPackageCard({
   buttonVariant = "default",
   savings,
   mostPopular = false,
+  isPremiumRequired = false,
   onButtonClick
 }: GrowthPackageProps) {
+  const { isPremium } = usePremium();
+
   const getButtonStyles = () => {
     switch (buttonVariant) {
       case "success":
@@ -62,6 +72,11 @@ function GrowthPackageCard({
       return part;
     });
   };
+
+  // Determine button text and styling for premium-required packages
+  const actualButtonText = isPremiumRequired && !isPremium 
+    ? "Upgrade to Premium to Access" 
+    : buttonText;
 
   return (
     <Card className="relative bg-white border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 h-full">
@@ -106,6 +121,11 @@ function GrowthPackageCard({
               {price}
             </p>
             <p className="text-xs text-gray-500">All-inclusive, one-time</p>
+            {isPremiumRequired && !isPremium && (
+              <p className="text-xs text-purple-600 font-medium mt-1">
+                Includes AI Automations, Lead Scoring & Smart Content — Premium Only
+              </p>
+            )}
           </div>
         </div>
         
@@ -113,7 +133,7 @@ function GrowthPackageCard({
           onClick={onButtonClick}
           className={`w-full py-3 h-10 text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-xl ${getButtonStyles()}`}
         >
-          {buttonText}
+          {actualButtonText}
         </Button>
       </CardContent>
     </Card>
@@ -149,6 +169,7 @@ function OneOffServiceCard({ icon: Icon, title, price, onButtonClick }: OneOffSe
 }
 
 export function Services() {
+  const { isPremium, setIsPremium } = usePremium();
   const [confirmationModal, setConfirmationModal] = useState<{
     isOpen: boolean;
     type: "package" | "service" | "contact";
@@ -161,7 +182,31 @@ export function Services() {
     price: ""
   });
 
-  const handlePackageClick = (title: string, price: string) => {
+  const [postPurchaseModal, setPostPurchaseModal] = useState<{
+    isOpen: boolean;
+    purchasedItem: string;
+  }>({
+    isOpen: false,
+    purchasedItem: ""
+  });
+
+  const [premiumUpgradeModal, setPremiumUpgradeModal] = useState<{
+    isOpen: boolean;
+    feature?: string;
+  }>({
+    isOpen: false,
+    feature: undefined
+  });
+
+  const handlePackageClick = (title: string, price: string, isPremiumRequired: boolean = false) => {
+    if (isPremiumRequired && !isPremium) {
+      setPremiumUpgradeModal({
+        isOpen: true,
+        feature: "Advanced AI Automations"
+      });
+      return;
+    }
+
     setConfirmationModal({
       isOpen: true,
       type: "package",
@@ -187,6 +232,32 @@ export function Services() {
     });
   };
 
+  const handleUpgradeClick = (feature?: string) => {
+    setPremiumUpgradeModal({
+      isOpen: true,
+      feature
+    });
+  };
+
+  const handlePremiumUpgrade = () => {
+    setIsPremium(true);
+    setPremiumUpgradeModal({ isOpen: false });
+    setPostPurchaseModal({ isOpen: false, purchasedItem: "" });
+  };
+
+  const handleConfirmationClose = () => {
+    const { title } = confirmationModal;
+    setConfirmationModal({ isOpen: false, type: "package", title: "", price: "" });
+    
+    // Show post-purchase upsell if user is not premium and just purchased a package
+    if (!isPremium && confirmationModal.type === "package") {
+      setPostPurchaseModal({
+        isOpen: true,
+        purchasedItem: title
+      });
+    }
+  };
+
   const growthPackages = [
     {
       title: "Business Launch Package",
@@ -202,7 +273,8 @@ export function Services() {
       price: "₹9,999 or AED 499",
       buttonText: "Get My Business Online",
       buttonVariant: "success" as const,
-      mostPopular: true
+      mostPopular: true,
+      isPremiumRequired: false
     },
     {
       title: "Lead Generation Starter Pack",
@@ -218,7 +290,8 @@ export function Services() {
       ],
       price: "₹6,999 or AED 349",
       buttonText: "Launch My Leads",
-      buttonVariant: "primary" as const
+      buttonVariant: "primary" as const,
+      isPremiumRequired: false
     },
     {
       title: "Growth & Automation Plan",
@@ -234,7 +307,8 @@ export function Services() {
       ],
       price: "₹12,999 or AED 649",
       buttonText: "Scale My Business",
-      buttonVariant: "default" as const
+      buttonVariant: "default" as const,
+      isPremiumRequired: true
     }
   ];
 
@@ -259,6 +333,11 @@ export function Services() {
   return (
     <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-gray-50/30 min-h-screen">
       <div className="max-w-6xl mx-auto p-4 space-y-8">
+        {/* Global Banner - Only show for non-premium users */}
+        {!isPremium && (
+          <ServicesBanner onUpgradeClick={() => handleUpgradeClick()} />
+        )}
+
         {/* Header */}
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-3">
@@ -287,7 +366,8 @@ export function Services() {
                 buttonText={pkg.buttonText}
                 buttonVariant={pkg.buttonVariant}
                 mostPopular={pkg.mostPopular}
-                onButtonClick={() => handlePackageClick(pkg.title, pkg.price)}
+                isPremiumRequired={pkg.isPremiumRequired}
+                onButtonClick={() => handlePackageClick(pkg.title, pkg.price, pkg.isPremiumRequired)}
               />
             ))}
           </div>
@@ -324,14 +404,34 @@ export function Services() {
           
           <CustomSolutionForm onSubmit={handleContactClick} />
         </div>
+
+        {/* Services Footer - Only show for non-premium users */}
+        {!isPremium && (
+          <ServicesFooter onUpgradeClick={() => handleUpgradeClick("Premium Marketing Features")} />
+        )}
       </div>
 
+      {/* Modals */}
       <ConfirmationModal
         isOpen={confirmationModal.isOpen}
-        onClose={() => setConfirmationModal({ isOpen: false, type: "package", title: "", price: "" })}
+        onClose={handleConfirmationClose}
         type={confirmationModal.type}
         title={confirmationModal.title}
         price={confirmationModal.price}
+      />
+
+      <PostPurchaseUpsellModal
+        isOpen={postPurchaseModal.isOpen}
+        onClose={() => setPostPurchaseModal({ isOpen: false, purchasedItem: "" })}
+        onUpgrade={handlePremiumUpgrade}
+        purchasedItem={postPurchaseModal.purchasedItem}
+      />
+
+      <PremiumUpgradeModal
+        isOpen={premiumUpgradeModal.isOpen}
+        onClose={() => setPremiumUpgradeModal({ isOpen: false })}
+        feature={premiumUpgradeModal.feature}
+        onUpgrade={handlePremiumUpgrade}
       />
     </div>
   );

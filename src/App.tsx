@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +12,7 @@ import { CRM } from "./components/CRM";
 import { InsightsSummary } from "./components/InsightsSummary";
 import { WhatsAppInsights } from "./components/WhatsAppInsights";
 import { WorkspaceProvider } from "./contexts/WorkspaceContext";
+import { PremiumProvider } from "./contexts/PremiumContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { WorkspaceSidebar } from "./components/WorkspaceSidebar";
@@ -278,29 +280,31 @@ function AdBuilderPage() {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/my-inspirations" element={<MyInspirations />} />
-        <Route path="/post-builder" element={
-          <WorkspaceProvider>
-            <PostBuilderPage />
-          </WorkspaceProvider>
-        } />
-        <Route path="/ad-builder" element={
-          <WorkspaceProvider>
-            <AdBuilderPage />
-          </WorkspaceProvider>
-        } />
-        <Route path="/crm/*" element={<CRM />} />
-        <Route path="/insights/summary" element={<InsightsSummary />} />
-        <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
+    <PremiumProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/my-inspirations" element={<MyInspirations />} />
+          <Route path="/post-builder" element={
+            <WorkspaceProvider>
+              <PostBuilderPage />
+            </WorkspaceProvider>
+          } />
+          <Route path="/ad-builder" element={
+            <WorkspaceProvider>
+              <AdBuilderPage />
+            </WorkspaceProvider>
+          } />
+          <Route path="/crm/*" element={<CRM />} />
+          <Route path="/insights/summary" element={<InsightsSummary />} />
+          <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </TooltipProvider>
+    </PremiumProvider>
   </QueryClientProvider>
 );
 
