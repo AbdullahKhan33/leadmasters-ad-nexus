@@ -17,14 +17,27 @@ import {
   Settings,
   Bell,
   Key,
-  History
+  History,
+  Sparkles,
+  Crown,
+  Lock
 } from "lucide-react";
+import { usePremium } from "@/contexts/PremiumContext";
+import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 
 export function UserSettings() {
   const [notifications, setNotifications] = useState(true);
   const [twoFactorAuth, setTwoFactorAuth] = useState(false);
   const [name, setName] = useState("John Doe");
   const [email, setEmail] = useState("john@company.com");
+  const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
+  
+  const { isPremium, setIsPremium, premiumFeatures, togglePremiumFeature } = usePremium();
+
+  const handleUpgrade = () => {
+    setIsPremium(true);
+    setUpgradeModal({ isOpen: false, feature: "" });
+  };
 
   return (
     <div className="flex-1 p-6 bg-gray-50">
@@ -109,6 +122,114 @@ export function UserSettings() {
           </CardContent>
         </Card>
 
+        {/* Premium Features */}
+        <Card className={`border shadow-sm hover:shadow-md transition-all duration-300 bg-white ${
+          isPremium ? 'border-purple-200 bg-gradient-to-r from-purple-50/50 to-pink-50/50' : 'border-gray-200'
+        }`}>
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center space-x-2 text-xl font-semibold text-gray-900">
+              {isPremium ? <Crown className="w-5 h-5 text-purple-600" /> : <Sparkles className="w-5 h-5 text-purple-600" />}
+              <span>Premium Features</span>
+              {isPremium && (
+                <Badge className="bg-gradient-to-r from-purple-600 to-pink-500 text-white ml-2">
+                  Active
+                </Badge>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {!isPremium && (
+              <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 mb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold text-purple-900 mb-1">Upgrade to Premium</h3>
+                    <p className="text-sm text-purple-700">Unlock AI-powered features to supercharge your CRM</p>
+                  </div>
+                  <Button
+                    onClick={() => setUpgradeModal({ isOpen: true, feature: "Premium Features" })}
+                    className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
+                  >
+                    <Crown className="w-4 h-4 mr-2" />
+                    Upgrade Now
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-gray-50/50">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Label className="text-base font-medium">AI Lead Scoring</Label>
+                    {!isPremium && <Lock className="w-4 h-4 text-gray-400" />}
+                  </div>
+                  <p className="text-sm text-gray-600">Automatically score and prioritize your leads</p>
+                </div>
+                <Switch 
+                  checked={isPremium && premiumFeatures.aiLeadScoring} 
+                  onCheckedChange={() => isPremium && togglePremiumFeature('aiLeadScoring')}
+                  disabled={!isPremium}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-gray-50/50">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Label className="text-base font-medium">AI Suggested Templates</Label>
+                    {!isPremium && <Lock className="w-4 h-4 text-gray-400" />}
+                  </div>
+                  <p className="text-sm text-gray-600">Get smart template recommendations for better responses</p>
+                </div>
+                <Switch 
+                  checked={isPremium && premiumFeatures.aiSuggestedTemplates} 
+                  onCheckedChange={() => isPremium && togglePremiumFeature('aiSuggestedTemplates')}
+                  disabled={!isPremium}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-gray-50/50">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Label className="text-base font-medium">Smart WhatsApp Drips</Label>
+                    {!isPremium && <Lock className="w-4 h-4 text-gray-400" />}
+                  </div>
+                  <p className="text-sm text-gray-600">Automated follow-up sequences powered by AI</p>
+                </div>
+                <Switch 
+                  checked={isPremium && premiumFeatures.smartWhatsAppDrips} 
+                  onCheckedChange={() => isPremium && togglePremiumFeature('smartWhatsAppDrips')}
+                  disabled={!isPremium}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-gray-50/50">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <Label className="text-base font-medium">Post-Sale Review Flows</Label>
+                    {!isPremium && <Lock className="w-4 h-4 text-gray-400" />}
+                  </div>
+                  <p className="text-sm text-gray-600">Automated review collection and customer feedback</p>
+                </div>
+                <Switch 
+                  checked={isPremium && premiumFeatures.postSaleReviewFlows} 
+                  onCheckedChange={() => isPremium && togglePremiumFeature('postSaleReviewFlows')}
+                  disabled={!isPremium}
+                />
+              </div>
+            </div>
+
+            {isPremium && (
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Crown className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-800">Premium Plan Active</span>
+                </div>
+                <p className="text-sm text-green-700">All AI features are available and can be toggled on/off as needed.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Subscription & Billing */}
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
           <CardHeader className="pb-4">
@@ -122,40 +243,52 @@ export function UserSettings() {
               <div>
                 <h3 className="font-semibold text-gray-900">Current Plan</h3>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Badge className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 border-purple-200">
-                    Professional
+                  <Badge className={isPremium 
+                    ? "bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 border-purple-200"
+                    : "bg-gray-100 text-gray-700 border-gray-200"
+                  }>
+                    {isPremium ? 'Premium' : 'Free'}
                   </Badge>
-                  <span className="text-sm text-gray-500">$29/month</span>
+                  <span className="text-sm text-gray-500">
+                    {isPremium ? '$29/month' : '$0/month'}
+                  </span>
                 </div>
               </div>
-              <Button className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white">
-                Upgrade Plan
-              </Button>
+              {!isPremium && (
+                <Button 
+                  onClick={() => setUpgradeModal({ isOpen: true, feature: "Premium Plan" })}
+                  className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white"
+                >
+                  Upgrade Plan
+                </Button>
+              )}
             </div>
             
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-gray-600">Usage this month</span>
-                  <span className="text-gray-900">142 / 500 posts</span>
+                  <span className="text-gray-900">142 / {isPremium ? '∞' : '100'} AI actions</span>
                 </div>
-                <Progress value={28} className="h-2" />
+                <Progress value={isPremium ? 28 : 70} className="h-2" />
               </div>
             </div>
             
-            <div className="border-t pt-4">
-              <h4 className="font-medium text-gray-900 mb-3">Payment Methods</h4>
-              <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-5 bg-gradient-to-r from-blue-600 to-purple-600 rounded"></div>
-                  <div>
-                    <p className="text-sm font-medium">•••• •••• •••• 4242</p>
-                    <p className="text-xs text-gray-500">Expires 12/25</p>
+            {isPremium && (
+              <div className="border-t pt-4">
+                <h4 className="font-medium text-gray-900 mb-3">Payment Methods</h4>
+                <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-5 bg-gradient-to-r from-blue-600 to-purple-600 rounded"></div>
+                    <div>
+                      <p className="text-sm font-medium">•••• •••• •••• 4242</p>
+                      <p className="text-xs text-gray-500">Expires 12/25</p>
+                    </div>
                   </div>
+                  <Button variant="outline" size="sm">Edit</Button>
                 </div>
-                <Button variant="outline" size="sm">Edit</Button>
               </div>
-            </div>
+            )}
             
             <Button variant="outline" className="w-full text-purple-600 border-purple-200 hover:bg-purple-50">
               View Billing History
@@ -229,6 +362,13 @@ export function UserSettings() {
             </div>
           </CardContent>
         </Card>
+
+        <PremiumUpgradeModal
+          isOpen={upgradeModal.isOpen}
+          onClose={() => setUpgradeModal({ isOpen: false, feature: "" })}
+          feature={upgradeModal.feature}
+          onUpgrade={handleUpgrade}
+        />
       </div>
     </div>
   );

@@ -23,6 +23,7 @@ import { Templates } from "@/components/Templates";
 import { Services } from "@/components/Services";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
+import { PremiumProvider } from "@/contexts/PremiumContext";
 import { useLocation } from "react-router-dom";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services';
@@ -236,7 +237,9 @@ function IndexContent() {
 export default function Index() {
   return (
     <WorkspaceProvider>
-      <IndexContent />
+      <PremiumProvider>
+        <IndexContent />
+      </PremiumProvider>
     </WorkspaceProvider>
   );
 }

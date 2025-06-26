@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,9 +14,15 @@ import {
   Clock,
   CheckCircle2,
   Circle,
-  MessageCircle
+  MessageCircle,
+  Bot,
+  Sparkles,
+  Lock
 } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { usePremium } from "@/contexts/PremiumContext";
+import { PremiumBadge } from "@/components/premium/PremiumBadge";
+import { PremiumLockCard } from "@/components/premium/PremiumLockCard";
 
 interface Lead {
   id: string;
@@ -32,6 +37,11 @@ interface Lead {
   isOnline: boolean;
   priority: 'high' | 'medium' | 'low';
   dateAdded: string;
+  aiScore?: number;
+}
+
+interface CRMInboxViewProps {
+  onUpgradeClick: (feature: string) => void;
 }
 
 const mockLeads: Lead[] = [
@@ -46,7 +56,8 @@ const mockLeads: Lead[] = [
     unreadCount: 2,
     isOnline: true,
     priority: "high",
-    dateAdded: "2024-01-29"
+    dateAdded: "2024-01-29",
+    aiScore: 95
   },
   {
     id: "2",
@@ -59,7 +70,8 @@ const mockLeads: Lead[] = [
     unreadCount: 0,
     isOnline: true,
     priority: "medium",
-    dateAdded: "2024-01-28"
+    dateAdded: "2024-01-28",
+    aiScore: 87
   },
   {
     id: "3",
@@ -72,7 +84,8 @@ const mockLeads: Lead[] = [
     unreadCount: 1,
     isOnline: false,
     priority: "high",
-    dateAdded: "2024-01-27"
+    dateAdded: "2024-01-27",
+    aiScore: 78
   },
   {
     id: "4",
@@ -85,7 +98,8 @@ const mockLeads: Lead[] = [
     unreadCount: 0,
     isOnline: false,
     priority: "medium",
-    dateAdded: "2024-01-26"
+    dateAdded: "2024-01-26",
+    aiScore: 65
   },
   {
     id: "5",
@@ -98,17 +112,29 @@ const mockLeads: Lead[] = [
     unreadCount: 0,
     isOnline: false,
     priority: "low",
-    dateAdded: "2024-01-25"
+    dateAdded: "2024-01-25",
+    aiScore: 52
   }
 ];
 
-export function CRMInboxView() {
+const aiQuickReplies = [
+  "Thank you for your interest! I'd be happy to share our pricing details with you.",
+  "Let me send you our premium package information right away.",
+  "I can schedule a quick call to discuss your specific needs. When works best for you?",
+  "Here's what's included in our premium package..."
+];
+
+export function CRMInboxView({ onUpgradeClick }: CRMInboxViewProps) {
   const [searchParams] = useSearchParams();
   const [leads, setLeads] = useState<Lead[]>(mockLeads);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>(mockLeads);
   const [searchQuery, setSearchQuery] = useState("");
   const [newMessage, setNewMessage] = useState("");
+  const { isPremium, premiumFeatures } = usePremium();
+
+  const canShowAIReplies = isPremium && premiumFeatures.aiSuggestedTemplates;
+  const canShowAIScore = isPremium && premiumFeatures.aiLeadScoring;
 
   // Handle URL filters
   useEffect(() => {
@@ -225,6 +251,25 @@ export function CRMInboxView() {
         <div className="p-6 border-b border-gray-200/50">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">WhatsApp Inbox</h2>
           
+          {/* AI Features for Free Users */}
+          {!isPremium && (
+            <div className="mb-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Bot className="w-4 h-4 text-purple-600" />
+                  <span className="text-sm font-medium text-purple-700">AI Features Available</span>
+                </div>
+                <Button
+                  onClick={() => onUpgradeClick("AI Inbox Features")}
+                  size="sm"
+                  className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white text-xs px-2 py-1 h-6"
+                >
+                  Upgrade
+                </Button>
+              </div>
+            </div>
+          )}
+
           {/* Active Filters Display */}
           {(searchParams.get('source') || searchParams.get('status') || searchParams.get('dateRange')) && (
             <div className="mb-4 space-y-2">
@@ -297,6 +342,11 @@ export function CRMInboxView() {
                     <Badge variant="outline" className="text-xs">
                       {lead.source}
                     </Badge>
+                    {canShowAIScore && lead.aiScore && (
+                      <PremiumBadge className="text-xs">
+                        AI: {lead.aiScore}%
+                      </PremiumBadge>
+                    )}
                   </div>
                   
                   <p className="text-sm text-gray-600 truncate mb-2">
@@ -338,8 +388,13 @@ export function CRMInboxView() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">{selectedLead.name}</h3>
-                    <p className="text-sm text-gray-500">
-                      {selectedLead.isOnline ? 'Online now' : `Last seen ${selectedLead.timestamp}`}
+                    <p className="text-sm text-gray-500 flex items-center space-x-2">
+                      <span>{selectedLead.isOnline ? 'Online now' : `Last seen ${selectedLead.timestamp}`}</span>
+                      {canShowAIScore && selectedLead.aiScore && (
+                        <PremiumBadge className="text-xs">
+                          Lead Score: {selectedLead.aiScore}%
+                        </PremiumBadge>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -354,6 +409,46 @@ export function CRMInboxView() {
                 </div>
               </div>
             </div>
+
+            {/* AI Quick Replies Section */}
+            {canShowAIReplies ? (
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-200 p-4">
+                <div className="flex items-center space-x-2 mb-3">
+                  <Sparkles className="w-4 h-4 text-purple-600" />
+                  <span className="text-sm font-medium text-purple-700">AI Quick Replies</span>
+                  <PremiumBadge>AI Powered</PremiumBadge>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {aiQuickReplies.map((reply, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setNewMessage(reply)}
+                      className="text-xs bg-white hover:bg-purple-50 border-purple-200 text-purple-700"
+                    >
+                      {reply.length > 50 ? `${reply.substring(0, 50)}...` : reply}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Lock className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">AI Quick Replies are a Premium feature</span>
+                  </div>
+                  <Button
+                    onClick={() => onUpgradeClick("AI Quick Replies")}
+                    size="sm"
+                    className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
+                  >
+                    Upgrade Now
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Chat Messages */}
             <div className="flex-1 p-6 overflow-y-auto bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20">
@@ -407,4 +502,60 @@ export function CRMInboxView() {
       </div>
     </div>
   );
+}
+
+// Utility functions
+function getStatusColor(status: string) {
+  switch (status) {
+    case 'new':
+      return 'bg-blue-100 text-blue-800 border-blue-200';
+    case 'active':
+      return 'bg-green-100 text-green-800 border-green-200';
+    case 'awaitingReply':
+      return 'bg-orange-100 text-orange-800 border-orange-200';
+    case 'responded':
+      return 'bg-purple-100 text-purple-800 border-purple-200';
+    case 'closed':
+      return 'bg-gray-100 text-gray-800 border-gray-200';
+    default:
+      return 'bg-gray-100 text-gray-800 border-gray-200';
+  }
+}
+
+function getStatusIcon(status: string) {
+  switch (status) {
+    case 'new':
+      return <Circle className="w-3 h-3" />;
+    case 'active':
+      return <MessageCircle className="w-3 h-3" />;
+    case 'awaitingReply':
+      return <Clock className="w-3 h-3" />;
+    case 'responded':
+      return <CheckCircle2 className="w-3 h-3" />;
+    case 'closed':
+      return <CheckCircle2 className="w-3 h-3" />;
+    default:
+      return <Circle className="w-3 h-3" />;
+  }
+}
+
+function getStatusLabel(status: string) {
+  switch (status) {
+    case 'new':
+      return 'New Lead';
+    case 'active':
+      return 'Active Chat';
+    case 'awaitingReply':
+      return 'Awaiting Reply';
+    case 'responded':
+      return 'Responded';
+    case 'closed':
+      return 'Closed';
+    default:
+      return status;
+  }
+}
+
+function handleSendMessage() {
+  // Implementation for sending message
 }
