@@ -75,25 +75,25 @@ export function CampaignManager({ onBack }: CampaignManagerProps) {
     switch (status.toLowerCase()) {
       case 'sent':
         return (
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 border-green-200">
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 border-green-200 whitespace-nowrap">
             {status}
           </Badge>
         );
       case 'in progress':
         return (
-          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-200">
+          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-200 whitespace-nowrap">
             {status}
           </Badge>
         );
       case 'draft':
         return (
-          <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100 border-gray-200">
+          <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100 border-gray-200 whitespace-nowrap">
             {status}
           </Badge>
         );
       default:
         return (
-          <Badge variant="outline">
+          <Badge variant="outline" className="whitespace-nowrap">
             {status}
           </Badge>
         );

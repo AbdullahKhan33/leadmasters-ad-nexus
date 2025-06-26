@@ -84,11 +84,11 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Completed":
-        return <Badge className="bg-green-100 text-green-700 hover:bg-green-200">Completed</Badge>;
+        return <Badge className="bg-green-100 text-green-700 hover:bg-green-200 whitespace-nowrap">Completed</Badge>;
       case "In Progress":
-        return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200">In Progress</Badge>;
+        return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 whitespace-nowrap">In Progress</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <Badge variant="secondary" className="whitespace-nowrap">{status}</Badge>;
     }
   };
 
