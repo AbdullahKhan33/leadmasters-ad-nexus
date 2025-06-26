@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -200,7 +199,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </div>
         </div>
 
-        {/* Message Delivery Trends Chart - Fixed container */}
+        {/* Message Delivery Trends Chart - Fixed overflow container */}
         <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
@@ -208,8 +207,8 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
               Message Delivery Trends
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="w-full h-64 min-h-0">
+          <CardContent className="p-6">
+            <div className="w-full h-80 overflow-hidden">
               <ChartContainer
                 config={{
                   delivered: {
@@ -217,10 +216,15 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
                     color: "#7C3AED",
                   },
                 }}
-                className="w-full h-full"
+                className="w-full h-full max-w-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <LineChart 
+                    data={chartData} 
+                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                    width={undefined}
+                    height={undefined}
+                  >
                     <XAxis 
                       dataKey="day" 
                       tick={{ fontSize: 12 }}
@@ -231,6 +235,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
                       tick={{ fontSize: 12 }}
                       axisLine={false}
                       tickLine={false}
+                      width={50}
                     />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Line 
