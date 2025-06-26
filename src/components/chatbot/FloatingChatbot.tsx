@@ -30,7 +30,7 @@ interface Message {
   type: 'user' | 'bot';
   content: string;
   timestamp: Date;
-  links?: { text: string; url: string; }[];
+  links?: { text: string; url: string; action?: () => void; }[];
 }
 
 interface SupportForm {
@@ -84,6 +84,8 @@ const FAQ_DATA = [
     links: [{ text: "Open Automations", url: "/?view=crm-automations" }]
   }
 ];
+
+const GREETING_KEYWORDS = ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening'];
 
 export function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -149,6 +151,21 @@ export function FloatingChatbot() {
     return null;
   }
 
+  const isGreeting = (query: string): boolean => {
+    const lowerQuery = query.toLowerCase().trim();
+    return GREETING_KEYWORDS.some(greeting => lowerQuery.includes(greeting));
+  };
+
+  const getGreetingResponse = (): string => {
+    const responses = [
+      "Hello! 👋 I'm your LeadMasters AI assistant. How can I help you today?",
+      "Hi there! 😊 Welcome to LeadMasters AI. What would you like to know?",
+      "Hey! 🌟 I'm here to help you with your LeadMasters questions. What's on your mind?",
+      "Hello! Great to see you here. How can I assist you with your LeadMasters experience?"
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
+  };
+
   const findFAQAnswer = (query: string): typeof FAQ_DATA[0] | null => {
     const lowerQuery = query.toLowerCase();
     return FAQ_DATA.find(faq => 
@@ -168,18 +185,42 @@ export function FloatingChatbot() {
 
     setMessages(prev => [...prev, userMessage]);
 
+    // Check for greetings first
+    const isGreetingMessage = isGreeting(inputValue);
+    
     // Find FAQ answer
     const faqMatch = findFAQAnswer(inputValue);
     
     setTimeout(() => {
+      let botContent: string;
+      let botLinks: Message['links'] = [];
+
+      if (isGreetingMessage) {
+        botContent = getGreetingResponse();
+      } else if (faqMatch) {
+        botContent = faqMatch.answer;
+        botLinks = faqMatch.links;
+      } else {
+        botContent = "I couldn't find a specific answer to your question. For personalized premium support, please contact our expert team at support@leadmasters.ai or create a support ticket below.";
+        botLinks = [
+          { 
+            text: "Create Support Ticket", 
+            url: "#", 
+            action: () => setShowSupportForm(true)
+          },
+          { 
+            text: "Email Support", 
+            url: "mailto:support@leadmasters.ai" 
+          }
+        ];
+      }
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        content: faqMatch 
-          ? faqMatch.answer 
-          : "I couldn't find a specific answer to your question. For personalized premium support, please contact our expert team at support@leadmasters.ai or use the escalation option below.",
+        content: botContent,
         timestamp: new Date(),
-        links: faqMatch?.links || [{ text: "Contact Premium Support", url: "mailto:support@leadmasters.ai" }]
+        links: botLinks
       };
       setMessages(prev => [...prev, botMessage]);
     }, 800);
@@ -236,6 +277,19 @@ export function FloatingChatbot() {
     const file = e.target.files?.[0];
     if (file) {
       setSupportForm(prev => ({ ...prev, file }));
+    }
+  };
+
+  const handleLinkClick = (link: Message['links'][0]) => {
+    if (link.action) {
+      link.action();
+    } else if (link.url.startsWith('#')) {
+      // Handle internal actions
+      return;
+    } else if (link.url.startsWith('mailto:')) {
+      window.location.href = link.url;
+    } else {
+      window.location.href = link.url;
     }
   };
 
@@ -442,16 +496,14 @@ export function FloatingChatbot() {
                             {message.links && message.links.length > 0 && (
                               <div className="mt-3 space-y-2">
                                 {message.links.map((link, index) => (
-                                  <a
+                                  <button
                                     key={index}
-                                    href={link.url}
-                                    className="inline-flex items-center gap-2 text-xs text-purple-600 hover:text-purple-700 underline underline-offset-2 font-medium transition-colors duration-200"
-                                    target={link.url.startsWith('http') ? '_blank' : '_self'}
-                                    rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                    onClick={() => handleLinkClick(link)}
+                                    className="inline-flex items-center gap-2 text-xs text-purple-600 hover:text-purple-700 underline underline-offset-2 font-medium transition-colors duration-200 cursor-pointer"
                                   >
                                     {link.text}
-                                    <ExternalLink className="w-3 h-3" />
-                                  </a>
+                                    {!link.action && <ExternalLink className="w-3 h-3" />}
+                                  </button>
                                 ))}
                               </div>
                             )}
