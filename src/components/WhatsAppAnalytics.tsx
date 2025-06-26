@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
 
 interface WhatsAppAnalyticsProps {
   onBack: () => void;
@@ -199,7 +199,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </div>
         </div>
 
-        {/* Message Delivery Trends Chart - Fixed overflow container */}
+        {/* Message Delivery Trends Chart - Fixed with BarChart */}
         <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
@@ -208,7 +208,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="w-full h-80 overflow-hidden">
+            <div className="w-full" style={{ height: '300px' }}>
               <ChartContainer
                 config={{
                   delivered: {
@@ -216,14 +216,12 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
                     color: "#7C3AED",
                   },
                 }}
-                className="w-full h-full max-w-full"
+                className="w-full h-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart 
+                  <BarChart 
                     data={chartData} 
-                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-                    width={undefined}
-                    height={undefined}
+                    margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
                   >
                     <XAxis 
                       dataKey="day" 
@@ -235,18 +233,15 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
                       tick={{ fontSize: 12 }}
                       axisLine={false}
                       tickLine={false}
-                      width={50}
+                      width={60}
                     />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Line 
-                      type="monotone" 
+                    <Bar 
                       dataKey="delivered" 
-                      stroke="#7C3AED" 
-                      strokeWidth={3}
-                      dot={{ fill: "#7C3AED", strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6, stroke: "#7C3AED", strokeWidth: 2 }}
+                      fill="#7C3AED" 
+                      radius={[4, 4, 0, 0]}
                     />
-                  </LineChart>
+                  </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </div>
