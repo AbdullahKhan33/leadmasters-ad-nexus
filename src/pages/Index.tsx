@@ -12,6 +12,7 @@ import { Schedule } from "@/components/Schedule";
 import { Workspaces } from "@/components/Workspaces";
 import { WorkspaceSettings } from "@/components/WorkspaceSettings";
 import { UserSettings } from "@/components/UserSettings";
+import { Support } from "@/components/Support";
 import { CRM } from "@/components/CRM";
 import { Agents } from "@/components/Agents";
 import { InsightsSummary } from "@/components/InsightsSummary";
@@ -30,7 +31,7 @@ import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
@@ -157,6 +158,11 @@ function IndexContent() {
     console.log("Premium upgrade successful");
   };
 
+  const handleSupportClick = () => {
+    console.log('Support clicked');
+    setCurrentView('support');
+  };
+
   console.log('Current view:', currentView);
 
   return (
@@ -210,7 +216,9 @@ function IndexContent() {
             ) : currentView === 'workspace-settings' ? (
               <WorkspaceSettings onBackClick={handleBackToWorkspaces} />
             ) : currentView === 'user-settings' ? (
-              <UserSettings />
+              <UserSettings onSupportClick={handleSupportClick} />
+            ) : currentView === 'support' ? (
+              <Support />
             ) : currentView === 'dashboard' ? (
               <Dashboard />
             ) : currentView === 'social-logins' ? (

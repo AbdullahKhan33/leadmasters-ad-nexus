@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,12 +21,17 @@ import {
   Sparkles,
   Crown,
   Lock,
-  MessageCircle
+  MessageCircle,
+  Ticket
 } from "lucide-react";
 import { usePremium } from "@/contexts/PremiumContext";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 
-export function UserSettings() {
+interface UserSettingsProps {
+  onSupportClick?: () => void;
+}
+
+export function UserSettings({ onSupportClick }: UserSettingsProps) {
   const [notifications, setNotifications] = useState(true);
   const [twoFactorAuth, setTwoFactorAuth] = useState(false);
   const [name, setName] = useState("John Doe");
@@ -65,6 +71,32 @@ export function UserSettings() {
           </h1>
           <p className="text-gray-600">Manage your account preferences and security settings</p>
         </div>
+
+        {/* Support Navigation */}
+        {onSupportClick && (
+          <Card className="border border-purple-200 shadow-sm hover:shadow-md transition-all duration-300 bg-gradient-to-r from-purple-50/50 to-pink-50/50">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 flex items-center justify-center">
+                    <Ticket className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Need Help?</h3>
+                    <p className="text-sm text-gray-600">Create a support ticket or browse our help resources</p>
+                  </div>
+                </div>
+                <Button
+                  onClick={onSupportClick}
+                  className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
+                >
+                  <Ticket className="w-4 h-4 mr-2" />
+                  Go to Support
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Profile Settings */}
         <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 bg-white">
