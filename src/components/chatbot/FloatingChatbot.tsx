@@ -75,8 +75,15 @@ export function FloatingChatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(true);
 
   useEffect(() => {
+    // Check if chatbot is disabled
+    const chatbotDisabled = localStorage.getItem('chatbot-disabled') === 'true';
+    setIsEnabled(!chatbotDisabled);
+
+    if (chatbotDisabled) return;
+
     // Show tooltip on first visit
     const hasSeenTooltip = localStorage.getItem('chatbot-tooltip-seen');
     if (!hasSeenTooltip) {
@@ -100,6 +107,24 @@ export function FloatingChatbot() {
       setMessages([welcomeMessage]);
     }
   }, [isOpen, messages.length]);
+
+  // Add function to disable chatbot (can be called from console or other components)
+  useEffect(() => {
+    (window as any).disableChatbot = () => {
+      localStorage.setItem('chatbot-disabled', 'true');
+      setIsEnabled(false);
+      setIsOpen(false);
+    };
+    
+    (window as any).enableChatbot = () => {
+      localStorage.setItem('chatbot-disabled', 'false');
+      setIsEnabled(true);
+    };
+  }, []);
+
+  if (!isEnabled) {
+    return null;
+  }
 
   const findFAQAnswer = (query: string): typeof FAQ_DATA[0] | null => {
     const lowerQuery = query.toLowerCase();
@@ -146,10 +171,10 @@ export function FloatingChatbot() {
   };
 
   const quickActions = [
-    { label: "Connect WhatsApp", action: () => window.location.href = "/?view=social-logins", gradient: "from-green-500 to-emerald-500" },
-    { label: "Create Post", action: () => window.location.href = "/post-builder", gradient: "from-blue-500 to-indigo-500" },
-    { label: "View CRM", action: () => window.location.href = "/?view=crm", gradient: "from-purple-500 to-pink-500" },
-    { label: "Upgrade Plan", action: () => window.location.href = "/?view=user-settings", gradient: "from-orange-500 to-red-500" }
+    { label: "Connect WhatsApp", action: () => window.location.href = "/?view=social-logins" },
+    { label: "Create Post", action: () => window.location.href = "/post-builder" },
+    { label: "View CRM", action: () => window.location.href = "/?view=crm" },
+    { label: "Upgrade Plan", action: () => window.location.href = "/?view=user-settings" }
   ];
 
   return (
@@ -220,11 +245,11 @@ export function FloatingChatbot() {
             </CardHeader>
 
             <CardContent className="flex-1 flex flex-col p-6 space-y-6 relative z-10">
-              {/* Premium Quick Actions */}
+              {/* Pale Quick Actions */}
               {messages.length <= 1 && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-purple-600" />
+                    <Sparkles className="w-4 h-4 text-gray-600" />
                     <p className="text-sm text-gray-700 font-semibold">Quick Actions</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -234,9 +259,9 @@ export function FloatingChatbot() {
                         variant="outline"
                         size="sm"
                         onClick={action.action}
-                        className={`text-xs h-12 flex flex-col items-center justify-center gap-1 border-2 hover:shadow-lg transition-all duration-300 bg-gradient-to-r hover:text-white hover:border-transparent ${action.gradient} hover:from-current hover:to-current`}
+                        className="text-xs h-12 flex flex-col items-center justify-center gap-1 border-2 border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 transition-all duration-300 text-gray-700"
                       >
-                        <span className="font-semibold">{action.label}</span>
+                        <span className="font-medium">{action.label}</span>
                       </Button>
                     ))}
                   </div>
