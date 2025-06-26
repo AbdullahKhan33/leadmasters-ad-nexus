@@ -11,6 +11,8 @@ import {
   FileText,
   Users
 } from "lucide-react";
+import { useState } from "react";
+import { ConfirmationModal } from "./services/ConfirmationModal";
 
 interface GrowthPackageProps {
   title: string;
@@ -21,6 +23,7 @@ interface GrowthPackageProps {
   buttonVariant?: "default" | "success" | "primary";
   savings?: string;
   mostPopular?: boolean;
+  onButtonClick: () => void;
 }
 
 function GrowthPackageCard({ 
@@ -31,7 +34,8 @@ function GrowthPackageCard({
   buttonText, 
   buttonVariant = "default",
   savings,
-  mostPopular = false
+  mostPopular = false,
+  onButtonClick
 }: GrowthPackageProps) {
   const getButtonStyles = () => {
     switch (buttonVariant) {
@@ -89,6 +93,7 @@ function GrowthPackageCard({
         </div>
         
         <Button 
+          onClick={onButtonClick}
           className={`w-full py-3 h-10 text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-xl ${getButtonStyles()}`}
         >
           {buttonText}
@@ -102,9 +107,10 @@ interface OneOffServiceProps {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   price: string;
+  onButtonClick: () => void;
 }
 
-function OneOffServiceCard({ icon: Icon, title, price }: OneOffServiceProps) {
+function OneOffServiceCard({ icon: Icon, title, price, onButtonClick }: OneOffServiceProps) {
   return (
     <Card className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
       <CardContent className="p-4 text-center">
@@ -114,6 +120,7 @@ function OneOffServiceCard({ icon: Icon, title, price }: OneOffServiceProps) {
         <h4 className="font-semibold text-gray-900 mb-1 text-sm">{title}</h4>
         <p className="text-lg font-bold text-purple-600 mb-3">{price}</p>
         <Button 
+          onClick={onButtonClick}
           variant="outline" 
           className="w-full border-purple-200 text-purple-600 hover:bg-purple-50 h-8 text-xs"
         >
@@ -125,6 +132,44 @@ function OneOffServiceCard({ icon: Icon, title, price }: OneOffServiceProps) {
 }
 
 export function Services() {
+  const [confirmationModal, setConfirmationModal] = useState<{
+    isOpen: boolean;
+    type: "package" | "service" | "contact";
+    title: string;
+    price?: string;
+  }>({
+    isOpen: false,
+    type: "package",
+    title: "",
+    price: ""
+  });
+
+  const handlePackageClick = (title: string, price: string) => {
+    setConfirmationModal({
+      isOpen: true,
+      type: "package",
+      title,
+      price
+    });
+  };
+
+  const handleServiceClick = (title: string, price: string) => {
+    setConfirmationModal({
+      isOpen: true,
+      type: "service",
+      title,
+      price
+    });
+  };
+
+  const handleContactClick = () => {
+    setConfirmationModal({
+      isOpen: true,
+      type: "contact",
+      title: "Custom Solution Inquiry"
+    });
+  };
+
   const growthPackages = [
     {
       title: "Business Launch Package",
@@ -219,6 +264,7 @@ export function Services() {
                 buttonVariant={pkg.buttonVariant}
                 savings={pkg.savings}
                 mostPopular={pkg.mostPopular}
+                onButtonClick={() => handlePackageClick(pkg.title, pkg.price)}
               />
             ))}
           </div>
@@ -238,6 +284,7 @@ export function Services() {
                 icon={service.icon}
                 title={service.title}
                 price={service.price}
+                onButtonClick={() => handleServiceClick(service.title, service.price)}
               />
             ))}
           </div>
@@ -251,6 +298,7 @@ export function Services() {
               Don't see exactly what you need? Contact our team to discuss custom packages tailored to your business requirements.
             </p>
             <Button 
+              onClick={handleContactClick}
               variant="outline" 
               className="border-purple-200 text-purple-600 hover:bg-purple-50 transition-colors duration-200 h-8 text-xs"
             >
@@ -259,6 +307,14 @@ export function Services() {
           </CardContent>
         </Card>
       </div>
+
+      <ConfirmationModal
+        isOpen={confirmationModal.isOpen}
+        onClose={() => setConfirmationModal({ isOpen: false, type: "package", title: "", price: "" })}
+        type={confirmationModal.type}
+        title={confirmationModal.title}
+        price={confirmationModal.price}
+      />
     </div>
   );
 }
