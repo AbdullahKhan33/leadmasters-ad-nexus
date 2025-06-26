@@ -169,83 +169,88 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
             </Card>
           </div>
 
-          {/* Message Delivery Trends Chart */}
+          {/* Analytics Overview - Now without the chart */}
           <div>
             <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-purple-600" />
-                  Delivery Trends
-                </CardTitle>
+                <CardTitle className="text-xl font-semibold text-gray-900">Analytics Overview</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="h-64">
-                  <ChartContainer
-                    config={{
-                      delivered: {
-                        label: "Messages Delivered",
-                        color: "#7C3AED",
-                      },
-                    }}
-                  >
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartData}>
-                        <XAxis 
-                          dataKey="day" 
-                          tick={{ fontSize: 12 }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <YAxis 
-                          tick={{ fontSize: 12 }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <Line 
-                          type="monotone" 
-                          dataKey="delivered" 
-                          stroke="#7C3AED" 
-                          strokeWidth={3}
-                          dot={{ fill: "#7C3AED", strokeWidth: 2, r: 4 }}
-                          activeDot={{ r: 6, stroke: "#7C3AED", strokeWidth: 2 }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </div>
-                <div className="pt-4 border-t border-gray-100 mt-4">
-                  <p className="text-sm text-gray-600">
-                    Weekly message delivery performance shows consistent engagement with peak activity on Friday.
-                  </p>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-6 text-center">
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-medium text-gray-600">Total Campaigns</h3>
+                    <p className="text-2xl font-bold text-gray-900">24</p>
+                    <p className="text-xs text-green-600">+3 this month</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-medium text-gray-600">Average Delivery Rate</h3>
+                    <p className="text-2xl font-bold text-gray-900">94.8%</p>
+                    <p className="text-xs text-green-600">+1.2% from last month</p>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-medium text-gray-600">Best Performing Time</h3>
+                    <p className="text-2xl font-bold text-gray-900">2-4 PM</p>
+                    <p className="text-xs text-gray-500">Peak engagement window</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
 
-        {/* Summary Stats */}
+        {/* Message Delivery Trends Chart - Now standalone */}
         <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-600">Total Campaigns</h3>
-                <p className="text-2xl font-bold text-gray-900">24</p>
-                <p className="text-xs text-green-600">+3 this month</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-600">Average Delivery Rate</h3>
-                <p className="text-2xl font-bold text-gray-900">94.8%</p>
-                <p className="text-xs text-green-600">+1.2% from last month</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-gray-600">Best Performing Time</h3>
-                <p className="text-2xl font-bold text-gray-900">2-4 PM</p>
-                <p className="text-xs text-gray-500">Peak engagement window</p>
-              </div>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-purple-600" />
+              Message Delivery Trends
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64">
+              <ChartContainer
+                config={{
+                  delivered: {
+                    label: "Messages Delivered",
+                    color: "#7C3AED",
+                  },
+                }}
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData}>
+                    <XAxis 
+                      dataKey="day" 
+                      tick={{ fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Line 
+                      type="monotone" 
+                      dataKey="delivered" 
+                      stroke="#7C3AED" 
+                      strokeWidth={3}
+                      dot={{ fill: "#7C3AED", strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: "#7C3AED", strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+            <div className="pt-4 border-t border-gray-100 mt-4">
+              <p className="text-sm text-gray-600">
+                Weekly message delivery performance shows consistent engagement with peak activity on Friday.
+              </p>
             </div>
           </CardContent>
         </Card>
+
+        {/* Summary Stats - Removed as it's now in Analytics Overview */}
       </div>
     </div>
   );
