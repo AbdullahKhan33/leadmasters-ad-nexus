@@ -86,13 +86,13 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'new':
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">New</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800 border-blue-200 whitespace-nowrap">New</Badge>;
       case 'active':
-        return <Badge className="bg-green-100 text-green-800 border-green-200">Active</Badge>;
+        return <Badge className="bg-green-100 text-green-800 border-green-200 whitespace-nowrap">Active</Badge>;
       case 'awaiting reply':
-        return <Badge className="bg-orange-100 text-orange-800 border-orange-200">Awaiting Reply</Badge>;
+        return <Badge className="bg-orange-100 text-orange-800 border-orange-200 whitespace-nowrap">Awaiting Reply</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline" className="whitespace-nowrap">{status}</Badge>;
     }
   };
 
@@ -150,119 +150,129 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
         {/* Table */}
         <Card className="border border-gray-200 shadow-sm bg-white">
           <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Lead</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Source</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Last Message</TableHead>
-                  <TableHead className="flex items-center space-x-2">
-                    <span>AI Score</span>
-                    {!canShowAIScore && <Lock className="w-3 h-3 text-gray-400" />}
-                  </TableHead>
-                  <TableHead className="flex items-center space-x-2">
-                    <span>AI Next Action</span>
-                    {!canShowAIActions && <Lock className="w-3 h-3 text-gray-400" />}
-                  </TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockLeads.map((lead) => (
-                  <TableRow key={lead.id} className="hover:bg-gray-50">
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 text-xs">
-                            {lead.name.split(' ').map(n => n[0]).join('')}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium text-gray-900">{lead.name}</p>
-                          <p className="text-sm text-gray-500">{lead.timestamp}</p>
-                        </div>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="min-w-[200px]">Lead</TableHead>
+                    <TableHead className="min-w-[140px]">Contact</TableHead>
+                    <TableHead className="min-w-[100px]">Source</TableHead>
+                    <TableHead className="min-w-[120px]">Status</TableHead>
+                    <TableHead className="min-w-[200px]">Last Message</TableHead>
+                    <TableHead className="min-w-[140px]">
+                      <div className="flex items-center space-x-2">
+                        <span className="whitespace-nowrap">AI Score</span>
+                        {!canShowAIScore && <Lock className="w-3 h-3 text-gray-400 flex-shrink-0" />}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="text-sm font-medium">{lead.phone}</p>
-                        <p className="text-xs text-gray-500">{lead.source}</p>
+                    </TableHead>
+                    <TableHead className="min-w-[200px]">
+                      <div className="flex items-center space-x-2">
+                        <span className="whitespace-nowrap">AI Next Action</span>
+                        {!canShowAIActions && <Lock className="w-3 h-3 text-gray-400 flex-shrink-0" />}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-xs">
-                        {lead.source}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {getStatusBadge(lead.status)}
-                    </TableCell>
-                    <TableCell>
-                      <p className="text-sm text-gray-900 max-w-xs truncate">{lead.lastMessage}</p>
-                    </TableCell>
-                    <TableCell>
-                      {canShowAIScore ? (
-                        <div className="flex items-center space-x-2">
-                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getScoreColor(lead.aiScore!)}`}>
-                            {lead.aiScore}%
-                          </div>
-                          <PremiumBadge>AI Score</PremiumBadge>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          <div className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-400">
-                            --
-                          </div>
-                          <Button
-                            onClick={() => onUpgradeClick("AI Lead Scoring")}
-                            size="sm"
-                            variant="ghost"
-                            className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto"
-                          >
-                            Upgrade to unlock
-                          </Button>
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {canShowAIActions ? (
-                        <div className="max-w-xs">
-                          <p className="text-sm text-gray-900 mb-1">{lead.aiNextAction}</p>
-                          <PremiumBadge>AI Suggested</PremiumBadge>
-                        </div>
-                      ) : (
-                        <div className="max-w-xs">
-                          <p className="text-sm text-gray-400 mb-1">Premium Only — Upgrade to unlock</p>
-                          <Button
-                            onClick={() => onUpgradeClick("AI Next Actions")}
-                            size="sm"
-                            variant="ghost"
-                            className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto"
-                          >
-                            Upgrade
-                          </Button>
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-1">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MessageSquare className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <Phone className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
+                    </TableHead>
+                    <TableHead className="min-w-[120px]">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {mockLeads.map((lead) => (
+                    <TableRow key={lead.id} className="hover:bg-gray-50/50">
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="w-8 h-8 flex-shrink-0">
+                            <AvatarFallback className="bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 text-xs">
+                              {lead.name.split(' ').map(n => n[0]).join('')}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0">
+                            <p className="font-medium text-gray-900 truncate">{lead.name}</p>
+                            <p className="text-sm text-gray-500 truncate">{lead.timestamp}</p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium truncate">{lead.phone}</p>
+                          <p className="text-xs text-gray-500 truncate">{lead.source}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="text-xs whitespace-nowrap">
+                          {lead.source}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {getStatusBadge(lead.status)}
+                      </TableCell>
+                      <TableCell>
+                        <p className="text-sm text-gray-900 truncate max-w-[200px]" title={lead.lastMessage}>
+                          {lead.lastMessage}
+                        </p>
+                      </TableCell>
+                      <TableCell>
+                        {canShowAIScore ? (
+                          <div className="flex items-center space-x-2">
+                            <div className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getScoreColor(lead.aiScore!)}`}>
+                              {lead.aiScore}%
+                            </div>
+                            <PremiumBadge className="flex-shrink-0">AI Score</PremiumBadge>
+                          </div>
+                        ) : (
+                          <div className="flex items-center space-x-2">
+                            <div className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-400 whitespace-nowrap">
+                              --
+                            </div>
+                            <Button
+                              onClick={() => onUpgradeClick("AI Lead Scoring")}
+                              size="sm"
+                              variant="ghost"
+                              className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
+                            >
+                              Upgrade to unlock
+                            </Button>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {canShowAIActions ? (
+                          <div className="min-w-0">
+                            <p className="text-sm text-gray-900 mb-1 truncate max-w-[200px]" title={lead.aiNextAction}>
+                              {lead.aiNextAction}
+                            </p>
+                            <PremiumBadge className="flex-shrink-0">AI Suggested</PremiumBadge>
+                          </div>
+                        ) : (
+                          <div className="min-w-0">
+                            <p className="text-sm text-gray-400 mb-1 whitespace-nowrap">Premium Only</p>
+                            <Button
+                              onClick={() => onUpgradeClick("AI Next Actions")}
+                              size="sm"
+                              variant="ghost"
+                              className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
+                            >
+                              Upgrade
+                            </Button>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-1">
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                            <MessageSquare className="w-4 h-4" />
+                          </Button>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                            <Phone className="w-4 h-4" />
+                          </Button>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
