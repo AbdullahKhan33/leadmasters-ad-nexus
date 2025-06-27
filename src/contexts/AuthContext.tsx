@@ -29,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const parsed = JSON.parse(authData);
           setIsAuthenticated(true);
           setUser(parsed.user);
+          console.log('User already authenticated:', parsed.user);
         }
       } catch (error) {
         console.error('Error checking auth:', error);
@@ -72,8 +73,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const showLogin = () => {
+    console.log('showLogin called - current state:', { isAuthenticated, isLoginVisible });
     setIsLoginVisible(true);
+    console.log('showLogin - setting isLoginVisible to true');
   };
+
+  // Debug effect to monitor state changes
+  useEffect(() => {
+    console.log('Auth state changed:', { isAuthenticated, isLoginVisible });
+  }, [isAuthenticated, isLoginVisible]);
 
   return (
     <AuthContext.Provider value={{ 
@@ -86,11 +94,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoginVisible 
     }}>
       {children}
-      {isLoginVisible && !isAuthenticated && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      {/* Always show modal when isLoginVisible is true, regardless of auth status for debugging */}
+      {isLoginVisible && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
           <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full">
             <button 
-              onClick={() => setIsLoginVisible(false)}
+              onClick={() => {
+                console.log('Close button clicked');
+                setIsLoginVisible(false);
+              }}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors text-2xl font-bold z-10"
             >
               ✕
