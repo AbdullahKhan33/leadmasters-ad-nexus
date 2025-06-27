@@ -7,14 +7,9 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading, isLoggingOut } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  console.log('ProtectedRoute - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading, 'isLoggingOut:', isLoggingOut);
-
-  // Don't render anything while logging out to allow redirect
-  if (isLoggingOut) {
-    return null;
-  }
+  console.log('ProtectedRoute - isAuthenticated:', isAuthenticated, 'isLoading:', isLoading);
 
   if (isLoading) {
     return (

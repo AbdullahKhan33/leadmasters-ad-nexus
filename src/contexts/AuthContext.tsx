@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -8,7 +8,6 @@ interface AuthContextType {
   logout: () => void;
   showLogin: () => void;
   isLoading: boolean;
-  isLoggingOut: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,7 +16,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<{ username: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const login = async (username: string, password: string): Promise<boolean> => {
     console.log('Attempting login with:', username);
@@ -33,13 +31,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('Logging out...');
-    setIsLoggingOut(true);
-    setUser(null);
-    setIsAuthenticated(false);
-    
-    // Use window.location.replace for immediate redirect
-    window.location.replace('/');
+    console.log('Logging out - immediate redirect to home');
+    // Immediately redirect without any state updates
+    window.location.href = '/';
   };
 
   const showLogin = () => {
@@ -53,8 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login, 
       logout, 
       showLogin,
-      isLoading,
-      isLoggingOut
+      isLoading
     }}>
       {children}
     </AuthContext.Provider>
