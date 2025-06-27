@@ -5,19 +5,8 @@ import { Logo } from '@/components/ui/logo';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
-// Safe hook that doesn't throw when AuthContext is not available
-function useSafeAuth() {
-  try {
-    const { useAuth } = require('@/contexts/AuthContext');
-    return useAuth();
-  } catch {
-    return { isAuthenticated: false };
-  }
-}
-
 export function PublicHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isAuthenticated } = useSafeAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,12 +34,8 @@ export function PublicHeader() {
   };
 
   const handleLogin = () => {
-    console.log('Login button clicked in header');
-    if (isAuthenticated) {
-      navigate('/app');
-    } else {
-      navigate('/login');
-    }
+    console.log('Login button clicked in header - navigating to /login');
+    navigate('/login');
   };
 
   const isActivePath = (path: string) => {
@@ -112,7 +97,7 @@ export function PublicHeader() {
               onClick={handleLogin}
               className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
             >
-              {isAuthenticated ? 'Dashboard' : 'Sign In'}
+              Sign In
             </Button>
           </div>
         </div>
@@ -140,7 +125,7 @@ export function PublicHeader() {
                   onClick={handleLogin}
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
                 >
-                  {isAuthenticated ? 'Dashboard' : 'Sign In'}
+                  Sign In
                 </Button>
               </div>
             </div>

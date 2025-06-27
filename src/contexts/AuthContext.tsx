@@ -31,9 +31,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('Logging out - immediate redirect to home');
-    // Immediately redirect without any state updates
-    window.location.href = '/';
+    console.log('Logging out - clearing state and redirecting to home');
+    // Clear state first
+    setIsAuthenticated(false);
+    setUser(null);
+    
+    // Small delay to ensure state is cleared before redirect
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 100);
   };
 
   const showLogin = () => {

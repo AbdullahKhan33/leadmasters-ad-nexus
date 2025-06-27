@@ -20,8 +20,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   if (!isAuthenticated) {
+    console.log('Not authenticated, showing login screen');
     return <LoginScreen />;
   }
 
+  console.log('Authenticated, showing protected content');
   return <>{children}</>;
 }
