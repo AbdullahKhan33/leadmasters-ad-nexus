@@ -2,6 +2,8 @@
 import React from 'react';
 import { PublicHeader } from './public/PublicHeader';
 import { HeroSection } from './public/HeroSection';
+import { FeaturesSection } from './public/FeaturesSection';
+import { SocialProofSection } from './public/SocialProofSection';
 import { AboutSection } from './public/AboutSection';
 import { BlogSection } from './public/BlogSection';
 import { PricingSection } from './public/PricingSection';
@@ -14,6 +16,8 @@ export function PublicWebsite() {
       <PublicHeader />
       <main>
         <HeroSection />
+        <FeaturesSection />
+        <SocialProofSection />
         <AboutSection />
         <BlogSection />
         <PricingSection />
