@@ -31,15 +31,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('Logging out - clearing state and redirecting to home');
-    // Clear state first
+    console.log('Logging out - redirecting to home page');
     setIsAuthenticated(false);
     setUser(null);
-    
-    // Small delay to ensure state is cleared before redirect
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 100);
+    // Use replace to avoid back button issues
+    window.location.replace('/');
   };
 
   const showLogin = () => {
