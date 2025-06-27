@@ -8,6 +8,7 @@ interface AuthContextType {
   logout: () => void;
   showLogin: () => void;
   isLoading: boolean;
+  isLoggingOut: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,6 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<{ username: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const login = async (username: string, password: string): Promise<boolean> => {
     console.log('Attempting login with:', username);
@@ -32,13 +34,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     console.log('Logging out...');
+    setIsLoggingOut(true);
     setUser(null);
     setIsAuthenticated(false);
     
-    // Clear any auth state and redirect to home
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 0);
+    // Use window.location.replace for immediate redirect
+    window.location.replace('/');
   };
 
   const showLogin = () => {
@@ -52,7 +53,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login, 
       logout, 
       showLogin,
-      isLoading
+      isLoading,
+      isLoggingOut
     }}>
       {children}
     </AuthContext.Provider>
