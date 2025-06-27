@@ -37,9 +37,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     console.log('Logging out...');
+    // Clear localStorage first
     localStorage.removeItem('leadmasters_auth');
+    // Then update state synchronously
     setUser(null);
     setIsAuthenticated(false);
+    console.log('Logout completed');
   };
 
   return (
