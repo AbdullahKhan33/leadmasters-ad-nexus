@@ -62,18 +62,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     console.log('Logging out...');
     
-    // Clear all authentication data immediately
-    localStorage.removeItem('leadmasters_auth');
-    localStorage.clear(); // Clear all localStorage to be safe
+    // Clear ALL possible storage
+    localStorage.clear();
+    sessionStorage.clear();
     
-    // Clear auth state immediately
+    // Clear auth state
     setUser(null);
     setIsAuthenticated(false);
     
-    console.log('Auth data cleared, forcing complete page reload');
+    console.log('Auth data cleared, navigating to home');
     
-    // Force a complete page reload to reset all application state
-    window.location.replace('/');
+    // Use a more direct approach - navigate to the root domain
+    window.location.assign(window.location.origin);
   };
 
   const showLogin = () => {
