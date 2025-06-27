@@ -8,7 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import Index from "./pages/Index";
-import PostBuilderPage from "./pages/PostBuilderPage";
+import { PostBuilderPage } from "./pages/PostBuilderPage";
 import NotFound from "./pages/NotFound";
 import { PublicWebsite } from "./components/PublicWebsite";
 import { AboutUsPage } from "./components/public/AboutUsPage";
@@ -39,7 +39,7 @@ function App() {
                   <Route path="/blog/:slug" element={<BlogPostPage />} />
                   <Route path="/terms-and-conditions" element={<LegalPage type="terms" />} />
                   <Route path="/privacy-policy" element={<LegalPage type="privacy" />} />
-                  <Route path="/cancellation" element={<LegalPage type="cancellation" />} />
+                  <Route path="/cancellation" element={<LegalPage type="refund" />} />
                   <Route path="/app" element={<Index />} />
                   <Route path="/app/post-builder" element={<PostBuilderPage />} />
                   <Route path="*" element={<NotFound />} />
