@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -313,9 +312,9 @@ function PublicRoutes() {
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/contact" element={<ContactPage />} />
-      <Route path="/terms" element={<LegalPage type="terms" />} />
+      <Route path="/terms-and-conditions" element={<LegalPage type="terms" />} />
       <Route path="/privacy-policy" element={<LegalPage type="privacy" />} />
-      <Route path="/refund-policy" element={<LegalPage type="refund" />} />
+      <Route path="/cancellation" element={<LegalPage type="refund" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

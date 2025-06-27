@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Logo } from '@/components/ui/logo';
 import { Separator } from '@/components/ui/separator';
@@ -9,32 +8,41 @@ export function PublicFooter() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    scrollToTop();
+  };
+
   const footerSections = {
     product: {
       title: "Product",
       links: [
-        { name: "Features", action: () => navigate('/') },
-        { name: "Pricing", action: () => navigate('/pricing') },
-        { name: "Templates", action: () => navigate('/') }
+        { name: "Features", action: () => handleNavigation('/') },
+        { name: "Pricing", action: () => handleNavigation('/pricing') },
+        { name: "Templates", action: () => handleNavigation('/') }
       ]
     },
     company: {
       title: "Company",
       links: [
-        { name: "About Us", action: () => navigate('/about-us') },
-        { name: "Blog", action: () => navigate('/blog') },
-        { name: "Careers", action: () => navigate('/') },
-        { name: "Support", action: () => navigate('/contact') },
-        { name: "Help Center", action: () => navigate('/contact') },
-        { name: "Contact Us", action: () => navigate('/contact') }
+        { name: "About Us", action: () => handleNavigation('/about-us') },
+        { name: "Blog", action: () => handleNavigation('/blog') },
+        { name: "Careers", action: () => handleNavigation('/') },
+        { name: "Support", action: () => handleNavigation('/contact') },
+        { name: "Help Center", action: () => handleNavigation('/contact') },
+        { name: "Contact Us", action: () => handleNavigation('/contact') }
       ]
     },
     legal: {
       title: "Legal",
       links: [
-        { name: "Terms of Service", action: () => navigate('/terms') },
-        { name: "Privacy Policy", action: () => navigate('/privacy-policy') },
-        { name: "Cancellation & Refund Policy", action: () => navigate('/refund-policy') }
+        { name: "Terms of Service", action: () => handleNavigation('/terms-and-conditions') },
+        { name: "Privacy Policy", action: () => handleNavigation('/privacy-policy') },
+        { name: "Cancellation & Refund Policy", action: () => handleNavigation('/cancellation') }
       ]
     }
   };
