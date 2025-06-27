@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     console.log('Logging out...');
     
-    // Clear localStorage FIRST
+    // Clear localStorage FIRST and SYNCHRONOUSLY
     localStorage.removeItem('leadmasters_auth');
     
     // Clear auth state
@@ -72,8 +72,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     console.log('Auth data cleared, redirecting to home page');
     
-    // Navigate to root and force reload to ensure clean state
-    window.location.href = '/';
+    // Use setTimeout to ensure state updates are processed before redirect
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 50);
   };
 
   const showLogin = () => {
