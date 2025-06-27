@@ -1,11 +1,13 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: { username: string } | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+  showLogin: () => void;
   isLoading: boolean;
 }
 
@@ -61,7 +63,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('leadmasters_auth');
     setUser(null);
     setIsAuthenticated(false);
-    console.log('Logout completed');
+    console.log('Logout completed, redirecting to parent site');
+    // Redirect to parent site (home page)
+    window.location.href = '/';
+  };
+
+  const showLogin = () => {
+    window.location.href = '/login';
   };
 
   return (
@@ -70,6 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user, 
       login, 
       logout, 
+      showLogin,
       isLoading
     }}>
       {children}

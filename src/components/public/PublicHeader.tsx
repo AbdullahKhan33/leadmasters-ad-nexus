@@ -4,15 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Zap, MessageCircle, BarChart3 } from 'lucide-react';
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+import { Menu, X } from 'lucide-react';
 
 export function PublicHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -22,31 +14,11 @@ export function PublicHeader() {
 
   const navigationItems = [
     { name: 'Home', path: '/' },
+    { name: 'Features', path: '#features' },
     { name: 'About', path: '/about-us' },
     { name: 'Blog', path: '/blog' },
     { name: 'Pricing', path: '/pricing' },
     { name: 'Contact', path: '/contact' }
-  ];
-
-  const features = [
-    {
-      title: "AI Ad Builder",
-      description: "Create high-converting ads in minutes",
-      icon: Zap,
-      href: "#features"
-    },
-    {
-      title: "WhatsApp Marketing",
-      description: "Automate customer engagement",
-      icon: MessageCircle,
-      href: "#features"
-    },
-    {
-      title: "Smart Analytics",
-      description: "Track performance with AI insights",
-      icon: BarChart3,
-      href: "#features"
-    }
   ];
 
   const handleNavigation = (path: string) => {
@@ -93,62 +65,21 @@ export function PublicHeader() {
           </div>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden lg:flex">
-            <NavigationMenuList className="space-x-2">
-              <NavigationMenuItem>
-                <button
-                  onClick={() => handleNavigation('/')}
-                  className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg ${
-                    isActivePath('/')
-                      ? 'text-purple-600 bg-purple-50' 
-                      : 'text-gray-700 hover:text-purple-600 hover:bg-gray-50'
-                  }`}
-                >
-                  Home
-                </button>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-gray-700 hover:text-purple-600 font-medium">
-                  Features
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="grid w-80 gap-3 p-4">
-                    {features.map((feature) => (
-                      <div
-                        key={feature.title}
-                        className="group grid h-auto w-full items-center justify-start gap-1 rounded-md p-4 text-sm font-medium hover:bg-gray-50 cursor-pointer"
-                        onClick={() => handleNavigation(feature.href)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <feature.icon className="h-5 w-5 text-purple-600" />
-                          <div>
-                            <div className="font-semibold text-gray-900">{feature.title}</div>
-                            <div className="text-gray-500">{feature.description}</div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {navigationItems.slice(1).map((item) => (
-                <NavigationMenuItem key={item.path}>
-                  <button
-                    onClick={() => handleNavigation(item.path)}
-                    className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg ${
-                      isActivePath(item.path)
-                        ? 'text-purple-600 bg-purple-50' 
-                        : 'text-gray-700 hover:text-purple-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {item.name}
-                  </button>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+          <div className="hidden lg:flex items-center space-x-2">
+            {navigationItems.map((item) => (
+              <button
+                key={item.path}
+                onClick={() => handleNavigation(item.path)}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg ${
+                  isActivePath(item.path)
+                    ? 'text-purple-600 bg-purple-50' 
+                    : 'text-gray-700 hover:text-purple-600 hover:bg-gray-50'
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden">
