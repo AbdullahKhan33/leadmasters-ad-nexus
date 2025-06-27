@@ -7,6 +7,8 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+  showLogin: () => void;
+  isLoginVisible: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,6 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<{ username: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoginVisible, setIsLoginVisible] = useState(false);
 
   const login = async (username: string, password: string): Promise<boolean> => {
     console.log('Attempting login with:', username);
@@ -28,6 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('leadmasters_auth', JSON.stringify(authData));
       setIsAuthenticated(true);
       setUser({ username });
+      setIsLoginVisible(false);
       console.log('Login successful');
       return true;
     }
@@ -42,11 +46,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Then update state synchronously
     setUser(null);
     setIsAuthenticated(false);
+    setIsLoginVisible(false);
     console.log('Logout completed');
   };
 
+  const showLogin = () => {
+    setIsLoginVisible(true);
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ 
+      isAuthenticated, 
+      user, 
+      login, 
+      logout, 
+      isLoading, 
+      showLogin, 
+      isLoginVisible 
+    }}>
       {children}
     </AuthContext.Provider>
   );

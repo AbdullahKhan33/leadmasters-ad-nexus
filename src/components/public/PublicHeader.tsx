@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function PublicHeader() {
   const [activeSection, setActiveSection] = useState('home');
+  const { showLogin } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -15,8 +17,7 @@ export function PublicHeader() {
   };
 
   const handleLogin = () => {
-    // This will trigger the login screen since user is not authenticated
-    window.location.reload();
+    showLogin();
   };
 
   return (
