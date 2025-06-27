@@ -2,9 +2,13 @@
 import React from 'react';
 import { ArrowRight, Calendar, User, Clock, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 export function BlogSection() {
+  const navigate = useNavigate();
+
   const featuredPost = {
+    id: 'generate-100-leads-30-days',
     title: "How to Generate 100 Leads in 30 Days (Without Spending a Fortune)",
     excerpt: "The exact step-by-step blueprint we use to help small businesses consistently generate qualified leads using AI-powered marketing strategies.",
     author: "LeadMasters Team",
@@ -16,6 +20,7 @@ export function BlogSection() {
 
   const blogPosts = [
     {
+      id: 'ai-tools-small-business-2024',
       title: "5 AI Tools Every Small Business Should Use in 2024",
       excerpt: "Discover the essential AI tools that are transforming how small businesses operate, compete, and grow in today's digital landscape.",
       author: "Marketing Team",
@@ -24,14 +29,16 @@ export function BlogSection() {
       category: "AI Tools"
     },
     {
+      id: 'whatsapp-marketing-secret-weapon',
       title: "WhatsApp Marketing: The Secret Weapon for Local Businesses",
       excerpt: "Learn how smart business owners are using WhatsApp to build relationships, nurture leads, and close more sales than ever before.",
       author: "Growth Team",
       date: "Dec 15, 2024",
       readTime: "7 min read",
-      category: "Marketing"
+      category: "WhatsApp Marketing"
     },
     {
+      id: 'startup-to-scale-journey',
       title: "From Startup to Scale: Our Product Development Journey",
       excerpt: "Take a behind-the-scenes look at how we built LeadMasters.ai from a simple idea into a powerful lead generation platform.",
       author: "Product Team",
@@ -40,14 +47,55 @@ export function BlogSection() {
       category: "Company"
     },
     {
+      id: 'roi-breakdown-customer-results',
       title: "ROI Breakdown: What Our Customers Really Achieve",
       excerpt: "Real numbers, real results. See exactly how our customers are measuring and maximizing their return on investment with AI marketing.",
       author: "Success Team",
       date: "Dec 10, 2024",
       readTime: "4 min read",
       category: "Case Studies"
+    },
+    {
+      id: 'facebook-ads-optimization-guide',
+      title: "Facebook Ads Optimization: 7 Tactics That Actually Work",
+      excerpt: "Stop wasting money on Facebook ads that don't convert. These proven optimization tactics will double your ROI in 30 days.",
+      author: "Advertising Team",
+      date: "Dec 8, 2024",
+      readTime: "9 min read",
+      category: "Marketing Automation"
+    },
+    {
+      id: 'crm-setup-small-business',
+      title: "CRM Setup for Small Businesses: Complete Guide",
+      excerpt: "Build a customer relationship management system that your team will actually use. Step-by-step implementation guide included.",
+      author: "CRM Team",
+      date: "Dec 5, 2024",
+      readTime: "11 min read",
+      category: "CRM"
+    },
+    {
+      id: 'small-business-website-essentials',
+      title: "Website Essentials: What Every Small Business Needs Online",
+      excerpt: "Your website is your digital storefront. Learn the essential elements that convert visitors into customers and boost your credibility.",
+      author: "Web Team",
+      date: "Dec 3, 2024",
+      readTime: "8 min read",
+      category: "Website"
+    },
+    {
+      id: 'marketing-automation-beginners',
+      title: "Marketing Automation for Beginners: Start Here",
+      excerpt: "Automate your marketing without the complexity. Simple workflows that save time and increase sales for small business owners.",
+      author: "Automation Team",
+      date: "Dec 1, 2024",
+      readTime: "6 min read",
+      category: "Marketing Automation"
     }
   ];
+
+  const handleBlogClick = (postId: string) => {
+    navigate(`/blog/${postId}`);
+  };
 
   return (
     <section id="blog" className="py-20 bg-gray-50">
@@ -67,7 +115,10 @@ export function BlogSection() {
 
         {/* Featured Post */}
         <div className="mb-16">
-          <div className="bg-gradient-to-r from-purple-600 to-pink-500 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden">
+          <div 
+            className="bg-gradient-to-r from-purple-600 to-pink-500 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden cursor-pointer hover:shadow-2xl transition-shadow duration-300"
+            onClick={() => handleBlogClick(featuredPost.id)}
+          >
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32" />
             <div className="relative z-10">
               <div className="flex items-center space-x-4 mb-6">
@@ -114,7 +165,11 @@ export function BlogSection() {
         {/* Regular Posts */}
         <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
           {blogPosts.map((post, index) => (
-            <article key={index} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
+            <article 
+              key={index} 
+              className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer"
+              onClick={() => handleBlogClick(post.id)}
+            >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">
@@ -175,7 +230,12 @@ export function BlogSection() {
         </div>
 
         <div className="text-center mt-12">
-          <Button variant="outline" size="lg" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="border-purple-200 text-purple-700 hover:bg-purple-50"
+            onClick={() => navigate('/blog')}
+          >
             View All Articles
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button>

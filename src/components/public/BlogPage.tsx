@@ -1,13 +1,18 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
 import { ArrowRight, Calendar, User, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 export function BlogPage() {
+  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState('All Posts');
+
   const featuredPosts = [
     {
+      id: 'ai-tools-small-business-2024',
       title: "10 AI Tools Every Small Business Should Use in 2024",
       excerpt: "Discover the essential AI tools that are transforming how small businesses operate, compete, and grow in today's digital marketplace.",
       author: "LeadMasters Team",
@@ -17,11 +22,12 @@ export function BlogPage() {
       featured: true
     },
     {
+      id: 'whatsapp-marketing-secret-weapon',
       title: "WhatsApp Marketing: The Complete Guide for Small Businesses",
       excerpt: "Learn how to leverage WhatsApp Business to connect with customers, automate responses, and drive sales for your small business.",
       author: "Marketing Team",
       date: "Dec 18, 2024",
-      readTime: "12 min read",
+      readTime: "12 min read",  
       category: "WhatsApp Marketing",
       featured: true
     }
@@ -29,6 +35,7 @@ export function BlogPage() {
 
   const recentPosts = [
     {
+      id: 'generate-100-leads-30-days',
       title: "5 Lead Generation Mistakes That Are Killing Your Sales",
       excerpt: "Avoid these common lead generation pitfalls that prevent small businesses from converting prospects into paying customers.",
       author: "Sales Team",
@@ -37,22 +44,25 @@ export function BlogPage() {
       category: "Lead Generation"
     },
     {
+      id: 'ai-prompts-business-guide',
       title: "How to Write AI Prompts That Actually Work for Your Business",
       excerpt: "Master the art of prompt engineering to get better results from AI tools and save hours of manual work.",
       author: "AI Team",
       date: "Dec 12, 2024",
       readTime: "7 min read",
-      category: "AI Tips"
+      category: "AI Tools"
     },
     {
+      id: 'facebook-vs-google-ads',
       title: "Facebook Ads vs. Google Ads: Which is Better for Small Businesses?",
       excerpt: "Compare the pros and cons of Facebook and Google advertising to determine the best platform for your business goals.",
       author: "Advertising Team",
       date: "Dec 10, 2024",
       readTime: "9 min read",
-      category: "Advertising"
+      category: "Marketing Automation"
     },
     {
+      id: 'crm-setup-small-business',
       title: "Building a CRM That Actually Gets Used: 7 Essential Features",
       excerpt: "Learn what makes a CRM system that your team will actually use, and how to implement it effectively in your business.",
       author: "Product Team",
@@ -61,14 +71,16 @@ export function BlogPage() {
       category: "CRM"
     },
     {
+      id: 'marketing-automation-beginners',
       title: "The Small Business Owner's Guide to Marketing Automation",
       excerpt: "Discover how to set up marketing automation that saves time and increases sales without the complexity.",
       author: "Automation Team",
       date: "Dec 5, 2024",
       readTime: "10 min read",
-      category: "Automation"
+      category: "Marketing Automation"
     },
     {
+      id: 'small-business-website-essentials',
       title: "Why Your Business Needs a Professional Website (And How to Get One Fast)",
       excerpt: "Learn why a professional website is crucial for small business success and how to create one quickly and affordably.",
       author: "Web Team",
@@ -80,7 +92,7 @@ export function BlogPage() {
 
   const categories = [
     "All Posts",
-    "AI Tools",
+    "AI Tools", 
     "Lead Generation",
     "WhatsApp Marketing",
     "Small Business Tips",
@@ -88,6 +100,11 @@ export function BlogPage() {
     "CRM",
     "Website"
   ];
+
+  const allPosts = [...featuredPosts, ...recentPosts];
+  const filteredPosts = activeCategory === 'All Posts' 
+    ? allPosts 
+    : allPosts.filter(post => post.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-white">
@@ -107,16 +124,25 @@ export function BlogPage() {
           </div>
         </section>
 
-        {/* Categories */}
-        <section className="py-8 bg-white border-b">
+        {/* Categories - Styled like your navigation bar */}
+        <section className="py-8 bg-white border-b sticky top-16 z-40">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-2">
               {categories.map((category, index) => (
                 <Button
                   key={index}
-                  variant={index === 0 ? "default" : "outline"}
+                  variant="ghost"
                   size="sm"
-                  className={index === 0 ? "bg-gradient-to-r from-purple-600 to-pink-500 text-white" : ""}
+                  onClick={() => setActiveCategory(category)}
+                  className={`
+                    rounded-full px-6 py-2 font-medium transition-all duration-200
+                    ${activeCategory === category 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg' 
+                      : index === 1 && activeCategory !== category
+                        ? 'border-2 border-gray-300 text-gray-700 hover:border-purple-300 hover:text-purple-600'
+                        : 'text-gray-600 hover:text-purple-600 hover:bg-purple-50'
+                    }
+                  `}
                 >
                   {category}
                 </Button>
@@ -126,58 +152,70 @@ export function BlogPage() {
         </section>
 
         {/* Featured Posts */}
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12">Featured Articles</h2>
-            <div className="grid lg:grid-cols-2 gap-8 mb-16">
-              {featuredPosts.map((post, index) => (
-                <article key={index} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 hover:shadow-lg transition-shadow duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                      {post.category}
-                    </span>
-                    <div className="flex items-center space-x-2 text-sm text-gray-500">
-                      <Clock className="w-4 h-4" />
-                      <span>{post.readTime}</span>
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 mb-6 text-lg">
-                    {post.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
+        {activeCategory === 'All Posts' && (
+          <section className="py-16 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-12">Featured Articles</h2>
+              <div className="grid lg:grid-cols-2 gap-8 mb-16">
+                {featuredPosts.map((post, index) => (
+                  <article 
+                    key={index} 
+                    className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                    onClick={() => navigate(`/blog/${post.id}`)}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                        {post.category}
+                      </span>
                       <div className="flex items-center space-x-2 text-sm text-gray-500">
-                        <User className="w-4 h-4" />
-                        <span>{post.author}</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-sm text-gray-500">
-                        <Calendar className="w-4 h-4" />
-                        <span>{post.date}</span>
+                        <Clock className="w-4 h-4" />
+                        <span>{post.readTime}</span>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="text-purple-600 hover:text-purple-700">
-                      Read More <ArrowRight className="ml-1 w-4 h-4" />
-                    </Button>
-                  </div>
-                </article>
-              ))}
+                    
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                      {post.title}
+                    </h3>
+                    
+                    <p className="text-gray-600 mb-6 text-lg">
+                      {post.excerpt}
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                          <User className="w-4 h-4" />
+                          <span>{post.author}</span>
+                        </div>
+                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                          <Calendar className="w-4 h-4" />
+                          <span>{post.date}</span>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="sm" className="text-purple-600 hover:text-purple-700">
+                        Read More <ArrowRight className="ml-1 w-4 h-4" />
+                      </Button>
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* Recent Posts */}
+        {/* All Posts */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-12">Recent Posts</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-12">
+              {activeCategory === 'All Posts' ? 'Recent Posts' : `${activeCategory} Posts`}
+            </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {recentPosts.map((post, index) => (
-                <article key={index} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              {filteredPosts.map((post, index) => (
+                <article 
+                  key={index} 
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                  onClick={() => navigate(`/blog/${post.id}`)}
+                >
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <span className="inline-block bg-purple-100 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full">
