@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -63,19 +62,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     console.log('Logging out...');
     
-    // Clear localStorage FIRST and SYNCHRONOUSLY
+    // Clear all authentication data immediately
     localStorage.removeItem('leadmasters_auth');
+    localStorage.clear(); // Clear all localStorage to be safe
     
-    // Clear auth state
+    // Clear auth state immediately
     setUser(null);
     setIsAuthenticated(false);
     
-    console.log('Auth data cleared, redirecting to home page');
+    console.log('Auth data cleared, forcing complete page reload');
     
-    // Use setTimeout to ensure state updates are processed before redirect
-    setTimeout(() => {
-      window.location.href = '/';
-    }, 50);
+    // Force a complete page reload to reset all application state
+    window.location.replace('/');
   };
 
   const showLogin = () => {
