@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
@@ -29,22 +29,20 @@ function App() {
             <WorkspaceProvider>
               <Toaster />
               <Sonner />
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<PublicWebsite />} />
-                  <Route path="/about-us" element={<AboutUsPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/pricing" element={<PricingPage />} />
-                  <Route path="/blog" element={<BlogPage />} />
-                  <Route path="/blog/:slug" element={<BlogPostPage />} />
-                  <Route path="/terms-and-conditions" element={<LegalPage type="terms" />} />
-                  <Route path="/privacy-policy" element={<LegalPage type="privacy" />} />
-                  <Route path="/cancellation" element={<LegalPage type="refund" />} />
-                  <Route path="/app" element={<Index />} />
-                  <Route path="/app/post-builder" element={<PostBuilderPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
+              <Routes>
+                <Route path="/" element={<PublicWebsite />} />
+                <Route path="/about-us" element={<AboutUsPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:slug" element={<BlogPostPage />} />
+                <Route path="/terms-and-conditions" element={<LegalPage type="terms" />} />
+                <Route path="/privacy-policy" element={<LegalPage type="privacy" />} />
+                <Route path="/cancellation" element={<LegalPage type="refund" />} />
+                <Route path="/app" element={<Index />} />
+                <Route path="/app/post-builder" element={<PostBuilderPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </WorkspaceProvider>
           </PremiumProvider>
         </AuthProvider>
