@@ -85,7 +85,7 @@ export function PublicFooter() {
       links: [
         { name: "Terms of Service", action: () => handleNavigation('/terms-and-conditions') },
         { name: "Privacy Policy", action: () => handleNavigation('/privacy-policy') },
-        { name: "Cancellation & Refund Policy", action: () => handleNavigation('/cancellation') }
+        { name: "Cancellation & Refund", action: () => handleNavigation('/cancellation') }
       ]
     }
   };
@@ -100,8 +100,8 @@ export function PublicFooter() {
         }}></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
@@ -109,30 +109,30 @@ export function PublicFooter() {
                 <Logo className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-300 bg-clip-text text-transparent">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-300 bg-clip-text text-transparent">
                   LeadMasters.ai
                 </h3>
-                <p className="text-sm text-purple-300 font-medium -mt-1">AI-Powered Growth</p>
+                <p className="text-sm text-purple-300 font-medium">AI-Powered Growth</p>
               </div>
             </div>
-            <p className="text-gray-300 mb-8 max-w-md text-lg leading-relaxed">
+            <p className="text-gray-300 mb-6 max-w-md leading-relaxed">
               Transform your business with AI-powered lead generation. 
               Get more leads, run smarter campaigns, and accelerate your growth.
             </p>
             
             {/* Contact Info */}
-            <div className="space-y-3 mb-8">
+            <div className="space-y-3 mb-6">
               <div className="flex items-center space-x-3 text-gray-300">
                 <div className="p-2 bg-gray-800 rounded-lg">
                   <Mail className="w-4 h-4" />
                 </div>
-                <span>hello@leadmasters.ai</span>
+                <span className="text-sm">hello@leadmasters.ai</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <div className="p-2 bg-gray-800 rounded-lg">
                   <Phone className="w-4 h-4" />
                 </div>
-                <span>+1 (555) 123-4567</span>
+                <span className="text-sm">+1 (555) 123-4567</span>
               </div>
             </div>
             
@@ -148,7 +148,7 @@ export function PublicFooter() {
                     aria-label={social.name}
                   >
                     <social.icon className="w-5 h-5 text-white" />
-                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                       {social.name}
                     </div>
                   </a>
@@ -160,16 +160,16 @@ export function PublicFooter() {
           {/* Footer Links */}
           {Object.entries(footerSections).map(([key, section]) => (
             <div key={key}>
-              <h4 className="text-xl font-semibold mb-6 text-gray-200 relative">
+              <h4 className="text-lg font-semibold mb-4 text-gray-200 relative">
                 {section.title}
-                <div className="absolute -bottom-2 left-0 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                <div className="absolute -bottom-1 left-0 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
               </h4>
-              <ul className="space-y-4">
+              <ul className="space-y-3">
                 {section.links.map((link, index) => (
                   <li key={index}>
                     <button
                       onClick={link.action}
-                      className="text-gray-300 hover:text-white transition-colors cursor-pointer hover:translate-x-1 transform duration-200 text-base"
+                      className="text-gray-300 hover:text-white transition-colors cursor-pointer hover:translate-x-1 transform duration-200 text-sm block text-left"
                     >
                       {link.name}
                     </button>
@@ -180,15 +180,15 @@ export function PublicFooter() {
           ))}
         </div>
 
-        <Separator className="my-12 bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
+        <Separator className="my-8 bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
 
         {/* Bottom Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
-          <div className="text-gray-400 text-base">
+        <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
+          <div className="text-gray-400 text-sm">
             © {currentYear} LeadMasters.ai. All rights reserved.
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8 text-sm text-gray-400">
+          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-xs text-gray-400">
             <div className="flex items-center space-x-2">
               <span className="text-purple-300">🚀</span>
               <span>Empowering 10,000+ businesses worldwide</span>
@@ -201,18 +201,18 @@ export function PublicFooter() {
         </div>
 
         {/* Trust Badges */}
-        <div className="mt-8 pt-8 border-t border-gray-700">
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+        <div className="mt-6 pt-6 border-t border-gray-700">
+          <div className="flex flex-wrap justify-center items-center gap-6 opacity-60">
             <div className="text-xs text-gray-400 flex items-center space-x-2">
-              <span className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</span>
+              <span className="w-3 h-3 bg-green-500 rounded-full flex items-center justify-center text-white text-xs">✓</span>
               <span>SOC 2 Compliant</span>
             </div>
             <div className="text-xs text-gray-400 flex items-center space-x-2">
-              <span className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">🔒</span>
+              <span className="w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">🔒</span>
               <span>Enterprise Grade Security</span>
             </div>
             <div className="text-xs text-gray-400 flex items-center space-x-2">
-              <span className="w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs">⚡</span>
+              <span className="w-3 h-3 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs">⚡</span>
               <span>99.9% Uptime SLA</span>
             </div>
           </div>
