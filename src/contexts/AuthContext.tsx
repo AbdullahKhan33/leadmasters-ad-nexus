@@ -31,9 +31,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('Logging out...');
-    // Force a complete page reload to the main website
-    window.location.href = window.location.origin;
+    console.log('Logging out - clearing auth state and redirecting to home');
+    // Clear authentication state immediately
+    setIsAuthenticated(false);
+    setUser(null);
+    
+    // Clear any stored session data
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Force navigation to home page
+    window.location.href = '/';
   };
 
   const showLogin = () => {
