@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('Logging out - clearing auth state and redirecting to home');
+    console.log('Logging out - clearing auth state');
     // Clear authentication state immediately
     setIsAuthenticated(false);
     setUser(null);
@@ -40,8 +40,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.clear();
     sessionStorage.clear();
     
-    // Force navigation to home page
-    window.location.href = '/';
+    // Use setTimeout to ensure state is cleared before redirect
+    setTimeout(() => {
+      // Force a complete reload to the home page
+      window.location.replace('/');
+    }, 100);
   };
 
   const showLogin = () => {

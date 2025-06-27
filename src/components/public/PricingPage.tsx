@@ -146,32 +146,6 @@ export function PricingPage() {
           </div>
         </section>
 
-        {/* Guarantee Section */}
-        <section className="py-16 bg-gradient-to-r from-green-500 to-green-600">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              30-Day Money-Back Guarantee
-            </h2>
-            <p className="text-xl text-green-100 mb-8">
-              We're so confident you'll love the results that we offer a full refund if you're not completely satisfied within 30 days.
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 text-green-100">
-              <div>
-                <div className="text-2xl font-bold">✓</div>
-                <div>No questions asked</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold">✓</div>
-                <div>Full refund guaranteed</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold">✓</div>
-                <div>Keep what you've built</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* FAQ Section */}
         <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

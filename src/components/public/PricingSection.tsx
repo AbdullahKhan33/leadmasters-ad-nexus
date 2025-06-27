@@ -127,11 +127,8 @@ export function PricingSection() {
           ))}
         </div>
 
-        {/* FAQ or Additional Info */}
+        {/* Additional Info */}
         <div className="text-center mt-16">
-          <p className="text-gray-600 mb-4">
-            All packages include a 30-day money-back guarantee. No hidden fees.
-          </p>
           <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-500">
             <div className="flex items-center">
               <Check className="w-4 h-4 text-green-500 mr-2" />

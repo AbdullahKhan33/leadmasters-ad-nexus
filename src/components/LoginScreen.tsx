@@ -36,7 +36,7 @@ export function LoginScreen() {
       } else {
         toast({
           title: "Login Failed",
-          description: "Invalid username or password. Try admin/admin",
+          description: "Invalid username or password.",
           variant: "destructive",
         });
       }
@@ -176,13 +176,6 @@ export function LoginScreen() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Test Credentials */}
-        <div className="text-center">
-          <p className="text-sm text-gray-500">
-            Test credentials: <span className="font-medium">admin</span> / <span className="font-medium">admin</span>
-          </p>
-        </div>
       </div>
     </div>
   );
