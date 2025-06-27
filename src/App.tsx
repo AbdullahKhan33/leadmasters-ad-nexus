@@ -15,6 +15,7 @@ import { PublicWebsite } from "./components/PublicWebsite";
 import { AboutUsPage } from "./components/public/AboutUsPage";
 import { ContactPage } from "./components/public/ContactPage";
 import { PricingPage } from "./components/public/PricingPage";
+import { FeaturesPage } from "./components/public/FeaturesPage";
 import { BlogPage } from "./components/public/BlogPage";
 import { BlogPostPage } from "./components/public/BlogPostPage";
 import { LegalPage } from "./components/public/LegalPage";
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/about-us" element={<AboutUsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/pricing" element={<PricingPage />} />
+                  <Route path="/features" element={<FeaturesPage />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/:slug" element={<BlogPostPage />} />
                   <Route path="/terms-and-conditions" element={<LegalPage type="terms" />} />

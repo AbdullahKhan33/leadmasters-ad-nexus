@@ -23,7 +23,7 @@ export function PublicHeader() {
 
   const navigationItems = [
     { name: 'Home', path: '/' },
-    { name: 'Features', path: '#features' },
+    { name: 'Features', path: '/features' },
     { name: 'About', path: '/about-us' },
     { name: 'Blog', path: '/blog' },
     { name: 'Pricing', path: '/pricing' },
@@ -31,7 +31,9 @@ export function PublicHeader() {
   ];
 
   const handleNavigation = (path: string) => {
-    if (path.startsWith('#')) {
+    if (path === '/features' || path.startsWith('/')) {
+      navigate(path);
+    } else if (path.startsWith('#')) {
       const element = document.getElementById(path.substring(1));
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });

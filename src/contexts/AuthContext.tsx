@@ -35,8 +35,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setIsAuthenticated(false);
     
-    // Immediate redirect to home
-    window.location.href = '/';
+    // Clear any auth state and redirect to home
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 0);
   };
 
   const showLogin = () => {
