@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -96,59 +95,56 @@ function PostBuilderPage() {
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        {isInWorkspace ? (
-          <WorkspaceSidebar 
-            onDashboardClick={handleDashboardClick}
-            onPostBuilderClick={handlePostBuilderClick}
-            onAdBuilderClick={handleAdBuilderClick}
-            onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
-            onAnalyticsClick={handleAnalyticsClick}
-            onScheduleClick={handleScheduleClick}
-            onWorkspacesClick={handleWorkspacesClick}
-            onUserSettingsClick={handleUserSettingsClick}
-            onCRMClick={handleCRMClick}
-            onDomainSetupClick={handleDomainSetupClick}
-            onCRMAutomationsClick={handleCRMAutomationsClick}
-            onTemplatesClick={handleTemplatesClick}
-            onAgentsClick={handleAgentsClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
-            onServicesClick={handleServicesClick}
-            currentView="post-builder"
-          />
-        ) : (
-          <AppSidebar 
-            onDashboardClick={handleDashboardClick}
-            onPostBuilderClick={handlePostBuilderClick}
-            onAdBuilderClick={handleAdBuilderClick}
-            onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
-            onAnalyticsClick={handleAnalyticsClick}
-            onScheduleClick={handleScheduleClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
-            onWorkspacesClick={handleWorkspacesClick}
-            onCRMClick={handleCRMClick}
-            onDomainSetupClick={handleDomainSetupClick}
-            onCRMAutomationsClick={handleCRMAutomationsClick}
-            onTemplatesClick={handleTemplatesClick}
-            onAgentsClick={handleAgentsClick}
-            onServicesClick={handleServicesClick}
-            currentView="post-builder"
-          />
-        )}
-        <div className="flex-1 flex flex-col min-w-0">
-          <TopBar />
-          <div className="flex-1 overflow-hidden">
-            <PostBuilder />
-          </div>
+    <div className="min-h-screen flex w-full">
+      {isInWorkspace ? (
+        <WorkspaceSidebar 
+          onDashboardClick={handleDashboardClick}
+          onPostBuilderClick={handlePostBuilderClick}
+          onAdBuilderClick={handleAdBuilderClick}
+          onSocialLoginsClick={handleSocialLoginsClick}
+          onInspirationHubClick={handleInspirationHubClick}
+          onAnalyticsClick={handleAnalyticsClick}
+          onScheduleClick={handleScheduleClick}
+          onWorkspacesClick={handleWorkspacesClick}
+          onUserSettingsClick={handleUserSettingsClick}
+          onCRMClick={handleCRMClick}
+          onDomainSetupClick={handleDomainSetupClick}
+          onCRMAutomationsClick={handleCRMAutomationsClick}
+          onTemplatesClick={handleTemplatesClick}
+          onAgentsClick={handleAgentsClick}
+          onSmartAutomationsClick={handleSmartAutomationsClick}
+          onServicesClick={handleServicesClick}
+          currentView="post-builder"
+        />
+      ) : (
+        <AppSidebar 
+          onDashboardClick={handleDashboardClick}
+          onPostBuilderClick={handlePostBuilderClick}
+          onAdBuilderClick={handleAdBuilderClick}
+          onSocialLoginsClick={handleSocialLoginsClick}
+          onInspirationHubClick={handleInspirationHubClick}
+          onAnalyticsClick={handleAnalyticsClick}
+          onScheduleClick={handleScheduleClick}
+          onSmartAutomationsClick={handleSmartAutomationsClick}
+          onWorkspacesClick={handleWorkspacesClick}
+          onCRMClick={handleCRMClick}
+          onDomainSetupClick={handleDomainSetupClick}
+          onCRMAutomationsClick={handleCRMAutomationsClick}
+          onTemplatesClick={handleTemplatesClick}
+          onAgentsClick={handleAgentsClick}
+          onServicesClick={handleServicesClick}
+          currentView="post-builder"
+        />
+      )}
+      <div className="flex-1 flex flex-col min-w-0">
+        <TopBar />
+        <div className="flex-1 overflow-hidden">
+          <PostBuilder />
         </div>
-        
-        {/* Floating Chatbot */}
-        {shouldShowChatbot && <FloatingChatbot />}
       </div>
-    </SidebarProvider>
+      
+      {shouldShowChatbot && <FloatingChatbot />}
+    </div>
   );
 }
 
@@ -223,59 +219,56 @@ function AdBuilderPage() {
   };
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        {isInWorkspace ? (
-          <WorkspaceSidebar 
-            onDashboardClick={handleDashboardClick}
-            onPostBuilderClick={handlePostBuilderClick}
-            onAdBuilderClick={handleAdBuilderClick}
-            onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
-            onAnalyticsClick={handleAnalyticsClick}
-            onScheduleClick={handleScheduleClick}
-            onWorkspacesClick={handleWorkspacesClick}
-            onUserSettingsClick={handleUserSettingsClick}
-            onCRMClick={handleCRMClick}
-            onDomainSetupClick={handleDomainSetupClick}
-            onCRMAutomationsClick={handleCRMAutomationsClick}
-            onTemplatesClick={handleTemplatesClick}
-            onAgentsClick={handleAgentsClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
-            onServicesClick={handleServicesClick}
-            currentView="ad-builder"
-          />
-        ) : (
-          <AppSidebar 
-            onDashboardClick={handleDashboardClick}
-            onPostBuilderClick={handlePostBuilderClick}
-            onAdBuilderClick={handleAdBuilderClick}
-            onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
-            onAnalyticsClick={handleAnalyticsClick}
-            onScheduleClick={handleScheduleClick}
-            onSmartAutomationsClick={handleSmartAutomationsClick}
-            onWorkspacesClick={handleWorkspacesClick}
-            onCRMClick={handleCRMClick}
-            onDomainSetupClick={handleDomainSetupClick}
-            onCRMAutomationsClick={handleCRMAutomationsClick}
-            onTemplatesClick={handleTemplatesClick}
-            onAgentsClick={handleAgentsClick}
-            onServicesClick={handleServicesClick}
-            currentView="ad-builder"
-          />
-        )}
-        <div className="flex-1 flex flex-col min-w-0">
-          <TopBar />
-          <div className="flex-1 overflow-hidden">
-            <AdBuilder />
-          </div>
+    <div className="min-h-screen flex w-full">
+      {isInWorkspace ? (
+        <WorkspaceSidebar 
+          onDashboardClick={handleDashboardClick}
+          onPostBuilderClick={handlePostBuilderClick}
+          onAdBuilderClick={handleAdBuilderClick}
+          onSocialLoginsClick={handleSocialLoginsClick}
+          onInspirationHubClick={handleInspirationHubClick}
+          onAnalyticsClick={handleAnalyticsClick}
+          onScheduleClick={handleScheduleClick}
+          onWorkspacesClick={handleWorkspacesClick}
+          onUserSettingsClick={handleUserSettingsClick}
+          onCRMClick={handleCRMClick}
+          onDomainSetupClick={handleDomainSetupClick}
+          onCRMAutomationsClick={handleCRMAutomationsClick}
+          onTemplatesClick={handleTemplatesClick}
+          onAgentsClick={handleAgentsClick}
+          onSmartAutomationsClick={handleSmartAutomationsClick}
+          onServicesClick={handleServicesClick}
+          currentView="ad-builder"
+        />
+      ) : (
+        <AppSidebar 
+          onDashboardClick={handleDashboardClick}
+          onPostBuilderClick={handlePostBuilderClick}
+          onAdBuilderClick={handleAdBuilderClick}
+          onSocialLoginsClick={handleSocialLoginsClick}
+          onInspirationHubClick={handleInspirationHubClick}
+          onAnalyticsClick={handleAnalyticsClick}
+          onScheduleClick={handleScheduleClick}
+          onSmartAutomationsClick={handleSmartAutomationsClick}
+          onWorkspacesClick={handleWorkspacesClick}
+          onCRMClick={handleCRMClick}
+          onDomainSetupClick={handleDomainSetupClick}
+          onCRMAutomationsClick={handleCRMAutomationsClick}
+          onTemplatesClick={handleTemplatesClick}
+          onAgentsClick={handleAgentsClick}
+          onServicesClick={handleServicesClick}
+          currentView="ad-builder"
+        />
+      )}
+      <div className="flex-1 flex flex-col min-w-0">
+        <TopBar />
+        <div className="flex-1 overflow-hidden">
+          <AdBuilder />
         </div>
-        
-        {/* Floating Chatbot */}
-        {shouldShowChatbot && <FloatingChatbot />}
       </div>
-    </SidebarProvider>
+      
+      {shouldShowChatbot && <FloatingChatbot />}
+    </div>
   );
 }
 
@@ -286,25 +279,26 @@ const App = () => (
         <Toaster />
         <Sonner />
         <ProtectedRoute>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/my-inspirations" element={<MyInspirations />} />
-            <Route path="/post-builder" element={
-              <WorkspaceProvider>
-                <PostBuilderPage />
-              </WorkspaceProvider>
-            } />
-            <Route path="/ad-builder" element={
-              <WorkspaceProvider>
-                <AdBuilderPage />
-              </WorkspaceProvider>
-            } />
-            <Route path="/crm/*" element={<CRM />} />
-            <Route path="/insights/summary" element={<InsightsSummary />} />
-            <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <SidebarProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/my-inspirations" element={<MyInspirations />} />
+              <Route path="/post-builder" element={
+                <WorkspaceProvider>
+                  <PostBuilderPage />
+                </WorkspaceProvider>
+              } />
+              <Route path="/ad-builder" element={
+                <WorkspaceProvider>
+                  <AdBuilderPage />
+                </WorkspaceProvider>
+              } />
+              <Route path="/crm/*" element={<CRM />} />
+              <Route path="/insights/summary" element={<InsightsSummary />} />
+              <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </SidebarProvider>
         </ProtectedRoute>
       </TooltipProvider>
     </PremiumProvider>
