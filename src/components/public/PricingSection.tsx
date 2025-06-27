@@ -13,12 +13,30 @@ export function PricingSection() {
       price: "₹9,999 or AED 499",
       description: "Everything to get your business legally online & discoverable.",
       features: [
-        "Business Registration Assistance (via partner)",
-        "Simple, mobile-friendly website (incl. 1-year hosting)",
-        "Google My Business setup",
-        "Social Media Pages setup (FB, Insta, WhatsApp)",
-        "FREE Basic Logo (AI-generated)",
-        "WhatsApp Business Profile setup"
+        {
+          main: "Business Registration Assistance",
+          sub: "via partner"
+        },
+        {
+          main: "Simple, mobile-friendly website",
+          sub: "incl. 1-year hosting"
+        },
+        {
+          main: "Google My Business setup",
+          sub: null
+        },
+        {
+          main: "Social Media Pages setup",
+          sub: "FB, Insta, WhatsApp"
+        },
+        {
+          main: "FREE Basic Logo",
+          sub: "AI-generated"
+        },
+        {
+          main: "WhatsApp Business Profile setup",
+          sub: null
+        }
       ],
       cta: "Get My Business Online",
       popular: true,
@@ -30,13 +48,34 @@ export function PricingSection() {
       price: "₹6,999 or AED 349",
       description: "We set up your ads, content, and CRM — leads ready to capture.",
       features: [
-        "First Facebook & Instagram Ad setup",
-        "5 AI-written Social Posts (customized for your business)",
-        "WhatsApp Chatbot setup",
-        "LeadMasters CRM basic setup & lead import",
-        "WhatsApp Templates for faster replies",
-        "100 Preloaded CRM Leads (optional from Apollo/HubSpot)",
-        "7-Day WhatsApp Engagement Plan (ready to use)"
+        {
+          main: "First Facebook & Instagram Ad setup",
+          sub: null
+        },
+        {
+          main: "5 AI-written Social Posts",
+          sub: "customized for your business"
+        },
+        {
+          main: "WhatsApp Chatbot setup",
+          sub: null
+        },
+        {
+          main: "LeadMasters CRM basic setup & lead import",
+          sub: null
+        },
+        {
+          main: "WhatsApp Templates for faster replies",
+          sub: null
+        },
+        {
+          main: "100 Preloaded CRM Leads",
+          sub: "optional from Apollo/HubSpot"
+        },
+        {
+          main: "7-Day WhatsApp Engagement Plan",
+          sub: "ready to use"
+        }
       ],
       cta: "Launch My Leads",
       popular: false,
@@ -48,13 +87,34 @@ export function PricingSection() {
       price: "₹12,999 or AED 649",
       description: "Advanced content, ads, automation — serious business growth.",
       features: [
-        "Professional Ad Creatives Pack (images & captions)",
-        "AI Content Pack (WhatsApp, Social Media, Email)",
-        "SEO Starter Kit for your website",
-        "15 WhatsApp Message Templates (high-converting)",
-        "Monthly Done-For-You Marketing option (add-on)",
-        "CRM Automations Setup (Lead Scoring, Follow-Ups)",
-        "Monthly Performance Insights Report"
+        {
+          main: "Professional Ad Creatives Pack",
+          sub: "images & captions"
+        },
+        {
+          main: "AI Content Pack",
+          sub: "WhatsApp, Social Media, Email"
+        },
+        {
+          main: "SEO Starter Kit for your website",
+          sub: null
+        },
+        {
+          main: "15 WhatsApp Message Templates",
+          sub: "high-converting"
+        },
+        {
+          main: "Monthly Done-For-You Marketing option",
+          sub: "add-on"
+        },
+        {
+          main: "CRM Automations Setup",
+          sub: "Lead Scoring, Follow-Ups"
+        },
+        {
+          main: "Monthly Performance Insights Report",
+          sub: null
+        }
       ],
       cta: "Scale My Business",
       popular: false,
@@ -112,7 +172,12 @@ export function PricingSection() {
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start">
                     <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700 text-sm">{feature}</span>
+                    <div className="text-gray-700 text-sm">
+                      <div>{feature.main}</div>
+                      {feature.sub && (
+                        <div className="text-gray-500 text-xs mt-1">({feature.sub})</div>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
