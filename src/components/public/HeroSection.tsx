@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, MessageCircle, Target, BarChart3, Play, Users, TrendingUp, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function HeroSection() {
-  const [currentStat, setCurrentStat] = useState(0);
+  const [hoveredStat, setHoveredStat] = useState<number | null>(null);
   const { showLogin } = useAuth();
 
   const stats = [
@@ -15,19 +15,13 @@ export function HeroSection() {
     { number: "24/7", label: "AI Support" }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStat((prev) => (prev + 1) % stats.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const scrollToPricing = () => {
-    const element = document.getElementById('pricing');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const companyLogos = [
+    { name: "TechFlow", color: "from-blue-500 to-blue-600" },
+    { name: "GrowthCo", color: "from-green-500 to-green-600" },
+    { name: "InnovateLab", color: "from-purple-500 to-purple-600" },
+    { name: "ScaleUp", color: "from-orange-500 to-orange-600" },
+    { name: "NextGen", color: "from-pink-500 to-pink-600" }
+  ];
 
   const scrollToFeatures = () => {
     const element = document.getElementById('features');
@@ -71,9 +65,9 @@ export function HeroSection() {
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-600">
                 <div className="flex items-center">
                   <div className="flex -space-x-2 mr-3">
-                    {[1,2,3,4,5].map((i) => (
-                      <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
-                        {String.fromCharCode(65 + i)}
+                    {companyLogos.map((company, i) => (
+                      <div key={i} className={`w-8 h-8 rounded-full bg-gradient-to-r ${company.color} border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-md`}>
+                        {company.name.charAt(0)}
                       </div>
                     ))}
                   </div>
@@ -109,11 +103,13 @@ export function HeroSection() {
               {stats.map((stat, index) => (
                 <div 
                   key={index}
-                  className={`text-center p-4 rounded-xl transition-all duration-500 ${
-                    currentStat === index 
+                  className={`text-center p-4 rounded-xl transition-all duration-300 cursor-pointer ${
+                    hoveredStat === index
                       ? 'bg-white shadow-lg scale-105 border border-purple-200' 
                       : 'bg-white/50 hover:bg-white/70'
                   }`}
+                  onMouseEnter={() => setHoveredStat(index)}
+                  onMouseLeave={() => setHoveredStat(null)}
                 >
                   <div className="text-2xl font-bold text-purple-600">{stat.number}</div>
                   <div className="text-sm text-gray-600">{stat.label}</div>
