@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
@@ -13,116 +12,184 @@ export function LegalPage({ type }: LegalPageProps) {
       case 'terms':
         return {
           title: 'Terms of Service',
-          lastUpdated: 'December 27, 2024',
+          lastUpdated: 'October 2, 2024',
           content: (
             <div className="space-y-8">
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
                 <p className="text-gray-600 mb-4">
-                  By accessing and using LeadMasters.ai ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+                  LEADMASTERS AI SOLUTIONS PRIVATE LIMITED, #81/16, Haralukunte, Hsr Layout, Bangalore, Karnataka, India, 560102. ("we," "us," or "our") operates the website leadmasters.ai and the associated services, including our mobile application (collectively referred to as the "LeadMasters AI App"). This Privacy Policy outlines how LEADMASTERS AI SOLUTIONS PRIVATE LIMITED, #81/16, Haralukunte, Hsr Layout, Bangalore, Karnataka, India, 560102 collects, uses, and safeguards your personal data when you use our services.
+                </p>
+                <p className="text-gray-600 mb-4">
+                  We are committed to ensuring that your privacy is protected in accordance with applicable international data protection laws, including the General Data Protection Regulation (GDPR), California Consumer Privacy Act (CCPA), and other relevant standards. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when using our services, including integrations with Meta platforms (Facebook, Instagram, Threads, WhatsApp), LinkedIn, X (formerly Twitter), Google Ads, and YouTube.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Description of Service</h2>
-                <p className="text-gray-600 mb-4">
-                  LeadMasters.ai provides AI-powered lead generation tools and services for small businesses, including but not limited to:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>AI-generated content creation for social media and marketing</li>
-                  <li>Lead capture forms and landing page creation</li>
-                  <li>CRM tools and customer relationship management</li>
-                  <li>Marketing automation services and workflows</li>
-                  <li>Website design and development services</li>
-                  <li>Business setup and consultation services</li>
-                  <li>Social media account setup and management</li>
-                  <li>WhatsApp Business integration and automation</li>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Definitions</h2>
+                <div className="space-y-3 text-gray-600">
+                  <p><strong>1.1</strong> "Platform" refers to LeadMasters AI, accessible via leadmasters.ai and leadmasters.site.</p>
+                  <p><strong>1.2</strong> "We," "Us," or "Our" refers to LeadMasters AI, its affiliates, and subsidiaries.</p>
+                  <p><strong>1.3</strong> "User," "You," or "Your" refers to the individual or entity accessing and using LeadMasters AI.</p>
+                  <p><strong>1.4</strong> "Services" means the lead generation, ad optimization, and social media integration services provided by LeadMasters AI, including integrations with third-party platforms such as Meta, LinkedIn, X, Google Ads, and YouTube.</p>
+                </div>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Eligibility</h2>
+                <p className="text-gray-600 mb-4">To use our Services, you must:</p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Be at least 18 years old or have reached the age of majority in your jurisdiction.</li>
+                  <li>Comply with all applicable laws and regulations, including international privacy laws such as GDPR.</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. User Accounts and Registration</h2>
-                <p className="text-gray-600 mb-4">
-                  When you create an account with us, you must provide information that is accurate, complete, and current at all times. You are responsible for safeguarding the password and for all activities that occur under your account. You agree not to disclose your password to any third party.
-                </p>
-                <p className="text-gray-600 mb-4">
-                  You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account. We will not be liable for any loss or damage arising from your failure to comply with this section.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Payment Terms and Billing</h2>
-                <p className="text-gray-600 mb-4">
-                  Payment for services is due upon purchase unless otherwise specified. We accept various payment methods as displayed during checkout. All prices are subject to change with 30 days notice.
-                </p>
-                <p className="text-gray-600 mb-4">
-                  Subscription services will automatically renew unless cancelled at least 24 hours before the renewal date. You may cancel your subscription at any time through your account settings or by contacting our support team.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Intellectual Property Rights</h2>
-                <p className="text-gray-600 mb-4">
-                  The Service and its original content, features, and functionality are and will remain the exclusive property of LeadMasters.ai and its licensors. The Service is protected by copyright, trademark, and other laws.
-                </p>
-                <p className="text-gray-600 mb-4">
-                  Content created for your business (websites, social media content, etc.) becomes your property upon full payment. You retain all rights to your business data and content you provide to us.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">6. User Conduct and Prohibited Uses</h2>
-                <p className="text-gray-600 mb-4">
-                  You may not use our Service:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>For any unlawful purpose or to solicit others to perform unlawful acts</li>
-                  <li>To violate any international, federal, provincial, or state regulations, rules, laws, or local ordinances</li>
-                  <li>To infringe upon or violate our intellectual property rights or the intellectual property rights of others</li>
-                  <li>To harass, abuse, insult, harm, defame, slander, disparage, intimidate, or discriminate</li>
-                  <li>To submit false or misleading information</li>
-                  <li>To upload or transmit viruses or any other type of malicious code</li>
-                  <li>To spam, phish, pharm, pretext, spider, crawl, or scrape</li>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. User Responsibilities</h2>
+                <p className="text-gray-600 mb-4">You agree not to:</p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Use the platform in any way that violates applicable laws or platform policies (e.g., Meta, LinkedIn, X).</li>
+                  <li>Post or transmit content that is defamatory, abusive, obscene, or unlawful.</li>
+                  <li>Interfere with the proper working of the platform, including uploading viruses or harmful code.</li>
+                  <li>Use automated systems, such as bots or scripts, to interact with our Services without permission.</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Service Availability</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Account Registration</h2>
+                <p className="text-gray-600 mb-4">To use our Services, you may be required to register and create an account. You agree to:</p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Provide accurate, current, and complete information during the registration process.</li>
+                  <li>Maintain the confidentiality of your account credentials.</li>
+                  <li>Be responsible for all activities that occur under your account.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Payment and Subscription</h2>
+                <p className="text-gray-600 mb-4">By subscribing to any paid features of the platform, you agree to:</p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Provide accurate payment details.</li>
+                  <li>Allow us to charge you for the selected service plan.</li>
+                  <li>Comply with any subscription renewal terms.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Refund Policy</h2>
                 <p className="text-gray-600 mb-4">
-                  We strive to maintain 99.9% uptime but cannot guarantee uninterrupted service. We reserve the right to modify or discontinue the Service at any time with reasonable notice.
+                  All payments are final unless otherwise specified. Refunds may be granted at our sole discretion under specific circumstances outlined in our Refund Policy. If you believe you are entitled to a refund, please contact us at support@leadmasters.ai within 30 days from the date of payment.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Limitation of Liability</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">7. License</h2>
                 <p className="text-gray-600 mb-4">
-                  In no event shall LeadMasters.ai, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the Service.
+                  LeadMasters AI grants you a limited, non-exclusive, non-transferable license to access and use the platform for your personal or business purposes, including ad generation and campaign management.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Governing Law</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Intellectual Property</h2>
                 <p className="text-gray-600 mb-4">
-                  These Terms shall be interpreted and governed by the laws of the State of Delaware, United States, without regard to conflict of law provisions.
+                  All content and materials on the platform, including but not limited to software, logos, graphics, and text, are owned by LeadMasters AI or its licensors. You are not permitted to reproduce, distribute, or modify any content without prior written permission from LeadMasters AI.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Changes to Terms</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Termination</h2>
                 <p className="text-gray-600 mb-4">
-                  We reserve the right to update these Terms of Service at any time. We will notify users of any material changes via email or through our Service.
+                  LeadMasters AI reserves the right to suspend or terminate your access to the platform without cause or notice if you violate these Terms, engage in any unlawful activity, or fail to comply with third-party integration policies.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Contact Information</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Dispute Resolution</h2>
+                <p className="text-gray-600 mb-4">
+                  Any disputes arising under these Terms shall be resolved by binding arbitration in accordance with the Arbitration and Conciliation Act, 1996, of India. The location of arbitration shall be Bangalore, India, and the language of arbitration shall be English.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Limitation of Liability</h2>
+                <p className="text-gray-600 mb-4">
+                  LeadMasters AI shall not be liable for any indirect, incidental, special, or consequential damages arising out of your use of the platform, including but not limited to loss of data or profit. In no event shall our liability exceed the amount paid by you for the service in the preceding 12 months.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">12. Indemnity</h2>
+                <p className="text-gray-600 mb-4">
+                  You agree to indemnify, defend, and hold harmless LeadMasters AI and its affiliates, officers, employees, and agents from any claims, liabilities, damages, losses, or expenses, including legal fees, arising out of your use of the platform or breach of these Terms.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">13. Service Availability</h2>
+                <p className="text-gray-600 mb-4">
+                  While we strive to ensure continuous access to our platform, we cannot guarantee uninterrupted service. LeadMasters AI shall not be liable for any outages or disruptions caused by scheduled maintenance, third-party service outages, or events beyond our control.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">14. Third-Party Services</h2>
+                <p className="text-gray-600 mb-4">
+                  LeadMasters AI integrates with third-party services such as Google Ads, Facebook, LinkedIn, YouTube, and X. Your use of such third-party services is subject to their respective terms and conditions. LeadMasters AI is not responsible for any actions, policies, or data practices of these third-party services.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">15. Acceptable Use Policy</h2>
+                <p className="text-gray-600 mb-4">Users must comply with the Acceptable Use Policy while using LeadMasters AI. The following activities are prohibited:</p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li>Running campaigns that promote illegal, fraudulent, or harmful content.</li>
+                  <li>Using the platform to harass or harm others.</li>
+                  <li>Misusing the platform for unauthorized access, hacking, or security breaches.</li>
+                </ul>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">16. Termination Without Cause</h2>
+                <p className="text-gray-600 mb-4">
+                  LeadMasters AI reserves the right to terminate any account without cause and without prior notice. If your account is terminated, you may no longer access our platform or services.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">17. No Waiver</h2>
+                <p className="text-gray-600 mb-4">
+                  Failure by LeadMasters AI to enforce any part of these Terms at any time does not constitute a waiver of our right to enforce it in the future.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">18. User-Generated Content</h2>
+                <p className="text-gray-600 mb-4">
+                  Any content created or uploaded by users (including ad copy, social media posts, etc.) remains the property of the user. However, by uploading such content, you grant LeadMasters AI a worldwide, royalty-free, non-exclusive, perpetual license to use, display, distribute, and modify such content in connection with the operation of the platform.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">19. Modifications to Terms</h2>
+                <p className="text-gray-600 mb-4">
+                  LeadMasters AI reserves the right to modify these Terms at any time. Any changes will be effective immediately upon posting to the platform. Your continued use of the platform after the posting of the modified Terms constitutes your agreement to the changes.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">20. Governing Law</h2>
+                <p className="text-gray-600 mb-4">
+                  These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of laws principles.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">21. Contact Information</h2>
                 <p className="text-gray-600">
-                  If you have any questions about these Terms of Service, please contact us at:
+                  If you have any questions regarding these Terms, please contact us at:
                 </p>
                 <div className="mt-2 text-gray-600">
-                  <p>Email: legal@leadmasters.ai</p>
-                  <p>Phone: +1 (555) 123-4567</p>
-                  <p>Address: 123 Business Ave, Suite 100, Business City, BC 12345</p>
+                  <p>Email: support@leadmasters.ai</p>
+                  <p>Phone: +91 8179212829</p>
                 </div>
               </section>
             </div>
