@@ -62,6 +62,7 @@ export function PublicHeader() {
   };
 
   const handleLogin = () => {
+    console.log('Login button clicked in header');
     showLogin();
   };
 
@@ -159,15 +160,8 @@ export function PublicHeader() {
             </button>
           </div>
 
-          {/* CTA Buttons */}
+          {/* CTA Button - Single Sign In Button */}
           <div className="hidden lg:flex items-center space-x-3">
-            <Button 
-              variant="ghost"
-              onClick={handleLogin}
-              className="text-gray-700 hover:text-purple-600 hover:bg-purple-50"
-            >
-              Sign In
-            </Button>
             <Button 
               onClick={handleLogin}
               className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
@@ -196,13 +190,6 @@ export function PublicHeader() {
               ))}
               
               <div className="pt-4 border-t border-gray-200 space-y-2">
-                <Button 
-                  variant="ghost"
-                  onClick={handleLogin}
-                  className="w-full justify-center text-gray-700"
-                >
-                  Sign In
-                </Button>
                 <Button 
                   onClick={handleLogin}
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"

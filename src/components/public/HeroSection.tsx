@@ -30,6 +30,11 @@ export function HeroSection() {
     }
   };
 
+  const handleStartFreeTrial = () => {
+    console.log('Start Free Trial button clicked in hero');
+    showLogin();
+  };
+
   return (
     <section id="home" className="relative bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-20 lg:py-32 overflow-hidden">
       {/* Background Elements */}
@@ -79,7 +84,7 @@ export function HeroSection() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
-                onClick={showLogin}
+                onClick={handleStartFreeTrial}
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white text-lg px-8 py-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
               >
@@ -168,6 +173,16 @@ export function HeroSection() {
                       Post optimized for maximum engagement
                     </div>
                   </div>
+                </div>
+
+                {/* Additional CTA in Demo */}
+                <div className="text-center pt-4 border-t border-gray-100">
+                  <Button
+                    onClick={handleStartFreeTrial}
+                    className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white px-6 py-2 text-sm"
+                  >
+                    Start Your Free Trial
+                  </Button>
                 </div>
               </div>
             </div>
