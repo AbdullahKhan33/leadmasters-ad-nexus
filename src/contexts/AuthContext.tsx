@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { LoginScreen } from '@/components/LoginScreen';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -8,8 +7,6 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
-  showLogin: () => void;
-  isLoginVisible: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,7 +15,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<{ username: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoginVisible, setIsLoginVisible] = useState(false);
 
   useEffect(() => {
     // Check if user is already authenticated on app load
@@ -53,7 +49,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('leadmasters_auth', JSON.stringify(authData));
       setIsAuthenticated(true);
       setUser({ username });
-      setIsLoginVisible(false);
       console.log('Login successful');
       return true;
     }
@@ -63,25 +58,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     console.log('Logging out...');
-    // Clear localStorage first
     localStorage.removeItem('leadmasters_auth');
-    // Then update state synchronously
     setUser(null);
     setIsAuthenticated(false);
-    setIsLoginVisible(false);
     console.log('Logout completed');
   };
-
-  const showLogin = () => {
-    console.log('showLogin called - current state:', { isAuthenticated, isLoginVisible });
-    setIsLoginVisible(true);
-    console.log('showLogin - setting isLoginVisible to true');
-  };
-
-  // Debug effect to monitor state changes
-  useEffect(() => {
-    console.log('Auth state changed:', { isAuthenticated, isLoginVisible });
-  }, [isAuthenticated, isLoginVisible]);
 
   return (
     <AuthContext.Provider value={{ 
@@ -89,30 +70,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user, 
       login, 
       logout, 
-      isLoading, 
-      showLogin, 
-      isLoginVisible 
+      isLoading
     }}>
       {children}
-      {/* Always show modal when isLoginVisible is true, regardless of auth status for debugging */}
-      {isLoginVisible && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full">
-            <button 
-              onClick={() => {
-                console.log('Close button clicked');
-                setIsLoginVisible(false);
-              }}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors text-2xl font-bold z-10"
-            >
-              ✕
-            </button>
-            <div className="p-6">
-              <LoginScreen />
-            </div>
-          </div>
-        </div>
-      )}
     </AuthContext.Provider>
   );
 }

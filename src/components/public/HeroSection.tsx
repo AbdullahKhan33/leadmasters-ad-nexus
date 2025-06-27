@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, MessageCircle, Target, BarChart3, Play, Users, TrendingUp, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export function HeroSection() {
   const [hoveredStat, setHoveredStat] = useState<number | null>(null);
-  const { showLogin } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const stats = [
     { number: "100+", label: "Businesses Growing" },
@@ -32,7 +34,11 @@ export function HeroSection() {
 
   const handleStartFreeTrial = () => {
     console.log('Start Free Trial button clicked in hero');
-    showLogin();
+    if (isAuthenticated) {
+      navigate('/app');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (
@@ -88,7 +94,7 @@ export function HeroSection() {
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white text-lg px-8 py-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
               >
-                Start Free Trial
+                {isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial'}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               
@@ -181,7 +187,7 @@ export function HeroSection() {
                     onClick={handleStartFreeTrial}
                     className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white px-6 py-2 text-sm"
                   >
-                    Start Your Free Trial
+                    {isAuthenticated ? 'Go to Dashboard' : 'Start Your Free Trial'}
                   </Button>
                 </div>
               </div>

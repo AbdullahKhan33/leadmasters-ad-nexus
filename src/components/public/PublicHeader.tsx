@@ -16,7 +16,7 @@ import {
 
 export function PublicHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { showLogin } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,7 +63,11 @@ export function PublicHeader() {
 
   const handleLogin = () => {
     console.log('Login button clicked in header');
-    showLogin();
+    if (isAuthenticated) {
+      navigate('/app');
+    } else {
+      navigate('/login');
+    }
   };
 
   const isActivePath = (path: string) => {
@@ -160,13 +164,13 @@ export function PublicHeader() {
             </button>
           </div>
 
-          {/* CTA Button - Single Sign In Button */}
+          {/* CTA Button */}
           <div className="hidden lg:flex items-center space-x-3">
             <Button 
               onClick={handleLogin}
               className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl"
             >
-              Sign In
+              {isAuthenticated ? 'Dashboard' : 'Sign In'}
             </Button>
           </div>
         </div>
@@ -194,7 +198,7 @@ export function PublicHeader() {
                   onClick={handleLogin}
                   className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
                 >
-                  Sign In
+                  {isAuthenticated ? 'Dashboard' : 'Sign In'}
                 </Button>
               </div>
             </div>
