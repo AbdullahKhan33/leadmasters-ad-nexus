@@ -323,152 +323,101 @@ export function LegalPage({ type }: LegalPageProps) {
       case 'refund':
         return {
           title: 'Cancellation & Refund Policy',
-          lastUpdated: 'December 27, 2024',
+          lastUpdated: '30 aug 2024',
           content: (
             <div className="space-y-8">
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. 30-Day Money-Back Guarantee</h2>
                 <p className="text-gray-600 mb-4">
-                  We stand behind our work with a comprehensive 30-day money-back guarantee on all our packages. If you're not completely satisfied with our service, you can request a full refund within 30 days of your purchase date.
-                </p>
-                <p className="text-gray-600 mb-4">
-                  This guarantee covers all our service packages including Lead Generation Starter Pack, Business Launch Package, and Growth & Automation Pro.
+                  At LeadMasters AI, we strive to ensure customer satisfaction with our services. However, we understand that sometimes situations arise where you may need to cancel a service or request a refund. This Cancellation and Refund Policy outlines the terms and conditions for cancellations and refunds.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Refund Eligibility Criteria</h2>
-                <p className="text-gray-600 mb-4">
-                  To be eligible for a refund, you must meet the following criteria:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Request the refund within 30 calendar days of your initial purchase</li>
-                  <li>Provide a detailed explanation of your dissatisfaction</li>
-                  <li>Allow our team to attempt to resolve any issues first</li>
-                  <li>Have made a good faith effort to use and implement our services</li>
-                  <li>Respond to our support team's requests for information within 5 business days</li>
-                </ul>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Cancellation Policy</h2>
+                
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">1.1 Subscription Cancellations</h3>
+                  <p className="text-gray-600 mb-4">
+                    You may cancel your subscription to any of our services at any time through your account settings. Upon cancellation, your subscription will remain active until the end of the current billing cycle. No further payments will be charged after the cancellation is processed.
+                  </p>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">1.2 One-Time Service Cancellations</h3>
+                  <p className="text-gray-600 mb-4">
+                    If you have purchased a one-time service, cancellations are accepted within 24 hours of purchase, provided that the service has not been initiated or delivered. After the 24-hour window, or if the service has commenced, cancellations will no longer be accepted.
+                  </p>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">1.3 Workshop/Event Cancellations</h3>
+                  <p className="text-gray-600 mb-4">
+                    Cancellations for workshops, events, or scheduled sessions must be made at least 48 hours prior to the start of the event for a full refund. Cancellations made within 48 hours of the event may not be eligible for a refund but may be eligible for rescheduling or credits towards future events.
+                  </p>
+                </div>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. What You Keep After Refund</h2>
-                <p className="text-gray-600 mb-4">
-                  Even if you request and receive a refund, you get to keep all the valuable assets we've created for your business:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Any websites we've designed and built for you</li>
-                  <li>All social media content we've created</li>
-                  <li>Social media accounts we've set up and optimized</li>
-                  <li>Lead capture forms and landing pages</li>
-                  <li>Brand identity elements (logos, color schemes, etc.)</li>
-                  <li>Any leads generated during the service period</li>
-                  <li>Email templates and marketing materials</li>
-                  <li>CRM setup and data (if applicable)</li>
-                </ul>
-                <p className="text-gray-600 mb-4">
-                  This means you receive significant value even in the unlikely event that you're not satisfied with our service.
-                </p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Refund Policy</h2>
+                
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">2.1 Refund Eligibility</h3>
+                  <p className="text-gray-600 mb-4">Refunds may be granted at our sole discretion under the following circumstances:</p>
+                  <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
+                    <li>Technical issues that prevent you from accessing the platform or services for an extended period (e.g., system downtime).</li>
+                    <li>Errors in billing or duplicate charges.</li>
+                    <li>Refunds for unused portions of a subscription if the service is terminated by LeadMasters AI without cause.</li>
+                  </ul>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">2.2 Non-Refundable Services</h3>
+                  <p className="text-gray-600 mb-4">
+                    Certain services and products may be marked as non-refundable. This includes digital products, downloadable materials, or services that have already been delivered or initiated. Payments for completed services, such as campaigns that have already been executed or delivered, are non-refundable.
+                  </p>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">2.3 How to Request a Refund</h3>
+                  <p className="text-gray-600 mb-4">
+                    If you believe you are entitled to a refund, please contact us at support@leadmasters.ai within 30 days of your purchase or the date the issue occurred. All refund requests must include your account information, the transaction details, and a description of the issue.
+                  </p>
+                </div>
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">2.4 Processing of Refunds</h3>
+                  <p className="text-gray-600 mb-4">
+                    Approved refunds will be processed within 14 business days of the request being granted. Refunds will be issued to the original payment method. If that method is no longer valid, an alternative refund method will be arranged. Any bank or transaction fees incurred during the refund process will be deducted from the refunded amount, where applicable.
+                  </p>
+                </div>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Refund Request Process</h2>
-                <p className="text-gray-600 mb-4">
-                  To request a refund, please follow these steps:
-                </p>
-                <ol className="list-decimal list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Email us at hello@leadmasters.ai with "Refund Request" in the subject line</li>
-                  <li>Include your full name, order number, and purchase date</li>
-                  <li>Provide a detailed explanation of why you're requesting a refund</li>
-                  <li>Our team will respond within 24 hours to discuss your concerns</li>
-                  <li>We'll work with you to address any issues and find a solution</li>
-                  <li>If we can't resolve the issue to your satisfaction, we'll process your refund within 5-7 business days</li>
-                </ol>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. No Refund Policy</h2>
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">3.1 Subscription and Usage</h3>
+                  <p className="text-gray-600 mb-4">
+                    Refunds will not be issued for partially used subscriptions or for failure to use the platform's services. It is the user's responsibility to manage their subscription and use of the services. Refunds will not be granted for services that are suspended or terminated due to a violation of our Terms and Conditions or Acceptable Use Policy.
+                  </p>
+                </div>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Refund Processing</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Modifications to the Policy</h2>
                 <p className="text-gray-600 mb-4">
-                  Once approved, refunds will be processed as follows:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Credit card payments: 5-7 business days to appear on your statement</li>
-                  <li>PayPal payments: 3-5 business days</li>
-                  <li>Bank transfers: 7-10 business days</li>
-                  <li>Other payment methods: As specified by the payment provider</li>
-                </ul>
-                <p className="text-gray-600 mb-4">
-                  Refunds will be processed using the same payment method used for the original purchase.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Partial Refunds</h2>
-                <p className="text-gray-600 mb-4">
-                  In certain circumstances, we may offer partial refunds:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Services that have been substantially completed</li>
-                  <li>Requests made after the 30-day guarantee period</li>
-                  <li>Situations where significant business value has already been delivered</li>
-                  <li>Custom work that cannot be returned or reused</li>
-                </ul>
-                <p className="text-gray-600 mb-4">
-                  Partial refund amounts will be determined based on the work completed and value delivered.
+                  LeadMasters AI reserves the right to modify this Cancellation and Refund Policy at any time. Any changes to this policy will be effective immediately upon posting on our website. Continued use of our platform or services after changes to the policy constitutes your acceptance of the revised policy.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Subscription Cancellation Policy</h2>
-                <p className="text-gray-600 mb-4">
-                  For ongoing subscription services:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>You can cancel your subscription at any time through your account dashboard</li>
-                  <li>Cancellations take effect at the end of your current billing period</li>
-                  <li>No refunds for partial billing periods unless within the 30-day guarantee</li>
-                  <li>You retain access to all services until the end of your paid period</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Non-Refundable Items</h2>
-                <p className="text-gray-600 mb-4">
-                  The following items are generally non-refundable:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Third-party service fees (domain registrations, hosting, etc.)</li>
-                  <li>Advertising spend on your behalf</li>
-                  <li>Custom development work after approval and delivery</li>
-                  <li>Training sessions that have been completed</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Dispute Resolution</h2>
-                <p className="text-gray-600 mb-4">
-                  If you're not satisfied with our refund decision, we encourage you to:
-                </p>
-                <ol className="list-decimal list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Contact our customer service manager for a review</li>
-                  <li>Request mediation through a neutral third party</li>
-                  <li>Provide additional documentation to support your case</li>
-                </ol>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Contact Information</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Contact Information</h2>
                 <p className="text-gray-600">
-                  For any questions about refunds, cancellations, or this policy, please contact us:
+                  If you have any questions or concerns about this policy, please contact us at:
                 </p>
                 <div className="mt-2 text-gray-600">
-                  <p><strong>Email:</strong> hello@leadmasters.ai</p>
-                  <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                  <p><strong>Business Hours:</strong> Monday-Friday, 9 AM - 6 PM EST</p>
-                  <p><strong>Address:</strong> 123 Business Ave, Suite 100, Business City, BC 12345</p>
+                  <p>Email: support@leadmasters.ai</p>
+                  <p>Phone: +91 8147808161</p>
                 </div>
-                <p className="text-gray-600 mt-4">
-                  Our customer service team is committed to resolving any issues promptly and fairly.
-                </p>
               </section>
             </div>
           )
