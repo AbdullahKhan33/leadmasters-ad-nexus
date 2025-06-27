@@ -31,6 +31,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (error) {
         console.error('Error checking auth:', error);
+        // Clear corrupted auth data
+        localStorage.removeItem('leadmasters_auth');
       } finally {
         setIsLoading(false);
       }
@@ -60,12 +62,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     console.log('Logging out...');
-    localStorage.removeItem('leadmasters_auth');
+    
+    // Clear auth state immediately
     setUser(null);
     setIsAuthenticated(false);
+    
+    // Clear localStorage
+    localStorage.removeItem('leadmasters_auth');
+    
     console.log('Logout completed, redirecting to parent site');
-    // Redirect to parent site (home page)
-    window.location.href = '/';
+    
+    // Force a complete page reload to the root path
+    window.location.replace('/');
   };
 
   const showLogin = () => {
