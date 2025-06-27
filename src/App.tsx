@@ -21,6 +21,8 @@ import { AdBuilder } from "./components/AdBuilder";
 import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
 import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { useAuth } from "./contexts/AuthContext";
+import { PublicWebsite } from "./components/PublicWebsite";
 
 const queryClient = new QueryClient();
 
@@ -272,37 +274,53 @@ function AdBuilderPage() {
   );
 }
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <PremiumProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <ProtectedRoute>
-          <SidebarProvider>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/my-inspirations" element={<MyInspirations />} />
-              <Route path="/post-builder" element={
-                <WorkspaceProvider>
-                  <PostBuilderPage />
-                </WorkspaceProvider>
-              } />
-              <Route path="/ad-builder" element={
-                <WorkspaceProvider>
-                  <AdBuilderPage />
-                </WorkspaceProvider>
-              } />
-              <Route path="/crm/*" element={<CRM />} />
-              <Route path="/insights/summary" element={<InsightsSummary />} />
-              <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </SidebarProvider>
-        </ProtectedRoute>
-      </TooltipProvider>
-    </PremiumProvider>
-  </QueryClientProvider>
-);
+function DashboardRoutes() {
+  return (
+    <ProtectedRoute>
+      <SidebarProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/my-inspirations" element={<MyInspirations />} />
+          <Route path="/post-builder" element={
+            <WorkspaceProvider>
+              <PostBuilderPage />
+            </WorkspaceProvider>
+          } />
+          <Route path="/ad-builder" element={
+            <WorkspaceProvider>
+              <AdBuilderPage />
+            </WorkspaceProvider>
+          } />
+          <Route path="/crm/*" element={<CRM />} />
+          <Route path="/insights/summary" element={<InsightsSummary />} />
+          <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </SidebarProvider>
+    </ProtectedRoute>
+  );
+}
+
+const App = () => {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <PremiumProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          {isAuthenticated ? (
+            <WorkspaceProvider>
+              <DashboardRoutes />
+            </WorkspaceProvider>
+          ) : (
+            <PublicWebsite />
+          )}
+        </TooltipProvider>
+      </PremiumProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
