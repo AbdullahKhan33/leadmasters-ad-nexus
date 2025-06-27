@@ -21,6 +21,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check if user is already authenticated on app load
     const checkAuth = () => {
       try {
+        // Check if we're in a logout process
+        const isLoggingOut = localStorage.getItem('leadmasters_logout_in_progress');
+        if (isLoggingOut) {
+          console.log('Logout in progress, skipping auth check');
+          localStorage.removeItem('leadmasters_logout_in_progress');
+          setIsAuthenticated(false);
+          setUser(null);
+          setIsLoading(false);
+          return;
+        }
+
         const authData = localStorage.getItem('leadmasters_auth');
         if (authData) {
           const parsed = JSON.parse(authData);
@@ -62,18 +73,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     console.log('Logging out...');
     
-    // Clear ALL possible storage
-    localStorage.clear();
-    sessionStorage.clear();
+    // Set logout flag BEFORE clearing anything
+    localStorage.setItem('leadmasters_logout_in_progress', 'true');
     
-    // Clear auth state
+    // Clear auth state immediately
     setUser(null);
     setIsAuthenticated(false);
     
-    console.log('Auth data cleared, navigating to home');
-    
-    // Use a more direct approach - navigate to the root domain
-    window.location.assign(window.location.origin);
+    // Small delay to ensure state updates, then clear storage and redirect
+    setTimeout(() => {
+      localStorage.clear();
+      sessionStorage.clear();
+      console.log('Storage cleared, redirecting to home');
+      
+      // Force navigation to home page
+      window.location.href = '/';
+    }, 50);
   };
 
   const showLogin = () => {
