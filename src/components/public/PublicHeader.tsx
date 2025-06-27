@@ -2,13 +2,22 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
+// Safe hook that doesn't throw when AuthContext is not available
+function useSafeAuth() {
+  try {
+    const { useAuth } = require('@/contexts/AuthContext');
+    return useAuth();
+  } catch {
+    return { isAuthenticated: false };
+  }
+}
+
 export function PublicHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useSafeAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
