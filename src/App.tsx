@@ -21,6 +21,7 @@ import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { AdBuilder } from "./components/AdBuilder";
 import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
 import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -284,25 +285,27 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/my-inspirations" element={<MyInspirations />} />
-          <Route path="/post-builder" element={
-            <WorkspaceProvider>
-              <PostBuilderPage />
-            </WorkspaceProvider>
-          } />
-          <Route path="/ad-builder" element={
-            <WorkspaceProvider>
-              <AdBuilderPage />
-            </WorkspaceProvider>
-          } />
-          <Route path="/crm/*" element={<CRM />} />
-          <Route path="/insights/summary" element={<InsightsSummary />} />
-          <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <ProtectedRoute>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/my-inspirations" element={<MyInspirations />} />
+            <Route path="/post-builder" element={
+              <WorkspaceProvider>
+                <PostBuilderPage />
+              </WorkspaceProvider>
+            } />
+            <Route path="/ad-builder" element={
+              <WorkspaceProvider>
+                <AdBuilderPage />
+              </WorkspaceProvider>
+            } />
+            <Route path="/crm/*" element={<CRM />} />
+            <Route path="/insights/summary" element={<InsightsSummary />} />
+            <Route path="/insights/whatsapp" element={<WhatsAppInsights />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ProtectedRoute>
       </TooltipProvider>
     </PremiumProvider>
   </QueryClientProvider>
