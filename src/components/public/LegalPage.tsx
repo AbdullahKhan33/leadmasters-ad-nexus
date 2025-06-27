@@ -199,136 +199,121 @@ export function LegalPage({ type }: LegalPageProps) {
       case 'privacy':
         return {
           title: 'Privacy Policy',
-          lastUpdated: 'December 27, 2024',
+          lastUpdated: 'October 2, 2024',
           content: (
             <div className="space-y-8">
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Information We Collect</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
                 <p className="text-gray-600 mb-4">
-                  We collect information you provide directly to us, such as when you create an account, use our services, or contact us for support.
+                  LEADMASTERS AI SOLUTIONS PRIVATE LIMITED, #81/16, Haralukunte, Hsr Layout, Bangalore, Karnataka, India, 560102. ("we," "us," or "our") operates the website leadmasters.ai and the associated services, including our mobile application (collectively referred to as the "LeadMasters AI App"). This Privacy Policy outlines how LEADMASTERS AI SOLUTIONS PRIVATE LIMITED, #81/16, Haralukunte, Hsr Layout, Bangalore, Karnataka, India, 560102 collects, uses, and safeguards your personal data when you use our services.
                 </p>
+                <p className="text-gray-600 mb-4">
+                  We are committed to ensuring that your privacy is protected in accordance with applicable international data protection laws, including the General Data Protection Regulation (GDPR), California Consumer Privacy Act (CCPA), and other relevant standards. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when using our services, including integrations with Meta platforms (Facebook, Instagram, Threads, WhatsApp), LinkedIn, X (formerly Twitter), Google Ads, and YouTube.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Data Collection</h2>
+                <p className="text-gray-600 mb-4">We collect personal information in the following ways:</p>
                 
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Personal Information:</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Information You Provide Directly:</h3>
+                    <p className="text-gray-600 mb-4">This includes information provided by creating an account, subscribing to our services, interacting with our platform, and connecting to third-party services like LinkedIn, X, Google Ads, and YouTube. This may include your name, email address, profile information, and other contact details.</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Meta Platforms Integration:</h3>
+                    <p className="text-gray-600 mb-2">We collect data when you connect Meta platforms to our services, including:</p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                      <li><strong>Instagram:</strong> Profile information, content, engagement metrics, and any data necessary for our automation and ad features.</li>
+                      <li><strong>WhatsApp:</strong> Contact details, messaging data, and user interactions.</li>
+                      <li><strong>Threads and Facebook:</strong> Public profile data, posts, usage analytics, and ad campaign metrics.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">LinkedIn Integration:</h3>
+                    <p className="text-gray-600 mb-2">When you connect your LinkedIn account to LeadMasters AI, we collect:</p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                      <li><strong>Profile Information:</strong> Such as your name, profile photo, headline, and other public information.</li>
+                      <li><strong>Engagement Metrics:</strong> Data on post interactions, connections, and other engagement data for automated post creation, scheduling, and ad generation.</li>
+                      <li><strong>Content Data:</strong> Information you provide to generate posts or ad campaigns.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">X (formerly Twitter) Integration:</h3>
+                    <p className="text-gray-600 mb-2">When you use LeadMasters AI to integrate with X, we collect:</p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                      <li><strong>Profile Information:</strong> Username, public tweets, followers, and engagement metrics.</li>
+                      <li><strong>Content Data:</strong> Information to schedule and publish posts, generate leads, and create ad content.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Google Ads and YouTube Integration:</h3>
+                    <p className="text-gray-600 mb-2">When you connect Google Ads or YouTube to LeadMasters AI, we collect:</p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                      <li><strong>Google Ads Campaign Data:</strong> Including keywords, performance metrics, demographics, and ad analytics to facilitate ad generation, campaign optimization, and reporting.</li>
+                      <li><strong>YouTube Profile and Engagement Data:</strong> Public channel information, video interactions, and analytics to optimize content strategies and enhance ad targeting.</li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Usage Information:</h3>
+                    <p className="text-gray-600 mb-4">We collect data automatically through cookies, web beacons, and similar technologies to understand how users interact with our platform. This includes pages visited, time spent, actions performed, and interaction data from our integrations.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. How We Use Your Data</h2>
+                <p className="text-gray-600 mb-4">We use the collected data to:</p>
                 <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Name, email address, phone number</li>
-                  <li>Business information (company name, industry, website)</li>
-                  <li>Payment information (processed securely through third-party providers)</li>
-                  <li>Communication preferences and history</li>
+                  <li><strong>Provide and Improve Services:</strong> Including integrating with Meta, LinkedIn, X, Google Ads, and YouTube, managing ad campaigns, creating and posting content, generating ads, and generating leads.</li>
+                  <li><strong>Communications:</strong> Sending service-related communications such as updates, promotional offers, and newsletters, based on user consent.</li>
+                  <li><strong>Personalization and Marketing:</strong> Customizing your experience and providing tailored recommendations, including targeted advertising on LinkedIn, Meta, X, Google Ads, and YouTube platforms.</li>
+                  <li><strong>Compliance and Legal Requirements:</strong> To adhere to applicable legal obligations, industry standards, and platform policies.</li>
                 </ul>
 
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Usage Data:</h3>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Log data (IP address, browser type, pages visited)</li>
-                  <li>Device information and unique identifiers</li>
-                  <li>Usage patterns and feature interactions</li>
-                  <li>Performance and analytics data</li>
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Ad Generation and Advertising Activities:</h3>
+                  <ul className="list-disc list-inside text-gray-600 space-y-2">
+                    <li><strong>Meta Platforms:</strong> We use collected data for generating targeted advertisements, managing ad campaigns, and analyzing engagement metrics to improve ad performance.</li>
+                    <li><strong>LinkedIn:</strong> We use LinkedIn data to generate ad content targeting specific professional demographics, using engagement data to create, optimize, and schedule ads tailored to user segments.</li>
+                    <li><strong>X:</strong> We use X data for ad campaign creation, analyzing post performance, and generating targeted ads, including automated tools to craft engaging ads and deploy them effectively.</li>
+                    <li><strong>Google Ads Integration:</strong> We use Google Ads data to create, manage, and optimize ad campaigns. This includes analyzing campaign metrics to improve targeting, adjust ad spend, and enhance overall ad performance.</li>
+                    <li><strong>YouTube Integration:</strong> Data from YouTube is used to optimize video content, create targeted ads, and enhance engagement through personalized ad strategies.</li>
+                  </ul>
+                </div>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Sharing of Information</h2>
+                <p className="text-gray-600 mb-4">We may share your data with:</p>
+                <ul className="list-disc list-inside text-gray-600 space-y-2">
+                  <li><strong>Service Providers:</strong> Third-party vendors who support our services, including hosting, analytics, customer support, data processing, and ad management.</li>
+                  <li><strong>Business Partners and Advertisers:</strong> Where permitted by law and based on user consent, we may share information with our business partners to provide co-branded services or to help with advertising and marketing initiatives.</li>
+                  <li><strong>Meta, LinkedIn, X, Google, and YouTube Platforms:</strong> Data is shared with these platforms to facilitate integrations, including ad generation, ensuring compliance with their respective privacy policies and terms.</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">2. How We Use Your Information</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. User Consent</h2>
                 <p className="text-gray-600 mb-4">
-                  We use the information we collect to:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Provide, maintain, and improve our services</li>
-                  <li>Process transactions and send related information</li>
-                  <li>Send technical notices, updates, and support messages</li>
-                  <li>Respond to your comments and questions</li>
-                  <li>Communicate with you about products, services, and promotions</li>
-                  <li>Monitor and analyze trends and usage</li>
-                  <li>Detect and prevent fraudulent transactions</li>
-                  <li>Comply with legal obligations</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Information Sharing and Disclosure</h2>
-                <p className="text-gray-600 mb-4">
-                  We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li><strong>With your consent:</strong> When you explicitly agree to share information</li>
-                  <li><strong>Service providers:</strong> Third-party companies that help us operate our platform (payment processors, analytics providers, etc.)</li>
-                  <li><strong>Legal compliance:</strong> When required by law or to protect our rights</li>
-                  <li><strong>Business transfers:</strong> In connection with any merger, sale, or acquisition</li>
-                  <li><strong>Safety and security:</strong> To protect the rights, property, or safety of our users</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Data Security</h2>
-                <p className="text-gray-600 mb-4">
-                  We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. These measures include:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li>Encryption of sensitive data in transit and at rest</li>
-                  <li>Regular security audits and vulnerability assessments</li>
-                  <li>Access controls and authentication measures</li>
-                  <li>Employee training on data protection practices</li>
-                  <li>Secure data centers with physical security measures</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Data Retention</h2>
-                <p className="text-gray-600 mb-4">
-                  We retain your personal information for as long as necessary to provide our services and fulfill the purposes outlined in this policy, unless a longer retention period is required by law.
+                  By using our services, you consent to our data collection practices. You may withdraw your consent at any time by contacting us at support@leadmasters.ai. Withdrawal of consent may limit your access to specific features of our platform, including ad generation services.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Your Rights and Choices</h2>
-                <p className="text-gray-600 mb-4">
-                  You have the following rights regarding your personal information:
-                </p>
-                <ul className="list-disc list-inside text-gray-600 space-y-2 mb-4">
-                  <li><strong>Access:</strong> Request access to your personal information</li>
-                  <li><strong>Correction:</strong> Request correction of inaccurate information</li>
-                  <li><strong>Deletion:</strong> Request deletion of your personal information</li>
-                  <li><strong>Portability:</strong> Request a copy of your data in a structured format</li>
-                  <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
-                  <li><strong>Restriction:</strong> Request limitation on processing of your data</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Cookies and Tracking</h2>
-                <p className="text-gray-600 mb-4">
-                  We use cookies and similar tracking technologies to collect information about your browsing activities. You can control cookies through your browser settings.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Third-Party Services</h2>
-                <p className="text-gray-600 mb-4">
-                  Our Service may contain links to third-party websites or services. We are not responsible for the privacy practices of these third parties.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">9. International Data Transfers</h2>
-                <p className="text-gray-600 mb-4">
-                  Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Children's Privacy</h2>
-                <p className="text-gray-600 mb-4">
-                  Our Service is not intended for children under 13. We do not knowingly collect personal information from children under 13.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Contact Us</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">13. Contact Us</h2>
                 <p className="text-gray-600">
                   If you have any questions about this Privacy Policy, please contact us at:
                 </p>
                 <div className="mt-2 text-gray-600">
-                  <p>Email: privacy@leadmasters.ai</p>
-                  <p>Phone: +1 (555) 123-4567</p>
-                  <p>Address: 123 Business Ave, Suite 100, Business City, BC 12345</p>
+                  <p>Email: support@leadmasters.ai</p>
+                  <p>Website: https://leadmasters.ai</p>
                 </div>
               </section>
             </div>
