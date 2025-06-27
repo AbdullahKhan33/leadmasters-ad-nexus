@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { LoginScreen } from '@/components/LoginScreen';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -16,8 +17,28 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<{ username: string } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already authenticated on app load
+    const checkAuth = () => {
+      try {
+        const authData = localStorage.getItem('leadmasters_auth');
+        if (authData) {
+          const parsed = JSON.parse(authData);
+          setIsAuthenticated(true);
+          setUser(parsed.user);
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
     console.log('Attempting login with:', username);
@@ -65,6 +86,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoginVisible 
     }}>
       {children}
+      {isLoginVisible && !isAuthenticated && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full">
+            <button 
+              onClick={() => setIsLoginVisible(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors text-2xl font-bold z-10"
+            >
+              ✕
+            </button>
+            <div className="p-6">
+              <LoginScreen />
+            </div>
+          </div>
+        </div>
+      )}
     </AuthContext.Provider>
   );
 }

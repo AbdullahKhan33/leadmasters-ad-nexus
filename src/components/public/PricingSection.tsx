@@ -106,7 +106,7 @@ export function PricingSection() {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative rounded-3xl border-2 p-8 ${
+              className={`relative rounded-3xl border-2 p-8 h-full flex flex-col ${
                 plan.popular
                   ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-2xl scale-105'
                   : 'border-gray-200 bg-white hover:border-purple-200'
@@ -141,12 +141,12 @@ export function PricingSection() {
                 <p className="text-gray-600 mb-6">{plan.description}</p>
                 
                 <div className="space-y-2">
-                  <div className="flex items-center justify-center space-x-2">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price.inr}</span>
-                    <span className="text-gray-500">/</span>
-                    <span className="text-4xl font-bold text-gray-900">{plan.price.aed}</span>
+                  <div className="flex items-center justify-center space-x-3">
+                    <span className="text-2xl font-bold text-gray-900">{plan.price.inr}</span>
+                    <span className="text-gray-400">/</span>
+                    <span className="text-2xl font-bold text-gray-900">{plan.price.aed}</span>
                   </div>
-                  <div className="flex items-center justify-center space-x-2 text-sm">
+                  <div className="flex items-center justify-center space-x-3 text-sm">
                     <span className="line-through text-gray-400">{plan.originalPrice.inr}</span>
                     <span className="text-gray-400">/</span>
                     <span className="line-through text-gray-400">{plan.originalPrice.aed}</span>
@@ -155,26 +155,28 @@ export function PricingSection() {
                 </div>
               </div>
 
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start space-x-3">
-                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700 text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="flex-1 flex flex-col">
+                <ul className="space-y-4 mb-8 flex-1">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start space-x-3">
+                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-              <Button
-                onClick={showLogin}
-                className={`w-full ${
-                  plan.popular
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl'
-                    : 'bg-gray-900 hover:bg-gray-800 text-white'
-                } group-hover:scale-105 transition-all duration-200`}
-              >
-                {plan.cta}
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
+                <Button
+                  onClick={showLogin}
+                  className={`w-full mt-auto ${
+                    plan.popular
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white shadow-lg hover:shadow-xl'
+                      : 'bg-gray-900 hover:bg-gray-800 text-white'
+                  } group-hover:scale-105 transition-all duration-200`}
+                >
+                  {plan.cta}
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>
