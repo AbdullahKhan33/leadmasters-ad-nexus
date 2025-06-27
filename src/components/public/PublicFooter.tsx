@@ -3,46 +3,39 @@ import React from 'react';
 import { Logo } from '@/components/ui/logo';
 import { Separator } from '@/components/ui/separator';
 import { MessageCircle, Linkedin, Instagram } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function PublicFooter() {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
   const footerSections = {
     product: {
       title: "Product",
       links: [
-        { name: "Features", href: "#" },
-        { name: "Pricing", href: "#pricing" },
-        { name: "Templates", href: "#" }
+        { name: "Features", action: () => navigate('/') },
+        { name: "Pricing", action: () => navigate('/pricing') },
+        { name: "Templates", action: () => navigate('/') }
       ]
     },
     company: {
       title: "Company",
       links: [
-        { name: "About Us", href: "#about" },
-        { name: "Blog", href: "#blog" },
-        { name: "Careers", href: "#" },
-        { name: "Support", href: "#" },
-        { name: "Help Center", href: "#" },
-        { name: "Contact Us", href: "#contact" }
+        { name: "About Us", action: () => navigate('/about-us') },
+        { name: "Blog", action: () => navigate('/blog') },
+        { name: "Careers", action: () => navigate('/') },
+        { name: "Support", action: () => navigate('/contact') },
+        { name: "Help Center", action: () => navigate('/contact') },
+        { name: "Contact Us", action: () => navigate('/contact') }
       ]
     },
     legal: {
       title: "Legal",
       links: [
-        { name: "Terms of Service", href: "#" },
-        { name: "Privacy Policy", href: "#" },
-        { name: "Cancellation & Refund Policy", href: "#" }
+        { name: "Terms of Service", action: () => navigate('/terms') },
+        { name: "Privacy Policy", action: () => navigate('/privacy-policy') },
+        { name: "Cancellation & Refund Policy", action: () => navigate('/refund-policy') }
       ]
-    }
-  };
-
-  const scrollToSection = (href: string) => {
-    if (href.startsWith('#')) {
-      const element = document.getElementById(href.substring(1));
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
     }
   };
 
@@ -100,7 +93,7 @@ export function PublicFooter() {
                 {section.links.map((link, index) => (
                   <li key={index}>
                     <button
-                      onClick={() => scrollToSection(link.href)}
+                      onClick={link.action}
                       className="text-gray-300 hover:text-white transition-colors cursor-pointer"
                     >
                       {link.name}

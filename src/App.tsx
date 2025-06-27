@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +24,11 @@ import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { useAuth } from "./contexts/AuthContext";
 import { PublicWebsite } from "./components/PublicWebsite";
 import { LoginScreen } from "./components/LoginScreen";
+import { AboutUsPage } from "./components/public/AboutUsPage";
+import { BlogPage } from "./components/public/BlogPage";
+import { PricingPage } from "./components/public/PricingPage";
+import { ContactPage } from "./components/public/ContactPage";
+import { LegalPage } from "./components/public/LegalPage";
 
 const queryClient = new QueryClient();
 
@@ -299,6 +305,22 @@ function DashboardRoutes() {
   );
 }
 
+function PublicRoutes() {
+  return (
+    <Routes>
+      <Route path="/" element={<PublicWebsite />} />
+      <Route path="/about-us" element={<AboutUsPage />} />
+      <Route path="/blog" element={<BlogPage />} />
+      <Route path="/pricing" element={<PricingPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/terms" element={<LegalPage type="terms" />} />
+      <Route path="/privacy-policy" element={<LegalPage type="privacy" />} />
+      <Route path="/refund-policy" element={<LegalPage type="refund" />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
+
 const App = () => {
   const { isAuthenticated, isLoginVisible } = useAuth();
 
@@ -315,7 +337,7 @@ const App = () => {
           ) : isLoginVisible ? (
             <LoginScreen />
           ) : (
-            <PublicWebsite />
+            <PublicRoutes />
           )}
         </TooltipProvider>
       </PremiumProvider>
