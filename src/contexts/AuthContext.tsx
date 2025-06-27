@@ -31,11 +31,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log('Logging out - redirecting to home page');
-    setIsAuthenticated(false);
-    setUser(null);
-    // Use replace to avoid back button issues
-    window.location.replace('/');
+    console.log('Logging out...');
+    // Force a complete page reload to the main website
+    window.location.href = window.location.origin;
   };
 
   const showLogin = () => {
