@@ -9,8 +9,8 @@ export function HeroSection() {
   const { showLogin } = useAuth();
 
   const stats = [
-    { number: "10,000+", label: "Businesses Growing" },
-    { number: "500%", label: "Average Lead Increase" },
+    { number: "100+", label: "Businesses Growing" },
+    { number: "400%", label: "Average Lead Increase" },
     { number: "2 Min", label: "Setup Time" },
     { number: "24/7", label: "AI Support" }
   ];
@@ -77,7 +77,7 @@ export function HeroSection() {
                       </div>
                     ))}
                   </div>
-                  <span>Join 10,000+ growing businesses</span>
+                  <span>Join 100+ growing businesses</span>
                 </div>
               </div>
             </div>

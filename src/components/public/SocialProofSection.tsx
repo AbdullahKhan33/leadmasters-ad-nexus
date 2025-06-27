@@ -41,9 +41,9 @@ export function SocialProofSection() {
   ];
 
   const metrics = [
-    { number: "10,000+", label: "Active Businesses", icon: Users },
-    { number: "2.5M+", label: "Leads Generated", icon: TrendingUp },
-    { number: "500%", label: "Average ROI", icon: Zap },
+    { number: "100+", label: "Active Businesses", icon: Users },
+    { number: "25,000+", label: "Leads Generated", icon: TrendingUp },
+    { number: "400%", label: "Average ROI", icon: Zap },
     { number: "4.9/5", label: "Customer Rating", icon: Star }
   ];
 
@@ -61,14 +61,14 @@ export function SocialProofSection() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 bg-green-100 rounded-full mb-6">
             <Star className="w-4 h-4 text-green-600 mr-2" />
-            <span className="text-sm font-medium text-green-700">Trusted by 10,000+ Businesses</span>
+            <span className="text-sm font-medium text-green-700">Trusted by 100+ Growing Businesses</span>
           </div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
             Real Results from 
             <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent"> Real Businesses</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Don't just take our word for it. See how businesses like yours are crushing their lead generation goals.
+            Don't just take our word for it. See how businesses like yours are crushing their lead generation goals with proven strategies that work.
           </p>
         </div>
 
@@ -143,10 +143,10 @@ export function SocialProofSection() {
 
         {/* Logo Cloud */}
         <div className="mt-16 text-center">
-          <p className="text-gray-500 text-sm font-medium mb-8">Trusted by businesses in every industry</p>
+          <p className="text-gray-500 text-sm font-medium mb-8">Trusted by businesses across every industry</p>
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
             {['Restaurant', 'Fitness', 'E-commerce', 'Real Estate', 'Consulting', 'Healthcare'].map((industry, index) => (
-              <div key={index} className="bg-white px-6 py-3 rounded-lg border border-gray-200 text-gray-600 font-medium">
+              <div key={index} className="bg-white px-6 py-3 rounded-lg border border-gray-200 text-gray-600 font-medium hover:border-purple-200 hover:text-purple-700 transition-colors">
                 {industry}
               </div>
             ))}
