@@ -68,8 +68,7 @@ export function PublicFooter() {
       title: "Product",
       links: [
         { name: "Features", action: () => handleNavigation('/') },
-        { name: "Pricing", action: () => handleNavigation('/pricing') },
-        { name: "Templates", action: () => handleNavigation('/') }
+        { name: "Pricing", action: () => handleNavigation('/pricing') }
       ]
     },
     company: {
@@ -77,9 +76,7 @@ export function PublicFooter() {
       links: [
         { name: "About Us", action: () => handleNavigation('/about-us') },
         { name: "Blog", action: () => handleNavigation('/blog') },
-        { name: "Careers", action: () => handleNavigation('/') },
         { name: "Support", action: () => handleNavigation('/contact') },
-        { name: "Help Center", action: () => handleNavigation('/contact') },
         { name: "Contact Us", action: () => handleNavigation('/contact') }
       ]
     },
