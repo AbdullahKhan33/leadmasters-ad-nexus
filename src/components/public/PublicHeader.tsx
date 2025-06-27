@@ -7,44 +7,21 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 export function PublicHeader() {
-  const [activeSection, setActiveSection] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { showLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const navigationItems = [
-    { name: 'Home', path: '/', id: 'home' },
-    { name: 'About Us', path: '/about-us', id: 'about' },
-    { name: 'Blog', path: '/blog', id: 'blog' },
-    { name: 'Pricing', path: '/pricing', id: 'pricing' },
-    { name: 'Contact Us', path: '/contact', id: 'contact' }
+    { name: 'Home', path: '/' },
+    { name: 'About Us', path: '/about-us' },
+    { name: 'Blog', path: '/blog' },
+    { name: 'Pricing', path: '/pricing' },
+    { name: 'Contact Us', path: '/contact' }
   ];
 
-  const handleNavigation = (path: string, id: string) => {
-    if (path === '/' && location.pathname === '/') {
-      // If we're on the home page and clicking home, scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (path === '/' && id !== 'home') {
-      // If we're navigating to a section on the home page from another page
-      navigate('/');
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else if (location.pathname === '/' && id !== 'home') {
-      // If we're on the home page and clicking a section link
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      // Navigate to the specific page
-      navigate(path);
-    }
-    setActiveSection(id);
+  const handleNavigation = (path: string) => {
+    navigate(path);
     setIsMobileMenuOpen(false);
   };
 
@@ -78,8 +55,8 @@ export function PublicHeader() {
           <nav className="hidden md:flex items-center space-x-8">
             {navigationItems.map((item) => (
               <button
-                key={item.id}
-                onClick={() => handleNavigation(item.path, item.id)}
+                key={item.path}
+                onClick={() => handleNavigation(item.path)}
                 className={`text-sm font-medium transition-colors ${
                   isActivePath(item.path)
                     ? 'text-purple-600' 
@@ -120,8 +97,8 @@ export function PublicHeader() {
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-100">
               {navigationItems.map((item) => (
                 <button
-                  key={item.id}
-                  onClick={() => handleNavigation(item.path, item.id)}
+                  key={item.path}
+                  onClick={() => handleNavigation(item.path)}
                   className={`block w-full text-left px-3 py-2 text-base font-medium transition-colors ${
                     isActivePath(item.path)
                       ? 'text-purple-600 bg-purple-50' 

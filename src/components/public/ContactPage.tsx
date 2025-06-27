@@ -5,9 +5,8 @@ import { PublicFooter } from './PublicFooter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { MessageCircle, Phone, Mail, MapPin, Clock, Users } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MapPin, Phone, Mail, MessageCircle, Clock, CheckCircle } from 'lucide-react';
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -15,45 +14,62 @@ export function ContactPage() {
     email: '',
     phone: '',
     company: '',
-    message: '',
-    interestedIn: ''
+    service: '',
+    message: ''
   });
-  const { toast } = useToast();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simulate form submission
-    toast({
-      title: "Message Sent Successfully!",
-      description: "Thank you for contacting us. We'll get back to you within 24 hours with a personalized proposal.",
-    });
-
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      message: '',
-      interestedIn: ''
-    });
+    console.log('Form submitted:', formData);
+    setIsSubmitted(true);
   };
 
-  const handleWhatsAppClick = () => {
-    window.open('https://wa.me/1234567890?text=Hi! I\'m interested in LeadMasters.ai for my business.', '_blank');
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleScheduleCall = () => {
-    window.open('https://calendly.com/leadmasters-demo', '_blank');
-  };
+  const services = [
+    "Lead Generation Starter Pack",
+    "Business Launch Package", 
+    "Growth & Automation Pro",
+    "Custom Solution",
+    "General Inquiry"
+  ];
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-white">
+        <PublicHeader />
+        <main className="pt-16">
+          <section className="py-20 bg-gradient-to-br from-green-50 to-blue-50">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Thank You for Reaching Out!
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                We've received your message and will get back to you within 24 hours.
+              </p>
+              <Button 
+                onClick={() => setIsSubmitted(false)}
+                variant="outline"
+                className="mr-4"
+              >
+                Send Another Message
+              </Button>
+              <Button onClick={() => window.location.href = '/'}>
+                Back to Home
+              </Button>
+            </div>
+          </section>
+        </main>
+        <PublicFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -64,243 +80,229 @@ export function ContactPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-                Let's Grow Your <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">Business Together</span>
+                Get in <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">Touch</span>
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Ready to transform your lead generation? Get in touch with our team and we'll create a custom growth plan for your business.
+                Ready to transform your business with AI-powered lead generation? 
+                Let's discuss how we can help you grow.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Contact Options */}
-        <section className="py-16 bg-white">
+        {/* Contact Form & Info */}
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-3 gap-8 mb-16">
-              <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-green-500 rounded-lg mb-4">
-                  <MessageCircle className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">WhatsApp Chat</h3>
-                <p className="text-gray-600 mb-4">Get instant answers to your questions</p>
-                <Button 
-                  onClick={handleWhatsAppClick}
-                  className="bg-green-500 hover:bg-green-600 text-white"
-                >
-                  Chat Now
-                </Button>
+            <div className="grid lg:grid-cols-2 gap-16">
+              {/* Contact Form */}
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">Send us a Message</h2>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Full Name *
+                      </label>
+                      <Input
+                        required
+                        value={formData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email Address *
+                      </label>
+                      <Input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Phone Number
+                      </label>
+                      <Input
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        placeholder="+1 (555) 123-4567"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Company Name
+                      </label>
+                      <Input
+                        value={formData.company}
+                        onChange={(e) => handleInputChange('company', e.target.value)}
+                        placeholder="Your company name"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Service Interest
+                    </label>
+                    <Select onValueChange={(value) => handleInputChange('service', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a service" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {services.map((service) => (
+                          <SelectItem key={service} value={service}>
+                            {service}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Message *
+                    </label>
+                    <Textarea
+                      required
+                      rows={6}
+                      value={formData.message}
+                      onChange={(e) => handleInputChange('message', e.target.value)}
+                      placeholder="Tell us about your business and how we can help..."
+                    />
+                  </div>
+
+                  <Button 
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
+                  >
+                    Send Message
+                  </Button>
+                </form>
               </div>
 
-              <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500 rounded-lg mb-4">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Schedule a Call</h3>
-                <p className="text-gray-600 mb-4">Book a free strategy session</p>
-                <Button 
-                  onClick={handleScheduleCall}
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
-                >
-                  Book Call
-                </Button>
-              </div>
+              {/* Contact Info */}
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">Get in Touch</h2>
+                
+                <div className="space-y-8">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Mail className="w-6 h-6 text-purple-600" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
+                      <p className="text-gray-600 mb-2">Send us an email and we'll respond within 24 hours</p>
+                      <a href="mailto:hello@leadmasters.ai" className="text-purple-600 font-medium">
+                        hello@leadmasters.ai
+                      </a>
+                    </div>
+                  </div>
 
-              <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-purple-500 rounded-lg mb-4">
-                  <Mail className="w-6 h-6 text-white" />
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <MessageCircle className="w-6 h-6 text-green-600" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">WhatsApp</h3>
+                      <p className="text-gray-600 mb-2">Chat with us directly for quick questions</p>
+                      <a href="https://wa.me/15551234567" className="text-green-600 font-medium">
+                        +1 (555) 123-4567
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Phone className="w-6 h-6 text-blue-600" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Call Us</h3>
+                      <p className="text-gray-600 mb-2">Speak directly with our team</p>
+                      <a href="tel:+15551234567" className="text-blue-600 font-medium">
+                        +1 (555) 123-4567
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <Clock className="w-6 h-6 text-orange-600" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">Business Hours</h3>
+                      <div className="text-gray-600 space-y-1">
+                        <p>Monday - Friday: 9:00 AM - 6:00 PM EST</p>
+                        <p>Saturday: 10:00 AM - 4:00 PM EST</p>
+                        <p>Sunday: Closed</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Send a Message</h3>
-                <p className="text-gray-600 mb-4">Detailed inquiry form below</p>
-                <Button 
-                  onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="bg-purple-500 hover:bg-purple-600 text-white"
-                >
-                  Fill Form
-                </Button>
+
+                {/* Quick Response Promise */}
+                <div className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Our Promise</h3>
+                  <p className="text-gray-600">
+                    We respond to all inquiries within 24 hours during business hours. 
+                    For urgent matters, please call or WhatsApp us directly.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Contact Form & Info */}
-        <section id="contact-form" className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12">
-              {/* Contact Form */}
-              <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Send us a Message</h2>
-                <p className="text-gray-600 mb-8">
-                  Tell us about your business and we'll create a custom growth plan just for you.
+        {/* FAQ Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+              Frequently Asked Questions
+            </h2>
+            
+            <div className="space-y-8">
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  How quickly can you set up my lead generation system?
+                </h3>
+                <p className="text-gray-600">
+                  Most setups are completed within 5-7 business days. Our Business Launch Package 
+                  can be fully deployed within 2 weeks, including website, social media, and lead generation systems.
                 </p>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name">Full Name *</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        className="mt-1"
-                        placeholder="John Smith"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email Address *</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        className="mt-1"
-                        placeholder="john@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                        placeholder="+1 (555) 123-4567"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="company">Company Name</Label>
-                      <Input
-                        id="company"
-                        name="company"
-                        type="text"
-                        value={formData.company}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                        placeholder="Your Business Name"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="interestedIn">What are you interested in?</Label>
-                    <select
-                      id="interestedIn"
-                      name="interestedIn"
-                      value={formData.interestedIn}
-                      onChange={handleInputChange}
-                      className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    >
-                      <option value="">Select an option</option>
-                      <option value="lead-generation">Lead Generation Package</option>
-                      <option value="business-launch">Business Launch Package</option>
-                      <option value="growth-automation">Growth & Automation Package</option>
-                      <option value="custom-solution">Custom Solution</option>
-                      <option value="just-browsing">Just Getting Information</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message">Tell us about your business *</Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1 min-h-[120px]"
-                      placeholder="What type of business do you run? What are your main challenges with lead generation? What are your goals?"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white"
-                  >
-                    Send Message & Get Custom Proposal
-                  </Button>
-                </form>
               </div>
-
-              {/* Contact Information */}
-              <div className="space-y-8">
-                <div className="bg-white rounded-2xl shadow-lg p-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h3>
-                  
-                  <div className="space-y-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-purple-100 rounded-lg p-3">
-                        <Phone className="w-6 h-6 text-purple-600" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Phone Support</h4>
-                        <p className="text-gray-600">+1 (555) 123-4567</p>
-                        <p className="text-sm text-gray-500">Mon-Fri 9AM-6PM EST</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-blue-100 rounded-lg p-3">
-                        <Mail className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Email Support</h4>
-                        <p className="text-gray-600">hello@leadmasters.ai</p>
-                        <p className="text-sm text-gray-500">Response within 2 hours</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-green-100 rounded-lg p-3">
-                        <MapPin className="w-6 h-6 text-green-600" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Office</h4>
-                        <p className="text-gray-600">123 Business District</p>
-                        <p className="text-gray-600">Tech City, TC 12345</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-orange-100 rounded-lg p-3">
-                        <Clock className="w-6 h-6 text-orange-600" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900">Business Hours</h4>
-                        <p className="text-gray-600">Monday - Friday: 9AM - 6PM EST</p>
-                        <p className="text-gray-600">Saturday: 10AM - 2PM EST</p>
-                        <p className="text-gray-600">Sunday: Closed</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Response Time Promise */}
-                <div className="bg-gradient-to-r from-purple-600 to-pink-500 rounded-2xl p-8 text-white text-center">
-                  <h3 className="text-2xl font-bold mb-4">Our Promise to You</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-center space-x-2">
-                      <Clock className="w-5 h-5" />
-                      <span>24-hour response guarantee</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2">
-                      <Users className="w-5 h-5" />
-                      <span>Free strategy consultation</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2">
-                      <MessageCircle className="w-5 h-5" />
-                      <span>No pushy sales tactics</span>
-                    </div>
-                  </div>
-                </div>
+              
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Do you provide ongoing support after setup?
+                </h3>
+                <p className="text-gray-600">
+                  Yes! All our packages include ongoing support. Higher-tier packages include dedicated 
+                  success managers and monthly strategy calls to ensure your continued growth.
+                </p>
+              </div>
+              
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  What if I'm not satisfied with the results?
+                </h3>
+                <p className="text-gray-600">
+                  We offer a 30-day money-back guarantee on all packages. If you're not completely 
+                  satisfied, we'll refund your investment while you keep everything we've built for you.
+                </p>
               </div>
             </div>
           </div>
