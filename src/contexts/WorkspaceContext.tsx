@@ -18,6 +18,7 @@ interface WorkspaceContextType {
   setActiveWorkspace: (workspace: Workspace | null) => void;
   selectWorkspace: (workspace: Workspace) => void;
   addWorkspace: (workspace: Workspace) => void;
+  deleteWorkspace: (workspaceId: string) => void;
   isInWorkspace: boolean;
   hasWorkspaces: boolean;
 }
@@ -51,6 +52,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (workspaces.length > 0) {
       localStorage.setItem('workspaces', JSON.stringify(workspaces));
+    } else {
+      // Clear localStorage when no workspaces exist
+      localStorage.removeItem('workspaces');
+      localStorage.removeItem('activeWorkspace');
     }
   }, [workspaces]);
 
@@ -58,6 +63,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (activeWorkspace) {
       localStorage.setItem('activeWorkspace', JSON.stringify(activeWorkspace));
+    } else {
+      localStorage.removeItem('activeWorkspace');
     }
   }, [activeWorkspace]);
 
@@ -70,12 +77,26 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setActiveWorkspace(workspace);
   };
 
+  const deleteWorkspace = (workspaceId: string) => {
+    setWorkspaces(prev => {
+      const updatedWorkspaces = prev.filter(workspace => workspace.id !== workspaceId);
+      
+      // If the deleted workspace was the active one, clear active workspace
+      if (activeWorkspace?.id === workspaceId) {
+        setActiveWorkspace(null);
+      }
+      
+      return updatedWorkspaces;
+    });
+  };
+
   const value = {
     activeWorkspace,
     workspaces,
     setActiveWorkspace,
     selectWorkspace,
     addWorkspace,
+    deleteWorkspace,
     isInWorkspace: activeWorkspace !== null,
     hasWorkspaces: workspaces.length > 0,
   };

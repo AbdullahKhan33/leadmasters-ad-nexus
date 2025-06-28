@@ -4,6 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { 
   Building2, 
@@ -37,7 +47,11 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const { workspaces, selectWorkspace, activeWorkspace, addWorkspace, hasWorkspaces } = useWorkspace();
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; workspace: Workspace | null }>({ 
+    isOpen: false, 
+    workspace: null 
+  });
+  const { workspaces, selectWorkspace, activeWorkspace, addWorkspace, deleteWorkspace, hasWorkspaces } = useWorkspace();
   const { toast } = useToast();
 
   const filteredWorkspaces = workspaces.filter(workspace => {
@@ -62,6 +76,23 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     event.stopPropagation();
     if (onWorkspaceSettingsClick) {
       onWorkspaceSettingsClick(workspace);
+    }
+  };
+
+  const handleDeleteWorkspace = (workspace: Workspace, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setDeleteConfirmation({ isOpen: true, workspace });
+  };
+
+  const confirmDeleteWorkspace = () => {
+    if (deleteConfirmation.workspace) {
+      deleteWorkspace(deleteConfirmation.workspace.id);
+      toast({
+        title: "Workspace Deleted",
+        description: `${deleteConfirmation.workspace.name} has been deleted successfully.`,
+        variant: "destructive",
+      });
+      setDeleteConfirmation({ isOpen: false, workspace: null });
     }
   };
 
@@ -361,9 +392,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
                         variant="outline"
                         size="sm"
                         className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 rounded-lg transition-all duration-200"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
+                        onClick={(e) => handleDeleteWorkspace(workspace, e)}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -381,6 +410,28 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
         onClose={() => setIsCreateModalOpen(false)}
         onCreateWorkspace={handleCreateWorkspace}
       />
+
+      <AlertDialog open={deleteConfirmation.isOpen} onOpenChange={(open) => 
+        setDeleteConfirmation({ isOpen: open, workspace: deleteConfirmation.workspace })
+      }>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Workspace</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteConfirmation.workspace?.name}"? This action cannot be undone and will permanently remove all data associated with this workspace.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteWorkspace}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Delete Workspace
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -56,12 +55,19 @@ function IndexContent() {
     if (isInWorkspace && activeWorkspace && !location.state?.view) {
       setCurrentView('dashboard');
     } else if (!hasWorkspaces) {
-      // Force workspace view for new users
+      // Force workspace view for users with no workspaces
       setCurrentView('workspaces');
     } else if (!isInWorkspace && !location.state?.view) {
       setCurrentView('workspaces');
     }
   }, [isInWorkspace, activeWorkspace, hasWorkspaces, location.state]);
+
+  // Monitor workspace changes to redirect when all workspaces are deleted
+  useEffect(() => {
+    if (!hasWorkspaces && currentView !== 'workspaces') {
+      setCurrentView('workspaces');
+    }
+  }, [hasWorkspaces, currentView]);
 
   // Prevent navigation if no workspaces exist
   const handleNavigationClick = (view: AllViews, callback: () => void) => {
