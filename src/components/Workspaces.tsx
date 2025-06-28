@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { 
@@ -285,7 +284,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
               Delete Workspace
             </AlertDialogAction>
           </AlertDialogFooter>
-        </AlertDialogFooter>
+        </AlertDialogContent>
       </AlertDialog>
     </div>
   );
