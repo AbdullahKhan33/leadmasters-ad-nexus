@@ -46,16 +46,44 @@ export function AboutUsPage() {
                   <span className="text-purple-700 font-semibold">Founder & CEO</span>
                 </div>
                 
-                <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
-                  <p className="border-l-4 border-purple-500 pl-6 bg-purple-50 p-6 rounded-r-lg">
-                    At the helm of LeadMasters AI is <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-blue-600 mx-1">Abdullah Khan</Badge>, a seasoned <Badge variant="gradient" className="bg-gradient-to-r from-blue-600 to-purple-600 mx-1">tech entrepreneur</Badge> and <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-pink-600 mx-1">AI strategist</Badge> with over <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-blue-600 mx-1">18 years of experience</Badge> in driving <Badge variant="gradient" className="bg-gradient-to-r from-orange-600 to-red-600 mx-1">software innovation</Badge> and <Badge variant="gradient" className="bg-gradient-to-r from-teal-600 to-green-600 mx-1">business transformation</Badge>.
-                  </p>
-                  <p className="border-l-4 border-blue-500 pl-6 bg-blue-50 p-6 rounded-r-lg">
-                    Abdullah's vision for LeadMasters AI is simple yet powerful — make <Badge variant="gradient" className="bg-gradient-to-r from-blue-600 to-purple-600 mx-1">AI-driven marketing</Badge> and <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-pink-600 mx-1">lead generation effortless</Badge> for businesses of all sizes. With a background spanning <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-blue-600 mx-1">technical leadership</Badge>, <Badge variant="gradient" className="bg-gradient-to-r from-orange-600 to-red-600 mx-1">product development</Badge>, and <Badge variant="gradient" className="bg-gradient-to-r from-teal-600 to-purple-600 mx-1">global training</Badge>, he has built LeadMasters to help businesses cut through complexity and turn AI into real, <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-yellow-600 mx-1">measurable growth</Badge>.
-                  </p>
-                  <p className="border-l-4 border-green-500 pl-6 bg-green-50 p-6 rounded-r-lg">
-                    Under his leadership, LeadMasters AI is reshaping how companies approach <Badge variant="gradient" className="bg-gradient-to-r from-blue-600 to-green-600 mx-1">lead generation</Badge>, <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-blue-600 mx-1">campaign management</Badge>, and <Badge variant="gradient" className="bg-gradient-to-r from-pink-600 to-purple-600 mx-1">customer engagement</Badge> — combining <Badge variant="gradient" className="bg-gradient-to-r from-orange-600 to-red-600 mx-1">automation</Badge>, <Badge variant="gradient" className="bg-gradient-to-r from-teal-600 to-blue-600 mx-1">intelligent insights</Badge>, and <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-teal-600 mx-1">simplicity</Badge> in one seamless platform.
-                  </p>
+                <div className="space-y-8 text-gray-700 text-lg leading-relaxed">
+                  <div className="relative pl-6">
+                    <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-purple-500 to-blue-500 rounded-full"></div>
+                    <p className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-r-xl border border-purple-100">
+                      At the helm of LeadMasters AI is <span className="font-bold text-purple-700">Abdullah Khan</span>, a seasoned 
+                      <span className="font-semibold text-blue-600"> tech entrepreneur</span> and 
+                      <span className="font-semibold text-purple-600"> AI strategist</span> with over 
+                      <span className="font-bold text-green-600">18 years of experience</span> in driving 
+                      <span className="font-semibold text-orange-600">software innovation</span> and 
+                      <span className="font-semibold text-teal-600">business transformation</span>.
+                    </p>
+                  </div>
+                  
+                  <div className="relative pl-6">
+                    <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-green-500 rounded-full"></div>
+                    <p className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-r-xl border border-blue-100">
+                      Abdullah's vision for LeadMasters AI is simple yet powerful — make 
+                      <em className="font-semibold text-blue-700 not-italic">AI-driven marketing</em> and 
+                      <em className="font-semibold text-purple-700 not-italic">lead generation effortless</em> for businesses of all sizes. 
+                      With expertise spanning <span className="font-medium text-green-700">technical leadership</span>, 
+                      <span className="font-medium text-orange-700">product development</span>, and 
+                      <span className="font-medium text-teal-700">global training</span>, he has built LeadMasters to help businesses 
+                      cut through complexity and turn AI into real, <span className="font-bold text-green-600">measurable growth</span>.
+                    </p>
+                  </div>
+                  
+                  <div className="relative pl-6">
+                    <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-green-500 to-purple-500 rounded-full"></div>
+                    <p className="bg-gradient-to-r from-green-50 to-purple-50 p-6 rounded-r-xl border border-green-100">
+                      Under his leadership, LeadMasters AI is reshaping how companies approach modern marketing — 
+                      combining <span className="font-semibold text-orange-600">intelligent automation</span>, 
+                      <span className="font-semibold text-teal-600">data-driven insights</span>, and 
+                      <span className="font-semibold text-green-600">intuitive simplicity</span> in one seamless platform 
+                      that transforms <span className="font-medium text-blue-700">lead generation</span>, 
+                      <span className="font-medium text-purple-700">campaign management</span>, and 
+                      <span className="font-medium text-pink-700">customer engagement</span>.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="mt-8 grid grid-cols-3 gap-4">
