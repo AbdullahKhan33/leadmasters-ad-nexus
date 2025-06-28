@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
@@ -115,30 +116,30 @@ export function BlogPage() {
       category: "Marketing Automation"
     },
     {
-      id: 'crm-setup-small-business',
-      title: "Building a CRM That Actually Gets Used: 7 Essential Features",
-      excerpt: "85% of CRM implementations fail because teams don't use them. Learn what makes a CRM system that your team will actually love using, and how to implement it effectively without the usual resistance.",
-      author: "Product Team",
+      id: 'crm-implementation-guide',
+      title: "CRM Implementation: How to Get Your Team to Actually Use It",
+      excerpt: "85% of CRM systems fail because employees refuse to use them. This step-by-step guide shows you how to choose, implement, and get team buy-in for a CRM that drives real results.",
+      author: "Sales Operations Team",
       date: "Jan 8, 2025",
-      readTime: "5 min read",
+      readTime: "16 min read",
       category: "CRM"
     },
     {
-      id: 'marketing-automation-beginners',
-      title: "The Small Business Owner's Guide to Marketing Automation",
-      excerpt: "Marketing automation doesn't have to be complex or expensive. Discover how to set up simple automation workflows that save 15+ hours per week and increase sales by 30% without the usual complexity.",
-      author: "Automation Team",
+      id: 'marketing-automation-workflows',
+      title: "5 Marketing Automation Workflows That Generate Sales While You Sleep",
+      excerpt: "Set up these 5 proven automation workflows to nurture leads, recover abandoned carts, and turn one-time buyers into repeat customers automatically, increasing revenue by 40%.",
+      author: "Marketing Team",
       date: "Jan 5, 2025",
-      readTime: "10 min read",
+      readTime: "13 min read",
       category: "Marketing Automation"
     },
     {
-      id: 'small-business-website-essentials',
-      title: "Why Your Business Needs a Professional Website (And How to Get One Fast)",
-      excerpt: "73% of consumers judge a business's credibility based on website design. Learn why a professional website is crucial for small business success and how to create one quickly and affordably in 2025.",
-      author: "Web Team",
+      id: 'website-conversion-optimization',
+      title: "Website Conversion Optimization: Turn More Visitors Into Customers",
+      excerpt: "Small changes can create big results. These 12 proven conversion optimization techniques can double your website's lead generation without spending more on advertising.",
+      author: "Conversion Team",
       date: "Jan 3, 2025",
-      readTime: "8 min read",
+      readTime: "11 min read",
       category: "Website"
     }
   ];

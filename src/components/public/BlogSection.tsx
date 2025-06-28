@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight, Calendar, User, Clock, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -82,13 +83,31 @@ export function BlogSection() {
       category: "Small Business Tips"
     },
     {
-      id: 'whatsapp-customer-service',
-      title: "WhatsApp Customer Service: Turn Support Into Sales Opportunities",
-      excerpt: "Smart businesses are using WhatsApp customer service to solve problems AND increase sales. Here's how to turn every support interaction into a potential upsell opportunity.",
-      author: "Customer Success Team",
-      date: "Jan 28, 2025",
+      id: 'marketing-automation-beginners-guide',
+      title: "Marketing Automation for Small Business: The Complete Beginner's Guide",
+      excerpt: "Discover how to set up email sequences, lead nurturing workflows, and automated follow-ups that convert 35% more prospects into customers while you sleep.",
+      author: "Automation Team",
+      date: "Jan 30, 2025",
+      readTime: "12 min read",
+      category: "Marketing Automation"
+    },
+    {
+      id: 'crm-setup-small-business-guide',
+      title: "How to Choose and Set Up a CRM That Your Team Will Actually Use",
+      excerpt: "85% of CRM implementations fail because teams ignore them. Learn the 7 essential features that make a CRM irresistible to use, plus step-by-step setup instructions.",
+      author: "Sales Team",
+      date: "Feb 8, 2025",
+      readTime: "14 min read",
+      category: "CRM"
+    },
+    {
+      id: 'small-business-website-conversion-guide',
+      title: "Turn Your Website Into a Lead Generation Machine: 9 Proven Strategies",
+      excerpt: "Your website should be your best salesperson. These 9 conversion optimization strategies can increase your website leads by 200% without spending more on traffic.",
+      author: "Web Team",
+      date: "Feb 12, 2025",
       readTime: "10 min read",
-      category: "WhatsApp Marketing"
+      category: "Website"
     }
   ];
 
