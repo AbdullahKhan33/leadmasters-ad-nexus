@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +38,8 @@ export function OnboardingWorkspaceForm({ onCreateWorkspace }: OnboardingWorkspa
     mobileNumber: '',
     timezone: ''
   });
+
+  const [availableStates, setAvailableStates] = useState<string[]>([]);
 
   const { toast } = useToast();
 
@@ -131,7 +133,7 @@ export function OnboardingWorkspaceForm({ onCreateWorkspace }: OnboardingWorkspa
     'Vietnam'
   ];
 
-  const states = [
+  const usStates = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
     'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
     'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
@@ -198,6 +200,19 @@ export function OnboardingWorkspaceForm({ onCreateWorkspace }: OnboardingWorkspa
     'UTC+11:00 (Solomon Islands)',
     'UTC+12:00 (New Zealand)'
   ];
+
+  // Update available states when country changes
+  useEffect(() => {
+    if (formData.country === 'United States') {
+      setAvailableStates(usStates);
+    } else {
+      setAvailableStates([]);
+      // Clear state selection if not US
+      if (formData.state) {
+        handleInputChange('state', '');
+      }
+    }
+  }, [formData.country, formData.state]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -391,12 +406,16 @@ export function OnboardingWorkspaceForm({ onCreateWorkspace }: OnboardingWorkspa
                     <Label className="text-sm font-semibold text-gray-700 mb-2 block">
                       State
                     </Label>
-                    <Select value={formData.state} onValueChange={(value) => handleInputChange('state', value)}>
+                    <Select 
+                      value={formData.state} 
+                      onValueChange={(value) => handleInputChange('state', value)}
+                      disabled={availableStates.length === 0}
+                    >
                       <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
-                        <SelectValue placeholder="Select state" />
+                        <SelectValue placeholder={availableStates.length > 0 ? "Select state" : "Select country first"} />
                       </SelectTrigger>
                       <SelectContent>
-                        {states.map((state) => (
+                        {availableStates.map((state) => (
                           <SelectItem key={state} value={state}>
                             {state}
                           </SelectItem>
