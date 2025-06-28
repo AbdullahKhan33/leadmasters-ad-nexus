@@ -1,9 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -26,10 +28,11 @@ import {
   Trash2,
   Globe,
   Briefcase,
-  Settings
+  Settings,
+  ArrowLeft,
+  Sparkles
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import { CreateWorkspaceModal } from './CreateWorkspaceModal';
 import { OnboardingWorkspaceForm } from './OnboardingWorkspaceForm';
 
 interface Workspace {
@@ -46,13 +49,49 @@ interface Workspace {
 export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsClick?: (workspace: Workspace) => void }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [createFormData, setCreateFormData] = useState({
+    name: '',
+    description: '',
+    country: '',
+    industry: '',
+    businessType: ''
+  });
   const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; workspace: Workspace | null }>({ 
     isOpen: false, 
     workspace: null 
   });
   const { workspaces, selectWorkspace, activeWorkspace, addWorkspace, deleteWorkspace, hasWorkspaces } = useWorkspace();
   const { toast } = useToast();
+
+  const countries = [
+    'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan',
+    'Bahrain', 'Bangladesh', 'Belarus', 'Belgium', 'Bolivia', 'Bosnia and Herzegovina', 'Brazil', 'Bulgaria',
+    'Cambodia', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia', 'Czech Republic', 'Denmark',
+    'Ecuador', 'Egypt', 'Estonia', 'Ethiopia', 'Finland', 'France', 'Georgia', 'Germany', 'Ghana',
+    'Greece', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy',
+    'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Latvia', 'Lebanon', 'Lithuania', 'Luxembourg',
+    'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand', 'Nigeria', 'Norway', 'Oman',
+    'Pakistan', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Saudi Arabia',
+    'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka',
+    'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom',
+    'United States', 'Uruguay', 'Venezuela', 'Vietnam'
+  ];
+
+  const industries = [
+    'Technology',
+    'Marketing',
+    'Finance',
+    'Healthcare',
+    'Education',
+    'Retail',
+    'Manufacturing',
+    'Real Estate',
+    'Consulting',
+    'Media & Entertainment'
+  ];
+
+  const businessTypes = ['B2B', 'B2C', 'B2B2C'];
 
   const filteredWorkspaces = workspaces.filter(workspace => {
     const matchesSearch = workspace.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,26 +135,33 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     }
   };
 
-  const handleCreateWorkspace = (workspaceData: {
-    name: string;
-    description: string;
-    country: string;
-    industry: string;
-    businessType: string;
-  }) => {
-    const newWorkspace: Workspace = {
-      id: Date.now().toString(),
-      ...workspaceData,
-      memberCount: 1,
-      isActive: true
-    };
+  const handleCreateWorkspace = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (createFormData.name && createFormData.description && createFormData.country && createFormData.industry && createFormData.businessType) {
+      const newWorkspace: Workspace = {
+        id: Date.now().toString(),
+        ...createFormData,
+        memberCount: 1,
+        isActive: true
+      };
 
-    addWorkspace(newWorkspace);
-    
-    toast({
-      title: "Workspace Created",
-      description: `${workspaceData.name} has been created successfully.`,
-    });
+      addWorkspace(newWorkspace);
+      
+      toast({
+        title: "Workspace Created",
+        description: `${createFormData.name} has been created successfully.`,
+      });
+
+      // Reset form and hide it
+      setCreateFormData({
+        name: '',
+        description: '',
+        country: '',
+        industry: '',
+        businessType: ''
+      });
+      setShowCreateForm(false);
+    }
   };
 
   const handleOnboardingWorkspaceCreate = (workspaceData: {
@@ -150,6 +196,10 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     });
   };
 
+  const handleInputChange = (field: string, value: string) => {
+    setCreateFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const isWorkspaceSelected = (workspace: Workspace) => {
     return activeWorkspace?.id === workspace.id;
   };
@@ -157,6 +207,155 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
   // Show onboarding form for new users
   if (!hasWorkspaces) {
     return <OnboardingWorkspaceForm onCreateWorkspace={handleOnboardingWorkspaceCreate} />;
+  }
+
+  // Show create workspace form
+  if (showCreateForm) {
+    return (
+      <div className="flex-1 overflow-auto bg-gradient-to-br from-gray-50/50 via-blue-50/30 to-purple-50/50 p-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Back Button */}
+          <Button
+            variant="ghost"
+            onClick={() => setShowCreateForm(false)}
+            className="mb-6 hover:bg-white/70"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Workspaces
+          </Button>
+
+          {/* Create Workspace Form */}
+          <Card className="bg-white/95 backdrop-blur-md border border-gray-200/50 shadow-2xl rounded-3xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-b border-gray-200/50 p-8">
+              <div className="flex items-center space-x-3 mb-2">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-white shadow-lg">
+                  <Building2 className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                    Create New Workspace
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 mt-1">
+                    Set up a new workspace to organize your campaigns and content.
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="p-8">
+              <form onSubmit={handleCreateWorkspace} className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="name" className="text-sm font-semibold text-gray-700 mb-2 block">
+                      Workspace Name *
+                    </Label>
+                    <Input
+                      id="name"
+                      value={createFormData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      placeholder="Enter workspace name..."
+                      className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="description" className="text-sm font-semibold text-gray-700 mb-2 block">
+                      Description *
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={createFormData.description}
+                      onChange={(e) => handleInputChange('description', e.target.value)}
+                      placeholder="Describe your workspace..."
+                      className="border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300 min-h-[100px] resize-none"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                        <Globe className="w-4 h-4 mr-2" />
+                        Country *
+                      </Label>
+                      <Select value={createFormData.country} onValueChange={(value) => handleInputChange('country', value)} required>
+                        <SelectTrigger className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                          <SelectValue placeholder="Select country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countries.map((country) => (
+                            <SelectItem key={country} value={country}>
+                              {country}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                        <Briefcase className="w-4 h-4 mr-2" />
+                        Industry *
+                      </Label>
+                      <Select value={createFormData.industry} onValueChange={(value) => handleInputChange('industry', value)} required>
+                        <SelectTrigger className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                          <SelectValue placeholder="Select industry" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {industries.map((industry) => (
+                            <SelectItem key={industry} value={industry}>
+                              {industry}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                      <Users className="w-4 h-4 mr-2" />
+                      Business Type *
+                    </Label>
+                    <Select value={createFormData.businessType} onValueChange={(value) => handleInputChange('businessType', value)} required>
+                      <SelectTrigger className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                        <SelectValue placeholder="Select business type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {businessTypes.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex space-x-3 pt-6 border-t border-gray-200/50">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowCreateForm(false)}
+                    className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl transition-all duration-200 h-12"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl h-12"
+                  >
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Create Workspace
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   const EmptyState = () => (
@@ -171,7 +370,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
         Create your first workspace to start organizing your campaigns and posts by team, client, or project.
       </p>
       <Button 
-        onClick={() => setIsCreateModalOpen(true)}
+        onClick={() => setShowCreateForm(true)}
         className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-8 py-3 rounded-xl shadow-lg"
       >
         <Plus className="w-5 h-5 mr-2" />
@@ -184,11 +383,6 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     return (
       <div className="flex-1 overflow-auto bg-gradient-to-br from-gray-50/50 via-blue-50/30 to-purple-50/50 p-8">
         <EmptyState />
-        <CreateWorkspaceModal 
-          isOpen={isCreateModalOpen}
-          onClose={() => setIsCreateModalOpen(false)}
-          onCreateWorkspace={handleCreateWorkspace}
-        />
       </div>
     );
   }
@@ -207,7 +401,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
             </p>
           </div>
           <Button 
-            onClick={() => setIsCreateModalOpen(true)}
+            onClick={() => setShowCreateForm(true)}
             className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
           >
             <Plus className="w-5 h-5 mr-2" />
@@ -404,12 +598,6 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
           </div>
         )}
       </div>
-
-      <CreateWorkspaceModal 
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreateWorkspace={handleCreateWorkspace}
-      />
 
       <AlertDialog open={deleteConfirmation.isOpen} onOpenChange={(open) => 
         setDeleteConfirmation({ isOpen: open, workspace: deleteConfirmation.workspace })
