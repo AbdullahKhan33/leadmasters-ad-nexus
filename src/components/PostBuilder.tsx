@@ -51,6 +51,13 @@ export function PostBuilder() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasGeneratedContent, setHasGeneratedContent] = useState(false);
   const [aiPrompt, setAiPrompt] = useState('');
+  const [showAllPreviews, setShowAllPreviews] = useState(false);
+  const [platformSpecificContent, setPlatformSpecificContent] = useState({
+    facebook: '',
+    instagram: '',
+    twitter: '',
+    linkedin: ''
+  });
 
   // Handle pre-filled content from inspiration
   useEffect(() => {
@@ -207,6 +214,15 @@ export function PostBuilder() {
 
       const generatedContent = generateContent();
       setPostContent(generatedContent);
+      
+      // Auto-populate platform-specific content with base content
+      setPlatformSpecificContent({
+        facebook: generatedContent,
+        instagram: generatedContent,
+        twitter: generatedContent.length > 280 ? generatedContent.substring(0, 270) + '...' : generatedContent,
+        linkedin: generatedContent
+      });
+      
       setHasGeneratedContent(true);
       
       toast({
@@ -240,7 +256,14 @@ export function PostBuilder() {
       description: "Your post is being published to Facebook, Instagram, Twitter, and LinkedIn.",
     });
     
-    console.log('Publishing to all platforms:', { content: postContent, tone: selectedTone, audience: selectedAudience });
+    console.log('Publishing to all platforms:', { content: postContent, tone: selectedTone, audience: selectedAudience, platformSpecific: platformSpecificContent });
+  };
+
+  const handlePlatformContentChange = (platformId: string, content: string) => {
+    setPlatformSpecificContent(prev => ({
+      ...prev,
+      [platformId]: content
+    }));
   };
 
   console.log('Rendering all platforms view');
@@ -434,7 +457,8 @@ export function PostBuilder() {
                           <Textarea
                             placeholder={`Customize content for ${platform.name}...`}
                             className="min-h-[80px] resize-none"
-                            defaultValue={postContent}
+                            value={platformSpecificContent[platform.id as keyof typeof platformSpecificContent]}
+                            onChange={(e) => handlePlatformContentChange(platform.id, e.target.value)}
                           />
                           <div className="mt-3 flex items-center justify-between text-sm text-gray-500">
                             <span>Character limit: {platform.id === 'twitter' ? '280' : '2,200'}</span>
@@ -459,7 +483,7 @@ export function PostBuilder() {
                   <CardTitle className="text-lg font-semibold text-gray-900">Multi-Platform Preview</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {platforms.slice(0, 2).map((platform) => (
+                  {(showAllPreviews ? platforms : platforms.slice(0, 2)).map((platform) => (
                     <div key={platform.id} className="border rounded-lg p-3 bg-gray-50">
                       <div className="flex items-center space-x-2 mb-2">
                         <platform.icon className="w-4 h-4 text-gray-600" />
@@ -486,7 +510,7 @@ export function PostBuilder() {
                       )}
                       
                       <div className="text-sm text-gray-800 mb-2">
-                        {postContent || "Your content will appear here..."}
+                        {platformSpecificContent[platform.id as keyof typeof platformSpecificContent] || postContent || "Your content will appear here..."}
                       </div>
                       <div className="flex items-center space-x-3 text-xs text-gray-500">
                         <button className="flex items-center space-x-1 hover:text-red-500">
@@ -504,8 +528,12 @@ export function PostBuilder() {
                       </div>
                     </div>
                   ))}
-                  <Button variant="ghost" className="w-full text-purple-600 hover:text-purple-700 hover:bg-purple-50">
-                    View All Platform Previews
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                    onClick={() => setShowAllPreviews(!showAllPreviews)}
+                  >
+                    {showAllPreviews ? 'Show Less' : 'View All Platform Previews'}
                   </Button>
                 </CardContent>
               </Card>
