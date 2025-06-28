@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
@@ -101,10 +100,10 @@ export function BlogPostPage() {
     setPost(postData);
   }, [slug]);
 
-  // Add scroll to top effect when component mounts
+  // Scroll to top when component mounts or slug changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [slug]);
 
   if (!post) {
     return (
