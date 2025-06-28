@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
@@ -46,44 +45,25 @@ export function AboutUsPage() {
                   <span className="text-purple-700 font-semibold">Founder & CEO</span>
                 </div>
                 
-                <div className="space-y-8 text-gray-700 text-lg leading-relaxed">
-                  <div className="relative pl-6">
-                    <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-purple-500 to-blue-500 rounded-full"></div>
-                    <p className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-r-xl border border-purple-100">
-                      At the helm of LeadMasters AI is <span className="font-bold text-purple-700">Abdullah Khan</span>, a seasoned 
-                      <span className="font-semibold text-blue-600"> tech entrepreneur</span> and 
-                      <span className="font-semibold text-purple-600"> AI strategist</span> with over 
-                      <span className="font-bold text-green-600">18 years of experience</span> in driving 
-                      <span className="font-semibold text-orange-600">software innovation</span> and 
-                      <span className="font-semibold text-teal-600">business transformation</span>.
-                    </p>
-                  </div>
+                <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
+                  <p>
+                    At the helm of LeadMasters AI is <strong className="text-purple-700">Abdullah Khan</strong>, a seasoned 
+                    tech entrepreneur and AI strategist with over <strong className="text-green-600">18 years of experience</strong> in driving 
+                    software innovation and business transformation.
+                  </p>
                   
-                  <div className="relative pl-6">
-                    <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-green-500 rounded-full"></div>
-                    <p className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-r-xl border border-blue-100">
-                      Abdullah's vision for LeadMasters AI is simple yet powerful — make 
-                      <em className="font-semibold text-blue-700 not-italic">AI-driven marketing</em> and 
-                      <em className="font-semibold text-purple-700 not-italic">lead generation effortless</em> for businesses of all sizes. 
-                      With expertise spanning <span className="font-medium text-green-700">technical leadership</span>, 
-                      <span className="font-medium text-orange-700">product development</span>, and 
-                      <span className="font-medium text-teal-700">global training</span>, he has built LeadMasters to help businesses 
-                      cut through complexity and turn AI into real, <span className="font-bold text-green-600">measurable growth</span>.
-                    </p>
-                  </div>
+                  <p>
+                    Abdullah's vision for LeadMasters AI is simple yet powerful — make AI-driven marketing and 
+                    lead generation effortless for businesses of all sizes. With expertise spanning technical leadership, 
+                    product development, and global training, he has built LeadMasters to help businesses 
+                    cut through complexity and turn AI into real, <strong className="text-green-600">measurable growth</strong>.
+                  </p>
                   
-                  <div className="relative pl-6">
-                    <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-green-500 to-purple-500 rounded-full"></div>
-                    <p className="bg-gradient-to-r from-green-50 to-purple-50 p-6 rounded-r-xl border border-green-100">
-                      Under his leadership, LeadMasters AI is reshaping how companies approach modern marketing — 
-                      combining <span className="font-semibold text-orange-600">intelligent automation</span>, 
-                      <span className="font-semibold text-teal-600">data-driven insights</span>, and 
-                      <span className="font-semibold text-green-600">intuitive simplicity</span> in one seamless platform 
-                      that transforms <span className="font-medium text-blue-700">lead generation</span>, 
-                      <span className="font-medium text-purple-700">campaign management</span>, and 
-                      <span className="font-medium text-pink-700">customer engagement</span>.
-                    </p>
-                  </div>
+                  <p>
+                    Under his leadership, LeadMasters AI is reshaping how companies approach modern marketing — 
+                    combining intelligent automation, data-driven insights, and intuitive simplicity in one seamless platform 
+                    that transforms lead generation, campaign management, and customer engagement.
+                  </p>
                 </div>
 
                 <div className="mt-8 grid grid-cols-3 gap-4">
