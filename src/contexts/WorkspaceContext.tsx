@@ -81,9 +81,18 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setWorkspaces(prev => {
       const updatedWorkspaces = prev.filter(workspace => workspace.id !== workspaceId);
       
-      // If the deleted workspace was the active one, clear active workspace
+      // If the deleted workspace was the active one, handle auto-selection
       if (activeWorkspace?.id === workspaceId) {
-        setActiveWorkspace(null);
+        if (updatedWorkspaces.length > 0) {
+          // Auto-select the first available workspace
+          const newActiveWorkspace = updatedWorkspaces[0];
+          setActiveWorkspace(newActiveWorkspace);
+          console.log('Auto-selected new active workspace:', newActiveWorkspace.name);
+        } else {
+          // No workspaces left, clear active workspace
+          setActiveWorkspace(null);
+          console.log('No workspaces remaining, cleared active workspace');
+        }
       }
       
       return updatedWorkspaces;
