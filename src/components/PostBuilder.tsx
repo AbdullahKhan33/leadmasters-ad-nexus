@@ -50,6 +50,7 @@ export function PostBuilder() {
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasGeneratedContent, setHasGeneratedContent] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
 
   // Handle pre-filled content from inspiration
   useEffect(() => {
@@ -174,46 +175,34 @@ export function PostBuilder() {
   };
 
   const handleGenerateAIPost = async () => {
-    if (!selectedTone || !selectedAudience) {
+    if (!aiPrompt.trim()) {
       toast({
-        title: "Missing Information",
-        description: "Please select both tone and target audience to generate AI content.",
+        title: "Missing Prompt",
+        description: "Please enter a prompt to generate AI content.",
         variant: "destructive",
       });
       return;
     }
 
     setIsGenerating(true);
-    console.log('Generating AI post with:', { tone: selectedTone, audience: selectedAudience });
+    console.log('Generating AI post with prompt:', aiPrompt);
 
     try {
       // Simulate AI generation delay
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Generate sample content based on tone and audience
+      // Generate content based on the prompt
       const generateContent = () => {
-        const baseContent = {
-          professional: {
-            'general audience': "Discover how cutting-edge technology is transforming the way we approach business challenges. Our latest insights reveal key strategies that successful companies are implementing to stay ahead in today's competitive landscape.",
-            'business owners': "As a business owner, staying ahead of market trends is crucial for sustained growth. Here are three data-driven strategies that leading companies are using to increase their market share by 35% this quarter.",
-            'professionals (25-45)': "Career advancement in today's digital age requires continuous learning and strategic networking. Here's how top professionals are leveraging AI tools to enhance their productivity and achieve their career goals."
-          },
-          casual: {
-            'young adults (18-25)': "Hey everyone! 🌟 Just discovered this amazing new trend that's completely changing how we think about social media. You guys have to check this out - it's going to blow your mind!",
-            'general audience': "Coffee thoughts ☕️ Sometimes the best ideas come when you're just relaxing and letting your mind wander. What's your favorite way to spark creativity?",
-            'tech enthusiasts': "Okay tech fam, you need to see this! 🚀 The latest updates are absolutely game-changing. Who else is excited about what's coming next in the tech world?"
-          },
-          humorous: {
-            'general audience': "Me: I'll just check social media for 5 minutes. Also me: *3 hours later still scrolling* 😅 Anyone else relate to this daily struggle? #SocialMediaLife",
-            'professionals (25-45)': "When someone asks if you're familiar with the latest industry software: 'Oh yes, I'm an expert' *frantically googles it* 😂 #ProfessionalLife #Relatable",
-            'young adults (18-25)': "POV: You're trying to adult but the wifi goes down and suddenly you don't know how to function 📶❌ Why is everything online now?! 😭"
-          }
-        };
-
-        const toneKey = selectedTone.toLowerCase() as keyof typeof baseContent;
-        const audienceKey = selectedAudience.toLowerCase() as keyof typeof baseContent[typeof toneKey];
+        // Use the prompt to generate more contextual content
+        const promptKeywords = aiPrompt.toLowerCase();
         
-        return baseContent[toneKey]?.[audienceKey] || baseContent.professional['general audience'];
+        if (promptKeywords.includes('business') || promptKeywords.includes('professional')) {
+          return `🚀 ${aiPrompt}\n\nTransform your business approach with cutting-edge AI solutions. Our platform empowers professionals to achieve unprecedented growth through intelligent automation and data-driven strategies.\n\n✨ Key Benefits:\n• Enhanced productivity and efficiency\n• Data-driven decision making\n• Automated workflow optimization\n• Competitive market advantage\n\nReady to revolutionize your business? Let's connect! 💼\n\n#AI #Business #Innovation #Growth #Technology`;
+        } else if (promptKeywords.includes('social media') || promptKeywords.includes('marketing')) {
+          return `📱 ${aiPrompt}\n\nElevate your social media game with AI-powered marketing strategies! Our innovative tools help brands create engaging content that resonates with their audience.\n\n🎯 What we offer:\n• AI-generated content creation\n• Advanced audience targeting\n• Performance analytics\n• Multi-platform management\n\nTransform your social presence today! 🌟\n\n#SocialMedia #Marketing #AI #ContentCreation #DigitalMarketing`;
+        } else {
+          return `✨ ${aiPrompt}\n\nDiscover the power of AI-driven solutions that transform ideas into reality. Our cutting-edge platform combines innovation with simplicity to deliver exceptional results.\n\n🌟 Experience:\n• Intelligent automation\n• Seamless integration\n• Real-time insights\n• Scalable solutions\n\nJoin thousands of satisfied users who've already made the switch! 🚀\n\n#AI #Innovation #Technology #Success #Growth`;
+        }
       };
 
       const generatedContent = generateContent();
@@ -222,7 +211,7 @@ export function PostBuilder() {
       
       toast({
         title: "AI Content Generated!",
-        description: "Your post content has been generated successfully. Review and customize it before publishing.",
+        description: "Your post content has been generated based on your prompt.",
       });
     } catch (error) {
       console.error('Error generating AI content:', error);
@@ -278,6 +267,58 @@ export function PostBuilder() {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Column - Content Creation */}
             <div className="lg:col-span-2 space-y-6">
+              {/* AI Prompt Input */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
+                    AI Prompt
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="ai-prompt" className="text-sm font-medium text-gray-700">
+                      Describe what you want to create
+                    </Label>
+                    <Textarea
+                      id="ai-prompt"
+                      placeholder="e.g., Create a professional post about AI tools for small businesses, focusing on productivity and growth..."
+                      value={aiPrompt}
+                      onChange={(e) => setAiPrompt(e.target.value)}
+                      className="mt-1 min-h-[100px] resize-none"
+                    />
+                  </div>
+                  
+                  <Button
+                    onClick={handleGenerateAIPost}
+                    disabled={isGenerating || !aiPrompt.trim()}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                    size="lg"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Generating AI Content...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        Generate AI Post
+                      </>
+                    )}
+                  </Button>
+
+                  {hasGeneratedContent && (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center space-x-2 text-green-800">
+                        <Sparkles className="w-4 h-4" />
+                        <span className="text-sm font-medium">AI content generated successfully!</span>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               {/* Upload Media */}
               <Card className="border border-gray-200 shadow-sm bg-white">
                 <CardHeader className="pb-4">
@@ -333,79 +374,6 @@ export function PostBuilder() {
                       >
                         Remove Media
                       </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* AI Content Generation */}
-              <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Bot className="w-5 h-5 mr-2 text-purple-600" />
-                    AI Content Generation
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="tone" className="text-sm font-medium text-gray-700">Tone</Label>
-                      <Select value={selectedTone} onValueChange={setSelectedTone}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select tone" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {tones.map((tone) => (
-                            <SelectItem key={tone} value={tone.toLowerCase()}>
-                              {tone}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="audience" className="text-sm font-medium text-gray-700">Target Audience</Label>
-                      <Select value={selectedAudience} onValueChange={setSelectedAudience}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select audience" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {audiences.map((audience) => (
-                            <SelectItem key={audience} value={audience.toLowerCase()}>
-                              {audience}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={handleGenerateAIPost}
-                    disabled={isGenerating || !selectedTone || !selectedAudience}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
-                    size="lg"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Generating AI Content...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-5 h-5 mr-2" />
-                        Generate AI Post
-                      </>
-                    )}
-                  </Button>
-
-                  {hasGeneratedContent && (
-                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="flex items-center space-x-2 text-green-800">
-                        <Sparkles className="w-4 h-4" />
-                        <span className="text-sm font-medium">AI content generated successfully!</span>
-                      </div>
                     </div>
                   )}
                 </CardContent>
