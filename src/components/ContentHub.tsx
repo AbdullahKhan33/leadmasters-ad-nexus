@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,7 +49,7 @@ export function ContentHub() {
     {
       id: "1",
       title: "New Product Launch Announcement",
-      content: "We're excited to announce our latest AI-powered marketing tool that will revolutionize how you create content...",
+      content: "We're excited to announce our latest AI-powered marketing tool that will revolutionize how you create content. This innovative solution combines machine learning with intuitive design to help businesses of all sizes create compelling marketing materials in minutes, not hours.",
       platform: "Facebook",
       status: 'published',
       createdAt: "2024-01-15T10:30:00Z",
@@ -62,7 +63,7 @@ export function ContentHub() {
     {
       id: "2", 
       title: "Instagram Story - Behind the Scenes",
-      content: "Take a look behind the scenes at our latest photoshoot for the upcoming campaign...",
+      content: "Take a look behind the scenes at our latest photoshoot for the upcoming campaign. Our creative team worked tirelessly to capture the perfect shots that tell our brand story.",
       platform: "Instagram",
       status: 'published',
       createdAt: "2024-01-14T09:15:00Z",
@@ -76,7 +77,7 @@ export function ContentHub() {
     {
       id: "3",
       title: "Industry Insights: Marketing Trends 2024",
-      content: "The marketing landscape is evolving rapidly. Here are the top 5 trends every marketer should watch...",
+      content: "The marketing landscape is evolving rapidly. Here are the top 5 trends every marketer should watch: 1) AI-powered personalization, 2) Voice search optimization, 3) Interactive content experiences, 4) Sustainability messaging, 5) Community-driven marketing approaches.",
       platform: "LinkedIn",
       status: 'published',
       createdAt: "2024-01-13T16:45:00Z",
@@ -87,20 +88,56 @@ export function ContentHub() {
     },
     {
       id: "4",
-      title: "Quick Marketing Tip",
-      content: "Pro tip: Always A/B test your headlines. A simple change can increase your CTR by 40%...",
+      title: "Monday Motivation Quote",
+      content: "Success is not final, failure is not fatal: it is the courage to continue that counts. - Winston Churchill. Start your week with determination and remember that every small step forward is progress. What's your goal for this week? #MondayMotivation #Success",
       platform: "Twitter",
-      status: 'draft',
-      createdAt: "2024-01-16T11:20:00Z",
-      mediaUrl: "/placeholder.svg",
-      mediaType: "image",
+      status: 'published',
+      createdAt: "2024-01-12T08:00:00Z",
+      publishedAt: "2024-01-12T09:00:00Z",
+      engagement: { views: 1234, likes: 67, shares: 23, comments: 15 },
       platformIcon: Twitter,
       platformColor: "text-gray-800"
     },
     {
       id: "5",
+      title: "Customer Testimonial Feature",
+      content: "We're thrilled to share this amazing feedback from our client Sarah Johnson: 'Working with this team has transformed our marketing strategy. We've seen a 300% increase in engagement and our ROI has never been better!' Thank you Sarah for trusting us with your brand's growth! 🙌",
+      platform: "Facebook",
+      status: 'published',
+      createdAt: "2024-01-11T15:20:00Z",
+      publishedAt: "2024-01-11T16:00:00Z",
+      engagement: { views: 2156, likes: 134, shares: 42, comments: 28 },
+      platformIcon: Facebook,
+      platformColor: "text-blue-600"
+    },
+    {
+      id: "6",
+      title: "How-to Tutorial: Social Media Analytics",
+      content: "[Video] Learn how to interpret your social media analytics in just 10 minutes. This comprehensive guide covers key metrics, tracking tools, and actionable insights you can implement today.",
+      platform: "YouTube",
+      status: 'published',
+      createdAt: "2024-01-10T11:30:00Z",
+      publishedAt: "2024-01-10T14:00:00Z",
+      mediaUrl: "/placeholder.svg",
+      mediaType: "video",
+      engagement: { views: 5432, likes: 289, shares: 78, comments: 45 },
+      platformIcon: Youtube,
+      platformColor: "text-red-600"
+    },
+    {
+      id: "7",
+      title: "Quick Marketing Tip",
+      content: "Pro tip: Always A/B test your headlines. A simple change can increase your CTR by 40% or more. Try testing emotional vs logical appeals, questions vs statements, and different lengths to see what resonates with your audience.",
+      platform: "Twitter",
+      status: 'draft',
+      createdAt: "2024-01-16T11:20:00Z",
+      platformIcon: Twitter,
+      platformColor: "text-gray-800"
+    },
+    {
+      id: "8",
       title: "Customer Success Story",
-      content: "Meet Sarah, who increased her lead generation by 300% using our platform. Here's her story...",
+      content: "Meet Sarah, who increased her lead generation by 300% using our platform. Here's her story and the exact strategies she used to transform her business in just 3 months.",
       platform: "Facebook",
       status: 'draft',
       createdAt: "2024-01-16T15:30:00Z",
@@ -110,9 +147,9 @@ export function ContentHub() {
       platformColor: "text-blue-600"
     },
     {
-      id: "6",
+      id: "9",
       title: "Weekly Tutorial Video",
-      content: "[Video] How to create engaging social media content in 5 minutes using AI...",
+      content: "[Video] How to create engaging social media content in 5 minutes using AI. This step-by-step tutorial will show you the exact process our team uses daily.",
       platform: "YouTube",
       status: 'draft',
       createdAt: "2024-01-15T13:45:00Z",
@@ -120,6 +157,38 @@ export function ContentHub() {
       mediaType: "video",
       platformIcon: Youtube,
       platformColor: "text-red-600"
+    },
+    {
+      id: "10",
+      title: "Team Spotlight: Meet Our Designers",
+      content: "This week we're highlighting our amazing design team! From concept to creation, they bring every vision to life. Their creativity and attention to detail make all the difference in our client campaigns. #TeamSpotlight #Design #CreativeTeam",
+      platform: "Instagram",
+      status: 'draft',
+      createdAt: "2024-01-16T10:15:00Z",
+      mediaUrl: "/placeholder.svg",
+      mediaType: "image",
+      platformIcon: Instagram,
+      platformColor: "text-pink-600"
+    },
+    {
+      id: "11",
+      title: "Industry Report: Digital Marketing ROI",
+      content: "Our latest research reveals fascinating insights about digital marketing ROI across different industries. Manufacturing leads with 4.2x average return, while retail follows at 3.8x. Service-based businesses show the highest growth potential at 3.5x with room for improvement through better targeting strategies.",
+      platform: "LinkedIn",
+      status: 'draft',
+      createdAt: "2024-01-16T14:00:00Z",
+      platformIcon: Linkedin,
+      platformColor: "text-blue-700"
+    },
+    {
+      id: "12",
+      title: "Friday Inspiration",
+      content: "The best marketing doesn't feel like marketing. - Tom Fishburne. As we wrap up another productive week, remember that authentic connections with your audience matter more than perfect campaigns. What authentic story will you tell next week? #FridayInspiration #AuthenticMarketing",
+      platform: "Twitter",
+      status: 'draft',
+      createdAt: "2024-01-16T16:45:00Z",
+      platformIcon: Twitter,
+      platformColor: "text-gray-800"
     }
   ]);
 
@@ -316,23 +385,31 @@ export function ContentHub() {
             <DialogTitle>{post.title}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-              {post.mediaType === 'video' ? (
-                <video 
-                  src={post.mediaUrl} 
-                  controls 
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <img 
-                  src={post.mediaUrl} 
-                  alt={post.title}
-                  className="w-full h-full object-cover"
-                />
-              )}
-            </div>
-            <div className="space-y-2">
-              <p className="text-gray-600">{post.content}</p>
+            {/* Only show media if it exists and is not a text-only post */}
+            {post.mediaUrl && post.mediaType && (
+              <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                {post.mediaType === 'video' ? (
+                  <video 
+                    src={post.mediaUrl} 
+                    controls 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img 
+                    src={post.mediaUrl} 
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            )}
+            
+            {/* Always show the text content prominently */}
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">{post.content}</p>
+              </div>
+              
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <IconComponent className={`w-4 h-4 ${post.platformColor}`} />
@@ -342,6 +419,7 @@ export function ContentHub() {
                   {post.status === 'published' ? 'Published' : 'Draft'}
                 </Badge>
               </div>
+              
               {post.status === 'draft' && (
                 <div className="flex space-x-2 pt-4">
                   <Button 
