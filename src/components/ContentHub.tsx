@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -314,55 +313,13 @@ export function ContentHub() {
                 </div>
               )}
 
-              <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+              <p className="text-gray-600 text-sm line-clamp-3">
                 {post.content}
               </p>
-              
-              <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                <div className="flex items-center space-x-1">
-                  <Calendar className="w-3 h-3" />
-                  <span>Created: {formatDate(post.createdAt)}</span>
-                </div>
-                {post.publishedAt && (
-                  <div className="flex items-center space-x-1">
-                    <Share2 className="w-3 h-3" />
-                    <span>Published: {formatDate(post.publishedAt)}</span>
-                  </div>
-                )}
-              </div>
-              
-              {post.engagement && (
-                <div className="grid grid-cols-4 gap-4 pt-4 border-t border-gray-100">
-                  <div className="text-center">
-                    <div className="text-sm font-semibold text-gray-900">
-                      {formatNumber(post.engagement.views)}
-                    </div>
-                    <div className="text-xs text-gray-500">Views</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-semibold text-gray-900">
-                      {formatNumber(post.engagement.likes)}
-                    </div>
-                    <div className="text-xs text-gray-500">Likes</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-semibold text-gray-900">
-                      {formatNumber(post.engagement.shares)}
-                    </div>
-                    <div className="text-xs text-gray-500">Shares</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-semibold text-gray-900">
-                      {formatNumber(post.engagement.comments)}
-                    </div>
-                    <div className="text-xs text-gray-500">Comments</div>
-                  </div>
-                </div>
-              )}
             </CardContent>
 
             {/* Always include CardFooter for consistent layout */}
-            <CardFooter className="pt-4" onClick={(e) => e.stopPropagation()}>
+            <CardFooter className="pt-4 flex-col space-y-4" onClick={(e) => e.stopPropagation()}>
               {post.status === 'draft' ? (
                 <div className="flex space-x-2 w-full">
                   <Button variant="outline" size="sm" className="flex-1">
@@ -379,11 +336,49 @@ export function ContentHub() {
                   </Button>
                 </div>
               ) : (
-                <div className="w-full h-10 flex items-center justify-center">
-                  <Badge variant="secondary" className="text-xs">
-                    Published {post.publishedAt ? formatDate(post.publishedAt) : ''}
-                  </Badge>
-                </div>
+                <>
+                  <div className="flex items-center justify-between text-xs text-gray-500 w-full">
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="w-3 h-3" />
+                      <span>Created: {formatDate(post.createdAt)}</span>
+                    </div>
+                    {post.publishedAt && (
+                      <div className="flex items-center space-x-1">
+                        <Share2 className="w-3 h-3" />
+                        <span>Published: {formatDate(post.publishedAt)}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {post.engagement && (
+                    <div className="grid grid-cols-4 gap-4 pt-4 border-t border-gray-100 w-full">
+                      <div className="text-center">
+                        <div className="text-sm font-semibold text-gray-900">
+                          {formatNumber(post.engagement.views)}
+                        </div>
+                        <div className="text-xs text-gray-500">Views</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-sm font-semibold text-gray-900">
+                          {formatNumber(post.engagement.likes)}
+                        </div>
+                        <div className="text-xs text-gray-500">Likes</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-sm font-semibold text-gray-900">
+                          {formatNumber(post.engagement.shares)}
+                        </div>
+                        <div className="text-xs text-gray-500">Shares</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-sm font-semibold text-gray-900">
+                          {formatNumber(post.engagement.comments)}
+                        </div>
+                        <div className="text-xs text-gray-500">Comments</div>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </CardFooter>
           </Card>
