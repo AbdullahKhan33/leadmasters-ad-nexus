@@ -318,7 +318,7 @@ export function ContentHub() {
                 {post.content}
               </p>
               
-              {/* Draft Actions */}
+              {/* Draft Actions - moved to after content */}
               {post.status === 'draft' && (
                 <div className="flex space-x-2 mb-4" onClick={(e) => e.stopPropagation()}>
                   <Button variant="outline" size="sm" className="flex-1">
