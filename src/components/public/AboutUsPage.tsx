@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
@@ -23,8 +24,50 @@ export function AboutUsPage() {
           </div>
         </section>
 
-        {/* Our Mission */}
+        {/* Founder Section */}
         <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Meet Our Founder & CEO</h2>
+            </div>
+            
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="order-2 lg:order-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Abdullah Khan</h3>
+                <div className="space-y-4 text-gray-600">
+                  <p>
+                    At the helm of LeadMasters AI is Abdullah Khan, a seasoned tech entrepreneur and AI strategist with over 18 years of experience in driving software innovation and business transformation.
+                  </p>
+                  <p>
+                    Abdullah's vision for LeadMasters AI is simple yet powerful — make AI-driven marketing and lead generation effortless for businesses of all sizes. With a background spanning technical leadership, product development, and global training, he has built LeadMasters to help businesses cut through complexity and turn AI into real, measurable growth.
+                  </p>
+                  <p>
+                    Under his leadership, LeadMasters AI is reshaping how companies approach lead generation, campaign management, and customer engagement — combining automation, intelligent insights, and simplicity in one seamless platform.
+                  </p>
+                </div>
+              </div>
+              <div className="order-1 lg:order-2 flex justify-center">
+                <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-8 w-full max-w-md">
+                  <div className="text-center">
+                    <div className="w-32 h-32 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full mx-auto mb-6 flex items-center justify-center">
+                      <span className="text-2xl font-bold text-purple-700">AK</span>
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-2">Abdullah Khan</h4>
+                    <p className="text-purple-600 font-semibold mb-4">Founder & CEO</p>
+                    <div className="text-sm text-gray-600">
+                      <p className="mb-2">📍 Tech Entrepreneur</p>
+                      <p className="mb-2">🎯 AI Strategist</p>
+                      <p>⚡ 18+ Years Experience</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Mission */}
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
@@ -84,7 +127,7 @@ export function AboutUsPage() {
         </section>
 
         {/* Why LeadMasters */}
-        <section className="py-20 bg-gray-50">
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
@@ -124,7 +167,7 @@ export function AboutUsPage() {
         </section>
 
         {/* Values */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Our Values</h2>
