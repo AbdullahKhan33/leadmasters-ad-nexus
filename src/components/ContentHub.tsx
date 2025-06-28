@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -236,7 +236,7 @@ export function ContentHub() {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer flex flex-col">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-center space-x-3">
@@ -292,7 +292,7 @@ export function ContentHub() {
               </div>
             </CardHeader>
             
-            <CardContent className="pt-0">
+            <CardContent className="pt-0 flex-1">
               {/* Media Preview */}
               {post.mediaUrl && (
                 <div className="relative mb-4">
@@ -318,7 +318,7 @@ export function ContentHub() {
                 {post.content}
               </p>
               
-              <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
                 <div className="flex items-center space-x-1">
                   <Calendar className="w-3 h-3" />
                   <span>Created: {formatDate(post.createdAt)}</span>
@@ -332,7 +332,7 @@ export function ContentHub() {
               </div>
               
               {post.engagement && (
-                <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-100">
+                <div className="grid grid-cols-4 gap-4 pt-4 border-t border-gray-100">
                   <div className="text-center">
                     <div className="text-sm font-semibold text-gray-900">
                       {formatNumber(post.engagement.views)}
@@ -359,10 +359,12 @@ export function ContentHub() {
                   </div>
                 </div>
               )}
+            </CardContent>
 
-              {/* Draft Actions - moved to very bottom after all content and metadata */}
-              {post.status === 'draft' && (
-                <div className="flex space-x-2 mt-4 pt-4 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
+            {/* Draft Actions moved to CardFooter for consistent layout */}
+            {post.status === 'draft' && (
+              <CardFooter className="pt-4" onClick={(e) => e.stopPropagation()}>
+                <div className="flex space-x-2 w-full">
                   <Button variant="outline" size="sm" className="flex-1">
                     <Eye className="w-4 h-4 mr-1" />
                     Preview
@@ -376,8 +378,8 @@ export function ContentHub() {
                     Publish
                   </Button>
                 </div>
-              )}
-            </CardContent>
+              </CardFooter>
+            )}
           </Card>
         </DialogTrigger>
         <DialogContent className="max-w-4xl">
