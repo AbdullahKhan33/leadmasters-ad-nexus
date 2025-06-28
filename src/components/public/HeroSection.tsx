@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, MessageCircle, Target, BarChart3, Play, Users, TrendingUp, CheckCircle, Sparkles, Brain, Rocket, Globe } from 'lucide-react';
