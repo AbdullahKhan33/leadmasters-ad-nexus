@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { PostPlatformMenu } from "@/components/PostPlatformMenu";
 import { FacebookPostBuilder } from "./FacebookPostBuilder";
@@ -48,6 +47,7 @@ export function PostBuilder() {
   const [selectedTone, setSelectedTone] = useState('');
   const [selectedAudience, setSelectedAudience] = useState('');
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+  const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasGeneratedContent, setHasGeneratedContent] = useState(false);
 
@@ -166,6 +166,10 @@ export function PostBuilder() {
     const file = event.target.files?.[0];
     if (file) {
       setUploadedMedia(file);
+      
+      // Create preview URL for the uploaded file
+      const url = URL.createObjectURL(file);
+      setMediaPreviewUrl(url);
     }
   };
 
@@ -280,24 +284,57 @@ export function PostBuilder() {
                   <CardTitle className="text-lg font-semibold text-gray-900">Upload Media</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 lg:p-8 text-center hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200">
-                    <input
-                      type="file"
-                      accept="image/*,video/*"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                      id="media-upload"
-                    />
-                    <label htmlFor="media-upload" className="cursor-pointer">
-                      <Upload className="w-10 h-10 lg:w-12 lg:h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
-                        {uploadedMedia ? uploadedMedia.name : 'Drop your files here, or browse'}
-                      </p>
-                      <p className="text-xs lg:text-sm text-gray-500">
-                        Supports: JPG, PNG, MP4, MOV (max 50MB)
-                      </p>
-                    </label>
-                  </div>
+                  {!uploadedMedia ? (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 lg:p-8 text-center hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200">
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                        id="media-upload"
+                      />
+                      <label htmlFor="media-upload" className="cursor-pointer">
+                        <Upload className="w-10 h-10 lg:w-12 lg:h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-base lg:text-lg font-medium text-gray-700 mb-2">
+                          Drop your files here, or browse
+                        </p>
+                        <p className="text-xs lg:text-sm text-gray-500">
+                          Supports: JPG, PNG, MP4, MOV (max 50MB)
+                        </p>
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                        <div className="flex items-center space-x-3">
+                          {uploadedMedia.type.startsWith('image/') ? (
+                            <ImageIcon className="w-8 h-8 text-purple-600" />
+                          ) : (
+                            <Video className="w-8 h-8 text-purple-600" />
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">{uploadedMedia.name}</p>
+                            <p className="text-sm text-gray-500">
+                              {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setUploadedMedia(null);
+                          if (mediaPreviewUrl) {
+                            URL.revokeObjectURL(mediaPreviewUrl);
+                            setMediaPreviewUrl(null);
+                          }
+                        }}
+                        className="w-full"
+                      >
+                        Remove Media
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -460,6 +497,26 @@ export function PostBuilder() {
                         <platform.icon className="w-4 h-4 text-gray-600" />
                         <span className="text-sm font-medium text-gray-700">{platform.name}</span>
                       </div>
+                      
+                      {/* Show uploaded media if available */}
+                      {uploadedMedia && mediaPreviewUrl && (
+                        <div className="mb-3 rounded-lg overflow-hidden">
+                          {uploadedMedia.type.startsWith('image/') ? (
+                            <img 
+                              src={mediaPreviewUrl} 
+                              alt="Preview" 
+                              className="w-full h-32 object-cover"
+                            />
+                          ) : (
+                            <video 
+                              src={mediaPreviewUrl} 
+                              className="w-full h-32 object-cover"
+                              muted
+                            />
+                          )}
+                        </div>
+                      )}
+                      
                       <div className="text-sm text-gray-800 mb-2">
                         {postContent || "Your content will appear here..."}
                       </div>
