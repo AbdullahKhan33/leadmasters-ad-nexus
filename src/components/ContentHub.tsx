@@ -76,7 +76,7 @@ export function ContentHub() {
     {
       id: "3",
       title: "Industry Insights: Marketing Trends 2024",
-      content: "The marketing landscape is evolving rapidly. Here are the top 5 trends every marketer should watch: 1) AI-powered personalization, 2) Voice search optimization, 3) Interactive content experiences, 4) Sustainability messaging, 5) Community-driven marketing approaches.",
+      content: "The marketing landscape is evolving rapidly, and staying ahead of the curve is crucial for business success. Here are the top 10 trends every marketer should watch in 2024: 1) AI-powered personalization that creates unique experiences for each customer, 2) Voice search optimization as smart speakers become mainstream, 3) Interactive content experiences that engage users beyond traditional formats, 4) Sustainability messaging that resonates with environmentally conscious consumers, 5) Community-driven marketing approaches that build authentic relationships, 6) Video-first content strategies across all platforms, 7) Privacy-focused marketing in response to increased data regulations, 8) Micro-influencer partnerships for authentic brand advocacy, 9) Real-time customer service integration across marketing channels, and 10) Omnichannel experiences that seamlessly connect online and offline touchpoints. Each of these trends represents a significant opportunity for brands willing to adapt and innovate in an increasingly competitive digital landscape.",
       platform: "LinkedIn",
       status: 'published',
       createdAt: "2024-01-13T16:45:00Z",
@@ -291,7 +291,7 @@ export function ContentHub() {
               </div>
             </CardHeader>
             
-            <CardContent className="pt-0 flex-1">
+            <CardContent className={`pt-0 flex-1 ${!post.mediaUrl ? 'flex items-center justify-center' : ''}`}>
               {/* Media Preview */}
               {post.mediaUrl && (
                 <div className="relative mb-4">
@@ -313,7 +313,7 @@ export function ContentHub() {
                 </div>
               )}
 
-              <p className="text-gray-600 text-sm line-clamp-3">
+              <p className={`text-gray-600 text-sm line-clamp-3 ${!post.mediaUrl ? 'text-center' : ''}`}>
                 {post.content}
               </p>
             </CardContent>
