@@ -36,22 +36,22 @@ const formatBlogContent = (content: string) => {
     
     // Main headings (##) - Bold and prominent
     if (trimmed.startsWith('## ')) {
-      return `<h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mt-16 mb-8 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('## ', '')}</h2>`;
+      return `<h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mt-16 mb-8 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('## ', '')}</h2>`;
     }
     
     // Sub-headings (###) - Elegant and spaced
     if (trimmed.startsWith('### ')) {
-      return `<h3 class="text-2xl lg:text-3xl font-semibold text-gray-800 mt-12 mb-6 leading-tight">${trimmed.replace('### ', '')}</h3>`;
+      return `<h3 className="text-2xl lg:text-3xl font-semibold text-gray-800 mt-12 mb-6 leading-tight">${trimmed.replace('### ', '')}</h3>`;
     }
     
     // Smaller headings (####) - Clean and modern
     if (trimmed.startsWith('#### ')) {
-      return `<h4 class="text-xl lg:text-2xl font-semibold text-gray-700 mt-10 mb-5 leading-snug">${trimmed.replace('#### ', '')}</h4>`;
+      return `<h4 className="text-xl lg:text-2xl font-semibold text-gray-700 mt-10 mb-5 leading-snug">${trimmed.replace('#### ', '')}</h4>`;
     }
     
     // Single line headings (#) - Hero style
     if (trimmed.startsWith('# ') && !trimmed.includes('\n')) {
-      return `<h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-12 mb-10 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('# ', '')}</h1>`;
+      return `<h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mt-12 mb-10 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('# ', '')}</h1>`;
     }
     
     // Bullet points - Styled with better spacing
@@ -61,9 +61,9 @@ const formatBlogContent = (content: string) => {
         return cleaned.startsWith('- ') || cleaned.startsWith('* ');
       }).map(item => {
         const cleanItem = item.replace(/^[\-\*]\s/, '').trim();
-        return `<li class="mb-4 text-gray-700 leading-relaxed pl-2">${cleanItem}</li>`;
+        return `<li className="mb-4 text-gray-700 leading-relaxed pl-2">${cleanItem}</li>`;
       }).join('');
-      return `<ul class="list-disc list-inside space-y-3 my-8 ml-6 bg-gray-50 p-6 rounded-xl border-l-4 border-purple-500">${listItems}</ul>`;
+      return `<ul className="list-disc list-inside space-y-3 my-8 ml-6 bg-gray-50 p-6 rounded-xl border-l-4 border-purple-500">${listItems}</ul>`;
     }
     
     // Checkmarks (✅) - Premium card style
@@ -71,21 +71,21 @@ const formatBlogContent = (content: string) => {
       const items = trimmed.split('\n').filter(line => line.includes('✅'));
       const listItems = items.map(item => {
         const cleanItem = item.replace('✅', '').trim();
-        return `<li class="flex items-start space-x-4 mb-5 p-4 bg-green-50 rounded-lg border border-green-200">
-          <span class="text-green-600 text-xl flex-shrink-0 mt-1">✅</span>
-          <span class="text-gray-800 leading-relaxed">${cleanItem}</span>
+        return `<li className="flex items-start space-x-4 mb-5 p-4 bg-green-50 rounded-lg border border-green-200">
+          <span className="text-green-600 text-xl flex-shrink-0 mt-1">✅</span>
+          <span className="text-gray-800 leading-relaxed">${cleanItem}</span>
         </li>`;
       }).join('');
-      return `<ul class="space-y-4 my-10">${listItems}</ul>`;
+      return `<ul className="space-y-4 my-10">${listItems}</ul>`;
     }
     
     // Regular paragraphs - Enhanced typography
     let formatted = trimmed
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900 bg-yellow-100 px-1 rounded">$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em class="italic text-purple-700 font-medium">$1</em>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong className="font-bold text-gray-900 bg-yellow-100 px-1 rounded">$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em className="italic text-purple-700 font-medium">$1</em>')
       .replace(/\n/g, '<br/>');
     
-    return `<p class="text-lg text-gray-700 leading-relaxed mb-8 font-light tracking-wide">${formatted}</p>`;
+    return `<p className="text-lg text-gray-700 leading-relaxed mb-8 font-light tracking-wide">${formatted}</p>`;
   }).filter(html => html.trim()).join('');
 };
 
@@ -148,11 +148,11 @@ export function BlogPostDetail() {
             </div>
 
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-8 mb-8 shadow-sm">
-              <h3 class="text-2xl font-bold text-yellow-800 mb-4 flex items-center">
-                <span class="text-3xl mr-3">🚀</span>
+              <h3 className="text-2xl font-bold text-yellow-800 mb-4 flex items-center">
+                <span className="text-3xl mr-3">🚀</span>
                 Content Coming Soon!
               </h3>
-              <p class="text-lg text-yellow-700 leading-relaxed">
+              <p className="text-lg text-yellow-700 leading-relaxed">
                 We're crafting exceptional content for this article with actionable insights and proven strategies. Check back soon!
               </p>
             </div>
