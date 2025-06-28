@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Zap, MessageCircle, Target, BarChart3, Play, Users, TrendingUp, CheckCircle, Sparkles, Brain, Rocket, Globe } from 'lucide-react';
@@ -294,7 +295,7 @@ export function HeroSection() {
             <div className="absolute -bottom-8 -left-8 bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl p-4 animate-pulse shadow-xl border-2 border-white">
               <Users className="w-8 h-8 text-white" />
             </div>
-            <div className="absolute top-1/2 -right-6 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full p-3 animate-spin shadow-lg border-2 border-white" style={{ animation: 'spin 6s linear infinite' }}>
+            <div className="absolute top-1/2 -right-6 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full p-3 shadow-lg border-2 border-white" style={{ animation: 'spin 6s linear infinite' }}>
               <Globe className="w-6 h-6 text-white" />
             </div>
             
