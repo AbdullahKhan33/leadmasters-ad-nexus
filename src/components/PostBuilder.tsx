@@ -32,7 +32,9 @@ import {
   Twitter,
   Linkedin,
   Bot,
-  Loader2
+  Loader2,
+  User,
+  Wand2
 } from "lucide-react";
 
 type Platform = 'all' | 'facebook' | 'instagram' | 'threads' | 'twitter' | 'linkedin';
@@ -46,6 +48,7 @@ export function PostBuilder() {
   const [postContent, setPostContent] = useState('');
   const [selectedTone, setSelectedTone] = useState('');
   const [selectedAudience, setSelectedAudience] = useState('');
+  const [selectedAIModel, setSelectedAIModel] = useState('');
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -168,6 +171,13 @@ export function PostBuilder() {
     'Business Owners',
     'Tech Enthusiasts',
     'Creative Professionals'
+  ];
+
+  const aiModels = [
+    'GPT-4',
+    'Claude',
+    'Gemini Pro',
+    'Custom Model'
   ];
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -359,6 +369,47 @@ export function PostBuilder() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {/* Target Audience and AI Model Selection */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700 flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        Target Audience
+                      </Label>
+                      <Select value={selectedAudience} onValueChange={setSelectedAudience}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="Select audience" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {audiences.map((audience) => (
+                            <SelectItem key={audience} value={audience}>
+                              {audience}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700 flex items-center">
+                        <Wand2 className="w-4 h-4 mr-2" />
+                        AI Model
+                      </Label>
+                      <Select value={selectedAIModel} onValueChange={setSelectedAIModel}>
+                        <SelectTrigger className="h-10">
+                          <SelectValue placeholder="Select AI model" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {aiModels.map((model) => (
+                            <SelectItem key={model} value={model}>
+                              {model}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
                   <div>
                     <Label htmlFor="ai-prompt" className="text-sm font-medium text-gray-700">
                       Describe what you want to create
