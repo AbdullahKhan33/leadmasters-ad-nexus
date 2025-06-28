@@ -30,7 +30,12 @@ import {
   Briefcase,
   Settings,
   ArrowLeft,
-  Sparkles
+  Sparkles,
+  User,
+  MapPin,
+  Link2,
+  Phone,
+  Clock
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { OnboardingWorkspaceForm } from './OnboardingWorkspaceForm';
@@ -51,10 +56,17 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [createFormData, setCreateFormData] = useState({
+    fullName: '',
     name: '',
     description: '',
+    address: '',
     country: '',
+    state: '',
     industry: '',
+    companySize: '',
+    websiteUrl: '',
+    mobileNumber: '',
+    timezone: '',
     businessType: ''
   });
   const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; workspace: Workspace | null }>({ 
@@ -78,17 +90,72 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     'United States', 'Uruguay', 'Venezuela', 'Vietnam'
   ];
 
+  const states = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
+    'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+    'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
+    'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
+    'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
+    'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+    'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+  ];
+
   const industries = [
     'Technology',
-    'Marketing',
-    'Finance',
+    'Marketing & Advertising',
+    'Finance & Banking',
     'Healthcare',
     'Education',
-    'Retail',
+    'Retail & E-commerce',
     'Manufacturing',
     'Real Estate',
     'Consulting',
-    'Media & Entertainment'
+    'Media & Entertainment',
+    'Hospitality',
+    'Construction',
+    'Transportation',
+    'Energy',
+    'Non-profit',
+    'Government',
+    'Other'
+  ];
+
+  const companySizes = [
+    '1-10 employees',
+    '11-50 employees',
+    '51-200 employees',
+    '201-500 employees',
+    '501-1000 employees',
+    '1000+ employees'
+  ];
+
+  const timezones = [
+    'UTC-12:00 (Baker Island)',
+    'UTC-11:00 (American Samoa)',
+    'UTC-10:00 (Hawaii)',
+    'UTC-09:00 (Alaska)',
+    'UTC-08:00 (Pacific Time)',
+    'UTC-07:00 (Mountain Time)',
+    'UTC-06:00 (Central Time)',
+    'UTC-05:00 (Eastern Time)',
+    'UTC-04:00 (Atlantic Time)',
+    'UTC-03:00 (Argentina)',
+    'UTC-02:00 (South Georgia)',
+    'UTC-01:00 (Azores)',
+    'UTC+00:00 (London)',
+    'UTC+01:00 (Central Europe)',
+    'UTC+02:00 (Eastern Europe)',
+    'UTC+03:00 (Moscow)',
+    'UTC+04:00 (Gulf)',
+    'UTC+05:00 (Pakistan)',
+    'UTC+05:30 (India)',
+    'UTC+06:00 (Bangladesh)',
+    'UTC+07:00 (Thailand)',
+    'UTC+08:00 (Singapore)',
+    'UTC+09:00 (Japan)',
+    'UTC+10:00 (Australia East)',
+    'UTC+11:00 (Solomon Islands)',
+    'UTC+12:00 (New Zealand)'
   ];
 
   const businessTypes = ['B2B', 'B2C', 'B2B2C'];
@@ -137,31 +204,54 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
 
   const handleCreateWorkspace = (e: React.FormEvent) => {
     e.preventDefault();
-    if (createFormData.name && createFormData.description && createFormData.country && createFormData.industry && createFormData.businessType) {
-      const newWorkspace: Workspace = {
-        id: Date.now().toString(),
-        ...createFormData,
-        memberCount: 1,
-        isActive: true
-      };
-
-      addWorkspace(newWorkspace);
-      
+    
+    // Validate required fields
+    const requiredFields = ['fullName', 'name', 'description', 'country', 'industry', 'timezone'];
+    const missingFields = requiredFields.filter(field => !createFormData[field as keyof typeof createFormData]);
+    
+    if (missingFields.length > 0) {
       toast({
-        title: "Workspace Created",
-        description: `${createFormData.name} has been created successfully.`,
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
       });
-
-      // Reset form and hide it
-      setCreateFormData({
-        name: '',
-        description: '',
-        country: '',
-        industry: '',
-        businessType: ''
-      });
-      setShowCreateForm(false);
+      return;
     }
+
+    const newWorkspace: Workspace = {
+      id: Date.now().toString(),
+      name: createFormData.name,
+      description: createFormData.description,
+      country: createFormData.country,
+      industry: createFormData.industry,
+      businessType: createFormData.businessType || 'B2B',
+      memberCount: 1,
+      isActive: true
+    };
+
+    addWorkspace(newWorkspace);
+
+    toast({
+      title: "Workspace Created",
+      description: `${createFormData.name} has been created successfully.`,
+    });
+
+    // Reset form and hide it
+    setCreateFormData({
+      fullName: '',
+      name: '',
+      description: '',
+      address: '',
+      country: '',
+      state: '',
+      industry: '',
+      companySize: '',
+      websiteUrl: '',
+      mobileNumber: '',
+      timezone: '',
+      businessType: ''
+    });
+    setShowCreateForm(false);
   };
 
   const handleOnboardingWorkspaceCreate = (workspaceData: {
@@ -244,43 +334,124 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
 
             <CardContent className="p-8">
               <form onSubmit={handleCreateWorkspace} className="space-y-6">
+                {/* Personal Information */}
                 <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name" className="text-sm font-semibold text-gray-700 mb-2 block">
-                      Workspace Name *
-                    </Label>
-                    <Input
-                      id="name"
-                      value={createFormData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      placeholder="Enter workspace name..."
-                      className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300"
-                      required
-                    />
+                  <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                    <User className="w-5 h-5 mr-2 text-blue-600" />
+                    Personal Information
+                  </h3>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="fullName" className="text-sm font-semibold text-gray-700 mb-2 block">
+                        Full Name *
+                      </Label>
+                      <Input
+                        id="fullName"
+                        value={createFormData.fullName}
+                        onChange={(e) => handleInputChange('fullName', e.target.value)}
+                        placeholder="Enter your full name"
+                        className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="mobileNumber" className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                        <Phone className="w-4 h-4 mr-2" />
+                        Mobile Number
+                      </Label>
+                      <Input
+                        id="mobileNumber"
+                        value={createFormData.mobileNumber}
+                        onChange={(e) => handleInputChange('mobileNumber', e.target.value)}
+                        placeholder="Enter your mobile number"
+                        className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Company Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                    <Building2 className="w-5 h-5 mr-2 text-blue-600" />
+                    Company Information
+                  </h3>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name" className="text-sm font-semibold text-gray-700 mb-2 block">
+                        Company Name *
+                      </Label>
+                      <Input
+                        id="name"
+                        value={createFormData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="Enter company name"
+                        className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="websiteUrl" className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                        <Link2 className="w-4 h-4 mr-2" />
+                        Website URL
+                      </Label>
+                      <Input
+                        id="websiteUrl"
+                        value={createFormData.websiteUrl}
+                        onChange={(e) => handleInputChange('websiteUrl', e.target.value)}
+                        placeholder="https://www.yourcompany.com"
+                        className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300"
+                      />
+                    </div>
                   </div>
 
                   <div>
                     <Label htmlFor="description" className="text-sm font-semibold text-gray-700 mb-2 block">
-                      Description *
+                      Company Description *
                     </Label>
                     <Textarea
                       id="description"
                       value={createFormData.description}
                       onChange={(e) => handleInputChange('description', e.target.value)}
-                      placeholder="Describe your workspace..."
-                      className="border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300 min-h-[100px] resize-none"
+                      placeholder="Describe your company and what you do..."
+                      className="border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300 min-h-[100px] resize-none"
                       required
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="address" className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Company Address
+                    </Label>
+                    <Input
+                      id="address"
+                      value={createFormData.address}
+                      onChange={(e) => handleInputChange('address', e.target.value)}
+                      placeholder="Enter company address"
+                      className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300"
+                    />
+                  </div>
+                </div>
+
+                {/* Location & Business Details */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-800 flex items-center">
+                    <Globe className="w-5 h-5 mr-2 text-blue-600" />
+                    Location & Business Details
+                  </h3>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
-                        <Globe className="w-4 h-4 mr-2" />
+                      <Label className="text-sm font-semibold text-gray-700 mb-2 block">
                         Country *
                       </Label>
                       <Select value={createFormData.country} onValueChange={(value) => handleInputChange('country', value)} required>
-                        <SelectTrigger className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                        <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
                           <SelectValue placeholder="Select country" />
                         </SelectTrigger>
                         <SelectContent>
@@ -294,12 +465,32 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
                     </div>
 
                     <div>
+                      <Label className="text-sm font-semibold text-gray-700 mb-2 block">
+                        State
+                      </Label>
+                      <Select value={createFormData.state} onValueChange={(value) => handleInputChange('state', value)}>
+                        <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                          <SelectValue placeholder="Select state" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {states.map((state) => (
+                            <SelectItem key={state} value={state}>
+                              {state}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
                       <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
                         <Briefcase className="w-4 h-4 mr-2" />
                         Industry *
                       </Label>
                       <Select value={createFormData.industry} onValueChange={(value) => handleInputChange('industry', value)} required>
-                        <SelectTrigger className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                        <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
                           <SelectValue placeholder="Select industry" />
                         </SelectTrigger>
                         <SelectContent>
@@ -311,25 +502,65 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
                         </SelectContent>
                       </Select>
                     </div>
+
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                        <Users className="w-4 h-4 mr-2" />
+                        Company Size
+                      </Label>
+                      <Select value={createFormData.companySize} onValueChange={(value) => handleInputChange('companySize', value)}>
+                        <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                          <SelectValue placeholder="Select company size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {companySizes.map((size) => (
+                            <SelectItem key={size} value={size}>
+                              {size}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
-                  <div>
-                    <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
-                      <Users className="w-4 h-4 mr-2" />
-                      Business Type *
-                    </Label>
-                    <Select value={createFormData.businessType} onValueChange={(value) => handleInputChange('businessType', value)} required>
-                      <SelectTrigger className="h-12 border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
-                        <SelectValue placeholder="Select business type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {businessTypes.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                        <Clock className="w-4 h-4 mr-2" />
+                        Timezone *
+                      </Label>
+                      <Select value={createFormData.timezone} onValueChange={(value) => handleInputChange('timezone', value)} required>
+                        <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                          <SelectValue placeholder="Select timezone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {timezones.map((timezone) => (
+                            <SelectItem key={timezone} value={timezone}>
+                              {timezone}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
+                        <Users className="w-4 h-4 mr-2" />
+                        Business Type *
+                      </Label>
+                      <Select value={createFormData.businessType} onValueChange={(value) => handleInputChange('businessType', value)} required>
+                        <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
+                          <SelectValue placeholder="Select business type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {businessTypes.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
 
