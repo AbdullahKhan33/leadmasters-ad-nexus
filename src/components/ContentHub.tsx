@@ -165,71 +165,76 @@ export function ContentHub() {
     const IconComponent = post.platformIcon;
     
     return (
-      <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-3">
-              <div className={`p-2 rounded-lg bg-gray-50 ${post.platformColor}`}>
-                <IconComponent className="w-5 h-5" />
-              </div>
-              <div>
-                <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">
-                  {post.title}
-                </CardTitle>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Badge variant="outline" className="text-xs">
-                    {post.platform}
-                  </Badge>
-                  <Badge 
-                    variant={post.status === 'published' ? 'default' : 'secondary'}
-                    className="text-xs"
-                  >
-                    {post.status === 'published' ? 'Published' : 'Draft'}
-                  </Badge>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className={`p-2 rounded-lg bg-gray-50 ${post.platformColor}`}>
+                    <IconComponent className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">
+                      {post.title}
+                    </CardTitle>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <Badge variant="outline" className="text-xs">
+                        {post.platform}
+                      </Badge>
+                      <Badge 
+                        variant={post.status === 'published' ? 'default' : 'secondary'}
+                        className="text-xs"
+                      >
+                        {post.status === 'published' ? 'Published' : 'Draft'}
+                      </Badge>
+                    </div>
+                  </div>
                 </div>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreVertical className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Edit Post
+                    </DropdownMenuItem>
+                    {post.status === 'published' && (
+                      <DropdownMenuItem>
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share Again
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
-            </div>
+            </CardHeader>
             
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <MoreVertical className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Details
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Edit3 className="w-4 h-4 mr-2" />
-                  Edit Post
-                </DropdownMenuItem>
-                {post.status === 'published' && (
-                  <DropdownMenuItem>
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share Again
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="pt-0">
-          {/* Media Preview */}
-          {post.mediaUrl && (
-            <Dialog>
-              <DialogTrigger asChild>
-                <div className="relative mb-4 cursor-pointer group/media">
+            <CardContent className="pt-0">
+              {/* Media Preview */}
+              {post.mediaUrl && (
+                <div className="relative mb-4">
                   <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
                     <img 
                       src={post.mediaUrl} 
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover/media:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     {post.mediaType === 'video' && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/media:bg-black/30 transition-colors">
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
                         <Play className="w-8 h-8 text-white" fill="white" />
                       </div>
                     )}
@@ -238,154 +243,124 @@ export function ContentHub() {
                     {post.mediaType === 'video' ? 'Video' : 'Image'}
                   </div>
                 </div>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl">
-                <DialogHeader>
-                  <DialogTitle>{post.title}</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                    {post.mediaType === 'video' ? (
-                      <video 
-                        src={post.mediaUrl} 
-                        controls 
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <img 
-                        src={post.mediaUrl} 
-                        alt={post.title}
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-gray-600">{post.content}</p>
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <IconComponent className={`w-4 h-4 ${post.platformColor}`} />
-                        <span className="text-sm font-medium">{post.platform}</span>
-                      </div>
-                      <Badge variant={post.status === 'published' ? 'default' : 'secondary'}>
-                        {post.status === 'published' ? 'Published' : 'Draft'}
-                      </Badge>
-                    </div>
-                    {post.status === 'draft' && (
-                      <div className="flex space-x-2 pt-4">
-                        <Button 
-                          onClick={() => handlePublishDraft(post.id)}
-                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                        >
-                          <Send className="w-4 h-4 mr-2" />
-                          Publish Now
-                        </Button>
-                        <Button variant="outline">
-                          <Edit3 className="w-4 h-4 mr-2" />
-                          Edit Draft
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          )}
+              )}
 
-          <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-            {post.content}
-          </p>
-          
-          {/* Draft Actions */}
-          {post.status === 'draft' && (
-            <div className="flex space-x-2 mb-4">
-              <Dialog>
-                <DialogTrigger asChild>
+              <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                {post.content}
+              </p>
+              
+              {/* Draft Actions */}
+              {post.status === 'draft' && (
+                <div className="flex space-x-2 mb-4" onClick={(e) => e.stopPropagation()}>
                   <Button variant="outline" size="sm" className="flex-1">
                     <Eye className="w-4 h-4 mr-1" />
                     Preview
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Preview: {post.title}</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    {post.mediaUrl && (
-                      <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                        {post.mediaType === 'video' ? (
-                          <video src={post.mediaUrl} controls className="w-full h-full object-cover" />
-                        ) : (
-                          <img src={post.mediaUrl} alt={post.title} className="w-full h-full object-cover" />
-                        )}
-                      </div>
-                    )}
-                    <p className="text-gray-600">{post.content}</p>
-                    <div className="flex space-x-2">
-                      <Button 
-                        onClick={() => handlePublishDraft(post.id)}
-                        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                      >
-                        <Send className="w-4 h-4 mr-2" />
-                        Publish Now
-                      </Button>
-                    </div>
+                  <Button 
+                    onClick={() => handlePublishDraft(post.id)}
+                    size="sm" 
+                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                  >
+                    <Send className="w-4 h-4 mr-1" />
+                    Publish
+                  </Button>
+                </div>
+              )}
+              
+              <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center space-x-1">
+                  <Calendar className="w-3 h-3" />
+                  <span>Created: {formatDate(post.createdAt)}</span>
+                </div>
+                {post.publishedAt && (
+                  <div className="flex items-center space-x-1">
+                    <Share2 className="w-3 h-3" />
+                    <span>Published: {formatDate(post.publishedAt)}</span>
                   </div>
-                </DialogContent>
-              </Dialog>
-              <Button 
-                onClick={() => handlePublishDraft(post.id)}
-                size="sm" 
-                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-              >
-                <Send className="w-4 h-4 mr-1" />
-                Publish
-              </Button>
-            </div>
-          )}
-          
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center space-x-1">
-              <Calendar className="w-3 h-3" />
-              <span>Created: {formatDate(post.createdAt)}</span>
-            </div>
-            {post.publishedAt && (
-              <div className="flex items-center space-x-1">
-                <Share2 className="w-3 h-3" />
-                <span>Published: {formatDate(post.publishedAt)}</span>
+                )}
               </div>
-            )}
+              
+              {post.engagement && (
+                <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-100">
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-gray-900">
+                      {formatNumber(post.engagement.views)}
+                    </div>
+                    <div className="text-xs text-gray-500">Views</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-gray-900">
+                      {formatNumber(post.engagement.likes)}
+                    </div>
+                    <div className="text-xs text-gray-500">Likes</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-gray-900">
+                      {formatNumber(post.engagement.shares)}
+                    </div>
+                    <div className="text-xs text-gray-500">Shares</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-gray-900">
+                      {formatNumber(post.engagement.comments)}
+                    </div>
+                    <div className="text-xs text-gray-500">Comments</div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </DialogTrigger>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{post.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+              {post.mediaType === 'video' ? (
+                <video 
+                  src={post.mediaUrl} 
+                  controls 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <img 
+                  src={post.mediaUrl} 
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+            <div className="space-y-2">
+              <p className="text-gray-600">{post.content}</p>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <IconComponent className={`w-4 h-4 ${post.platformColor}`} />
+                  <span className="text-sm font-medium">{post.platform}</span>
+                </div>
+                <Badge variant={post.status === 'published' ? 'default' : 'secondary'}>
+                  {post.status === 'published' ? 'Published' : 'Draft'}
+                </Badge>
+              </div>
+              {post.status === 'draft' && (
+                <div className="flex space-x-2 pt-4">
+                  <Button 
+                    onClick={() => handlePublishDraft(post.id)}
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    Publish Now
+                  </Button>
+                  <Button variant="outline">
+                    <Edit3 className="w-4 h-4 mr-2" />
+                    Edit Draft
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
-          
-          {post.engagement && (
-            <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-100">
-              <div className="text-center">
-                <div className="text-sm font-semibold text-gray-900">
-                  {formatNumber(post.engagement.views)}
-                </div>
-                <div className="text-xs text-gray-500">Views</div>
-              </div>
-              <div className="text-center">
-                <div className="text-sm font-semibold text-gray-900">
-                  {formatNumber(post.engagement.likes)}
-                </div>
-                <div className="text-xs text-gray-500">Likes</div>
-              </div>
-              <div className="text-center">
-                <div className="text-sm font-semibold text-gray-900">
-                  {formatNumber(post.engagement.shares)}
-                </div>
-                <div className="text-xs text-gray-500">Shares</div>
-              </div>
-              <div className="text-center">
-                <div className="text-sm font-semibold text-gray-900">
-                  {formatNumber(post.engagement.comments)}
-                </div>
-                <div className="text-xs text-gray-500">Comments</div>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        </DialogContent>
+      </Dialog>
     );
   };
 
