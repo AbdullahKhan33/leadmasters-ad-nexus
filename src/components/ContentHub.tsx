@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   FileText, 
   Calendar, 
@@ -15,9 +15,12 @@ import {
   Instagram,
   Linkedin,
   Twitter,
-  Youtube
+  Youtube,
+  Play,
+  Send
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 interface Post {
   id: string;
@@ -27,6 +30,8 @@ interface Post {
   status: 'published' | 'draft';
   createdAt: string;
   publishedAt?: string;
+  mediaUrl?: string;
+  mediaType?: 'image' | 'video';
   engagement?: {
     views: number;
     likes: number;
@@ -38,7 +43,8 @@ interface Post {
 }
 
 export function ContentHub() {
-  const [posts] = useState<Post[]>([
+  const { toast } = useToast();
+  const [posts, setPosts] = useState<Post[]>([
     {
       id: "1",
       title: "New Product Launch Announcement",
@@ -47,6 +53,8 @@ export function ContentHub() {
       status: 'published',
       createdAt: "2024-01-15T10:30:00Z",
       publishedAt: "2024-01-15T14:00:00Z",
+      mediaUrl: "/placeholder.svg",
+      mediaType: "image",
       engagement: { views: 2547, likes: 89, shares: 23, comments: 12 },
       platformIcon: Facebook,
       platformColor: "text-blue-600"
@@ -59,6 +67,8 @@ export function ContentHub() {
       status: 'published',
       createdAt: "2024-01-14T09:15:00Z",
       publishedAt: "2024-01-14T12:30:00Z",
+      mediaUrl: "/placeholder.svg",
+      mediaType: "video",
       engagement: { views: 1892, likes: 156, shares: 45, comments: 8 },
       platformIcon: Instagram,
       platformColor: "text-pink-600"
@@ -82,6 +92,8 @@ export function ContentHub() {
       platform: "Twitter",
       status: 'draft',
       createdAt: "2024-01-16T11:20:00Z",
+      mediaUrl: "/placeholder.svg",
+      mediaType: "image",
       platformIcon: Twitter,
       platformColor: "text-gray-800"
     },
@@ -92,6 +104,8 @@ export function ContentHub() {
       platform: "Facebook",
       status: 'draft',
       createdAt: "2024-01-16T15:30:00Z",
+      mediaUrl: "/placeholder.svg",
+      mediaType: "video",
       platformIcon: Facebook,
       platformColor: "text-blue-600"
     },
@@ -102,6 +116,8 @@ export function ContentHub() {
       platform: "YouTube",
       status: 'draft',
       createdAt: "2024-01-15T13:45:00Z",
+      mediaUrl: "/placeholder.svg",
+      mediaType: "video",
       platformIcon: Youtube,
       platformColor: "text-red-600"
     }
@@ -125,6 +141,24 @@ export function ContentHub() {
       return (num / 1000).toFixed(1) + 'K';
     }
     return num.toString();
+  };
+
+  const handlePublishDraft = (postId: string) => {
+    setPosts(posts.map(post => 
+      post.id === postId 
+        ? { 
+            ...post, 
+            status: 'published' as const, 
+            publishedAt: new Date().toISOString(),
+            engagement: { views: 0, likes: 0, shares: 0, comments: 0 }
+          }
+        : post
+    ));
+    
+    toast({
+      title: "Post Published",
+      description: "Your draft has been successfully published!",
+    });
   };
 
   const PostCard = ({ post }: { post: Post }) => {
@@ -183,9 +217,131 @@ export function ContentHub() {
         </CardHeader>
         
         <CardContent className="pt-0">
+          {/* Media Preview */}
+          {post.mediaUrl && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="relative mb-4 cursor-pointer group/media">
+                  <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                    <img 
+                      src={post.mediaUrl} 
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover/media:scale-105 transition-transform duration-300"
+                    />
+                    {post.mediaType === 'video' && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/media:bg-black/30 transition-colors">
+                        <Play className="w-8 h-8 text-white" fill="white" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="absolute top-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-xs">
+                    {post.mediaType === 'video' ? 'Video' : 'Image'}
+                  </div>
+                </div>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl">
+                <DialogHeader>
+                  <DialogTitle>{post.title}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                    {post.mediaType === 'video' ? (
+                      <video 
+                        src={post.mediaUrl} 
+                        controls 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img 
+                        src={post.mediaUrl} 
+                        alt={post.title}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-600">{post.content}</p>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <IconComponent className={`w-4 h-4 ${post.platformColor}`} />
+                        <span className="text-sm font-medium">{post.platform}</span>
+                      </div>
+                      <Badge variant={post.status === 'published' ? 'default' : 'secondary'}>
+                        {post.status === 'published' ? 'Published' : 'Draft'}
+                      </Badge>
+                    </div>
+                    {post.status === 'draft' && (
+                      <div className="flex space-x-2 pt-4">
+                        <Button 
+                          onClick={() => handlePublishDraft(post.id)}
+                          className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                        >
+                          <Send className="w-4 h-4 mr-2" />
+                          Publish Now
+                        </Button>
+                        <Button variant="outline">
+                          <Edit3 className="w-4 h-4 mr-2" />
+                          Edit Draft
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+
           <p className="text-gray-600 text-sm line-clamp-3 mb-4">
             {post.content}
           </p>
+          
+          {/* Draft Actions */}
+          {post.status === 'draft' && (
+            <div className="flex space-x-2 mb-4">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Eye className="w-4 h-4 mr-1" />
+                    Preview
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Preview: {post.title}</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    {post.mediaUrl && (
+                      <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                        {post.mediaType === 'video' ? (
+                          <video src={post.mediaUrl} controls className="w-full h-full object-cover" />
+                        ) : (
+                          <img src={post.mediaUrl} alt={post.title} className="w-full h-full object-cover" />
+                        )}
+                      </div>
+                    )}
+                    <p className="text-gray-600">{post.content}</p>
+                    <div className="flex space-x-2">
+                      <Button 
+                        onClick={() => handlePublishDraft(post.id)}
+                        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        Publish Now
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button 
+                onClick={() => handlePublishDraft(post.id)}
+                size="sm" 
+                className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+              >
+                <Send className="w-4 h-4 mr-1" />
+                Publish
+              </Button>
+            </div>
+          )}
           
           <div className="flex items-center justify-between text-xs text-gray-500">
             <div className="flex items-center space-x-1">

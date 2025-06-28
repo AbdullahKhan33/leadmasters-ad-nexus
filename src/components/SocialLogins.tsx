@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -103,7 +104,10 @@ export function SocialLogins() {
       name: "YouTube",
       icon: Youtube,
       color: "from-red-500 to-red-600"
-    },
+    }
+  ]);
+
+  const [comingSoonPlatforms] = useState<AvailablePlatform[]>([
     {
       id: "tiktok",
       name: "TikTok",
@@ -256,47 +260,73 @@ export function SocialLogins() {
             <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
             <h2 className="text-2xl font-semibold text-gray-800">Available Integrations</h2>
             <Badge className="bg-blue-100 text-blue-800 border-blue-200">
-              {availablePlatforms.filter(p => !p.comingSoon).length} Ready
+              {availablePlatforms.length} Ready
             </Badge>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {availablePlatforms.map((platform) => {
               const IconComponent = platform.icon;
-              const isComingSoon = platform.comingSoon;
               
               return (
                 <Card 
                   key={platform.id} 
-                  className={`group relative overflow-hidden bg-white/80 backdrop-blur-sm border-0 shadow-lg transition-all duration-300 ${
-                    isComingSoon 
-                      ? 'opacity-60 cursor-not-allowed' 
-                      : 'hover:shadow-xl hover:-translate-y-1 cursor-pointer'
-                  }`}
+                  className="group relative overflow-hidden bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl hover:-translate-y-1 cursor-pointer transition-all duration-300"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-5 ${!isComingSoon && 'group-hover:opacity-10'} transition-opacity duration-300`}></div>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
                   <CardContent className="p-6 relative text-center">
-                    <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${platform.color} shadow-lg mb-4 ${!isComingSoon && 'group-hover:scale-110'} transition-transform duration-200`}>
+                    <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${platform.color} shadow-lg mb-4 group-hover:scale-110 transition-transform duration-200`}>
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
                     
                     <h3 className="font-semibold text-gray-800 text-lg mb-4">{platform.name}</h3>
                     
-                    {isComingSoon ? (
-                      <Badge className="bg-gray-100 text-gray-600 border-gray-200">
-                        Coming Soon
-                      </Badge>
-                    ) : (
-                      <Button
-                        onClick={() => handleReconnect(platform.id, platform.name)}
-                        className={`w-full bg-gradient-to-r ${platform.color} hover:opacity-90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105`}
-                      >
-                        <span className="flex items-center space-x-2">
-                          <span>Integrate</span>
-                          <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-                        </span>
-                      </Button>
-                    )}
+                    <Button
+                      onClick={() => handleReconnect(platform.id, platform.name)}
+                      className={`w-full bg-gradient-to-r ${platform.color} hover:opacity-90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105`}
+                    >
+                      <span className="flex items-center space-x-2">
+                        <span>Integrate</span>
+                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+                      </span>
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Coming Soon Section */}
+        <div className="space-y-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-1 h-8 bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
+            <h2 className="text-2xl font-semibold text-gray-800">Coming Soon</h2>
+            <Badge className="bg-orange-100 text-orange-800 border-orange-200">
+              {comingSoonPlatforms.length} Platforms
+            </Badge>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {comingSoonPlatforms.map((platform) => {
+              const IconComponent = platform.icon;
+              
+              return (
+                <Card 
+                  key={platform.id} 
+                  className="group relative overflow-hidden bg-white/60 backdrop-blur-sm border-0 shadow-lg opacity-75 cursor-not-allowed transition-all duration-300"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${platform.color} opacity-5`}></div>
+                  <CardContent className="p-6 relative text-center">
+                    <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${platform.color} shadow-lg mb-4 opacity-60`}>
+                      <IconComponent className="w-8 h-8 text-white" />
+                    </div>
+                    
+                    <h3 className="font-semibold text-gray-600 text-lg mb-4">{platform.name}</h3>
+                    
+                    <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0">
+                      Coming Soon
+                    </Badge>
                   </CardContent>
                 </Card>
               );
