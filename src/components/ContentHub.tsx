@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   FileText, 
   Calendar, 
@@ -17,7 +18,8 @@ import {
   Twitter,
   Youtube,
   Play,
-  Send
+  Send,
+  Filter
 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
@@ -44,6 +46,8 @@ interface Post {
 
 export function ContentHub() {
   const { toast } = useToast();
+  const [publishedPlatformFilter, setPublishedPlatformFilter] = useState('all');
+  const [draftPlatformFilter, setDraftPlatformFilter] = useState('all');
   const [posts, setPosts] = useState<Post[]>([
     {
       id: "1",
@@ -191,8 +195,18 @@ export function ContentHub() {
     }
   ]);
 
-  const publishedPosts = posts.filter(post => post.status === 'published');
-  const draftPosts = posts.filter(post => post.status === 'draft');
+  const allPosts = posts;
+  const publishedPosts = allPosts.filter(post => post.status === 'published');
+  const draftPosts = allPosts.filter(post => post.status === 'draft');
+
+  // Filter posts by platform
+  const filteredPublishedPosts = publishedPlatformFilter === 'all' 
+    ? publishedPosts 
+    : publishedPosts.filter(post => post.platform.toLowerCase() === publishedPlatformFilter.toLowerCase());
+
+  const filteredDraftPosts = draftPlatformFilter === 'all' 
+    ? draftPosts 
+    : draftPosts.filter(post => post.platform.toLowerCase() === draftPlatformFilter.toLowerCase());
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -475,14 +489,32 @@ export function ContentHub() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-gray-800">Published Posts</h2>
-                <Badge className="bg-green-100 text-green-800 border-green-200">
-                  {publishedPosts.length} Published
-                </Badge>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <Filter className="w-4 h-4 text-gray-600" />
+                    <Select value={publishedPlatformFilter} onValueChange={setPublishedPlatformFilter}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Filter by platform" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Platforms</SelectItem>
+                        <SelectItem value="facebook">Facebook</SelectItem>
+                        <SelectItem value="instagram">Instagram</SelectItem>
+                        <SelectItem value="twitter">Twitter</SelectItem>
+                        <SelectItem value="linkedin">LinkedIn</SelectItem>
+                        <SelectItem value="youtube">YouTube</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800 border-green-200">
+                    {filteredPublishedPosts.length} Published
+                  </Badge>
+                </div>
               </div>
               
-              {publishedPosts.length > 0 ? (
+              {filteredPublishedPosts.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {publishedPosts.map((post) => (
+                  {filteredPublishedPosts.map((post) => (
                     <PostCard key={post.id} post={post} />
                   ))}
                 </div>
@@ -491,7 +523,11 @@ export function ContentHub() {
                   <CardContent>
                     <Share2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-600 mb-2">No Published Posts</h3>
-                    <p className="text-gray-500">Posts published through LeadMasters will appear here</p>
+                    <p className="text-gray-500">
+                      {publishedPlatformFilter === 'all' 
+                        ? "Posts published through LeadMasters will appear here" 
+                        : `No published posts found for ${publishedPlatformFilter}`}
+                    </p>
                   </CardContent>
                 </Card>
               )}
@@ -502,14 +538,32 @@ export function ContentHub() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-semibold text-gray-800">Draft Posts</h2>
-                <Badge className="bg-orange-100 text-orange-800 border-orange-200">
-                  {draftPosts.length} Drafts
-                </Badge>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <Filter className="w-4 h-4 text-gray-600" />
+                    <Select value={draftPlatformFilter} onValueChange={setDraftPlatformFilter}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Filter by platform" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Platforms</SelectItem>
+                        <SelectItem value="facebook">Facebook</SelectItem>
+                        <SelectItem value="instagram">Instagram</SelectItem>
+                        <SelectItem value="twitter">Twitter</SelectItem>
+                        <SelectItem value="linkedin">LinkedIn</SelectItem>
+                        <SelectItem value="youtube">YouTube</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Badge className="bg-orange-100 text-orange-800 border-orange-200">
+                    {filteredDraftPosts.length} Drafts
+                  </Badge>
+                </div>
               </div>
               
-              {draftPosts.length > 0 ? (
+              {filteredDraftPosts.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {draftPosts.map((post) => (
+                  {filteredDraftPosts.map((post) => (
                     <PostCard key={post.id} post={post} />
                   ))}
                 </div>
@@ -518,7 +572,11 @@ export function ContentHub() {
                   <CardContent>
                     <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-600 mb-2">No Draft Posts</h3>
-                    <p className="text-gray-500">Saved drafts from all platforms will appear here</p>
+                    <p className="text-gray-500">
+                      {draftPlatformFilter === 'all' 
+                        ? "Saved drafts from all platforms will appear here" 
+                        : `No draft posts found for ${draftPlatformFilter}`}
+                    </p>
                   </CardContent>
                 </Card>
               )}
