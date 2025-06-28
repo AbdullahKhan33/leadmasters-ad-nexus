@@ -1,4 +1,3 @@
-
 export interface CountryState {
   country: string;
   states: string[];
@@ -93,6 +92,12 @@ export const countriesWithStates: CountryState[] = [
       'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'Federal Capital Territory', 'Gombe', 'Imo',
       'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa',
       'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara'
+    ]
+  },
+  {
+    country: 'United Arab Emirates',
+    states: [
+      'Abu Dhabi', 'Dubai', 'Sharjah', 'Ajman', 'Umm Al Quwain', 'Ras Al Khaimah', 'Fujairah'
     ]
   }
 ];
