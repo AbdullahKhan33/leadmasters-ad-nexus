@@ -12,11 +12,11 @@ export function BlogPage() {
   const featuredPosts = [
     {
       id: 'ai-tools-small-business-2024',
-      title: "10 AI Tools Every Small Business Should Use in 2024",
+      title: "10 AI Tools Every Small Business Should Use in 2025",
       excerpt: "Discover the essential AI tools that are transforming how small businesses operate, compete, and grow in today's digital marketplace.",
       author: "LeadMasters Team",
-      date: "Dec 20, 2024",
-      readTime: "8 min read",
+      date: "Jan 12, 2025",
+      readTime: "8 min read",  
       category: "AI Tools",
       featured: true
     },
@@ -25,7 +25,7 @@ export function BlogPage() {
       title: "WhatsApp Marketing: The Complete Guide for Small Businesses",
       excerpt: "Learn how to leverage WhatsApp Business to connect with customers, automate responses, and drive sales for your small business.",
       author: "Marketing Team",
-      date: "Dec 18, 2024",
+      date: "Jan 18, 2025",
       readTime: "12 min read",  
       category: "WhatsApp Marketing",
       featured: true
@@ -35,10 +35,10 @@ export function BlogPage() {
   const recentPosts = [
     {
       id: 'generate-100-leads-30-days',
-      title: "5 Lead Generation Mistakes That Are Killing Your Sales",
-      excerpt: "Avoid these common lead generation pitfalls that prevent small businesses from converting prospects into paying customers.",
+      title: "How to Generate 100 Leads in 30 Days (Without Spending a Fortune)",
+      excerpt: "The exact step-by-step blueprint we use to help small businesses consistently generate qualified leads using AI-powered marketing strategies.",
       author: "Sales Team",
-      date: "Dec 15, 2024",
+      date: "Jan 15, 2025",
       readTime: "6 min read",
       category: "Lead Generation"
     },
@@ -47,7 +47,7 @@ export function BlogPage() {
       title: "How to Write AI Prompts That Actually Work for Your Business",
       excerpt: "Master the art of prompt engineering to get better results from AI tools and save hours of manual work.",
       author: "AI Team",
-      date: "Dec 12, 2024",
+      date: "Feb 12, 2025",
       readTime: "7 min read",
       category: "AI Tools"
     },
@@ -56,7 +56,7 @@ export function BlogPage() {
       title: "Facebook Ads vs. Google Ads: Which is Better for Small Businesses?",
       excerpt: "Compare the pros and cons of Facebook and Google advertising to determine the best platform for your business goals.",
       author: "Advertising Team",
-      date: "Dec 10, 2024",
+      date: "Feb 10, 2025",
       readTime: "9 min read",
       category: "Marketing Automation"
     },
@@ -65,7 +65,7 @@ export function BlogPage() {
       title: "Building a CRM That Actually Gets Used: 7 Essential Features",
       excerpt: "Learn what makes a CRM system that your team will actually use, and how to implement it effectively in your business.",
       author: "Product Team",
-      date: "Dec 8, 2024",
+      date: "Jan 8, 2025",
       readTime: "5 min read",
       category: "CRM"
     },
@@ -74,7 +74,7 @@ export function BlogPage() {
       title: "The Small Business Owner's Guide to Marketing Automation",
       excerpt: "Discover how to set up marketing automation that saves time and increases sales without the complexity.",
       author: "Automation Team",
-      date: "Dec 5, 2024",
+      date: "Jan 5, 2025",
       readTime: "10 min read",
       category: "Marketing Automation"
     },
@@ -83,7 +83,7 @@ export function BlogPage() {
       title: "Why Your Business Needs a Professional Website (And How to Get One Fast)",
       excerpt: "Learn why a professional website is crucial for small business success and how to create one quickly and affordably.",
       author: "Web Team",
-      date: "Dec 3, 2024",
+      date: "Jan 3, 2025",
       readTime: "8 min read",
       category: "Website"
     }

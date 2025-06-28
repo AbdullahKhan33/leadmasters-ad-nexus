@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowRight, Calendar, User, Clock, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ export function BlogSection() {
     title: "How to Generate 100 Leads in 30 Days (Without Spending a Fortune)",
     excerpt: "The exact step-by-step blueprint we use to help small businesses consistently generate qualified leads using AI-powered marketing strategies.",
     author: "LeadMasters Team",
-    date: "Dec 20, 2024",
+    date: "Jan 15, 2025",
     readTime: "8 min read",
     category: "Lead Generation",
     featured: true
@@ -21,10 +20,10 @@ export function BlogSection() {
   const blogPosts = [
     {
       id: 'ai-tools-small-business-2024',
-      title: "5 AI Tools Every Small Business Should Use in 2024",
+      title: "10 AI Tools Every Small Business Should Use in 2025",
       excerpt: "Discover the essential AI tools that are transforming how small businesses operate, compete, and grow in today's digital landscape.",
       author: "Marketing Team",
-      date: "Dec 18, 2024",
+      date: "Jan 12, 2025",
       readTime: "5 min read",
       category: "AI Tools"
     },
@@ -33,7 +32,7 @@ export function BlogSection() {
       title: "WhatsApp Marketing: The Secret Weapon for Local Businesses",
       excerpt: "Learn how smart business owners are using WhatsApp to build relationships, nurture leads, and close more sales than ever before.",
       author: "Growth Team",
-      date: "Dec 15, 2024",
+      date: "Jan 18, 2025",
       readTime: "7 min read",
       category: "WhatsApp Marketing"
     },
@@ -42,7 +41,7 @@ export function BlogSection() {
       title: "From Startup to Scale: Our Product Development Journey",
       excerpt: "Take a behind-the-scenes look at how we built LeadMasters.ai from a simple idea into a powerful lead generation platform.",
       author: "Product Team",
-      date: "Dec 12, 2024",
+      date: "Feb 5, 2025",
       readTime: "6 min read",
       category: "Company"
     },
@@ -51,7 +50,7 @@ export function BlogSection() {
       title: "ROI Breakdown: What Our Customers Really Achieve",
       excerpt: "Real numbers, real results. See exactly how our customers are measuring and maximizing their return on investment with AI marketing.",
       author: "Success Team",
-      date: "Dec 10, 2024",
+      date: "Feb 2, 2025",
       readTime: "4 min read",
       category: "Case Studies"
     },
@@ -60,7 +59,7 @@ export function BlogSection() {
       title: "Facebook Ads Optimization: 7 Tactics That Actually Work",
       excerpt: "Stop wasting money on Facebook ads that don't convert. These proven optimization tactics will double your ROI in 30 days.",
       author: "Advertising Team",
-      date: "Dec 8, 2024",
+      date: "Jan 25, 2025",
       readTime: "9 min read",
       category: "Marketing Automation"
     },
@@ -69,7 +68,7 @@ export function BlogSection() {
       title: "CRM Setup for Small Businesses: Complete Guide",
       excerpt: "Build a customer relationship management system that your team will actually use. Step-by-step implementation guide included.",
       author: "CRM Team",
-      date: "Dec 5, 2024",
+      date: "Jan 8, 2025",
       readTime: "11 min read",
       category: "CRM"
     },
@@ -78,7 +77,7 @@ export function BlogSection() {
       title: "Website Essentials: What Every Small Business Needs Online",
       excerpt: "Your website is your digital storefront. Learn the essential elements that convert visitors into customers and boost your credibility.",
       author: "Web Team",
-      date: "Dec 3, 2024",
+      date: "Jan 3, 2025",
       readTime: "8 min read",
       category: "Website"
     },
@@ -87,7 +86,7 @@ export function BlogSection() {
       title: "Marketing Automation for Beginners: Start Here",
       excerpt: "Automate your marketing without the complexity. Simple workflows that save time and increase sales for small business owners.",
       author: "Automation Team",
-      date: "Dec 1, 2024",
+      date: "Jan 5, 2025",
       readTime: "6 min read",
       category: "Marketing Automation"
     }
