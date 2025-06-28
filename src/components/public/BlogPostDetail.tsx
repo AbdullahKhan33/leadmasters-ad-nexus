@@ -25,113 +25,138 @@ const blogContent = {
   [whatsappAutomationWorkflowsContent.id]: whatsappAutomationWorkflowsContent,
 };
 
-// Enhanced styling for premium blog post appearance
 const formatBlogContent = (content: string) => {
-  const paragraphs = content.split('\n\n').filter(p => p.trim());
+  const sections = content.split('\n\n').filter(p => p.trim());
   
-  return paragraphs.map((paragraph, index) => {
-    const trimmed = paragraph.trim();
+  return sections.map((section, index) => {
+    const trimmed = section.trim();
     
     if (!trimmed) return '';
     
-    // Main headings (##) - Dual-colored and prominent
-    if (trimmed.startsWith('## ')) {
-      const headingText = trimmed.replace('## ', '');
-      const words = headingText.split(' ');
-      const firstHalf = words.slice(0, Math.ceil(words.length / 2)).join(' ');
-      const secondHalf = words.slice(Math.ceil(words.length / 2)).join(' ');
-      
-      return `<div key="${index}" className="my-12">
-        <h2 className="text-3xl lg:text-4xl font-bold leading-tight mb-6">
-          <span className="text-purple-600">${firstHalf}</span>
-          <span className="text-pink-500 ml-2">${secondHalf}</span>
-        </h2>
-      </div>`;
-    }
-    
-    // Sub-headings (###) - Clean and structured
-    if (trimmed.startsWith('### ')) {
-      const headingText = trimmed.replace('### ', '');
-      return `<div key="${index}" className="my-10">
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-purple-500 pl-4 bg-gray-50 py-3 rounded-r-lg">
-          ${headingText}
-        </h3>
-      </div>`;
-    }
-    
-    // Smaller headings (####) - Accent styling
-    if (trimmed.startsWith('#### ')) {
-      const headingText = trimmed.replace('#### ', '');
-      return `<div key="${index}" className="my-8">
-        <h4 className="text-xl font-semibold text-purple-700 mb-3 flex items-center">
-          <span className="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>
-          ${headingText}
-        </h4>
-      </div>`;
-    }
-    
-    // Hero headings (#) - Dual-colored main titles
+    // Main title (# )
     if (trimmed.startsWith('# ') && !trimmed.includes('\n')) {
-      const headingText = trimmed.replace('# ', '');
-      const words = headingText.split(' ');
-      const firstHalf = words.slice(0, Math.ceil(words.length / 2)).join(' ');
-      const secondHalf = words.slice(Math.ceil(words.length / 2)).join(' ');
-      
-      return `<div key="${index}" className="my-16 text-center">
-        <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-8">
-          <span className="text-purple-600">${firstHalf}</span>
-          <span className="text-pink-500 ml-2">${secondHalf}</span>
-        </h1>
-      </div>`;
+      const title = trimmed.replace('# ', '');
+      return `
+        <div key="${index}" className="mb-12 text-center">
+          <h1 className="text-5xl lg:text-6xl font-black mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent leading-tight">
+            ${title}
+          </h1>
+        </div>
+      `;
     }
     
-    // Enhanced bullet points with better spacing
+    // Italic subtitle
+    if (trimmed.startsWith('*') && trimmed.endsWith('*') && !trimmed.includes('\n')) {
+      const subtitle = trimmed.replace(/^\*/, '').replace(/\*$/, '');
+      return `
+        <div key="${index}" className="mb-16">
+          <p className="text-xl lg:text-2xl text-gray-600 leading-relaxed font-light text-center max-w-4xl mx-auto border-l-4 border-purple-300 pl-8 py-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-r-2xl shadow-sm">
+            ${subtitle}
+          </p>
+        </div>
+      `;
+    }
+    
+    // Major headings (## )
+    if (trimmed.startsWith('## ')) {
+      const heading = trimmed.replace('## ', '');
+      return `
+        <div key="${index}" className="mb-12 mt-16">
+          <h2 className="text-4xl lg:text-5xl font-bold mb-8 bg-gradient-to-r from-purple-700 to-pink-600 bg-clip-text text-transparent leading-tight">
+            ${heading}
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-8"></div>
+        </div>
+      `;
+    }
+    
+    // Sub-headings (### )
+    if (trimmed.startsWith('### ')) {
+      const heading = trimmed.replace('### ', '');
+      return `
+        <div key="${index}" className="mb-10 mt-12">
+          <h3 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-6 border-l-6 border-purple-500 pl-6 py-4 bg-gradient-to-r from-purple-50 to-transparent rounded-r-xl shadow-sm">
+            ${heading}
+          </h3>
+        </div>
+      `;
+    }
+    
+    // Smaller headings (#### )
+    if (trimmed.startsWith('#### ')) {
+      const heading = trimmed.replace('#### ', '');
+      return `
+        <div key="${index}" className="mb-8 mt-10">
+          <h4 className="text-xl lg:text-2xl font-semibold text-purple-700 mb-4 flex items-center">
+            <span className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mr-4"></span>
+            ${heading}
+          </h4>
+        </div>
+      `;
+    }
+    
+    // Lists with bullet points
     if (trimmed.includes('\n- ') || trimmed.includes('\n* ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
       const listItems = trimmed.split('\n').filter(line => {
         const cleaned = line.trim();
         return cleaned.startsWith('- ') || cleaned.startsWith('* ');
       }).map((item, itemIndex) => {
         const cleanItem = item.replace(/^[\-\*]\s/, '').trim();
-        return `<li key="${itemIndex}" className="flex items-start mb-4">
-          <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-4 flex-shrink-0"></span>
-          <span className="text-gray-700 leading-relaxed">${cleanItem}</span>
-        </li>`;
+        return `
+          <li key="${itemIndex}" className="flex items-start mb-4 group">
+            <span className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mt-3 mr-4 flex-shrink-0 group-hover:scale-125 transition-transform"></span>
+            <span className="text-gray-700 leading-relaxed text-lg">${cleanItem}</span>
+          </li>
+        `;
       }).join('');
       
-      return `<div key="${index}" className="my-8">
-        <ul className="space-y-2 bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100">
-          ${listItems}
-        </ul>
-      </div>`;
+      return `
+        <div key="${index}" className="mb-10">
+          <ul className="space-y-2 bg-gradient-to-br from-purple-50 via-white to-pink-50 p-8 rounded-2xl border border-purple-100 shadow-lg">
+            ${listItems}
+          </ul>
+        </div>
+      `;
     }
     
-    // Premium checkmark styling
-    if (trimmed.includes('✅')) {
-      const items = trimmed.split('\n').filter(line => line.includes('✅'));
-      const listItems = items.map((item, itemIndex) => {
-        const cleanItem = item.replace('✅', '').trim();
-        return `<div key="${itemIndex}" className="flex items-start space-x-4 mb-4 p-4 bg-green-50 rounded-lg border border-green-200 hover:shadow-sm transition-shadow">
-          <span className="text-green-600 text-xl flex-shrink-0">✅</span>
-          <span className="text-gray-800 leading-relaxed">${cleanItem}</span>
-        </div>`;
-      }).join('');
-      
-      return `<div key="${index}" className="my-10 space-y-4">${listItems}</div>`;
+    // Bold sections (**text**)
+    if (trimmed.startsWith('**') && trimmed.endsWith('**') && !trimmed.includes('\n')) {
+      const boldText = trimmed.replace(/^\*\*/, '').replace(/\*\*$/, '');
+      return `
+        <div key="${index}" className="mb-8">
+          <p className="text-xl lg:text-2xl font-bold text-gray-800 bg-gradient-to-r from-yellow-100 to-orange-100 p-6 rounded-xl border-l-4 border-yellow-400 shadow-sm">
+            ${boldText}
+          </p>
+        </div>
+      `;
     }
     
-    // Enhanced paragraph styling with better typography
+    // Regular paragraphs
     let formatted = trimmed
-      .replace(/\*\*(.*?)\*\*/g, '<span className="font-bold text-gray-900 bg-yellow-100 px-2 py-1 rounded">$1</span>')
-      .replace(/\*(.*?)\*/g, '<span className="italic text-purple-700 font-medium">$1</span>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong className="font-bold text-gray-900 bg-yellow-100 px-2 py-1 rounded-md">$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em className="italic text-purple-700 font-medium">$1</em>')
       .replace(/\n/g, '<br/>');
     
-    // Different styling for intro paragraphs vs regular content
-    const isIntro = index < 3;
-    const paragraphClass = isIntro 
-      ? "text-xl text-gray-600 leading-relaxed mb-8 font-light tracking-wide border-l-4 border-purple-200 pl-6 bg-gradient-to-r from-purple-50/50 to-transparent py-4 rounded-r-lg"
-      : "text-lg text-gray-700 leading-relaxed mb-6 tracking-wide";
+    // Check if it's an intro paragraph (first few paragraphs)
+    const isIntro = index < 4 && !trimmed.startsWith('#') && !trimmed.startsWith('*');
     
-    return `<p key="${index}" className="${paragraphClass}">${formatted}</p>`;
+    if (isIntro) {
+      return `
+        <div key="${index}" className="mb-10">
+          <p className="text-xl lg:text-2xl text-gray-600 leading-relaxed font-light tracking-wide border-l-4 border-purple-300 pl-8 py-6 bg-gradient-to-r from-purple-50/70 to-pink-50/70 rounded-r-2xl shadow-sm">
+            ${formatted}
+          </p>
+        </div>
+      `;
+    }
+    
+    return `
+      <div key="${index}" className="mb-8">
+        <p className="text-lg lg:text-xl text-gray-700 leading-relaxed tracking-wide mb-6">
+          ${formatted}
+        </p>
+      </div>
+    `;
   }).filter(html => html.trim()).join('');
 };
 
@@ -211,57 +236,54 @@ export function BlogPostDetail() {
 
   const formattedContent = formatBlogContent(content.content);
 
-  // Split title for dual color effect
-  const titleWords = content.title.split(' ');
-  const titleFirstHalf = titleWords.slice(0, Math.ceil(titleWords.length / 2)).join(' ');
-  const titleSecondHalf = titleWords.slice(Math.ceil(titleWords.length / 2)).join(' ');
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30">
       <PublicHeader />
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Button 
           variant="ghost" 
-          className="mb-12 hover:bg-purple-50 text-purple-600 hover:text-purple-700 font-medium shadow-sm"
+          className="mb-12 hover:bg-purple-100 text-purple-700 hover:text-purple-800 font-semibold transition-all duration-200 shadow-sm"
           onClick={() => navigate('/blog')}
         >
           <ArrowLeft className="w-5 h-5 mr-3" />
           Back to Blog
         </Button>
 
-        <article className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-8 lg:p-12 text-white">
-            <div className="flex flex-wrap items-center gap-4 text-sm mb-8 opacity-90">
-              <div className="flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full">
-                <User className="w-4 h-4" />
-                <span className="font-medium">{post.author}</span>
+        <article className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-purple-100/50">
+          {/* Hero Header */}
+          <div className="bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 p-8 lg:p-16 text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-black/10"></div>
+            <div className="relative z-10">
+              <div className="flex flex-wrap items-center gap-4 text-sm mb-10 opacity-90">
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <User className="w-4 h-4" />
+                  <span className="font-medium">{post.author}</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <Calendar className="w-4 h-4" />
+                  <span>{post.date}</span>
+                </div>
+                <div className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <Clock className="w-4 h-4" />
+                  <span>{post.readTime}</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full">
-                <Calendar className="w-4 h-4" />
-                <span>{post.date}</span>
-              </div>
-              <div className="flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full">
-                <Clock className="w-4 h-4" />
-                <span>{post.readTime}</span>
-              </div>
+              
+              <span className="inline-block bg-white/20 backdrop-blur-sm text-white text-sm font-bold px-6 py-3 rounded-full mb-10 border border-white/30">
+                {post.category}
+              </span>
             </div>
-            
-            <span className="inline-block bg-white/20 text-white text-sm font-bold px-4 py-2 rounded-full mb-8">
-              {post.category}
-            </span>
-            
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              <span className="text-white">{titleFirstHalf}</span>
-              <span className="text-yellow-300 ml-2">{titleSecondHalf}</span>
-            </h1>
           </div>
 
-          <div 
-            className="prose prose-lg max-w-none p-8 lg:p-12 bg-white"
-            dangerouslySetInnerHTML={{ 
-              __html: formattedContent
-            }}
-          />
+          {/* Content */}
+          <div className="p-8 lg:p-16 max-w-none">
+            <div 
+              className="prose prose-xl max-w-none"
+              dangerouslySetInnerHTML={{ 
+                __html: formattedContent
+              }}
+            />
+          </div>
         </article>
       </main>
       <PublicFooter />
