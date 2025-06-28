@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { PublicHeader } from './PublicHeader';
@@ -11,12 +10,18 @@ import { facebookVsGoogleAdsContent } from '@/content/facebook-vs-google-ads';
 import { marketingAutomationWorkflowsContent } from '@/content/marketing-automation-workflows';
 import { crmImplementationGuideContent } from '@/content/crm-implementation-guide';
 import { websiteConversionOptimizationContent } from '@/content/website-conversion-optimization';
+import { generate100Leads30DaysContent } from '@/content/generate-100-leads-30-days';
+import { aiToolsSmallBusiness2024Content } from '@/content/ai-tools-small-business-2024';
+import { whatsappAutomationWorkflowsContent } from '@/content/whatsapp-automation-workflows';
 
 const blogContent = {
   [facebookVsGoogleAdsContent.id]: facebookVsGoogleAdsContent,
   [marketingAutomationWorkflowsContent.id]: marketingAutomationWorkflowsContent,
   [crmImplementationGuideContent.id]: crmImplementationGuideContent,
   [websiteConversionOptimizationContent.id]: websiteConversionOptimizationContent,
+  [generate100Leads30DaysContent.id]: generate100Leads30DaysContent,
+  [aiToolsSmallBusiness2024Content.id]: aiToolsSmallBusiness2024Content,
+  [whatsappAutomationWorkflowsContent.id]: whatsappAutomationWorkflowsContent,
 };
 
 // Enhanced formatting only for specific blogs
