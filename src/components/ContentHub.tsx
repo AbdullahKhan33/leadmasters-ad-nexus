@@ -361,9 +361,9 @@ export function ContentHub() {
               )}
             </CardContent>
 
-            {/* Draft Actions moved to CardFooter for consistent layout */}
-            {post.status === 'draft' && (
-              <CardFooter className="pt-4" onClick={(e) => e.stopPropagation()}>
+            {/* Always include CardFooter for consistent layout */}
+            <CardFooter className="pt-4" onClick={(e) => e.stopPropagation()}>
+              {post.status === 'draft' ? (
                 <div className="flex space-x-2 w-full">
                   <Button variant="outline" size="sm" className="flex-1">
                     <Eye className="w-4 h-4 mr-1" />
@@ -378,8 +378,14 @@ export function ContentHub() {
                     Publish
                   </Button>
                 </div>
-              </CardFooter>
-            )}
+              ) : (
+                <div className="w-full h-10 flex items-center justify-center">
+                  <Badge variant="secondary" className="text-xs">
+                    Published {post.publishedAt ? formatDate(post.publishedAt) : ''}
+                  </Badge>
+                </div>
+              )}
+            </CardFooter>
           </Card>
         </DialogTrigger>
         <DialogContent className="max-w-4xl">
