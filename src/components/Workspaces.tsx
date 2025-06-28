@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { CreateWorkspaceModal } from './CreateWorkspaceModal';
+import { OnboardingWorkspaceForm } from './OnboardingWorkspaceForm';
 
 interface Workspace {
   id: string;
@@ -32,72 +33,24 @@ interface Workspace {
   isActive: boolean;
 }
 
-const mockWorkspaces: Workspace[] = [
-  {
-    id: '1',
-    name: 'TechCorp Solutions',
-    description: 'Leading technology solutions provider specializing in enterprise software development and digital transformation.',
-    country: 'United States',
-    industry: 'Technology',
-    businessType: 'B2B',
-    memberCount: 12,
-    isActive: true
-  },
-  {
-    id: '2',
-    name: 'Green Earth Marketing',
-    description: 'Sustainable marketing agency focused on eco-friendly brands and environmental awareness campaigns.',
-    country: 'Canada',
-    industry: 'Marketing',
-    businessType: 'B2C',
-    memberCount: 8,
-    isActive: false
-  },
-  {
-    id: '3',
-    name: 'FinanceFirst Consulting',
-    description: 'Financial advisory services for small and medium enterprises, providing strategic investment guidance.',
-    country: 'United Kingdom',
-    industry: 'Finance',
-    businessType: 'B2B',
-    memberCount: 15,
-    isActive: true
-  },
-  {
-    id: '4',
-    name: 'HealthWell Clinic',
-    description: 'Modern healthcare facility offering comprehensive medical services and wellness programs.',
-    country: 'Australia',
-    industry: 'Healthcare',
-    businessType: 'B2C',
-    memberCount: 25,
-    isActive: true
-  },
-  {
-    id: '5',
-    name: 'EduTech Innovations',
-    description: 'Educational technology company creating interactive learning platforms for K-12 education.',
-    country: 'Germany',
-    industry: 'Education',
-    businessType: 'B2B',
-    memberCount: 6,
-    isActive: false
-  }
-];
-
 export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsClick?: (workspace: Workspace) => void }) {
-  const [workspaces, setWorkspaces] = useState<Workspace[]>(mockWorkspaces);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const { selectWorkspace, activeWorkspace } = useWorkspace();
   const { toast } = useToast();
 
-  // Auto-select TechCorp Solutions (first workspace) on component mount
+  // Check if user is new (no workspaces)
   useEffect(() => {
-    if (workspaces.length > 0 && !activeWorkspace) {
-      const techCorpWorkspace = workspaces.find(w => w.name === 'TechCorp Solutions') || workspaces[0];
-      selectWorkspace(techCorpWorkspace);
+    if (workspaces.length > 0) {
+      setShowOnboarding(false);
+      if (!activeWorkspace) {
+        // Auto-select first workspace if none is selected
+        const firstWorkspace = workspaces[0];
+        selectWorkspace(firstWorkspace);
+      }
     }
   }, [workspaces, activeWorkspace, selectWorkspace]);
 
@@ -149,9 +102,48 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     });
   };
 
+  const handleOnboardingWorkspaceCreate = (workspaceData: {
+    fullName: string;
+    name: string;
+    description: string;
+    address: string;
+    country: string;
+    state: string;
+    industry: string;
+    companySize: string;
+    websiteUrl: string;
+    mobileNumber: string;
+    timezone: string;
+  }) => {
+    const newWorkspace: Workspace = {
+      id: Date.now().toString(),
+      name: workspaceData.name,
+      description: workspaceData.description,
+      country: workspaceData.country,
+      industry: workspaceData.industry,
+      businessType: 'B2B', // Default for onboarding
+      memberCount: 1,
+      isActive: true
+    };
+
+    setWorkspaces([newWorkspace]);
+    selectWorkspace(newWorkspace);
+    setShowOnboarding(false);
+    
+    toast({
+      title: "Welcome to Your Workspace!",
+      description: `${workspaceData.name} has been created successfully. Let's start your journey!`,
+    });
+  };
+
   const isWorkspaceSelected = (workspace: Workspace) => {
     return activeWorkspace?.id === workspace.id;
   };
+
+  // Show onboarding form for new users
+  if (showOnboarding && workspaces.length === 0) {
+    return <OnboardingWorkspaceForm onCreateWorkspace={handleOnboardingWorkspaceCreate} />;
+  }
 
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
