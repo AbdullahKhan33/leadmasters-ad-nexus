@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { PublicHeader } from './PublicHeader';
@@ -19,114 +18,72 @@ const blogContent = {
   [websiteConversionOptimizationContent.id]: websiteConversionOptimizationContent,
 };
 
-// Enhanced function to format blog content with proper HTML structure
+// Simplified function to format blog content with basic HTML structure
 const formatBlogContent = (content: string) => {
-  // Split content into paragraphs and process each one
+  // Split content into paragraphs
   const paragraphs = content.split('\n\n').filter(p => p.trim());
   
   return paragraphs.map(paragraph => {
     const trimmed = paragraph.trim();
     
+    // Skip empty paragraphs
+    if (!trimmed) return '';
+    
     // Handle main headings (##)
     if (trimmed.startsWith('## ')) {
-      return `<h2 class="text-3xl font-bold text-gray-900 mt-8 mb-6 leading-tight">${trimmed.replace('## ', '')}</h2>`;
+      return `<h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">${trimmed.replace('## ', '')}</h2>`;
     }
     
     // Handle sub-headings (###)
     if (trimmed.startsWith('### ')) {
-      return `<h3 class="text-2xl font-semibold text-gray-800 mt-6 mb-4 leading-tight">${trimmed.replace('### ', '')}</h3>`;
+      return `<h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">${trimmed.replace('### ', '')}</h3>`;
     }
     
     // Handle smaller headings (####)
     if (trimmed.startsWith('#### ')) {
-      return `<h4 class="text-xl font-semibold text-gray-800 mt-5 mb-3 leading-tight">${trimmed.replace('#### ', '')}</h4>`;
+      return `<h4 class="text-xl font-semibold text-gray-700 mt-6 mb-3">${trimmed.replace('#### ', '')}</h4>`;
     }
     
-    // Handle numbered sections (like "1. HubSpot CRM")
-    if (/^\d+\.\s/.test(trimmed)) {
-      return `<h3 class="text-xl font-semibold text-blue-700 mt-6 mb-4 leading-tight bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">${trimmed}</h3>`;
+    // Handle single line headings (starting with #)
+    if (trimmed.startsWith('# ') && !trimmed.includes('\n')) {
+      return `<h1 class="text-4xl font-bold text-gray-900 mt-8 mb-6">${trimmed.replace('# ', '')}</h1>`;
     }
     
-    // Handle bullet point lists (-)
-    if (trimmed.includes('\n- ') || trimmed.startsWith('- ')) {
-      const items = trimmed.split('\n').filter(line => line.trim().startsWith('- '));
-      const listItems = items.map(item => {
-        const cleanItem = item.replace(/^- /, '').trim();
-        return `<li class="text-gray-700 leading-relaxed mb-2">${cleanItem}</li>`;
+    // Handle bullet points that start with - or *
+    if (trimmed.includes('\n- ') || trimmed.includes('\n* ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+      const listItems = trimmed.split('\n').filter(line => {
+        const cleaned = line.trim();
+        return cleaned.startsWith('- ') || cleaned.startsWith('* ');
+      }).map(item => {
+        const cleanItem = item.replace(/^[\-\*]\s/, '').trim();
+        return `<li class="mb-2">${cleanItem}</li>`;
       }).join('');
-      return `<ul class="list-disc list-inside space-y-2 my-4 ml-4 text-gray-700">${listItems}</ul>`;
+      return `<ul class="list-disc list-inside space-y-2 my-6 ml-4">${listItems}</ul>`;
     }
     
-    // Handle pros/cons sections
-    if (trimmed.includes('**Pros**:') || trimmed.includes('**Cons**:')) {
-      let formatted = trimmed
-        .replace(/\*\*Pros\*\*:/g, '<h4 class="text-lg font-semibold text-green-700 mt-4 mb-2 flex items-center"><span class="mr-2">✅</span>Pros:</h4>')
-        .replace(/\*\*Cons\*\*:/g, '<h4 class="text-lg font-semibold text-red-700 mt-4 mb-2 flex items-center"><span class="mr-2">❌</span>Cons:</h4>')
-        .replace(/\n- /g, '<br/>• ')
-        .replace(/^- /g, '• ');
-      return `<div class="bg-gray-50 p-6 rounded-lg border border-gray-200 my-6">${formatted}</div>`;
-    }
-    
-    // Handle pricing information
-    if (trimmed.includes('**Pricing**:')) {
-      const formatted = trimmed.replace(/\*\*Pricing\*\*:/g, '<span class="font-semibold text-blue-700 flex items-center"><span class="mr-2">💰</span>Pricing:</span>');
-      return `<div class="text-gray-700 leading-relaxed mb-4 bg-blue-50 p-4 rounded-lg border border-blue-200">${formatted}</div>`;
-    }
-    
-    // Handle user reviews
-    if (trimmed.includes('**Real User Review**:')) {
-      const formatted = trimmed
-        .replace(/\*\*Real User Review\*\*:/g, '')
-        .replace(/"/g, '"')
-        .trim();
-      return `<blockquote class="border-l-4 border-purple-500 bg-purple-50 p-6 my-6 rounded-r-lg shadow-sm">
-        <div class="flex items-center mb-2">
-          <span class="text-purple-600 font-semibold">💬 Real User Review</span>
-        </div>
-        <p class="text-gray-700 italic leading-relaxed">"${formatted}"</p>
-      </blockquote>`;
-    }
-    
-    // Handle adoption scores
-    if (trimmed.includes('Adoption Score:')) {
-      const score = trimmed.match(/(\d+\.\d+)\/10/)?.[1];
-      const scoreColor = score && parseFloat(score) >= 8.5 ? 'text-green-600' : 
-                        score && parseFloat(score) >= 7.5 ? 'text-yellow-600' : 'text-red-600';
-      return `<div class="text-center my-6">
-        <div class="inline-block bg-gray-100 px-6 py-3 rounded-full shadow-sm">
-          <span class="font-semibold text-gray-700">📊 Adoption Score: </span>
-          <span class="font-bold text-2xl ${scoreColor}">${trimmed.replace('Adoption Score: ', '')}</span>
-        </div>
-      </div>`;
-    }
-    
-    // Handle checkbox lists (✅)
+    // Handle checkmarks (✅)
     if (trimmed.includes('✅')) {
       const items = trimmed.split('\n').filter(line => line.includes('✅'));
       const listItems = items.map(item => {
         const cleanItem = item.replace('✅', '').trim();
         return `<li class="flex items-start space-x-3 mb-3">
-          <span class="text-green-500 text-lg mt-1 flex-shrink-0">✅</span>
-          <span class="text-gray-700 leading-relaxed">${cleanItem}</span>
+          <span class="text-green-500 text-lg flex-shrink-0">✅</span>
+          <span>${cleanItem}</span>
         </li>`;
       }).join('');
-      return `<ul class="space-y-2 my-6 bg-green-50 p-6 rounded-lg border border-green-200 shadow-sm">${listItems}</ul>`;
+      return `<ul class="space-y-2 my-6">${listItems}</ul>`;
     }
     
-    // Handle regular paragraphs with basic inline formatting
-    if (trimmed.length > 0) {
-      let formatted = trimmed
-        // Bold text
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
-        // Italic text  
-        .replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>')
-        // Line breaks
-        .replace(/\n/g, '<br/>');
-      
-      return `<p class="text-gray-700 leading-relaxed mb-6 text-lg">${formatted}</p>`;
-    }
+    // Handle regular paragraphs
+    let formatted = trimmed
+      // Handle bold text
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+      // Handle italic text
+      .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+      // Handle line breaks within paragraphs
+      .replace(/\n/g, '<br/>');
     
-    return '';
+    return `<p class="text-gray-700 leading-relaxed mb-6">${formatted}</p>`;
   }).filter(html => html.trim()).join('');
 };
 
@@ -142,7 +99,7 @@ export function BlogPostDetail() {
   console.log('Blog post ID:', id);
   console.log('Found post:', post);
   console.log('Content available:', !!content);
-  console.log('Content keys:', Object.keys(blogContent));
+  console.log('Content preview:', content ? content.content.substring(0, 200) + '...' : 'No content');
 
   if (!post) {
     return <Navigate to="/blog" replace />;
@@ -223,7 +180,7 @@ export function BlogPostDetail() {
         </Button>
 
         <article>
-          <div className="mb-16">
+          <div className="mb-12">
             <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
               <div className="flex items-center space-x-2">
                 <User className="w-4 h-4" />
@@ -243,13 +200,13 @@ export function BlogPostDetail() {
               {post.category}
             </span>
             
-            <h1 className="text-5xl font-bold text-gray-900 mb-8 leading-tight">
+            <h1 className="text-4xl font-bold text-gray-900 mb-8 leading-tight">
               {content.title}
             </h1>
           </div>
 
           <div 
-            className="blog-content prose prose-lg max-w-none"
+            className="prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ 
               __html: formatBlogContent(content.content)
             }}
