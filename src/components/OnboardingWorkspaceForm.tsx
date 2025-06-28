@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -207,12 +208,10 @@ export function OnboardingWorkspaceForm({ onCreateWorkspace }: OnboardingWorkspa
       setAvailableStates(usStates);
     } else {
       setAvailableStates([]);
-      // Clear state selection if not US
-      if (formData.state) {
-        handleInputChange('state', '');
-      }
+      // Clear state selection if not US and state was previously selected
+      setFormData(prev => ({ ...prev, state: '' }));
     }
-  }, [formData.country, formData.state]);
+  }, [formData.country]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -235,6 +234,16 @@ export function OnboardingWorkspaceForm({ onCreateWorkspace }: OnboardingWorkspa
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const getStatePlaceholder = () => {
+    if (formData.country === 'United States') {
+      return "Select state";
+    } else if (formData.country) {
+      return "Not applicable";
+    } else {
+      return "Select country first";
+    }
   };
 
   return (
@@ -409,10 +418,10 @@ export function OnboardingWorkspaceForm({ onCreateWorkspace }: OnboardingWorkspa
                     <Select 
                       value={formData.state} 
                       onValueChange={(value) => handleInputChange('state', value)}
-                      disabled={availableStates.length === 0}
+                      disabled={formData.country !== 'United States'}
                     >
                       <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
-                        <SelectValue placeholder={availableStates.length > 0 ? "Select state" : "Select country first"} />
+                        <SelectValue placeholder={getStatePlaceholder()} />
                       </SelectTrigger>
                       <SelectContent>
                         {availableStates.map((state) => (

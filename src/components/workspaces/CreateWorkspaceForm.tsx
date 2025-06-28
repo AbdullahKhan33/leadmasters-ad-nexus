@@ -140,16 +140,26 @@ export function CreateWorkspaceForm({
       setAvailableStates(usStates);
     } else {
       setAvailableStates([]);
-      // Clear state selection if not US
+      // Clear state selection if not US and state was previously selected
       if (formData.state) {
         onFormDataChange('state', '');
       }
     }
-  }, [formData.country, formData.state, onFormDataChange]);
+  }, [formData.country, onFormDataChange]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
+  };
+
+  const getStatePlaceholder = () => {
+    if (formData.country === 'United States') {
+      return "Select state";
+    } else if (formData.country) {
+      return "Not applicable";
+    } else {
+      return "Select country first";
+    }
   };
 
   return (
@@ -322,10 +332,10 @@ export function CreateWorkspaceForm({
                     <Select 
                       value={formData.state} 
                       onValueChange={(value) => onFormDataChange('state', value)}
-                      disabled={availableStates.length === 0}
+                      disabled={formData.country !== 'United States'}
                     >
                       <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
-                        <SelectValue placeholder={availableStates.length > 0 ? "Select state" : "Select country first"} />
+                        <SelectValue placeholder={getStatePlaceholder()} />
                       </SelectTrigger>
                       <SelectContent>
                         {availableStates.map((state) => (
