@@ -32,7 +32,7 @@ export function LoginScreen() {
           title: "Login Successful",
           description: "Welcome to LeadMasters!",
         });
-        // Redirect to main app after successful login
+        // Redirect to dashboard after successful login
         navigate('/app');
       } else {
         toast({
