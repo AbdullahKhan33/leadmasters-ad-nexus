@@ -318,24 +318,6 @@ export function ContentHub() {
                 {post.content}
               </p>
               
-              {/* Draft Actions - moved to after content */}
-              {post.status === 'draft' && (
-                <div className="flex space-x-2 mb-4" onClick={(e) => e.stopPropagation()}>
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Eye className="w-4 h-4 mr-1" />
-                    Preview
-                  </Button>
-                  <Button 
-                    onClick={() => handlePublishDraft(post.id)}
-                    size="sm" 
-                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                  >
-                    <Send className="w-4 h-4 mr-1" />
-                    Publish
-                  </Button>
-                </div>
-              )}
-              
               <div className="flex items-center justify-between text-xs text-gray-500">
                 <div className="flex items-center space-x-1">
                   <Calendar className="w-3 h-3" />
@@ -375,6 +357,24 @@ export function ContentHub() {
                     </div>
                     <div className="text-xs text-gray-500">Comments</div>
                   </div>
+                </div>
+              )}
+
+              {/* Draft Actions - moved to very bottom after all content and metadata */}
+              {post.status === 'draft' && (
+                <div className="flex space-x-2 mt-4 pt-4 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Eye className="w-4 h-4 mr-1" />
+                    Preview
+                  </Button>
+                  <Button 
+                    onClick={() => handlePublishDraft(post.id)}
+                    size="sm" 
+                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                  >
+                    <Send className="w-4 h-4 mr-1" />
+                    Publish
+                  </Button>
                 </div>
               )}
             </CardContent>
