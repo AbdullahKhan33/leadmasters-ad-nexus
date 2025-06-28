@@ -25,67 +25,113 @@ const blogContent = {
   [whatsappAutomationWorkflowsContent.id]: whatsappAutomationWorkflowsContent,
 };
 
-// Premium styling for all blog posts
+// Enhanced styling for premium blog post appearance
 const formatBlogContent = (content: string) => {
   const paragraphs = content.split('\n\n').filter(p => p.trim());
   
-  return paragraphs.map(paragraph => {
+  return paragraphs.map((paragraph, index) => {
     const trimmed = paragraph.trim();
     
     if (!trimmed) return '';
     
-    // Main headings (##) - Bold and prominent
+    // Main headings (##) - Dual-colored and prominent
     if (trimmed.startsWith('## ')) {
-      return `<h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mt-16 mb-8 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('## ', '')}</h2>`;
+      const headingText = trimmed.replace('## ', '');
+      const words = headingText.split(' ');
+      const firstHalf = words.slice(0, Math.ceil(words.length / 2)).join(' ');
+      const secondHalf = words.slice(Math.ceil(words.length / 2)).join(' ');
+      
+      return `<div key="${index}" className="my-12">
+        <h2 className="text-3xl lg:text-4xl font-bold leading-tight mb-6">
+          <span className="text-purple-600">${firstHalf}</span>
+          <span className="text-pink-500 ml-2">${secondHalf}</span>
+        </h2>
+      </div>`;
     }
     
-    // Sub-headings (###) - Elegant and spaced
+    // Sub-headings (###) - Clean and structured
     if (trimmed.startsWith('### ')) {
-      return `<h3 className="text-2xl lg:text-3xl font-semibold text-gray-800 mt-12 mb-6 leading-tight">${trimmed.replace('### ', '')}</h3>`;
+      const headingText = trimmed.replace('### ', '');
+      return `<div key="${index}" className="my-10">
+        <h3 className="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-purple-500 pl-4 bg-gray-50 py-3 rounded-r-lg">
+          ${headingText}
+        </h3>
+      </div>`;
     }
     
-    // Smaller headings (####) - Clean and modern
+    // Smaller headings (####) - Accent styling
     if (trimmed.startsWith('#### ')) {
-      return `<h4 className="text-xl lg:text-2xl font-semibold text-gray-700 mt-10 mb-5 leading-snug">${trimmed.replace('#### ', '')}</h4>`;
+      const headingText = trimmed.replace('#### ', '');
+      return `<div key="${index}" className="my-8">
+        <h4 className="text-xl font-semibold text-purple-700 mb-3 flex items-center">
+          <span className="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>
+          ${headingText}
+        </h4>
+      </div>`;
     }
     
-    // Single line headings (#) - Hero style
+    // Hero headings (#) - Dual-colored main titles
     if (trimmed.startsWith('# ') && !trimmed.includes('\n')) {
-      return `<h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mt-12 mb-10 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('# ', '')}</h1>`;
+      const headingText = trimmed.replace('# ', '');
+      const words = headingText.split(' ');
+      const firstHalf = words.slice(0, Math.ceil(words.length / 2)).join(' ');
+      const secondHalf = words.slice(Math.ceil(words.length / 2)).join(' ');
+      
+      return `<div key="${index}" className="my-16 text-center">
+        <h1 className="text-4xl lg:text-5xl font-bold leading-tight mb-8">
+          <span className="text-purple-600">${firstHalf}</span>
+          <span className="text-pink-500 ml-2">${secondHalf}</span>
+        </h1>
+      </div>`;
     }
     
-    // Bullet points - Styled with better spacing
+    // Enhanced bullet points with better spacing
     if (trimmed.includes('\n- ') || trimmed.includes('\n* ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
       const listItems = trimmed.split('\n').filter(line => {
         const cleaned = line.trim();
         return cleaned.startsWith('- ') || cleaned.startsWith('* ');
-      }).map(item => {
+      }).map((item, itemIndex) => {
         const cleanItem = item.replace(/^[\-\*]\s/, '').trim();
-        return `<li className="mb-4 text-gray-700 leading-relaxed pl-2">${cleanItem}</li>`;
-      }).join('');
-      return `<ul className="list-disc list-inside space-y-3 my-8 ml-6 bg-gray-50 p-6 rounded-xl border-l-4 border-purple-500">${listItems}</ul>`;
-    }
-    
-    // Checkmarks (✅) - Premium card style
-    if (trimmed.includes('✅')) {
-      const items = trimmed.split('\n').filter(line => line.includes('✅'));
-      const listItems = items.map(item => {
-        const cleanItem = item.replace('✅', '').trim();
-        return `<li className="flex items-start space-x-4 mb-5 p-4 bg-green-50 rounded-lg border border-green-200">
-          <span className="text-green-600 text-xl flex-shrink-0 mt-1">✅</span>
-          <span className="text-gray-800 leading-relaxed">${cleanItem}</span>
+        return `<li key="${itemIndex}" className="flex items-start mb-4">
+          <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 mr-4 flex-shrink-0"></span>
+          <span className="text-gray-700 leading-relaxed">${cleanItem}</span>
         </li>`;
       }).join('');
-      return `<ul className="space-y-4 my-10">${listItems}</ul>`;
+      
+      return `<div key="${index}" className="my-8">
+        <ul className="space-y-2 bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-100">
+          ${listItems}
+        </ul>
+      </div>`;
     }
     
-    // Regular paragraphs - Enhanced typography
+    // Premium checkmark styling
+    if (trimmed.includes('✅')) {
+      const items = trimmed.split('\n').filter(line => line.includes('✅'));
+      const listItems = items.map((item, itemIndex) => {
+        const cleanItem = item.replace('✅', '').trim();
+        return `<div key="${itemIndex}" className="flex items-start space-x-4 mb-4 p-4 bg-green-50 rounded-lg border border-green-200 hover:shadow-sm transition-shadow">
+          <span className="text-green-600 text-xl flex-shrink-0">✅</span>
+          <span className="text-gray-800 leading-relaxed">${cleanItem}</span>
+        </div>`;
+      }).join('');
+      
+      return `<div key="${index}" className="my-10 space-y-4">${listItems}</div>`;
+    }
+    
+    // Enhanced paragraph styling with better typography
     let formatted = trimmed
-      .replace(/\*\*(.*?)\*\*/g, '<strong className="font-bold text-gray-900 bg-yellow-100 px-1 rounded">$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em className="italic text-purple-700 font-medium">$1</em>')
+      .replace(/\*\*(.*?)\*\*/g, '<span className="font-bold text-gray-900 bg-yellow-100 px-2 py-1 rounded">$1</span>')
+      .replace(/\*(.*?)\*/g, '<span className="italic text-purple-700 font-medium">$1</span>')
       .replace(/\n/g, '<br/>');
     
-    return `<p className="text-lg text-gray-700 leading-relaxed mb-8 font-light tracking-wide">${formatted}</p>`;
+    // Different styling for intro paragraphs vs regular content
+    const isIntro = index < 3;
+    const paragraphClass = isIntro 
+      ? "text-xl text-gray-600 leading-relaxed mb-8 font-light tracking-wide border-l-4 border-purple-200 pl-6 bg-gradient-to-r from-purple-50/50 to-transparent py-4 rounded-r-lg"
+      : "text-lg text-gray-700 leading-relaxed mb-6 tracking-wide";
+    
+    return `<p key="${index}" className="${paragraphClass}">${formatted}</p>`;
   }).filter(html => html.trim()).join('');
 };
 
@@ -165,6 +211,11 @@ export function BlogPostDetail() {
 
   const formattedContent = formatBlogContent(content.content);
 
+  // Split title for dual color effect
+  const titleWords = content.title.split(' ');
+  const titleFirstHalf = titleWords.slice(0, Math.ceil(titleWords.length / 2)).join(' ');
+  const titleSecondHalf = titleWords.slice(Math.ceil(titleWords.length / 2)).join(' ');
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <PublicHeader />
@@ -200,7 +251,8 @@ export function BlogPostDetail() {
             </span>
             
             <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              {content.title}
+              <span className="text-white">{titleFirstHalf}</span>
+              <span className="text-yellow-300 ml-2">{titleSecondHalf}</span>
             </h1>
           </div>
 
