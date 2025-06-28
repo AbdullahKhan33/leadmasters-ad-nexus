@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { PublicHeader } from './PublicHeader';
@@ -18,15 +19,13 @@ const blogContent = {
   [websiteConversionOptimizationContent.id]: websiteConversionOptimizationContent,
 };
 
-// Simplified function to format blog content with basic HTML structure
-const formatBlogContent = (content: string) => {
-  // Split content into paragraphs
+// Enhanced formatting only for specific blogs
+const formatEnhancedBlogContent = (content: string) => {
   const paragraphs = content.split('\n\n').filter(p => p.trim());
   
   return paragraphs.map(paragraph => {
     const trimmed = paragraph.trim();
     
-    // Skip empty paragraphs
     if (!trimmed) return '';
     
     // Handle main headings (##)
@@ -76,14 +75,46 @@ const formatBlogContent = (content: string) => {
     
     // Handle regular paragraphs
     let formatted = trimmed
-      // Handle bold text
       .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
-      // Handle italic text
       .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-      // Handle line breaks within paragraphs
       .replace(/\n/g, '<br/>');
     
     return `<p class="text-gray-700 leading-relaxed mb-6">${formatted}</p>`;
+  }).filter(html => html.trim()).join('');
+};
+
+// Simple formatting for all other blogs
+const formatSimpleBlogContent = (content: string) => {
+  const paragraphs = content.split('\n\n').filter(p => p.trim());
+  
+  return paragraphs.map(paragraph => {
+    const trimmed = paragraph.trim();
+    
+    if (!trimmed) return '';
+    
+    // Simple headings
+    if (trimmed.startsWith('## ')) {
+      return `<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">${trimmed.replace('## ', '')}</h2>`;
+    }
+    
+    if (trimmed.startsWith('### ')) {
+      return `<h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">${trimmed.replace('### ', '')}</h3>`;
+    }
+    
+    // Simple bullet points
+    if (trimmed.includes('\n- ') || trimmed.startsWith('- ')) {
+      const listItems = trimmed.split('\n').filter(line => line.trim().startsWith('- '))
+        .map(item => `<li>${item.replace('- ', '').trim()}</li>`).join('');
+      return `<ul class="list-disc list-inside my-4">${listItems}</ul>`;
+    }
+    
+    // Simple paragraphs
+    let formatted = trimmed
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br/>');
+    
+    return `<p class="text-gray-700 mb-4">${formatted}</p>`;
   }).filter(html => html.trim()).join('');
 };
 
@@ -99,7 +130,6 @@ export function BlogPostDetail() {
   console.log('Blog post ID:', id);
   console.log('Found post:', post);
   console.log('Content available:', !!content);
-  console.log('Content preview:', content ? content.content.substring(0, 200) + '...' : 'No content');
 
   if (!post) {
     return <Navigate to="/blog" replace />;
@@ -166,6 +196,17 @@ export function BlogPostDetail() {
     );
   }
 
+  // Determine which formatting to use based on the blog post ID
+  const shouldUseEnhancedFormatting = [
+    'marketing-automation-workflows',
+    'crm-implementation-guide', 
+    'website-conversion-optimization'
+  ].includes(id || '');
+
+  const formattedContent = shouldUseEnhancedFormatting 
+    ? formatEnhancedBlogContent(content.content)
+    : formatSimpleBlogContent(content.content);
+
   return (
     <div className="min-h-screen bg-white">
       <PublicHeader />
@@ -208,7 +249,7 @@ export function BlogPostDetail() {
           <div 
             className="prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ 
-              __html: formatBlogContent(content.content)
+              __html: formattedContent
             }}
           />
         </article>
