@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
@@ -49,37 +48,37 @@ export function AboutUsPage() {
                 <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
                   <p>
                     At the helm of LeadMasters AI is <strong className="text-purple-700">Abdullah Khan</strong>, a seasoned{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-1 rounded">T</span>ech{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-1 rounded">E</span>ntrepreneur and{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-1 rounded">A</span>I{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-1 rounded">S</span>trategist with over <strong className="text-green-600">18 years of experience</strong> in driving 
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Tech</span>{' '}
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Entrepreneur</span> and{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">AI</span>{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Strategist</span> with over <strong className="text-green-600">18 years of experience</strong> in driving 
                     software innovation and business transformation.
                   </p>
                   
                   <p>
                     Abdullah's vision for LeadMasters AI is simple yet powerful — make AI-driven marketing and 
                     lead generation effortless for businesses of all sizes. With expertise spanning{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-1 rounded">T</span>echnical{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-1 rounded">L</span>eadership,{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-1 rounded">P</span>roduct{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-1 rounded">D</span>evelopment, and{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-1 rounded">G</span>lobal{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-1 rounded">T</span>raining, he has built LeadMasters to help businesses 
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Technical</span>{' '}
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Leadership</span>,{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Product</span>{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Development</span>, and{' '}
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Global</span>{' '}
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Training</span>, he has built LeadMasters to help businesses 
                     cut through complexity and turn AI into real,{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-1 rounded">M</span>easurable{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-1 rounded">G</span>rowth.
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Measurable</span>{' '}
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Growth</span>.
                   </p>
                   
                   <p>
                     Under his leadership, LeadMasters AI is reshaping how companies approach modern marketing — 
                     combining intelligent automation, data-driven insights, and intuitive simplicity in one seamless platform 
                     that transforms{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-1 rounded">L</span>ead{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-1 rounded">G</span>eneration,{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-1 rounded">C</span>ampaign{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-1 rounded">M</span>anagement, and{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-1 rounded">C</span>ustomer{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-1 rounded">E</span>ngagement.
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Lead</span>{' '}
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Generation</span>,{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Campaign</span>{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Management</span>, and{' '}
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Customer</span>{' '}
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Engagement</span>.
                   </p>
                 </div>
 
