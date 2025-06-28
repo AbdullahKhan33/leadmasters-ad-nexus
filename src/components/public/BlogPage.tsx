@@ -12,28 +12,46 @@ export function BlogPage() {
 
   const featuredPosts = [
     {
-      id: 'ai-tools-small-business-2024',
-      title: "10 AI Tools Every Small Business Should Use in 2025",
-      excerpt: "From ChatGPT for content creation to Zapier for automation, discover the essential AI tools that successful entrepreneurs use to save 20+ hours per week while scaling their operations effortlessly.",
-      author: "LeadMasters Team",
-      date: "Jan 12, 2025",
-      readTime: "8 min read",  
-      category: "AI Tools",
+      id: 'facebook-vs-google-ads',
+      title: "Facebook Ads vs. Google Ads: Which is Better for Small Businesses?",
+      excerpt: "We spent $50,000 testing both platforms for small businesses. Here's our complete comparison of Facebook and Google advertising to help you choose the best platform for your goals and budget.",
+      author: "Advertising Team",
+      date: "Feb 10, 2025",
+      readTime: "9 min read",  
+      category: "Marketing Automation",
       featured: true
     },
     {
-      id: 'whatsapp-marketing-secret-weapon',
-      title: "WhatsApp Marketing: The Complete Guide for Small Businesses",
-      excerpt: "Local businesses using WhatsApp are seeing 3x higher engagement rates than email marketing. Here's the complete playbook to turn WhatsApp into your most profitable marketing channel in 2025.",
+      id: 'marketing-automation-workflows',
+      title: "5 Marketing Automation Workflows That Generate Sales While You Sleep",
+      excerpt: "Set up these 5 proven automation workflows to nurture leads, recover abandoned carts, and turn one-time buyers into repeat customers automatically, increasing revenue by 40%.",
       author: "Marketing Team",
-      date: "Jan 18, 2025",
-      readTime: "12 min read",  
-      category: "WhatsApp Marketing",
+      date: "Jan 5, 2025",
+      readTime: "13 min read",  
+      category: "Marketing Automation",
       featured: true
     }
   ];
 
   const recentPosts = [
+    {
+      id: 'crm-implementation-guide',
+      title: "CRM Implementation: How to Get Your Team to Actually Use It",
+      excerpt: "85% of CRM systems fail because employees refuse to use them. This step-by-step guide shows you how to choose, implement, and get team buy-in for a CRM that drives real results.",
+      author: "Sales Operations Team",
+      date: "Jan 8, 2025",
+      readTime: "16 min read",
+      category: "CRM"
+    },
+    {
+      id: 'website-conversion-optimization',
+      title: "Website Conversion Optimization: Turn More Visitors Into Customers",
+      excerpt: "Small changes can create big results. These 12 proven conversion optimization techniques can double your website's lead generation without spending more on advertising.",
+      author: "Conversion Team",
+      date: "Jan 3, 2025",
+      readTime: "11 min read",
+      category: "Website"
+    },
     {
       id: 'generate-100-leads-30-days',
       title: "How to Generate 100 Leads in 30 Days (Without Spending a Fortune)",
@@ -42,6 +60,24 @@ export function BlogPage() {
       date: "Jan 15, 2025",
       readTime: "6 min read",
       category: "Lead Generation"
+    },
+    {
+      id: 'ai-tools-small-business-2024',
+      title: "10 AI Tools Every Small Business Should Use in 2025",
+      excerpt: "From ChatGPT for content creation to Zapier for automation, discover the essential AI tools that successful entrepreneurs use to save 20+ hours per week while scaling their operations effortlessly.",
+      author: "LeadMasters Team",
+      date: "Jan 12, 2025",
+      readTime: "8 min read",
+      category: "AI Tools"
+    },
+    {
+      id: 'whatsapp-marketing-secret-weapon',
+      title: "WhatsApp Marketing: The Complete Guide for Small Businesses",
+      excerpt: "Local businesses using WhatsApp are seeing 3x higher engagement rates than email marketing. Here's the complete playbook to turn WhatsApp into your most profitable marketing channel in 2025.",
+      author: "Marketing Team",
+      date: "Jan 18, 2025",
+      readTime: "12 min read",
+      category: "WhatsApp Marketing"
     },
     {
       id: 'whatsapp-automation-workflows',
@@ -105,42 +141,6 @@ export function BlogPage() {
       date: "Feb 12, 2025",
       readTime: "7 min read",
       category: "AI Tools"
-    },
-    {
-      id: 'facebook-vs-google-ads',
-      title: "Facebook Ads vs. Google Ads: Which is Better for Small Businesses?",
-      excerpt: "We spent $50,000 testing both platforms for small businesses. Here's our complete comparison of Facebook and Google advertising to help you choose the best platform for your goals and budget.",
-      author: "Advertising Team",
-      date: "Feb 10, 2025",
-      readTime: "9 min read",
-      category: "Marketing Automation"
-    },
-    {
-      id: 'crm-implementation-guide',
-      title: "CRM Implementation: How to Get Your Team to Actually Use It",
-      excerpt: "85% of CRM systems fail because employees refuse to use them. This step-by-step guide shows you how to choose, implement, and get team buy-in for a CRM that drives real results.",
-      author: "Sales Operations Team",
-      date: "Jan 8, 2025",
-      readTime: "16 min read",
-      category: "CRM"
-    },
-    {
-      id: 'marketing-automation-workflows',
-      title: "5 Marketing Automation Workflows That Generate Sales While You Sleep",
-      excerpt: "Set up these 5 proven automation workflows to nurture leads, recover abandoned carts, and turn one-time buyers into repeat customers automatically, increasing revenue by 40%.",
-      author: "Marketing Team",
-      date: "Jan 5, 2025",
-      readTime: "13 min read",
-      category: "Marketing Automation"
-    },
-    {
-      id: 'website-conversion-optimization',
-      title: "Website Conversion Optimization: Turn More Visitors Into Customers",
-      excerpt: "Small changes can create big results. These 12 proven conversion optimization techniques can double your website's lead generation without spending more on advertising.",
-      author: "Conversion Team",
-      date: "Jan 3, 2025",
-      readTime: "11 min read",
-      category: "Website"
     }
   ];
 

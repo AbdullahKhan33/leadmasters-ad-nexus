@@ -20,6 +20,42 @@ export function BlogSection() {
 
   const blogPosts = [
     {
+      id: 'facebook-vs-google-ads',
+      title: "Facebook Ads vs. Google Ads: Which is Better for Small Businesses?",
+      excerpt: "We spent $50,000 testing both platforms for small businesses. Here's our complete comparison of Facebook and Google advertising to help you choose the best platform for your goals and budget.",
+      author: "Advertising Team",
+      date: "Feb 10, 2025",
+      readTime: "9 min read",
+      category: "Marketing Automation"
+    },
+    {
+      id: 'marketing-automation-workflows',
+      title: "5 Marketing Automation Workflows That Generate Sales While You Sleep",
+      excerpt: "Set up these 5 proven automation workflows to nurture leads, recover abandoned carts, and turn one-time buyers into repeat customers automatically, increasing revenue by 40%.",
+      author: "Marketing Team",
+      date: "Jan 5, 2025",
+      readTime: "13 min read",
+      category: "Marketing Automation"
+    },
+    {
+      id: 'crm-implementation-guide',
+      title: "CRM Implementation: How to Get Your Team to Actually Use It",
+      excerpt: "85% of CRM systems fail because employees refuse to use them. This step-by-step guide shows you how to choose, implement, and get team buy-in for a CRM that drives real results.",
+      author: "Sales Operations Team",
+      date: "Jan 8, 2025",
+      readTime: "16 min read",
+      category: "CRM"
+    },
+    {
+      id: 'website-conversion-optimization',
+      title: "Website Conversion Optimization: Turn More Visitors Into Customers",
+      excerpt: "Small changes can create big results. These 12 proven conversion optimization techniques can double your website's lead generation without spending more on advertising.",
+      author: "Conversion Team",
+      date: "Jan 3, 2025",
+      readTime: "11 min read",
+      category: "Website"
+    },
+    {
       id: 'ai-tools-small-business-2024',
       title: "10 AI Tools Every Small Business Should Use in 2025",
       excerpt: "From ChatGPT for content creation to Zapier for automation, discover the essential AI tools that successful entrepreneurs use to save 20+ hours per week while scaling their operations.",
@@ -72,42 +108,6 @@ export function BlogSection() {
       date: "Jan 25, 2025",
       readTime: "11 min read",
       category: "WhatsApp Marketing"
-    },
-    {
-      id: 'small-business-hiring-guide',
-      title: "The Small Business Hiring Blueprint: Find A-Players on a Budget",
-      excerpt: "Stop making expensive hiring mistakes. This proven blueprint shows you exactly how to attract, interview, and hire A-players even when you can't compete on salary alone.",
-      author: "HR & Talent Team",
-      date: "Feb 5, 2025",
-      readTime: "18 min read",
-      category: "Small Business Tips"
-    },
-    {
-      id: 'marketing-automation-beginners-guide',
-      title: "Marketing Automation for Small Business: The Complete Beginner's Guide",
-      excerpt: "Discover how to set up email sequences, lead nurturing workflows, and automated follow-ups that convert 35% more prospects into customers while you sleep.",
-      author: "Automation Team",
-      date: "Jan 30, 2025",
-      readTime: "12 min read",
-      category: "Marketing Automation"
-    },
-    {
-      id: 'crm-setup-small-business-guide',
-      title: "How to Choose and Set Up a CRM That Your Team Will Actually Use",
-      excerpt: "85% of CRM implementations fail because teams ignore them. Learn the 7 essential features that make a CRM irresistible to use, plus step-by-step setup instructions.",
-      author: "Sales Team",
-      date: "Feb 8, 2025",
-      readTime: "14 min read",
-      category: "CRM"
-    },
-    {
-      id: 'small-business-website-conversion-guide',
-      title: "Turn Your Website Into a Lead Generation Machine: 9 Proven Strategies",
-      excerpt: "Your website should be your best salesperson. These 9 conversion optimization strategies can increase your website leads by 200% without spending more on traffic.",
-      author: "Web Team",
-      date: "Feb 12, 2025",
-      readTime: "10 min read",
-      category: "Website"
     }
   ];
 
