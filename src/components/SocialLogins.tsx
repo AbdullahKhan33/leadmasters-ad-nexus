@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,6 +33,23 @@ interface AvailablePlatform {
   comingSoon?: boolean;
 }
 
+// Custom Google G icon component
+const GoogleIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+  </svg>
+);
+
+// Custom Threads icon component
+const ThreadsIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.5 12.497v-.01c0-3.09.85-5.943 2.495-8.492C5.845 1.205 8.598.024 12.179 0h.014c2.746.007 5.182.478 7.241 1.401.906.405 1.647.915 2.177 1.492.531.578.802 1.204.802 1.866 0 .493-.145.919-.431 1.267-.287.348-.681.522-1.179.522-.436 0-.804-.174-1.095-.517-.29-.342-.436-.796-.436-1.349 0-.493.145-.919.431-1.267.287.348.681.522 1.179-.522.498 0 .892.174 1.179.522.286.348.431.774.431 1.267 0 .662-.271 1.288-.802 1.866-.53.577-1.271 1.087-2.177 1.492-2.059.923-4.495 1.394-7.241 1.401z"/>
+  </svg>
+);
+
 export function SocialLogins() {
   const { toast } = useToast();
   
@@ -63,14 +79,14 @@ export function SocialLogins() {
       id: "google_1",
       platform: "Google",
       email: "marketing@leadmasters.ai",
-      icon: Search,
+      icon: GoogleIcon,
       color: "from-red-500 to-orange-500"
     },
     {
       id: "threads_1",
       platform: "Threads",
       email: "@leadmasters_official",
-      icon: MessageSquare,
+      icon: ThreadsIcon,
       color: "from-gray-800 to-black"
     }
   ]);

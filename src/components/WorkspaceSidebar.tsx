@@ -40,6 +40,7 @@ import {
   LogOut,
   Settings,
   ShoppingBag,
+  Archive,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -59,6 +60,7 @@ export function WorkspaceSidebar({
   onTemplatesClick,
   onAgentsClick,
   onServicesClick,
+  onContentHubClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -77,13 +79,13 @@ export function WorkspaceSidebar({
   onTemplatesClick: () => void;
   onAgentsClick: () => void;
   onServicesClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services';
+  onContentHubClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'content-hub';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  // Keep CRM submenu open when on any CRM-related view
   React.useEffect(() => {
     if (['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView)) {
       setIsCRMSubmenuOpen(true);
@@ -113,23 +115,18 @@ export function WorkspaceSidebar({
 
   const handleCRMMainClick = () => {
     if (isCollapsed) {
-      // If collapsed, just navigate to CRM dashboard
       onCRMClick();
     } else {
-      // If expanded, toggle submenu and navigate to CRM dashboard
       setIsCRMSubmenuOpen(!isCRMSubmenuOpen);
       onCRMClick();
     }
   };
 
   const handleLogout = () => {
-    // For now, just redirect to login or refresh
-    // In a real app, this would clear auth tokens and redirect
     console.log("Logging out...");
     window.location.reload();
   };
 
-  // Check if any CRM-related view is active
   const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView);
 
   return (
@@ -208,6 +205,25 @@ export function WorkspaceSidebar({
                 <div className="flex items-center space-x-3">
                   <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="font-semibold">Post Builder</span>
+                </div>
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onContentHubClick}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'content-hub')}`}
+            >
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Archive className={`w-5 h-5 ${getIconStyles(currentView === 'content-hub')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Content Hub</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Archive className={`w-5 h-5 ${getIconStyles(currentView === 'content-hub')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Content Hub</span>
                 </div>
               )}
             </SidebarMenuButton>

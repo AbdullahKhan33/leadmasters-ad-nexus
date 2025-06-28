@@ -21,6 +21,7 @@ import { DomainSetup } from "@/components/DomainSetup";
 import { CRMAutomations } from "@/components/crm/CRMAutomations";
 import { Templates } from "@/components/Templates";
 import { Services } from "@/components/Services";
+import { ContentHub } from "@/components/ContentHub";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { PremiumProvider, usePremium } from "@/contexts/PremiumContext";
@@ -29,9 +30,9 @@ import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
 import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'content-hub';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'content-hub';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'content-hub';
 
 function IndexContent() {
   const { isInWorkspace, activeWorkspace } = useWorkspace();
@@ -138,6 +139,11 @@ function IndexContent() {
     setCurrentView('services');
   };
 
+  const handleContentHubClick = () => {
+    console.log('Content Hub clicked');
+    setCurrentView('content-hub');
+  };
+
   const handleWorkspaceSettingsClick = (workspace: any) => {
     setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
@@ -186,6 +192,7 @@ function IndexContent() {
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onServicesClick={handleServicesClick}
+            onContentHubClick={handleContentHubClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -205,6 +212,7 @@ function IndexContent() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onServicesClick={handleServicesClick}
+            onContentHubClick={handleContentHubClick}
             currentView={currentView as AppSidebarView}
           />
         )}
@@ -225,6 +233,8 @@ function IndexContent() {
               <SocialLogins />
             ) : currentView === 'post-builder' ? (
               <PostBuilder />
+            ) : currentView === 'content-hub' ? (
+              <ContentHub />
             ) : currentView === 'inspiration-hub' ? (
               <InspirationHub />
             ) : currentView === 'analytics' ? (
