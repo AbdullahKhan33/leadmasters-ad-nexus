@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { PublicHeader } from './PublicHeader';
@@ -28,40 +29,27 @@ const formatBlogContent = (content: string) => {
     
     // Handle main headings (##)
     if (trimmed.startsWith('## ')) {
-      return `<h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6 leading-tight border-b border-gray-200 pb-3">${trimmed.replace('## ', '')}</h2>`;
+      return `<h2 class="text-3xl font-bold text-gray-900 mt-8 mb-4 leading-tight">${trimmed.replace('## ', '')}</h2>`;
     }
     
     // Handle sub-headings (###)
     if (trimmed.startsWith('### ')) {
-      return `<h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-4 leading-tight">${trimmed.replace('### ', '')}</h3>`;
+      return `<h3 class="text-2xl font-semibold text-gray-800 mt-6 mb-3 leading-tight">${trimmed.replace('### ', '')}</h3>`;
     }
     
     // Handle smaller headings (####)
     if (trimmed.startsWith('#### ')) {
-      return `<h4 class="text-xl font-semibold text-gray-800 mt-8 mb-3 leading-tight">${trimmed.replace('#### ', '')}</h4>`;
+      return `<h4 class="text-xl font-semibold text-gray-800 mt-5 mb-2 leading-tight">${trimmed.replace('#### ', '')}</h4>`;
     }
     
-    // Handle section headers that start with numbers (like "1. HubSpot CRM")
+    // Handle section headers that start with numbers (like "1. HubSpot CRM") - only for CRM guide
+    if (/^\d+\.\s[A-Z]/.test(trimmed) && trimmed.includes('CRM')) {
+      return `<h3 class="text-2xl font-bold text-purple-700 mt-8 mb-4 leading-tight bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-l-4 border-purple-500">${trimmed}</h3>`;
+    }
+    
+    // Handle regular numbered sections for other content
     if (/^\d+\.\s/.test(trimmed)) {
-      return `<h3 class="text-2xl font-bold text-purple-700 mt-10 mb-4 leading-tight bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg border-l-4 border-purple-500">${trimmed}</h3>`;
-    }
-    
-    // Handle bold standalone lines (like "**Best For**:")
-    if (trimmed.startsWith('**') && trimmed.endsWith('**') && !trimmed.includes(' ')) {
-      return `<h4 class="text-lg font-bold text-gray-800 mt-6 mb-2">${trimmed.replace(/\*\*/g, '')}</h4>`;
-    }
-    
-    // Handle checkbox lists (✅)
-    if (trimmed.includes('✅')) {
-      const items = trimmed.split('\n').filter(line => line.includes('✅'));
-      const listItems = items.map(item => {
-        const cleanItem = item.replace('✅', '').trim();
-        return `<li class="flex items-start space-x-3 mb-4">
-          <span class="text-green-500 text-xl mt-1 flex-shrink-0">✅</span>
-          <span class="text-gray-700 leading-relaxed">${cleanItem}</span>
-        </li>`;
-      }).join('');
-      return `<ul class="space-y-2 my-6 bg-green-50 p-6 rounded-lg border border-green-200">${listItems}</ul>`;
+      return `<h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3 leading-tight">${trimmed}</h3>`;
     }
     
     // Handle bullet point lists (-)
@@ -71,83 +59,73 @@ const formatBlogContent = (content: string) => {
         const cleanItem = item.replace(/^- /, '').trim();
         return `<li class="text-gray-700 leading-relaxed mb-2">${cleanItem}</li>`;
       }).join('');
-      return `<ul class="list-disc list-inside space-y-2 my-6 ml-6 text-gray-700">${listItems}</ul>`;
+      return `<ul class="list-disc list-inside space-y-2 my-4 ml-4 text-gray-700">${listItems}</ul>`;
     }
     
-    // Handle numbered lists that aren't headings
-    if (/^\d+\./.test(trimmed) && !trimmed.match(/^\d+\.\s[A-Z]/)) {
-      const items = trimmed.split('\n').filter(line => /^\d+\./.test(line.trim()));
+    // Handle checkbox lists (✅) - only for content with checkboxes
+    if (trimmed.includes('✅')) {
+      const items = trimmed.split('\n').filter(line => line.includes('✅'));
       const listItems = items.map(item => {
-        const cleanItem = item.replace(/^\d+\.\s*/, '').trim();
-        return `<li class="text-gray-700 leading-relaxed mb-3">${cleanItem}</li>`;
+        const cleanItem = item.replace('✅', '').trim();
+        return `<li class="flex items-start space-x-3 mb-3">
+          <span class="text-green-500 text-lg mt-1 flex-shrink-0">✅</span>
+          <span class="text-gray-700 leading-relaxed">${cleanItem}</span>
+        </li>`;
       }).join('');
-      return `<ol class="list-decimal list-inside space-y-2 my-6 ml-6 text-gray-700">${listItems}</ol>`;
+      return `<ul class="space-y-2 my-4 bg-green-50 p-4 rounded-lg border border-green-200">${listItems}</ul>`;
     }
     
-    // Handle pros/cons sections
+    // Handle pros/cons sections - only for content with explicit pros/cons
     if (trimmed.includes('**Pros**:') || trimmed.includes('**Cons**:')) {
       let formatted = trimmed
-        .replace(/\*\*Pros\*\*:/g, '<h4 class="text-lg font-semibold text-green-700 mt-4 mb-3">✅ Pros:</h4>')
-        .replace(/\*\*Cons\*\*:/g, '<h4 class="text-lg font-semibold text-red-700 mt-4 mb-3">❌ Cons:</h4>')
+        .replace(/\*\*Pros\*\*:/g, '<h4 class="text-lg font-semibold text-green-700 mt-4 mb-2">✅ Pros:</h4>')
+        .replace(/\*\*Cons\*\*:/g, '<h4 class="text-lg font-semibold text-red-700 mt-4 mb-2">❌ Cons:</h4>')
         .replace(/\n- /g, '<br/>• ')
         .replace(/^- /g, '• ');
-      return `<div class="bg-gray-50 p-6 rounded-lg border border-gray-200 my-6">${formatted}</div>`;
+      return `<div class="bg-gray-50 p-4 rounded-lg border border-gray-200 my-4">${formatted}</div>`;
     }
     
-    // Handle pricing information
+    // Handle pricing information - only for content with pricing
     if (trimmed.includes('**Pricing**:')) {
       const formatted = trimmed.replace(/\*\*Pricing\*\*:/g, '<span class="font-semibold text-blue-700">💰 Pricing:</span>');
-      return `<p class="text-gray-700 leading-relaxed mb-4 bg-blue-50 p-4 rounded-lg border border-blue-200">${formatted}</p>`;
+      return `<p class="text-gray-700 leading-relaxed mb-4 bg-blue-50 p-3 rounded-lg border border-blue-200">${formatted}</p>`;
     }
     
-    // Handle user reviews
+    // Handle user reviews - only for content with reviews
     if (trimmed.includes('**Real User Review**:')) {
       const formatted = trimmed
         .replace(/\*\*Real User Review\*\*:/g, '')
         .replace(/"/g, '"')
         .trim();
-      return `<blockquote class="border-l-4 border-purple-500 bg-purple-50 p-6 my-6 rounded-r-lg">
-        <p class="text-gray-700 italic leading-relaxed mb-3">${formatted}</p>
+      return `<blockquote class="border-l-4 border-purple-500 bg-purple-50 p-4 my-4 rounded-r-lg">
+        <p class="text-gray-700 italic leading-relaxed">${formatted}</p>
       </blockquote>`;
     }
     
-    // Handle adoption scores
+    // Handle adoption scores - only for content with scores
     if (trimmed.includes('Adoption Score:')) {
       const score = trimmed.match(/(\d+\.\d+)\/10/)?.[1];
       const scoreColor = score && parseFloat(score) >= 8.5 ? 'text-green-600' : 
                         score && parseFloat(score) >= 7.5 ? 'text-yellow-600' : 'text-red-600';
-      return `<div class="text-center my-4">
-        <span class="inline-block bg-gray-100 px-4 py-2 rounded-full">
+      return `<div class="text-center my-3">
+        <span class="inline-block bg-gray-100 px-3 py-2 rounded-full">
           <span class="font-semibold text-gray-700">Adoption Score: </span>
-          <span class="font-bold ${scoreColor} text-lg">${trimmed.replace('Adoption Score: ', '')}</span>
+          <span class="font-bold ${scoreColor}">${trimmed.replace('Adoption Score: ', '')}</span>
         </span>
       </div>`;
     }
     
-    // Handle special callout boxes
-    if (trimmed.includes('**Problem**:') || trimmed.includes('**Solution**:')) {
-      const formatted = trimmed
-        .replace(/\*\*Problem\*\*:/g, '<span class="font-semibold text-red-700">⚠️ Problem:</span>')
-        .replace(/\*\*Solution\*\*:/g, '<span class="font-semibold text-green-700">✅ Solution:</span>');
-      return `<div class="bg-yellow-50 border border-yellow-200 p-6 rounded-lg my-6">${formatted}</div>`;
-    }
-    
-    // Handle regular paragraphs with inline formatting
+    // Handle regular paragraphs with basic inline formatting
     if (trimmed.length > 0) {
       let formatted = trimmed
         // Bold text
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
         // Italic text  
-        .replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>')
+        .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
         // Line breaks
         .replace(/\n/g, '<br/>');
       
-      // Check if it's a standalone statistic or important statement
-      if (formatted.includes('%') || formatted.includes('$') || formatted.length < 100) {
-        return `<p class="text-lg font-medium text-gray-800 leading-relaxed mb-6 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">${formatted}</p>`;
-      }
-      
-      return `<p class="text-gray-700 leading-relaxed mb-6">${formatted}</p>`;
+      return `<p class="text-gray-700 leading-relaxed mb-4">${formatted}</p>`;
     }
     
     return '';
