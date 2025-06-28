@@ -13,7 +13,9 @@ import {
   CheckCircle,
   ExternalLink,
   Zap,
-  Users
+  Users,
+  Search,
+  MessageSquare
 } from "lucide-react";
 
 interface ConnectedAccount {
@@ -56,10 +58,24 @@ export function SocialLogins() {
       email: "team@leadmasters.ai",
       icon: Linkedin,
       color: "from-blue-600 to-blue-700"
+    },
+    {
+      id: "google_1",
+      platform: "Google",
+      email: "marketing@leadmasters.ai",
+      icon: Search,
+      color: "from-red-500 to-orange-500"
+    },
+    {
+      id: "threads_1",
+      platform: "Threads",
+      email: "@leadmasters_official",
+      icon: MessageSquare,
+      color: "from-gray-800 to-black"
     }
   ]);
 
-  const availablePlatforms: AvailablePlatform[] = [
+  const [availablePlatforms, setAvailablePlatforms] = useState<AvailablePlatform[]>([
     {
       id: "twitter",
       name: "Twitter / X",
@@ -86,14 +102,36 @@ export function SocialLogins() {
       color: "from-yellow-400 to-yellow-500",
       comingSoon: true
     }
-  ];
+  ]);
 
   const handleDisconnect = (accountId: string, platform: string) => {
-    setConnectedAccounts(prev => prev.filter(account => account.id !== accountId));
-    toast({
-      title: "Account Disconnected",
-      description: `${platform} account has been successfully disconnected.`,
-    });
+    // Find the account being disconnected
+    const disconnectedAccount = connectedAccounts.find(account => account.id === accountId);
+    
+    if (disconnectedAccount) {
+      // Remove from connected accounts
+      setConnectedAccounts(prev => prev.filter(account => account.id !== accountId));
+      
+      // Add to available platforms (if not already there)
+      const platformId = platform.toLowerCase().replace(/\s+/g, '').replace('/', '');
+      const isAlreadyAvailable = availablePlatforms.some(p => p.id === platformId);
+      
+      if (!isAlreadyAvailable) {
+        const newAvailablePlatform: AvailablePlatform = {
+          id: platformId,
+          name: platform,
+          icon: disconnectedAccount.icon,
+          color: disconnectedAccount.color
+        };
+        
+        setAvailablePlatforms(prev => [...prev, newAvailablePlatform]);
+      }
+      
+      toast({
+        title: "Account Disconnected",
+        description: `${platform} account has been disconnected and moved to available integrations.`,
+      });
+    }
   };
 
   const handleConnect = (platform: string) => {
@@ -102,6 +140,36 @@ export function SocialLogins() {
       description: `Redirecting to ${platform} for authentication...`,
     });
     // In a real app, this would redirect to OAuth flow
+  };
+
+  const handleReconnect = (platformId: string, platformName: string) => {
+    // Find the platform in available list
+    const platform = availablePlatforms.find(p => p.id === platformId);
+    
+    if (platform) {
+      // Create a new connected account
+      const newConnectedAccount: ConnectedAccount = {
+        id: `${platformId}_${Date.now()}`,
+        platform: platformName,
+        email: `reconnected@leadmasters.ai`,
+        icon: platform.icon,
+        color: platform.color
+      };
+      
+      // Add to connected accounts
+      setConnectedAccounts(prev => [...prev, newConnectedAccount]);
+      
+      // Remove from available platforms (only if it was a disconnected account)
+      setAvailablePlatforms(prev => prev.filter(p => p.id !== platformId));
+      
+      toast({
+        title: "Account Reconnected",
+        description: `${platformName} account has been successfully reconnected.`,
+      });
+    } else {
+      // Handle regular connection for platforms that were always available
+      handleConnect(platformName);
+    }
   };
 
   return (
@@ -204,7 +272,7 @@ export function SocialLogins() {
                       </Badge>
                     ) : (
                       <Button
-                        onClick={() => handleConnect(platform.name)}
+                        onClick={() => handleReconnect(platform.id, platform.name)}
                         className={`w-full bg-gradient-to-r ${platform.color} hover:opacity-90 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 group-hover:scale-105`}
                       >
                         <span className="flex items-center space-x-2">
