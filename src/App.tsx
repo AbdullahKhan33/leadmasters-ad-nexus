@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { PremiumProvider } from './contexts/PremiumContext';
 import { WorkspaceProvider } from './contexts/WorkspaceContext';
-import Index from './pages/Index';
+import { PublicWebsite } from './components/PublicWebsite';
 import { LoginPage } from './pages/LoginPage';
 import { AboutUsPage } from './components/public/AboutUsPage';
 import { FeaturesPage } from './components/public/FeaturesPage';
@@ -28,6 +27,7 @@ import Integrations from './pages/protected/Integrations';
 import Help from './pages/protected/Help';
 import { BlogPage } from './components/public/BlogPage';
 import { BlogPostDetail } from './components/public/BlogPostDetail';
+import Index from './pages/Index';
 
 const queryClient = new QueryClient();
 
@@ -41,7 +41,7 @@ function App() {
               <BrowserRouter>
                 <Routes>
                   {/* Public routes */}
-                  <Route path="/" element={<Index />} />
+                  <Route path="/" element={<PublicWebsite />} />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/about" element={<AboutUsPage />} />
                   <Route path="/features" element={<FeaturesPage />} />
@@ -49,9 +49,16 @@ function App() {
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/:id" element={<BlogPostDetail />} />
-                  <Route path="/legal/*" element={<LegalPage />} />
+                  <Route path="/legal/*" element={<LegalPage type="terms" />} />
                   
-                  {/* Protected routes */}
+                  {/* Main application (workspace system) */}
+                  <Route path="/app" element={
+                    <ProtectedRoute>
+                      <Index />
+                    </ProtectedRoute>
+                  } />
+                  
+                  {/* Protected routes - legacy, but keeping for compatibility */}
                   <Route path="/dashboard" element={
                     <ProtectedRoute>
                       <Dashboard />
