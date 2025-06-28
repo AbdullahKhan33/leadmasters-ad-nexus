@@ -34,25 +34,11 @@ interface Workspace {
 }
 
 export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsClick?: (workspace: Workspace) => void }) {
-  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(true);
-  const { selectWorkspace, activeWorkspace } = useWorkspace();
+  const { workspaces, selectWorkspace, activeWorkspace, addWorkspace, hasWorkspaces } = useWorkspace();
   const { toast } = useToast();
-
-  // Check if user is new (no workspaces)
-  useEffect(() => {
-    if (workspaces.length > 0) {
-      setShowOnboarding(false);
-      if (!activeWorkspace) {
-        // Auto-select first workspace if none is selected
-        const firstWorkspace = workspaces[0];
-        selectWorkspace(firstWorkspace);
-      }
-    }
-  }, [workspaces, activeWorkspace, selectWorkspace]);
 
   const filteredWorkspaces = workspaces.filter(workspace => {
     const matchesSearch = workspace.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -93,8 +79,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
       isActive: true
     };
 
-    setWorkspaces(prev => [newWorkspace, ...prev]);
-    selectWorkspace(newWorkspace);
+    addWorkspace(newWorkspace);
     
     toast({
       title: "Workspace Created",
@@ -126,9 +111,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
       isActive: true
     };
 
-    setWorkspaces([newWorkspace]);
-    selectWorkspace(newWorkspace);
-    setShowOnboarding(false);
+    addWorkspace(newWorkspace);
     
     toast({
       title: "Welcome to Your Workspace!",
@@ -141,7 +124,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
   };
 
   // Show onboarding form for new users
-  if (showOnboarding && workspaces.length === 0) {
+  if (!hasWorkspaces) {
     return <OnboardingWorkspaceForm onCreateWorkspace={handleOnboardingWorkspaceCreate} />;
   }
 

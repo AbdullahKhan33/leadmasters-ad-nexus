@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
@@ -35,7 +36,7 @@ type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'socia
 type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'content-hub';
 
 function IndexContent() {
-  const { isInWorkspace, activeWorkspace } = useWorkspace();
+  const { isInWorkspace, activeWorkspace, hasWorkspaces } = useWorkspace();
   const { setIsPremium } = usePremium();
   const [currentView, setCurrentView] = useState<AllViews>('workspaces');
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
@@ -54,44 +55,70 @@ function IndexContent() {
   useEffect(() => {
     if (isInWorkspace && activeWorkspace && !location.state?.view) {
       setCurrentView('dashboard');
+    } else if (!hasWorkspaces) {
+      // Force workspace view for new users
+      setCurrentView('workspaces');
     } else if (!isInWorkspace && !location.state?.view) {
       setCurrentView('workspaces');
     }
-  }, [isInWorkspace, activeWorkspace, location.state]);
+  }, [isInWorkspace, activeWorkspace, hasWorkspaces, location.state]);
+
+  // Prevent navigation if no workspaces exist
+  const handleNavigationClick = (view: AllViews, callback: () => void) => {
+    if (!hasWorkspaces && view !== 'workspaces') {
+      // Don't allow navigation away from workspaces if none exist
+      return;
+    }
+    callback();
+  };
 
   const handleDashboardClick = () => {
-    console.log('Dashboard clicked');
-    setCurrentView('dashboard');
+    handleNavigationClick('dashboard', () => {
+      console.log('Dashboard clicked');
+      setCurrentView('dashboard');
+    });
   };
 
   const handlePostBuilderClick = () => {
-    console.log('Post Builder clicked');
-    setCurrentView('post-builder');
+    handleNavigationClick('post-builder', () => {
+      console.log('Post Builder clicked');
+      setCurrentView('post-builder');
+    });
   };
 
   const handleAdBuilderClick = () => {
-    console.log('Ad Builder clicked');
-    setCurrentView('ad-builder');
+    handleNavigationClick('ad-builder', () => {
+      console.log('Ad Builder clicked');
+      setCurrentView('ad-builder');
+    });
   };
 
   const handleSocialLoginsClick = () => {
-    console.log('Social Logins clicked');
-    setCurrentView('social-logins');
+    handleNavigationClick('social-logins', () => {
+      console.log('Social Logins clicked');
+      setCurrentView('social-logins');
+    });
   };
 
   const handleInspirationHubClick = () => {
-    console.log('Inspiration Hub clicked');
-    setCurrentView('inspiration-hub');
+    handleNavigationClick('inspiration-hub', () => {
+      console.log('Inspiration Hub clicked');
+      setCurrentView('inspiration-hub');
+    });
   };
 
   const handleAnalyticsClick = () => {
-    console.log('Analytics clicked');
-    setCurrentView('analytics');
+    handleNavigationClick('analytics', () => {
+      console.log('Analytics clicked');
+      setCurrentView('analytics');
+    });
   };
 
   const handleScheduleClick = () => {
-    console.log('Schedule clicked');
-    setCurrentView('schedule');
+    handleNavigationClick('schedule', () => {
+      console.log('Schedule clicked');
+      setCurrentView('schedule');
+    });
   };
 
   const handleSmartAutomationsClick = () => {
@@ -105,43 +132,59 @@ function IndexContent() {
   };
 
   const handleUserSettingsClick = () => {
-    console.log('User Settings clicked');
-    setCurrentView('user-settings');
+    handleNavigationClick('user-settings', () => {
+      console.log('User Settings clicked');
+      setCurrentView('user-settings');
+    });
   };
 
   const handleCRMClick = () => {
-    console.log('CRM clicked');
-    setCurrentView('crm');
+    handleNavigationClick('crm', () => {
+      console.log('CRM clicked');
+      setCurrentView('crm');
+    });
   };
 
   const handleDomainSetupClick = () => {
-    console.log('Domain Setup clicked');
-    setCurrentView('domain-setup');
+    handleNavigationClick('domain-setup', () => {
+      console.log('Domain Setup clicked');
+      setCurrentView('domain-setup');
+    });
   };
 
   const handleCRMAutomationsClick = () => {
-    console.log('CRM Automations clicked');
-    setCurrentView('crm-automations');
+    handleNavigationClick('crm-automations', () => {
+      console.log('CRM Automations clicked');
+      setCurrentView('crm-automations');
+    });
   };
 
   const handleTemplatesClick = () => {
-    console.log('Templates clicked');
-    setCurrentView('templates');
+    handleNavigationClick('templates', () => {
+      console.log('Templates clicked');
+      setCurrentView('templates');
+    });
   };
 
   const handleAgentsClick = () => {
-    console.log('Agents clicked');
-    setCurrentView('agents');
+    handleNavigationClick('agents', () => {
+      console.log('Agents clicked');
+      setCurrentView('agents');
+    });
   };
 
   const handleServicesClick = () => {
-    console.log('Services clicked');
-    setCurrentView('services');
+    handleNavigationClick('services', () => {
+      console.log('Services clicked');
+      setCurrentView('services');
+    });
   };
 
   const handleContentHubClick = () => {
-    console.log('Content Hub clicked');
-    setCurrentView('content-hub');
+    handleNavigationClick('content-hub', () => {
+      console.log('Content Hub clicked');
+      setCurrentView('content-hub');
+    });
   };
 
   const handleWorkspaceSettingsClick = (workspace: any) => {
@@ -165,11 +208,26 @@ function IndexContent() {
   };
 
   const handleSupportClick = () => {
-    console.log('Support clicked');
-    setCurrentView('support');
+    handleNavigationClick('support', () => {
+      console.log('Support clicked');
+      setCurrentView('support');
+    });
   };
 
   console.log('Current view:', currentView);
+
+  // If no workspaces exist, only show workspaces view without sidebar
+  if (!hasWorkspaces) {
+    return (
+      <div className="min-h-screen flex w-full">
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 overflow-hidden">
+            <Workspaces onWorkspaceSettingsClick={handleWorkspaceSettingsClick} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>
