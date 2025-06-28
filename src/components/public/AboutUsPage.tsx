@@ -4,6 +4,7 @@ import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
 import { CheckCircle, Users, Target, Zap, Heart, Award, Rocket, Star, TrendingUp, Shield, Crown, ArrowRight } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 export function AboutUsPage() {
   return (
@@ -47,13 +48,13 @@ export function AboutUsPage() {
                 
                 <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
                   <p className="border-l-4 border-purple-500 pl-6 bg-purple-50 p-6 rounded-r-lg">
-                    At the helm of LeadMasters AI is Abdullah Khan, a seasoned tech entrepreneur and AI strategist with over 18 years of experience in driving software innovation and business transformation.
+                    At the helm of LeadMasters AI is <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-blue-600 mx-1">Abdullah Khan</Badge>, a seasoned <Badge variant="gradient" className="bg-gradient-to-r from-blue-600 to-purple-600 mx-1">tech entrepreneur</Badge> and <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-pink-600 mx-1">AI strategist</Badge> with over <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-blue-600 mx-1">18 years of experience</Badge> in driving <Badge variant="gradient" className="bg-gradient-to-r from-orange-600 to-red-600 mx-1">software innovation</Badge> and <Badge variant="gradient" className="bg-gradient-to-r from-teal-600 to-green-600 mx-1">business transformation</Badge>.
                   </p>
                   <p className="border-l-4 border-blue-500 pl-6 bg-blue-50 p-6 rounded-r-lg">
-                    Abdullah's vision for LeadMasters AI is simple yet powerful — make AI-driven marketing and lead generation effortless for businesses of all sizes. With a background spanning technical leadership, product development, and global training, he has built LeadMasters to help businesses cut through complexity and turn AI into real, measurable growth.
+                    Abdullah's vision for LeadMasters AI is simple yet powerful — make <Badge variant="gradient" className="bg-gradient-to-r from-blue-600 to-purple-600 mx-1">AI-driven marketing</Badge> and <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-pink-600 mx-1">lead generation effortless</Badge> for businesses of all sizes. With a background spanning <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-blue-600 mx-1">technical leadership</Badge>, <Badge variant="gradient" className="bg-gradient-to-r from-orange-600 to-red-600 mx-1">product development</Badge>, and <Badge variant="gradient" className="bg-gradient-to-r from-teal-600 to-purple-600 mx-1">global training</Badge>, he has built LeadMasters to help businesses cut through complexity and turn AI into real, <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-yellow-600 mx-1">measurable growth</Badge>.
                   </p>
                   <p className="border-l-4 border-green-500 pl-6 bg-green-50 p-6 rounded-r-lg">
-                    Under his leadership, LeadMasters AI is reshaping how companies approach lead generation, campaign management, and customer engagement — combining automation, intelligent insights, and simplicity in one seamless platform.
+                    Under his leadership, LeadMasters AI is reshaping how companies approach <Badge variant="gradient" className="bg-gradient-to-r from-blue-600 to-green-600 mx-1">lead generation</Badge>, <Badge variant="gradient" className="bg-gradient-to-r from-purple-600 to-blue-600 mx-1">campaign management</Badge>, and <Badge variant="gradient" className="bg-gradient-to-r from-pink-600 to-purple-600 mx-1">customer engagement</Badge> — combining <Badge variant="gradient" className="bg-gradient-to-r from-orange-600 to-red-600 mx-1">automation</Badge>, <Badge variant="gradient" className="bg-gradient-to-r from-teal-600 to-blue-600 mx-1">intelligent insights</Badge>, and <Badge variant="gradient" className="bg-gradient-to-r from-green-600 to-teal-600 mx-1">simplicity</Badge> in one seamless platform.
                   </p>
                 </div>
 
@@ -151,16 +152,16 @@ export function AboutUsPage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Our Impact</h3>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="text-center p-6 bg-purple-50 rounded-xl">
-                    <div className="text-4xl font-bold text-purple-600 mb-2">10,000+</div>
-                    <div className="text-sm text-gray-600">Businesses Served</div>
+                    <div className="text-4xl font-bold text-purple-600 mb-2">100+</div>
+                    <div className="text-sm text-gray-600">Early Adopters</div>
                   </div>
                   <div className="text-center p-6 bg-blue-50 rounded-xl">
                     <div className="text-4xl font-bold text-blue-600 mb-2">500%</div>
                     <div className="text-sm text-gray-600">Average Growth</div>
                   </div>
                   <div className="text-center p-6 bg-green-50 rounded-xl">
-                    <div className="text-4xl font-bold text-green-600 mb-2">$50M+</div>
-                    <div className="text-sm text-gray-600">Revenue Generated</div>
+                    <div className="text-4xl font-bold text-green-600 mb-2">10K+</div>
+                    <div className="text-sm text-gray-600">Leads Generated</div>
                   </div>
                   <div className="text-center p-6 bg-orange-50 rounded-xl">
                     <div className="text-4xl font-bold text-orange-600 mb-2">95%</div>
