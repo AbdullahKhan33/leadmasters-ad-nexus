@@ -290,59 +290,7 @@ export function PostBuilder() {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Column - Content Creation */}
             <div className="lg:col-span-2 space-y-6">
-              {/* AI Prompt Input */}
-              <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
-                    <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
-                    AI Prompt
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="ai-prompt" className="text-sm font-medium text-gray-700">
-                      Describe what you want to create
-                    </Label>
-                    <Textarea
-                      id="ai-prompt"
-                      placeholder="e.g., Create a professional post about AI tools for small businesses, focusing on productivity and growth..."
-                      value={aiPrompt}
-                      onChange={(e) => setAiPrompt(e.target.value)}
-                      className="mt-1 min-h-[100px] resize-none"
-                    />
-                  </div>
-                  
-                  <Button
-                    onClick={handleGenerateAIPost}
-                    disabled={isGenerating || !aiPrompt.trim()}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
-                    size="lg"
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Generating AI Content...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-5 h-5 mr-2" />
-                        Generate AI Post
-                      </>
-                    )}
-                  </Button>
-
-                  {hasGeneratedContent && (
-                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="flex items-center space-x-2 text-green-800">
-                        <Sparkles className="w-4 h-4" />
-                        <span className="text-sm font-medium">AI content generated successfully!</span>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Upload Media */}
+              {/* Upload Media - Now first */}
               <Card className="border border-gray-200 shadow-sm bg-white">
                 <CardHeader className="pb-4">
                   <CardTitle className="text-lg font-semibold text-gray-900">Upload Media</CardTitle>
@@ -397,6 +345,58 @@ export function PostBuilder() {
                       >
                         Remove Media
                       </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* AI Prompt Input - Now second */}
+              <Card className="border border-gray-200 shadow-sm bg-white">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                    <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
+                    AI Prompt
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="ai-prompt" className="text-sm font-medium text-gray-700">
+                      Describe what you want to create
+                    </Label>
+                    <Textarea
+                      id="ai-prompt"
+                      placeholder="e.g., Create a professional post about AI tools for small businesses, focusing on productivity and growth..."
+                      value={aiPrompt}
+                      onChange={(e) => setAiPrompt(e.target.value)}
+                      className="mt-1 min-h-[100px] resize-none"
+                    />
+                  </div>
+                  
+                  <Button
+                    onClick={handleGenerateAIPost}
+                    disabled={isGenerating || !aiPrompt.trim()}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                    size="lg"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Generating AI Content...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        Generate AI Post
+                      </>
+                    )}
+                  </Button>
+
+                  {hasGeneratedContent && (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center space-x-2 text-green-800">
+                        <Sparkles className="w-4 h-4" />
+                        <span className="text-sm font-medium">AI content generated successfully!</span>
+                      </div>
                     </div>
                   )}
                 </CardContent>
