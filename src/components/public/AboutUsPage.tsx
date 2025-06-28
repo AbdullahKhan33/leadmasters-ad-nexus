@@ -48,37 +48,28 @@ export function AboutUsPage() {
                 <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
                   <p>
                     At the helm of LeadMasters AI is <strong className="text-purple-700">Abdullah Khan</strong>, a seasoned{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Tech</span>{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Entrepreneur</span> and{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">AI</span>{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Strategist</span> with over <strong className="text-green-600">18 years of experience</strong> in driving 
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Tech Entrepreneur</span> and{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">AI Strategist</span> with over <strong className="text-green-600 bg-green-50 px-2 py-1 rounded">18 years of experience</strong> in driving 
                     software innovation and business transformation.
                   </p>
                   
                   <p>
                     Abdullah's vision for LeadMasters AI is simple yet powerful — make AI-driven marketing and 
                     lead generation effortless for businesses of all sizes. With expertise spanning{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Technical</span>{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Leadership</span>,{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Product</span>{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Development</span>, and{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Global</span>{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Training</span>, he has built LeadMasters to help businesses 
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Technical Leadership</span>,{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Product Development</span>, and{' '}
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Global Training</span>, he has built LeadMasters to help businesses 
                     cut through complexity and turn AI into real,{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Measurable</span>{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Growth</span>.
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Measurable Growth</span>.
                   </p>
                   
                   <p>
                     Under his leadership, LeadMasters AI is reshaping how companies approach modern marketing — 
                     combining intelligent automation, data-driven insights, and intuitive simplicity in one seamless platform 
                     that transforms{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Lead</span>{' '}
-                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Generation</span>,{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Campaign</span>{' '}
-                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Management</span>, and{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Customer</span>{' '}
-                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Engagement</span>.
+                    <span className="font-bold text-purple-600 bg-purple-50 px-2 py-1 rounded">Lead Generation</span>,{' '}
+                    <span className="font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Campaign Management</span>, and{' '}
+                    <span className="font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Customer Engagement</span>.
                   </p>
                 </div>
 
