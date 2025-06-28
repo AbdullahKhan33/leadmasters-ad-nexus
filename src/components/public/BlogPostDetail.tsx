@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { PublicHeader } from './PublicHeader';
@@ -24,8 +25,8 @@ const blogContent = {
   [whatsappAutomationWorkflowsContent.id]: whatsappAutomationWorkflowsContent,
 };
 
-// Enhanced formatting only for specific blogs
-const formatEnhancedBlogContent = (content: string) => {
+// Premium styling for all blog posts
+const formatBlogContent = (content: string) => {
   const paragraphs = content.split('\n\n').filter(p => p.trim());
   
   return paragraphs.map(paragraph => {
@@ -33,93 +34,58 @@ const formatEnhancedBlogContent = (content: string) => {
     
     if (!trimmed) return '';
     
-    // Handle main headings (##)
+    // Main headings (##) - Bold and prominent
     if (trimmed.startsWith('## ')) {
-      return `<h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">${trimmed.replace('## ', '')}</h2>`;
+      return `<h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mt-16 mb-8 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('## ', '')}</h2>`;
     }
     
-    // Handle sub-headings (###)
+    // Sub-headings (###) - Elegant and spaced
     if (trimmed.startsWith('### ')) {
-      return `<h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">${trimmed.replace('### ', '')}</h3>`;
+      return `<h3 class="text-2xl lg:text-3xl font-semibold text-gray-800 mt-12 mb-6 leading-tight">${trimmed.replace('### ', '')}</h3>`;
     }
     
-    // Handle smaller headings (####)
+    // Smaller headings (####) - Clean and modern
     if (trimmed.startsWith('#### ')) {
-      return `<h4 class="text-xl font-semibold text-gray-700 mt-6 mb-3">${trimmed.replace('#### ', '')}</h4>`;
+      return `<h4 class="text-xl lg:text-2xl font-semibold text-gray-700 mt-10 mb-5 leading-snug">${trimmed.replace('#### ', '')}</h4>`;
     }
     
-    // Handle single line headings (starting with #)
+    // Single line headings (#) - Hero style
     if (trimmed.startsWith('# ') && !trimmed.includes('\n')) {
-      return `<h1 class="text-4xl font-bold text-gray-900 mt-8 mb-6">${trimmed.replace('# ', '')}</h1>`;
+      return `<h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-12 mb-10 leading-tight bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">${trimmed.replace('# ', '')}</h1>`;
     }
     
-    // Handle bullet points that start with - or *
+    // Bullet points - Styled with better spacing
     if (trimmed.includes('\n- ') || trimmed.includes('\n* ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
       const listItems = trimmed.split('\n').filter(line => {
         const cleaned = line.trim();
         return cleaned.startsWith('- ') || cleaned.startsWith('* ');
       }).map(item => {
         const cleanItem = item.replace(/^[\-\*]\s/, '').trim();
-        return `<li class="mb-2">${cleanItem}</li>`;
+        return `<li class="mb-4 text-gray-700 leading-relaxed pl-2">${cleanItem}</li>`;
       }).join('');
-      return `<ul class="list-disc list-inside space-y-2 my-6 ml-4">${listItems}</ul>`;
+      return `<ul class="list-disc list-inside space-y-3 my-8 ml-6 bg-gray-50 p-6 rounded-xl border-l-4 border-purple-500">${listItems}</ul>`;
     }
     
-    // Handle checkmarks (✅)
+    // Checkmarks (✅) - Premium card style
     if (trimmed.includes('✅')) {
       const items = trimmed.split('\n').filter(line => line.includes('✅'));
       const listItems = items.map(item => {
         const cleanItem = item.replace('✅', '').trim();
-        return `<li class="flex items-start space-x-3 mb-3">
-          <span class="text-green-500 text-lg flex-shrink-0">✅</span>
-          <span>${cleanItem}</span>
+        return `<li class="flex items-start space-x-4 mb-5 p-4 bg-green-50 rounded-lg border border-green-200">
+          <span class="text-green-600 text-xl flex-shrink-0 mt-1">✅</span>
+          <span class="text-gray-800 leading-relaxed">${cleanItem}</span>
         </li>`;
       }).join('');
-      return `<ul class="space-y-2 my-6">${listItems}</ul>`;
+      return `<ul class="space-y-4 my-10">${listItems}</ul>`;
     }
     
-    // Handle regular paragraphs
+    // Regular paragraphs - Enhanced typography
     let formatted = trimmed
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900 bg-yellow-100 px-1 rounded">$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em class="italic text-purple-700 font-medium">$1</em>')
       .replace(/\n/g, '<br/>');
     
-    return `<p class="text-gray-700 leading-relaxed mb-6">${formatted}</p>`;
-  }).filter(html => html.trim()).join('');
-};
-
-// Simple formatting for all other blogs
-const formatSimpleBlogContent = (content: string) => {
-  const paragraphs = content.split('\n\n').filter(p => p.trim());
-  
-  return paragraphs.map(paragraph => {
-    const trimmed = paragraph.trim();
-    
-    if (!trimmed) return '';
-    
-    // Simple headings
-    if (trimmed.startsWith('## ')) {
-      return `<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">${trimmed.replace('## ', '')}</h2>`;
-    }
-    
-    if (trimmed.startsWith('### ')) {
-      return `<h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">${trimmed.replace('### ', '')}</h3>`;
-    }
-    
-    // Simple bullet points
-    if (trimmed.includes('\n- ') || trimmed.startsWith('- ')) {
-      const listItems = trimmed.split('\n').filter(line => line.trim().startsWith('- '))
-        .map(item => `<li>${item.replace('- ', '').trim()}</li>`).join('');
-      return `<ul class="list-disc list-inside my-4">${listItems}</ul>`;
-    }
-    
-    // Simple paragraphs
-    let formatted = trimmed
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\n/g, '<br/>');
-    
-    return `<p class="text-gray-700 mb-4">${formatted}</p>`;
+    return `<p class="text-lg text-gray-700 leading-relaxed mb-8 font-light tracking-wide">${formatted}</p>`;
   }).filter(html => html.trim()).join('');
 };
 
@@ -132,66 +98,62 @@ export function BlogPostDetail() {
   const post = allPosts.find(p => p.id === id);
   const content = id ? blogContent[id as keyof typeof blogContent] : null;
 
-  console.log('Blog post ID:', id);
-  console.log('Found post:', post);
-  console.log('Content available:', !!content);
-
   if (!post) {
     return <Navigate to="/blog" replace />;
   }
 
-  // For posts without full content, show a placeholder
+  // For posts without full content, show a styled placeholder
   if (!content) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         <PublicHeader />
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Button 
             variant="ghost" 
-            className="mb-8 hover:bg-gray-100"
+            className="mb-12 hover:bg-purple-50 text-purple-600 hover:text-purple-700 font-medium"
             onClick={() => navigate('/blog')}
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-5 h-5 mr-3" />
             Back to Blog
           </Button>
 
-          <article className="prose prose-lg max-w-none">
-            <div className="mb-8">
-              <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
-                <div className="flex items-center space-x-2">
+          <article className="bg-white rounded-2xl shadow-xl p-8 lg:p-12">
+            <div className="mb-12">
+              <div className="flex items-center space-x-6 text-sm text-gray-500 mb-8">
+                <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
                   <User className="w-4 h-4" />
-                  <span>{post.author}</span>
+                  <span className="font-medium">{post.author}</span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
                   <Calendar className="w-4 h-4" />
                   <span>{post.date}</span>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
                   <Clock className="w-4 h-4" />
                   <span>{post.readTime}</span>
                 </div>
               </div>
               
-              <span className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
+              <span className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-sm font-bold px-4 py-2 rounded-full mb-8 shadow-sm">
                 {post.category}
               </span>
               
-              <h1 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8 leading-tight">
                 {post.title}
               </h1>
               
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl lg:text-2xl text-gray-600 leading-relaxed font-light">
                 {post.excerpt}
               </p>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-semibold text-yellow-800 mb-2">
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-8 mb-8 shadow-sm">
+              <h3 class="text-2xl font-bold text-yellow-800 mb-4 flex items-center">
+                <span class="text-3xl mr-3">🚀</span>
                 Content Coming Soon!
               </h3>
-              <p className="text-yellow-700">
-                We're currently working on the full content for this article. 
-                Check back soon for the complete guide with actionable insights and strategies!
+              <p class="text-lg text-yellow-700 leading-relaxed">
+                We're crafting exceptional content for this article with actionable insights and proven strategies. Check back soon!
               </p>
             </div>
           </article>
@@ -201,58 +163,49 @@ export function BlogPostDetail() {
     );
   }
 
-  // Determine which formatting to use based on the blog post ID
-  const shouldUseEnhancedFormatting = [
-    'marketing-automation-workflows',
-    'crm-implementation-guide', 
-    'website-conversion-optimization'
-  ].includes(id || '');
-
-  const formattedContent = shouldUseEnhancedFormatting 
-    ? formatEnhancedBlogContent(content.content)
-    : formatSimpleBlogContent(content.content);
+  const formattedContent = formatBlogContent(content.content);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <PublicHeader />
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Button 
           variant="ghost" 
-          className="mb-8 hover:bg-gray-100 text-purple-600 hover:text-purple-700"
+          className="mb-12 hover:bg-purple-50 text-purple-600 hover:text-purple-700 font-medium shadow-sm"
           onClick={() => navigate('/blog')}
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-5 h-5 mr-3" />
           Back to Blog
         </Button>
 
-        <article>
-          <div className="mb-12">
-            <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
-              <div className="flex items-center space-x-2">
+        <article className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-8 lg:p-12 text-white">
+            <div className="flex flex-wrap items-center gap-4 text-sm mb-8 opacity-90">
+              <div className="flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full">
                 <User className="w-4 h-4" />
-                <span>{post.author}</span>
+                <span className="font-medium">{post.author}</span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full">
                 <Calendar className="w-4 h-4" />
                 <span>{post.date}</span>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 bg-white/20 px-3 py-1 rounded-full">
                 <Clock className="w-4 h-4" />
                 <span>{post.readTime}</span>
               </div>
             </div>
             
-            <span className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-sm font-semibold px-4 py-2 rounded-full mb-8">
+            <span className="inline-block bg-white/20 text-white text-sm font-bold px-4 py-2 rounded-full mb-8">
               {post.category}
             </span>
             
-            <h1 className="text-4xl font-bold text-gray-900 mb-8 leading-tight">
+            <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
               {content.title}
             </h1>
           </div>
 
           <div 
-            className="prose prose-lg max-w-none"
+            className="prose prose-lg max-w-none p-8 lg:p-12 bg-white"
             dangerouslySetInnerHTML={{ 
               __html: formattedContent
             }}
