@@ -229,7 +229,7 @@ export function HeroSection() {
                 <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200/50 shadow-inner">
                   <div className="flex items-center space-x-3 mb-4">
                     <div className={`w-12 h-12 bg-gradient-to-r ${demoSteps[currentStep].color} rounded-2xl flex items-center justify-center shadow-lg`}>
-                      <demoSteps[currentStep].icon className="w-6 h-6 text-white" />
+                      {React.createElement(demoSteps[currentStep].icon, { className: "w-6 h-6 text-white" })}
                     </div>
                     <div>
                       <p className="font-bold text-gray-900">{demoSteps[currentStep].title}</p>
