@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -80,6 +79,10 @@ function PostBuilderPage() {
     navigate('/', { state: { view: 'services' } });
   };
 
+  const handleContentHubClick = () => {
+    navigate('/', { state: { view: 'content-hub' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -101,6 +104,7 @@ function PostBuilderPage() {
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onServicesClick={handleServicesClick}
+            onContentHubClick={handleContentHubClick}
             currentView="post-builder"
           />
         ) : (
@@ -120,6 +124,7 @@ function PostBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onServicesClick={handleServicesClick}
+            onContentHubClick={handleContentHubClick}
             currentView="post-builder"
           />
         )}
@@ -203,6 +208,10 @@ function AdBuilderPage() {
     navigate('/', { state: { view: 'services' } });
   };
 
+  const handleContentHubClick = () => {
+    navigate('/', { state: { view: 'content-hub' } });
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -224,6 +233,7 @@ function AdBuilderPage() {
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onServicesClick={handleServicesClick}
+            onContentHubClick={handleContentHubClick}
             currentView="ad-builder"
           />
         ) : (
@@ -243,6 +253,7 @@ function AdBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onServicesClick={handleServicesClick}
+            onContentHubClick={handleContentHubClick}
             currentView="ad-builder"
           />
         )}
@@ -258,4 +269,3 @@ function AdBuilderPage() {
 }
 
 export { PostBuilderPage, AdBuilderPage };
-
