@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Building2, Globe, Briefcase, Users } from "lucide-react";
+import { countries, getStatesForCountry, hasStates } from "@/utils/countriesAndStates";
 
 interface CreateWorkspaceModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface CreateWorkspaceModalProps {
     name: string;
     description: string;
     country: string;
+    state?: string;
     industry: string;
     businessType: string;
   }) => void;
@@ -31,99 +33,12 @@ export function CreateWorkspaceModal({ isOpen, onClose, onCreateWorkspace }: Cre
     name: '',
     description: '',
     country: '',
+    state: '',
     industry: '',
     businessType: ''
   });
 
-  const countries = [
-    'Afghanistan',
-    'Albania',
-    'Algeria',
-    'Argentina',
-    'Armenia',
-    'Australia',
-    'Austria',
-    'Azerbaijan',
-    'Bahrain',
-    'Bangladesh',
-    'Belarus',
-    'Belgium',
-    'Bolivia',
-    'Bosnia and Herzegovina',
-    'Brazil',
-    'Bulgaria',
-    'Cambodia',
-    'Canada',
-    'Chile',
-    'China',
-    'Colombia',
-    'Croatia',
-    'Czech Republic',
-    'Denmark',
-    'Ecuador',
-    'Egypt',
-    'Estonia',
-    'Ethiopia',
-    'Finland',
-    'France',
-    'Georgia',
-    'Germany',
-    'Ghana',
-    'Greece',
-    'Hungary',
-    'Iceland',
-    'India',
-    'Indonesia',
-    'Iran',
-    'Iraq',
-    'Ireland',
-    'Israel',
-    'Italy',
-    'Japan',
-    'Jordan',
-    'Kazakhstan',
-    'Kenya',
-    'Kuwait',
-    'Latvia',
-    'Lebanon',
-    'Lithuania',
-    'Luxembourg',
-    'Malaysia',
-    'Mexico',
-    'Morocco',
-    'Netherlands',
-    'New Zealand',
-    'Nigeria',
-    'Norway',
-    'Oman',
-    'Pakistan',
-    'Peru',
-    'Philippines',
-    'Poland',
-    'Portugal',
-    'Qatar',
-    'Romania',
-    'Russia',
-    'Saudi Arabia',
-    'Singapore',
-    'Slovakia',
-    'Slovenia',
-    'South Africa',
-    'South Korea',
-    'Spain',
-    'Sri Lanka',
-    'Sweden',
-    'Switzerland',
-    'Thailand',
-    'Turkey',
-    'Ukraine',
-    'United Arab Emirates',
-    'United Kingdom',
-    'United States',
-    'Uruguay',
-    'Venezuela',
-    'Vietnam'
-  ];
+  const [availableStates, setAvailableStates] = useState<string[]>([]);
 
   const industries = [
     'Technology',
@@ -140,6 +55,17 @@ export function CreateWorkspaceModal({ isOpen, onClose, onCreateWorkspace }: Cre
 
   const businessTypes = ['B2B', 'B2C', 'B2B2C'];
 
+  // Update available states when country changes
+  useEffect(() => {
+    const states = getStatesForCountry(formData.country);
+    setAvailableStates(states);
+    
+    // Clear state selection if country changed and current state is not valid for new country
+    if (formData.state && !states.includes(formData.state)) {
+      setFormData(prev => ({ ...prev, state: '' }));
+    }
+  }, [formData.country]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.name && formData.description && formData.country && formData.industry && formData.businessType) {
@@ -148,6 +74,7 @@ export function CreateWorkspaceModal({ isOpen, onClose, onCreateWorkspace }: Cre
         name: '',
         description: '',
         country: '',
+        state: '',
         industry: '',
         businessType: ''
       });
@@ -157,6 +84,16 @@ export function CreateWorkspaceModal({ isOpen, onClose, onCreateWorkspace }: Cre
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const getStatePlaceholder = () => {
+    if (!formData.country) {
+      return "Select country first";
+    } else if (hasStates(formData.country)) {
+      return "Select state/province";
+    } else {
+      return "Not applicable";
+    }
   };
 
   return (
@@ -229,18 +166,21 @@ export function CreateWorkspaceModal({ isOpen, onClose, onCreateWorkspace }: Cre
               </div>
 
               <div>
-                <Label className="text-sm font-semibold text-gray-700 mb-2 block flex items-center">
-                  <Briefcase className="w-4 h-4 mr-2" />
-                  Industry *
+                <Label className="text-sm font-semibold text-gray-700 mb-2 block">
+                  State/Province
                 </Label>
-                <Select value={formData.industry} onValueChange={(value) => handleInputChange('industry', value)} required>
+                <Select 
+                  value={formData.state} 
+                  onValueChange={(value) => handleInputChange('state', value)}
+                  disabled={!hasStates(formData.country)}
+                >
                   <SelectTrigger className="border border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
-                    <SelectValue placeholder="Select industry" />
+                    <SelectValue placeholder={getStatePlaceholder()} />
                   </SelectTrigger>
                   <SelectContent>
-                    {industries.map((industry) => (
-                      <SelectItem key={industry} value={industry}>
-                        {industry}
+                    {availableStates.map((state) => (
+                      <SelectItem key={state} value={state}>
+                        {state}
                       </SelectItem>
                     ))}
                   </SelectContent>

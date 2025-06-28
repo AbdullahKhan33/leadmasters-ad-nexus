@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ import {
   Briefcase,
   Users
 } from 'lucide-react';
+import { countries, getStatesForCountry, hasStates } from "@/utils/countriesAndStates";
 
 interface CreateWorkspaceFormData {
   fullName: string;
@@ -41,30 +41,6 @@ interface CreateWorkspaceFormProps {
   formData: CreateWorkspaceFormData;
   onFormDataChange: (field: string, value: string) => void;
 }
-
-const countries = [
-  'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan',
-  'Bahrain', 'Bangladesh', 'Belarus', 'Belgium', 'Bolivia', 'Bosnia and Herzegovina', 'Brazil', 'Bulgaria',
-  'Cambodia', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia', 'Czech Republic', 'Denmark',
-  'Ecuador', 'Egypt', 'Estonia', 'Ethiopia', 'Finland', 'France', 'Georgia', 'Germany', 'Ghana',
-  'Greece', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy',
-  'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Latvia', 'Lebanon', 'Lithuania', 'Luxembourg',
-  'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand', 'Nigeria', 'Norway', 'Oman',
-  'Pakistan', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Saudi Arabia',
-  'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea', 'Spain', 'Sri Lanka',
-  'Sweden', 'Switzerland', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates', 'United Kingdom',
-  'United States', 'Uruguay', 'Venezuela', 'Vietnam'
-];
-
-const usStates = [
-  'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
-  'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
-  'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-  'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
-  'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
-  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-  'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-];
 
 const industries = [
   'Technology',
@@ -136,14 +112,12 @@ export function CreateWorkspaceForm({
 
   // Update available states when country changes
   useEffect(() => {
-    if (formData.country === 'United States') {
-      setAvailableStates(usStates);
-    } else {
-      setAvailableStates([]);
-      // Clear state selection if not US and state was previously selected
-      if (formData.state) {
-        onFormDataChange('state', '');
-      }
+    const states = getStatesForCountry(formData.country);
+    setAvailableStates(states);
+    
+    // Clear state selection if country changed and current state is not valid for new country
+    if (formData.state && !states.includes(formData.state)) {
+      onFormDataChange('state', '');
     }
   }, [formData.country, onFormDataChange]);
 
@@ -153,12 +127,12 @@ export function CreateWorkspaceForm({
   };
 
   const getStatePlaceholder = () => {
-    if (formData.country === 'United States') {
-      return "Select state";
-    } else if (formData.country) {
-      return "Not applicable";
-    } else {
+    if (!formData.country) {
       return "Select country first";
+    } else if (hasStates(formData.country)) {
+      return "Select state/province";
+    } else {
+      return "Not applicable";
     }
   };
 
@@ -327,12 +301,12 @@ export function CreateWorkspaceForm({
 
                   <div>
                     <Label className="text-sm font-semibold text-gray-700 mb-2 block">
-                      State
+                      State/Province
                     </Label>
                     <Select 
                       value={formData.state} 
                       onValueChange={(value) => onFormDataChange('state', value)}
-                      disabled={formData.country !== 'United States'}
+                      disabled={!hasStates(formData.country)}
                     >
                       <SelectTrigger className="h-12 border-gray-200 rounded-xl bg-white/70 backdrop-blur-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-300">
                         <SelectValue placeholder={getStatePlaceholder()} />
