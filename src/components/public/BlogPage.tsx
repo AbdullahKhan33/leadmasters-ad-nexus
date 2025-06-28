@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { PublicHeader } from './PublicHeader';
 import { PublicFooter } from './PublicFooter';
@@ -41,6 +42,60 @@ export function BlogPage() {
       date: "Jan 15, 2025",
       readTime: "6 min read",
       category: "Lead Generation"
+    },
+    {
+      id: 'whatsapp-automation-workflows',
+      title: "WhatsApp Automation: 5 Workflows That Convert Leads Into Sales",
+      excerpt: "WhatsApp automation isn't just about sending messages—it's about creating smart workflows that guide prospects from curiosity to purchase.",
+      author: "Automation Team",
+      date: "Jan 22, 2025",
+      readTime: "9 min read",
+      category: "WhatsApp Marketing"
+    },
+    {
+      id: 'whatsapp-broadcast-mastery',
+      title: "WhatsApp Broadcast Lists: How to Send 1000+ Messages Without Getting Blocked",
+      excerpt: "Master broadcast lists to reach thousands of customers with personalized messages while avoiding bans and maintaining engagement.",
+      author: "WhatsApp Specialists",
+      date: "Jan 25, 2025",
+      readTime: "11 min read",
+      category: "WhatsApp Marketing"
+    },
+    {
+      id: 'whatsapp-customer-service',
+      title: "WhatsApp Customer Service: Turn Support Into Sales Opportunities",
+      excerpt: "Transform your customer service into a revenue driver by using WhatsApp support to solve problems and create upselling opportunities.",
+      author: "Customer Success Team",
+      date: "Jan 28, 2025",
+      readTime: "10 min read",
+      category: "WhatsApp Marketing"
+    },
+    {
+      id: 'small-business-cash-flow',
+      title: "Cash Flow Management: 7 Strategies Every Small Business Owner Must Know",
+      excerpt: "Cash flow problems kill more small businesses than competition. Here are 7 proven strategies to maintain healthy cash flow and avoid disasters.",
+      author: "Finance Team",
+      date: "Feb 1, 2025",
+      readTime: "12 min read",
+      category: "Small Business Tips"
+    },
+    {
+      id: 'small-business-productivity',
+      title: "The 80/20 Productivity System: How Small Business Owners Can Work 4 Hours Less Per Day",
+      excerpt: "By focusing on the 20% of activities that drive 80% of results, successful entrepreneurs are reclaiming 4+ hours daily while growing faster.",
+      author: "Productivity Team",
+      date: "Feb 3, 2025",
+      readTime: "15 min read",
+      category: "Small Business Tips"
+    },
+    {
+      id: 'small-business-hiring-guide',
+      title: "The Small Business Hiring Blueprint: Find A-Players Without Breaking the Bank",
+      excerpt: "Here's the blueprint successful entrepreneurs use to consistently hire A-players, even on tight budgets, without costly hiring mistakes.",
+      author: "HR & Talent Team",
+      date: "Feb 5, 2025",
+      readTime: "18 min read",
+      category: "Small Business Tips"
     },
     {
       id: 'ai-prompts-business-guide',

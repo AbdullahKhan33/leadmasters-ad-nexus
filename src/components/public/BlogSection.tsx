@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight, Calendar, User, Clock, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,58 +38,58 @@ export function BlogSection() {
       category: "WhatsApp Marketing"
     },
     {
-      id: 'startup-to-scale-journey',
-      title: "From Startup to Scale: Our Product Development Journey",
-      excerpt: "Take a behind-the-scenes look at how we built LeadMasters.ai from a simple idea into a powerful lead generation platform.",
-      author: "Product Team",
-      date: "Feb 5, 2025",
-      readTime: "6 min read",
-      category: "Company"
-    },
-    {
-      id: 'roi-breakdown-customer-results',
-      title: "ROI Breakdown: What Our Customers Really Achieve",
-      excerpt: "Real numbers, real results. See exactly how our customers are measuring and maximizing their return on investment with AI marketing.",
-      author: "Success Team",
-      date: "Feb 2, 2025",
-      readTime: "4 min read",
-      category: "Case Studies"
-    },
-    {
-      id: 'facebook-ads-optimization-guide',
-      title: "Facebook Ads Optimization: 7 Tactics That Actually Work",
-      excerpt: "Stop wasting money on Facebook ads that don't convert. These proven optimization tactics will double your ROI in 30 days.",
-      author: "Advertising Team",
-      date: "Jan 25, 2025",
-      readTime: "9 min read",
-      category: "Marketing Automation"
-    },
-    {
-      id: 'crm-setup-small-business',
-      title: "CRM Setup for Small Businesses: Complete Guide",
-      excerpt: "Build a customer relationship management system that your team will actually use. Step-by-step implementation guide included.",
-      author: "CRM Team",
-      date: "Jan 8, 2025",
-      readTime: "11 min read",
-      category: "CRM"
-    },
-    {
-      id: 'small-business-website-essentials',
-      title: "Website Essentials: What Every Small Business Needs Online",
-      excerpt: "Your website is your digital storefront. Learn the essential elements that convert visitors into customers and boost your credibility.",
-      author: "Web Team",
-      date: "Jan 3, 2025",
-      readTime: "8 min read",
-      category: "Website"
-    },
-    {
-      id: 'marketing-automation-beginners',
-      title: "Marketing Automation for Beginners: Start Here",
-      excerpt: "Automate your marketing without the complexity. Simple workflows that save time and increase sales for small business owners.",
+      id: 'whatsapp-automation-workflows',
+      title: "WhatsApp Automation: 5 Workflows That Convert Leads Into Sales",
+      excerpt: "Create smart workflows that guide prospects from curiosity to purchase using WhatsApp automation that feels personal and conversational.",
       author: "Automation Team",
-      date: "Jan 5, 2025",
-      readTime: "6 min read",
-      category: "Marketing Automation"
+      date: "Jan 22, 2025",
+      readTime: "9 min read",
+      category: "WhatsApp Marketing"
+    },
+    {
+      id: 'small-business-cash-flow',
+      title: "Cash Flow Management: 7 Strategies Every Small Business Owner Must Know",
+      excerpt: "Cash flow problems kill more businesses than competition. Here are 7 proven strategies to maintain healthy cash flow and avoid disasters.",
+      author: "Finance Team",
+      date: "Feb 1, 2025",
+      readTime: "12 min read",
+      category: "Small Business Tips"
+    },
+    {
+      id: 'small-business-productivity',
+      title: "The 80/20 Productivity System: Work 4 Hours Less Per Day",
+      excerpt: "By focusing on the 20% of activities that drive 80% of results, successful entrepreneurs are reclaiming 4+ hours daily while growing faster.",
+      author: "Productivity Team",
+      date: "Feb 3, 2025",
+      readTime: "15 min read",
+      category: "Small Business Tips"
+    },
+    {
+      id: 'whatsapp-broadcast-mastery',
+      title: "WhatsApp Broadcast Lists: Send 1000+ Messages Without Getting Blocked",
+      excerpt: "Master broadcast lists to reach thousands of customers with personalized messages while avoiding bans and maintaining high engagement rates.",
+      author: "WhatsApp Specialists",
+      date: "Jan 25, 2025",
+      readTime: "11 min read",
+      category: "WhatsApp Marketing"
+    },
+    {
+      id: 'small-business-hiring-guide',
+      title: "The Small Business Hiring Blueprint: Find A-Players on a Budget",
+      excerpt: "The blueprint successful entrepreneurs use to consistently hire A-players, even on tight budgets, without costly hiring mistakes.",
+      author: "HR & Talent Team",
+      date: "Feb 5, 2025",
+      readTime: "18 min read",
+      category: "Small Business Tips"
+    },
+    {
+      id: 'whatsapp-customer-service',
+      title: "WhatsApp Customer Service: Turn Support Into Sales Opportunities",
+      excerpt: "Transform your customer service into a revenue driver by using WhatsApp support to solve problems and create upselling opportunities.",
+      author: "Customer Success Team",
+      date: "Jan 28, 2025",
+      readTime: "10 min read",
+      category: "WhatsApp Marketing"
     }
   ];
 
