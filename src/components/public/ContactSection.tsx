@@ -254,9 +254,20 @@ export function ContactSection() {
                     <MapPin className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">Headquarters</h4>
-                    <p className="text-gray-600">123 Innovation Drive</p>
-                    <p className="text-gray-600">Tech Valley, CA 94000</p>
+                    <h4 className="font-semibold text-gray-900">Headquarters - Bengaluru</h4>
+                    <p className="text-gray-600">#81/16, Haralukunte, HSR Layout</p>
+                    <p className="text-gray-600">Bangalore, 560102</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-orange-100 rounded-lg p-3">
+                    <MapPin className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Dubai Office</h4>
+                    <p className="text-gray-600">IFZA, Technohub 1</p>
+                    <p className="text-gray-600">Dubai Silicon Oasis, Dubai, UAE</p>
                   </div>
                 </div>
               </div>
@@ -271,8 +282,8 @@ export function ContactSection() {
                   <span className="text-purple-600 font-semibold">Same day</span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                  <span className="text-gray-700">Do you offer a money-back guarantee?</span>
-                  <span className="text-purple-600 font-semibold">30 days</span>
+                  <span className="text-gray-700">What platforms do you support?</span>
+                  <span className="text-purple-600 font-semibold">All major</span>
                 </div>
                 <div className="flex items-center justify-between py-2">
                   <span className="text-gray-700">Is there a setup fee?</span>
