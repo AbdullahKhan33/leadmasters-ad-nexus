@@ -597,37 +597,44 @@ Ready to level up? Drop a 🔥 in the comments!
                           {carouselImages.length}/10
                         </div>
                       </div>
-                    ) : uploadedMedia && mediaPreviewUrl ? (
-                      <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200 mb-4">
-                        {uploadedMedia.type.startsWith('image/') ? (
-                          <img 
-                            src={mediaPreviewUrl} 
-                            alt="Uploaded preview" 
-                            className="w-full h-auto object-cover max-h-96"
-                          />
-                        ) : (
-                          <video 
-                            src={mediaPreviewUrl} 
-                            className="w-full h-auto object-cover max-h-96"
-                            controls
-                          />
-                        )}
-                      </div>
-                    ) : selectedPostType === 'reel' ? (
-                      <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
-                        <Video className="w-16 h-16 text-pink-400" />
-                        <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                          REEL
-                        </div>
-                      </div>
-                    ) : selectedPostType === 'carousel' && (
-                      <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
-                        <ImageIcon className="w-16 h-16 text-pink-400" />
-                        <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                          CAROUSEL
-                        </div>
-                      </div>
-                    )}
+                     ) : uploadedMedia && mediaPreviewUrl ? (
+                       <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200 mb-4">
+                         {uploadedMedia.type.startsWith('image/') ? (
+                           <img 
+                             src={mediaPreviewUrl} 
+                             alt="Uploaded preview" 
+                             className="w-full h-auto object-cover max-h-96"
+                           />
+                         ) : (
+                           <video 
+                             src={mediaPreviewUrl} 
+                             className="w-full h-auto object-cover max-h-96"
+                             controls
+                           />
+                         )}
+                       </div>
+                     ) : selectedPostType === 'post' ? (
+                       <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
+                         <ImageIcon className="w-16 h-16 text-pink-400" />
+                         <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                           POST
+                         </div>
+                       </div>
+                     ) : selectedPostType === 'reel' ? (
+                       <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
+                         <Video className="w-16 h-16 text-pink-400" />
+                         <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                           REEL
+                         </div>
+                       </div>
+                     ) : selectedPostType === 'carousel' && (
+                       <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
+                         <ImageIcon className="w-16 h-16 text-pink-400" />
+                         <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                           CAROUSEL
+                         </div>
+                       </div>
+                     )}
                     
                     {/* Post Content */}
                     <div className="space-y-4">
