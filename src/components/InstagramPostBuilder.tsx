@@ -309,9 +309,13 @@ Ready to level up? Drop a 🔥 in the comments!
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-300">
-                        <Video className="w-6 h-6 text-gray-600" />
-                      </div>
+                      <video 
+                        src={mediaPreviewUrl} 
+                        className="w-full h-full object-cover"
+                        muted
+                        playsInline
+                        preload="metadata"
+                      />
                     )}
                   </div>
                   <div className="flex-1">
