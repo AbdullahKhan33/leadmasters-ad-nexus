@@ -536,11 +536,11 @@ Ready to level up? Drop a 🔥 in the comments!
                           <CarouselContent>
                             {carouselPreviewUrls.map((url, index) => (
                               <CarouselItem key={index}>
-                                <div className="w-full h-96 flex items-center justify-center">
+                                <div className="w-full h-96 flex items-center justify-center bg-gray-100">
                                   <img 
                                     src={url} 
                                     alt={`Carousel image ${index + 1}`}
-                                    className="w-full h-full object-cover"
+                                    className="max-w-full max-h-full object-contain"
                                     onError={(e) => {
                                       console.error('Failed to load carousel image:', url);
                                       e.currentTarget.style.display = 'none';
