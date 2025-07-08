@@ -209,26 +209,32 @@ Ready to transform your career trajectory?
                 </label>
               </div>
             ) : (
-              <div className="border border-blue-200 rounded-xl p-6 bg-blue-50/50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+              <div className="border border-blue-200 rounded-xl p-4 bg-blue-50/50">
+                <div className="flex items-center space-x-4">
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
                     {uploadedMedia.type.startsWith('image/') ? (
-                      <ImageIcon className="w-8 h-8 text-blue-600" />
+                      <img 
+                        src={mediaPreviewUrl} 
+                        alt="Uploaded thumbnail" 
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
-                      <Video className="w-8 h-8 text-blue-600" />
+                      <div className="w-full h-full flex items-center justify-center bg-gray-300">
+                        <Video className="w-6 h-6 text-gray-600" />
+                      </div>
                     )}
-                    <div>
-                      <p className="font-medium text-gray-900">{uploadedMedia.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900 truncate">{uploadedMedia.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={removeUploadedMedia}
-                    className="text-gray-500 hover:text-red-500"
+                    className="text-gray-500 hover:text-red-500 hover:bg-red-50"
                   >
                     <X className="w-4 h-4" />
                   </Button>
@@ -237,37 +243,6 @@ Ready to transform your career trajectory?
             )}
           </CardContent>
         </Card>
-
-        {/* Image Preview Section */}
-        {uploadedMedia && mediaPreviewUrl && (
-          <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-lg">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-bold text-gray-900 flex items-center space-x-3">
-                <div className="p-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-700">
-                  <ImageIcon className="w-4 h-4 text-white" />
-                </div>
-                <span>Media Preview</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
-                {uploadedMedia.type.startsWith('image/') ? (
-                  <img 
-                    src={mediaPreviewUrl} 
-                    alt="Uploaded preview" 
-                    className="w-full h-auto object-cover max-h-96"
-                  />
-                ) : (
-                  <video 
-                    src={mediaPreviewUrl} 
-                    className="w-full h-auto object-cover max-h-96"
-                    controls
-                  />
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-blue-500/10">
