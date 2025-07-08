@@ -72,15 +72,12 @@ export function TwitterPostBuilder() {
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log('TwitterPostBuilder - File selected:', file);
     if (file) {
       setUploadedMedia(file);
       
       // Create preview URL for the uploaded file
       const url = URL.createObjectURL(file);
-      console.log('TwitterPostBuilder - Preview URL created:', url);
       setMediaPreviewUrl(url);
-      console.log('TwitterPostBuilder - mediaPreviewUrl state should be set to:', url);
     }
   };
 
@@ -235,6 +232,37 @@ Ready to transform? Drop a 💯 below or DM us!
           </CardContent>
         </Card>
 
+        {/* Image Preview Section */}
+        {uploadedMedia && mediaPreviewUrl && (
+          <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-xl shadow-blue-500/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-bold text-gray-900 flex items-center space-x-3">
+                <div className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500">
+                  <ImageIcon className="w-4 h-4 text-white" />
+                </div>
+                <span>Media Preview</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
+                {uploadedMedia.type.startsWith('image/') ? (
+                  <img 
+                    src={mediaPreviewUrl} 
+                    alt="Uploaded preview" 
+                    className="w-full h-auto object-cover max-h-96"
+                  />
+                ) : (
+                  <video 
+                    src={mediaPreviewUrl} 
+                    className="w-full h-auto object-cover max-h-96"
+                    controls
+                  />
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/30 shadow-2xl shadow-blue-500/10">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-cyan-500/5" />
@@ -359,21 +387,6 @@ Ready to transform? Drop a 💯 below or DM us!
             </div>
           </CardContent>
         </Card>
-
-        {/* Debug Section - Remove this once issue is fixed */}
-        {process.env.NODE_ENV === 'development' && (
-          <Card className="bg-yellow-50 border border-yellow-200">
-            <CardContent className="p-4">
-              <h3 className="font-bold text-yellow-800 mb-2">Debug Info:</h3>
-              <div className="text-sm text-yellow-700 space-y-1">
-                <p>uploadedMedia: {uploadedMedia ? `${uploadedMedia.name} (${uploadedMedia.type})` : 'null'}</p>
-                <p>mediaPreviewUrl: {mediaPreviewUrl || 'null'}</p>
-                <p>Preview should show: {uploadedMedia && mediaPreviewUrl ? 'YES' : 'NO'}</p>
-                <p>Generated post visible: {showResponse ? 'YES' : 'NO'}</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Generated Post Results Section */}
         {(isGenerating || showResponse) && (

@@ -233,6 +233,37 @@ Drop your thoughts below 👇 Would love to hear your experiences!
           </CardContent>
         </Card>
 
+        {/* Image Preview Section */}
+        {uploadedMedia && mediaPreviewUrl && (
+          <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-bold text-gray-900 flex items-center space-x-3">
+                <div className="p-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
+                  <ImageIcon className="w-4 h-4 text-white" />
+                </div>
+                <span>Media Preview</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200">
+                {uploadedMedia.type.startsWith('image/') ? (
+                  <img 
+                    src={mediaPreviewUrl} 
+                    alt="Uploaded preview" 
+                    className="w-full h-auto object-cover max-h-96"
+                  />
+                ) : (
+                  <video 
+                    src={mediaPreviewUrl} 
+                    className="w-full h-auto object-cover max-h-96"
+                    controls
+                  />
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* AI Configuration Card */}
         <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-lg">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-50/50 to-pink-50/50" />
