@@ -400,9 +400,41 @@ Drop your thoughts below 👇 Would love to hear your experiences!
                     
                     {/* Post Content */}
                     <div className="space-y-3 mb-4">
-                      <p className="text-gray-100 whitespace-pre-line leading-relaxed text-sm">
-                        {generatedPost}
-                      </p>
+                      {isEditing ? (
+                        <div className="space-y-3">
+                          <Textarea
+                            value={editedContent}
+                            onChange={(e) => setEditedContent(e.target.value)}
+                            className="min-h-[120px] text-sm whitespace-pre-wrap resize-none bg-gray-800 border-2 border-gray-600 focus:border-purple-400 text-gray-100 placeholder:text-gray-400 transition-colors"
+                            placeholder="Edit your Threads post..."
+                            maxLength={500}
+                          />
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-400">{editedContent.length}/500 characters</span>
+                            <div className="flex space-x-2">
+                              <Button 
+                                onClick={handleCancelEdit}
+                                variant="outline" 
+                                size="sm"
+                                className="text-gray-300 hover:text-gray-100 border-gray-600 hover:border-gray-400"
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                onClick={handleSaveEdit}
+                                size="sm"
+                                className="bg-purple-600 hover:bg-purple-700 text-white"
+                              >
+                                Save Changes
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-gray-100 whitespace-pre-line leading-relaxed text-sm">
+                          {generatedPost}
+                        </p>
+                      )}
 
                       {/* Show uploaded media preview if available */}
                       {uploadedMedia && (

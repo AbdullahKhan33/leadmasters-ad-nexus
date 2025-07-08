@@ -410,9 +410,41 @@ Ready to transform your career trajectory?
                     
                     {/* Post Content */}
                     <div className="space-y-4">
-                      <p className="text-gray-800 whitespace-pre-line leading-relaxed text-sm">
-                        {generatedPost}
-                      </p>
+                      {isEditing ? (
+                        <div className="space-y-3">
+                          <Textarea
+                            value={editedContent}
+                            onChange={(e) => setEditedContent(e.target.value)}
+                            className="min-h-[120px] text-sm whitespace-pre-wrap resize-none border-2 border-blue-200 focus:border-blue-400 transition-colors"
+                            placeholder="Edit your LinkedIn post..."
+                            maxLength={3000}
+                          />
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500">{editedContent.length}/3000 characters</span>
+                            <div className="flex space-x-2">
+                              <Button 
+                                onClick={handleCancelEdit}
+                                variant="outline" 
+                                size="sm"
+                                className="text-gray-600 hover:text-gray-800"
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                onClick={handleSaveEdit}
+                                size="sm"
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                              >
+                                Save Changes
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-gray-800 whitespace-pre-line leading-relaxed text-sm">
+                          {generatedPost}
+                        </p>
+                      )}
                     </div>
 
                     {/* Show uploaded media preview if available */}
