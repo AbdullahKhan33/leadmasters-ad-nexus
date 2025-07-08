@@ -309,13 +309,20 @@ Ready to level up? Drop a 🔥 in the comments!
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <video 
-                        src={mediaPreviewUrl} 
-                        className="w-full h-full object-cover"
-                        muted
-                        playsInline
-                        preload="metadata"
-                      />
+                      <div className="w-full h-full bg-gray-800 rounded flex items-center justify-center overflow-hidden relative">
+                        <video 
+                          src={mediaPreviewUrl} 
+                          className="w-full h-full object-cover"
+                          muted
+                          playsInline
+                          preload="metadata"
+                          onLoadedMetadata={() => console.log('Video metadata loaded:', mediaPreviewUrl)}
+                          onError={(e) => console.error('Video load error:', e)}
+                        />
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                          <Video className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
                     )}
                   </div>
                   <div className="flex-1">
