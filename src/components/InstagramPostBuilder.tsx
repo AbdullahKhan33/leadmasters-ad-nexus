@@ -6,6 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { InstagramIntegrationDialog } from "./InstagramIntegrationDialog";
+import { useSocialIntegration } from "@/hooks/useSocialIntegration";
+import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   Calendar,
@@ -31,6 +34,8 @@ import {
 type PostType = 'post' | 'reel';
 
 export function InstagramPostBuilder() {
+  const { isInstagramConnected } = useSocialIntegration();
+  const { toast } = useToast();
   const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
   const [selectedAudience, setSelectedAudience] = useState('');
   const [selectedPage, setSelectedPage] = useState('');
@@ -41,6 +46,7 @@ export function InstagramPostBuilder() {
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
+  const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
@@ -120,6 +126,21 @@ Ready to level up? Drop a 🔥 in the comments!
       setShowResponse(true);
       setIsGenerating(false);
     }, 2000);
+  };
+
+  const handlePostNow = () => {
+    if (!isInstagramConnected()) {
+      setShowIntegrationDialog(true);
+      return;
+    }
+
+    // Instagram is connected, proceed with posting
+    toast({
+      title: "Posting to Instagram",
+      description: `Your ${selectedPostType} is being published to Instagram.`,
+    });
+    
+    console.log('Publishing to Instagram:', { content: generatedPost, postType: selectedPostType });
   };
 
   return (
@@ -460,7 +481,10 @@ Ready to level up? Drop a 🔥 in the comments!
 
                   {/* Action Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
-                    <Button className="group relative h-12 bg-gradient-to-r from-pink-600 to-orange-600 hover:from-pink-700 hover:to-orange-700 text-white rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all duration-300 hover:scale-105">
+                    <Button 
+                      onClick={handlePostNow}
+                      className="group relative h-12 bg-gradient-to-r from-pink-600 to-orange-600 hover:from-pink-700 hover:to-orange-700 text-white rounded-xl shadow-lg hover:shadow-pink-500/25 transition-all duration-300 hover:scale-105"
+                    >
                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                       <span className="font-semibold">Post Now</span>
                     </Button>
@@ -483,6 +507,12 @@ Ready to level up? Drop a 🔥 in the comments!
           </div>
         )}
       </div>
+      
+      {/* Instagram Integration Dialog */}
+      <InstagramIntegrationDialog 
+        open={showIntegrationDialog}
+        onOpenChange={setShowIntegrationDialog}
+      />
     </div>
   );
 }
