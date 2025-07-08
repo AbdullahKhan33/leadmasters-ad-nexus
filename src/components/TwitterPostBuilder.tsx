@@ -416,7 +416,7 @@ Ready to transform? Drop a 💯 below or DM us!
                            <Textarea
                              value={editedContent}
                              onChange={(e) => setEditedContent(e.target.value)}
-                             className="min-h-[100px] text-sm whitespace-pre-wrap"
+                             className="min-h-[200px] text-sm whitespace-pre-wrap"
                              placeholder="Edit your tweet..."
                              maxLength={280}
                            />

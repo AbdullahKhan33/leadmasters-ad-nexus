@@ -415,7 +415,7 @@ Ready to transform your career trajectory?
                           <Textarea
                             value={editedContent}
                             onChange={(e) => setEditedContent(e.target.value)}
-                            className="min-h-[120px] text-sm whitespace-pre-wrap resize-none border-2 border-blue-200 focus:border-blue-400 transition-colors"
+                            className="min-h-[200px] text-sm whitespace-pre-wrap resize-none border-2 border-blue-200 focus:border-blue-400 transition-colors"
                             placeholder="Edit your LinkedIn post..."
                             maxLength={3000}
                           />

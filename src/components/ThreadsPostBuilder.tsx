@@ -405,7 +405,7 @@ Drop your thoughts below 👇 Would love to hear your experiences!
                           <Textarea
                             value={editedContent}
                             onChange={(e) => setEditedContent(e.target.value)}
-                            className="min-h-[120px] text-sm whitespace-pre-wrap resize-none bg-gray-800 border-2 border-gray-600 focus:border-purple-400 text-gray-100 placeholder:text-gray-400 transition-colors"
+                            className="min-h-[200px] text-sm whitespace-pre-wrap resize-none bg-gray-800 border-2 border-gray-600 focus:border-purple-400 text-gray-100 placeholder:text-gray-400 transition-colors"
                             placeholder="Edit your Threads post..."
                             maxLength={500}
                           />
