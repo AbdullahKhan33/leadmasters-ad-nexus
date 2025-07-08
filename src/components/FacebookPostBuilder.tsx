@@ -455,7 +455,7 @@ Ready to take the next step? Comment below or DM us!
                            <Textarea
                              value={editedContent}
                              onChange={(e) => setEditedContent(e.target.value)}
-                             className="min-h-[120px] text-base whitespace-pre-wrap"
+                             className="min-h-[200px] text-base whitespace-pre-wrap"
                              placeholder="Edit your post content..."
                            />
                            <div className="flex space-x-2">

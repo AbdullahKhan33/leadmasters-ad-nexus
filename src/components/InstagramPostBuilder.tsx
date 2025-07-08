@@ -495,7 +495,7 @@ Ready to level up? Drop a 🔥 in the comments!
                               <Textarea
                                 value={editedContent}
                                 onChange={(e) => setEditedContent(e.target.value)}
-                                className="min-h-[120px] text-sm"
+                                className="min-h-[200px] text-sm"
                                 placeholder="Edit your post content..."
                               />
                               <div className="flex space-x-2">
