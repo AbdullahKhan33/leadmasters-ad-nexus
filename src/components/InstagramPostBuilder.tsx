@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { InstagramIntegrationDialog } from "./InstagramIntegrationDialog";
 import { useSocialIntegration } from "@/hooks/useSocialIntegration";
 import { useToast } from "@/hooks/use-toast";
@@ -31,7 +32,7 @@ import {
   Image as ImageIcon
 } from "lucide-react";
 
-type PostType = 'post' | 'reel';
+type PostType = 'post' | 'reel' | 'carousel';
 
 export function InstagramPostBuilder() {
   const { isInstagramConnected } = useSocialIntegration();
@@ -46,13 +47,16 @@ export function InstagramPostBuilder() {
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
+  const [carouselImages, setCarouselImages] = useState<File[]>([]);
+  const [carouselPreviewUrls, setCarouselPreviewUrls] = useState<string[]>([]);
   const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState('');
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
-    { value: 'reel', label: 'Reel', icon: Video, emoji: '🎬' }
+    { value: 'reel', label: 'Reel', icon: Video, emoji: '🎬' },
+    { value: 'carousel', label: 'Carousel', icon: ImageIcon, emoji: '🎠' }
   ];
 
   const audiences = [
@@ -79,13 +83,29 @@ export function InstagramPostBuilder() {
   ];
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setUploadedMedia(file);
-      
-      // Create preview URL for the uploaded file
-      const url = URL.createObjectURL(file);
-      setMediaPreviewUrl(url);
+    const files = event.target.files;
+    if (!files) return;
+
+    if (selectedPostType === 'carousel') {
+      // Handle multiple files for carousel
+      const newFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+      if (newFiles.length > 0) {
+        setCarouselImages(prev => [...prev, ...newFiles]);
+        
+        // Create preview URLs for carousel images
+        const newUrls = newFiles.map(file => URL.createObjectURL(file));
+        setCarouselPreviewUrls(prev => [...prev, ...newUrls]);
+      }
+    } else {
+      // Handle single file for post/reel
+      const file = files[0];
+      if (file) {
+        setUploadedMedia(file);
+        
+        // Create preview URL for the uploaded file
+        const url = URL.createObjectURL(file);
+        setMediaPreviewUrl(url);
+      }
     }
   };
 
@@ -95,6 +115,16 @@ export function InstagramPostBuilder() {
     }
     setUploadedMedia(null);
     setMediaPreviewUrl(null);
+  };
+
+  const removeCarouselImage = (index: number) => {
+    // Revoke the URL to prevent memory leaks
+    if (carouselPreviewUrls[index]) {
+      URL.revokeObjectURL(carouselPreviewUrls[index]);
+    }
+    
+    setCarouselImages(prev => prev.filter((_, i) => i !== index));
+    setCarouselPreviewUrls(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleGeneratePost = async () => {
@@ -107,7 +137,7 @@ export function InstagramPostBuilder() {
     
     // Simulate AI generation
     setTimeout(() => {
-      const contentType = selectedPostType === 'reel' ? 'Instagram Reel' : 'Instagram post';
+      const contentType = selectedPostType === 'reel' ? 'Instagram Reel' : selectedPostType === 'carousel' ? 'Instagram Carousel' : 'Instagram post';
       const mockPost = `✨ Amazing ${contentType.toLowerCase()} for ${selectedAudience.toLowerCase()}! 
 
 ${prompt}
@@ -122,7 +152,7 @@ Transform your career with AI-powered solutions! 🚀
 
 Ready to level up? Drop a 🔥 in the comments!
 
-#LeadMastersAI #CareerGrowth #AI #Innovation #SkillBuilding #ProfessionalDevelopment${selectedPostType === 'reel' ? ' #Reels #InstagramReels #Trending' : ' #InstaPost'}`;
+#LeadMastersAI #CareerGrowth #AI #Innovation #SkillBuilding #ProfessionalDevelopment${selectedPostType === 'reel' ? ' #Reels #InstagramReels #Trending' : selectedPostType === 'carousel' ? ' #Carousel #MultiplePhotos #Swipe' : ' #InstaPost'}`;
 
       setGeneratedPost(mockPost);
       setShowResponse(true);
@@ -174,10 +204,10 @@ Ready to level up? Drop a 🔥 in the comments!
             <span className="text-sm font-medium text-gray-700">Powered by AI</span>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-[#E91E63] via-[#9C27B0] to-[#FF9800] bg-clip-text text-transparent">
-            Instagram AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Generator
+            Instagram AI {selectedPostType === 'reel' ? 'Reel' : selectedPostType === 'carousel' ? 'Carousel' : 'Post'} Generator
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Create stunning, AI-powered Instagram {selectedPostType === 'reel' ? 'reels' : 'posts'} that captivate your audience
+            Create stunning, AI-powered Instagram {selectedPostType === 'reel' ? 'reels' : selectedPostType === 'carousel' ? 'carousels' : 'posts'} that captivate your audience
           </p>
         </div>
 
@@ -192,7 +222,64 @@ Ready to level up? Drop a 🔥 in the comments!
             </CardTitle>
           </CardHeader>
           <CardContent className="relative">
-            {!uploadedMedia ? (
+            {selectedPostType === 'carousel' ? (
+              /* Carousel Upload Section */
+              <div className="space-y-4">
+                <div className="border-2 border-dashed border-pink-200 rounded-xl p-8 text-center hover:border-pink-300 hover:bg-pink-50/50 transition-all duration-200">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="instagram-carousel-upload"
+                  />
+                  <label htmlFor="instagram-carousel-upload" className="cursor-pointer">
+                    <Upload className="w-12 h-12 text-pink-400 mx-auto mb-4" />
+                    <p className="text-lg font-medium text-gray-700 mb-2">
+                      Upload multiple images for carousel
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Supports: JPG, PNG (max 10 images, 50MB each)
+                    </p>
+                  </label>
+                </div>
+                
+                {/* Carousel Images Preview */}
+                {carouselImages.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {carouselImages.map((file, index) => (
+                      <div key={index} className="relative border border-pink-200 rounded-lg p-3 bg-pink-50/50">
+                        <div className="flex items-center space-x-2">
+                          <ImageIcon className="w-6 h-6 text-pink-600 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm truncate">{file.name}</p>
+                            <p className="text-xs text-gray-500">
+                              {(file.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeCarouselImage(index)}
+                            className="text-gray-500 hover:text-red-500 h-6 w-6 p-0"
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                        {carouselPreviewUrls[index] && (
+                          <img 
+                            src={carouselPreviewUrls[index]} 
+                            alt={`Preview ${index + 1}`}
+                            className="mt-2 w-full h-20 object-cover rounded"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : !uploadedMedia ? (
               <div className="border-2 border-dashed border-pink-200 rounded-xl p-8 text-center hover:border-pink-300 hover:bg-pink-50/50 transition-all duration-200">
                 <input
                   type="file"
@@ -249,7 +336,7 @@ Ready to level up? Drop a 🔥 in the comments!
               <div className="p-2 rounded-full bg-gradient-to-r from-pink-500 to-orange-500">
                 <Sparkles className="w-6 h-6 text-white" />
               </div>
-              <span>AI {selectedPostType === 'reel' ? 'Reel' : 'Post'} Configuration</span>
+              <span>AI {selectedPostType === 'reel' ? 'Reel' : selectedPostType === 'carousel' ? 'Carousel' : 'Post'} Configuration</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="relative space-y-8">
@@ -388,7 +475,7 @@ Ready to level up? Drop a 🔥 in the comments!
                 ) : (
                   <>
                     <ArrowRight className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform duration-300" />
-                    <span>Generate AI {selectedPostType === 'reel' ? 'Reel' : 'Post'}</span>
+                    <span>Generate AI {selectedPostType === 'reel' ? 'Reel' : selectedPostType === 'carousel' ? 'Carousel' : 'Post'}</span>
                   </>
                 )}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-400/20 to-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -402,7 +489,7 @@ Ready to level up? Drop a 🔥 in the comments!
           <div className="space-y-6">
             {/* Section Header */}
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated {selectedPostType === 'reel' ? 'Reel' : 'Post'}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Generated {selectedPostType === 'reel' ? 'Reel' : selectedPostType === 'carousel' ? 'Carousel' : 'Post'}</h2>
               <p className="text-gray-600">AI-powered content ready for your Instagram account</p>
             </div>
 
@@ -443,7 +530,34 @@ Ready to level up? Drop a 🔥 in the comments!
                     </div>
                     
                     {/* Media Section */}
-                    {uploadedMedia && mediaPreviewUrl ? (
+                    {selectedPostType === 'carousel' && carouselImages.length > 0 ? (
+                      <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200 mb-4 relative">
+                        <Carousel className="w-full">
+                          <CarouselContent>
+                            {carouselPreviewUrls.map((url, index) => (
+                              <CarouselItem key={index}>
+                                <img 
+                                  src={url} 
+                                  alt={`Carousel image ${index + 1}`}
+                                  className="w-full h-96 object-cover"
+                                />
+                              </CarouselItem>
+                            ))}
+                          </CarouselContent>
+                          <CarouselPrevious className="left-2" />
+                          <CarouselNext className="right-2" />
+                        </Carousel>
+                        {/* Carousel indicator dots */}
+                        <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                          {carouselPreviewUrls.map((_, index) => (
+                            <div key={index} className="w-1.5 h-1.5 bg-white/70 rounded-full" />
+                          ))}
+                        </div>
+                        <div className="absolute top-4 right-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                          {carouselImages.length}/10
+                        </div>
+                      </div>
+                    ) : uploadedMedia && mediaPreviewUrl ? (
                       <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-200 mb-4">
                         {uploadedMedia.type.startsWith('image/') ? (
                           <img 
@@ -459,11 +573,18 @@ Ready to level up? Drop a 🔥 in the comments!
                           />
                         )}
                       </div>
-                    ) : selectedPostType === 'reel' && (
+                    ) : selectedPostType === 'reel' ? (
                       <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
                         <Video className="w-16 h-16 text-pink-400" />
                         <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
                           REEL
+                        </div>
+                      </div>
+                    ) : selectedPostType === 'carousel' && (
+                      <div className="w-full h-96 bg-gradient-to-br from-pink-100 to-orange-100 rounded-lg mb-4 flex items-center justify-center relative">
+                        <ImageIcon className="w-16 h-16 text-pink-400" />
+                        <div className="absolute top-4 left-4 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                          CAROUSEL
                         </div>
                       </div>
                     )}
