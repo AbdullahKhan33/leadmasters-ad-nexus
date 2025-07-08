@@ -47,6 +47,8 @@ export function FacebookPostBuilder() {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
@@ -147,7 +149,26 @@ Ready to take the next step? Comment below or DM us!
       description: `Your ${selectedPostType} is being published to Facebook.`,
     });
     
-    console.log('Publishing to Facebook:', { content: generatedPost, postType: selectedPostType });
+    console.log("Publishing to Facebook:", { content: generatedPost, postType: selectedPostType });
+  };
+
+  const handleEditPost = () => {
+    setEditedContent(generatedPost);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    setGeneratedPost(editedContent);
+    setIsEditing(false);
+    toast({
+      title: "Post Updated",
+      description: "Your post content has been updated successfully.",
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditedContent("");
+    setIsEditing(false);
   };
 
   return (
@@ -427,11 +448,30 @@ Ready to take the next step? Comment below or DM us!
                       <MoreHorizontal className="w-5 h-5 text-gray-400" />
                     </div>
                     
-                    {/* Post Content */}
-                    <div className="space-y-6">
-                      <p className="text-gray-800 whitespace-pre-line leading-relaxed text-base">
-                        {generatedPost}
-                      </p>
+                     {/* Post Content */}
+                     <div className="space-y-6">
+                       {isEditing ? (
+                         <div className="space-y-3">
+                           <Textarea
+                             value={editedContent}
+                             onChange={(e) => setEditedContent(e.target.value)}
+                             className="min-h-[120px] text-base whitespace-pre-wrap"
+                             placeholder="Edit your post content..."
+                           />
+                           <div className="flex space-x-2">
+                             <Button size="sm" onClick={handleSaveEdit} className="bg-green-600 hover:bg-green-700 text-white">
+                               Save
+                             </Button>
+                             <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                               Cancel
+                             </Button>
+                           </div>
+                         </div>
+                       ) : (
+                         <p className="text-gray-800 whitespace-pre-line leading-relaxed text-base">
+                           {generatedPost}
+                         </p>
+                       )}
 
                       {/* Show actual image preview if available */}
                       {uploadedMedia && mediaPreviewUrl && (
@@ -492,24 +532,32 @@ Ready to take the next step? Comment below or DM us!
                     </div>
                   </div>
 
-                  {/* Action Buttons with Enhanced Hover */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-                    <Button 
-                      onClick={handlePostNow}
-                      className="group relative h-12 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-                    >
-                      <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                      <span className="font-semibold">Post Now</span>
-                    </Button>
-                    <Button variant="outline" className="h-12 bg-white/90 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg hover:border-purple-300 rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-purple-700">
-                      <Save className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Save Draft</span>
-                    </Button>
-                    <Button variant="outline" className="h-12 bg-white/90 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg hover:border-purple-300 rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-purple-700">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Schedule</span>
-                    </Button>
-                  </div>
+                   {/* Action Buttons with Enhanced Hover */}
+                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
+                     <Button 
+                       onClick={handlePostNow}
+                       className="group relative h-12 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+                     >
+                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                       <span className="font-semibold">Post Now</span>
+                     </Button>
+                     <Button variant="outline" className="h-12 bg-white/90 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg hover:border-purple-300 rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-purple-700">
+                       <Save className="w-4 h-4 mr-2" />
+                       <span className="font-semibold">Save Draft</span>
+                     </Button>
+                     <Button variant="outline" className="h-12 bg-white/90 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg hover:border-purple-300 rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-purple-700">
+                       <Calendar className="w-4 h-4 mr-2" />
+                       <span className="font-semibold">Schedule</span>
+                     </Button>
+                     <Button 
+                       onClick={handleEditPost}
+                       variant="outline" 
+                       className="h-12 bg-white/90 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:shadow-lg hover:border-purple-300 rounded-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-purple-700"
+                     >
+                       <Edit className="w-4 h-4 mr-2" />
+                       <span className="font-semibold">Edit Post</span>
+                     </Button>
+                   </div>
                 </CardContent>
               </Card>
             )}

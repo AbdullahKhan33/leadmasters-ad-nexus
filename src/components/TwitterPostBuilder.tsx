@@ -44,6 +44,8 @@ export function TwitterPostBuilder() {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
 
   const audiences = [
     'Students',
@@ -131,7 +133,26 @@ Ready to transform? Drop a 💯 below or DM us!
       description: "Your tweet is being published to X.",
     });
     
-    console.log('Publishing to Twitter:', { content: generatedPost });
+    console.log("Publishing to Twitter:", { content: generatedPost });
+  };
+
+  const handleEditPost = () => {
+    setEditedContent(generatedPost);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    setGeneratedPost(editedContent);
+    setIsEditing(false);
+    toast({
+      title: "Tweet Updated",
+      description: "Your tweet content has been updated successfully.",
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditedContent("");
+    setIsEditing(false);
   };
 
   return (
@@ -466,7 +487,11 @@ Ready to transform? Drop a 💯 below or DM us!
                       <Calendar className="w-4 h-4 mr-2" />
                       <span className="font-semibold">Schedule</span>
                     </Button>
-                    <Button variant="outline" className="h-10 bg-white/80 backdrop-blur-sm border-blue-200 hover:bg-blue-50 hover:shadow-lg rounded-lg transition-all duration-300 hover:scale-105 text-blue-700 text-sm">
+                    <Button 
+                      onClick={handleEditPost}
+                      variant="outline" 
+                      className="h-10 bg-white/80 backdrop-blur-sm border-blue-200 hover:bg-blue-50 hover:shadow-lg rounded-lg transition-all duration-300 hover:scale-105 text-blue-700 text-sm"
+                    >
                       <Edit className="w-4 h-4 mr-2" />
                       <span className="font-semibold">Edit Tweet</span>
                     </Button>
