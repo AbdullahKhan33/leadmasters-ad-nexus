@@ -219,26 +219,32 @@ Ready to take the next step? Comment below or DM us!
                 </label>
               </div>
             ) : (
-              <div className="border border-purple-200 rounded-xl p-6 bg-purple-50/50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+              <div className="border border-purple-200 rounded-xl p-4 bg-purple-50/50">
+                <div className="flex items-center space-x-4">
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
                     {uploadedMedia.type.startsWith('image/') ? (
-                      <ImageIcon className="w-8 h-8 text-purple-600" />
+                      <img 
+                        src={mediaPreviewUrl} 
+                        alt="Uploaded thumbnail" 
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
-                      <Video className="w-8 h-8 text-purple-600" />
+                      <div className="w-full h-full flex items-center justify-center bg-gray-300">
+                        <Video className="w-6 h-6 text-gray-600" />
+                      </div>
                     )}
-                    <div>
-                      <p className="font-medium text-gray-900">{uploadedMedia.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900 truncate">{uploadedMedia.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
                   </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={removeUploadedMedia}
-                    className="text-gray-500 hover:text-red-500"
+                    className="text-gray-500 hover:text-red-500 hover:bg-red-50"
                   >
                     <X className="w-4 h-4" />
                   </Button>
@@ -247,43 +253,6 @@ Ready to take the next step? Comment below or DM us!
             )}
           </CardContent>
         </Card>
-
-        {/* Thumbnail Preview Section */}
-        {uploadedMedia && mediaPreviewUrl && (
-          <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-lg">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-bold text-gray-900 flex items-center space-x-3">
-                <div className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500">
-                  <ImageIcon className="w-4 h-4 text-white" />
-                </div>
-                <span>Media Preview</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
-                  {uploadedMedia.type.startsWith('image/') ? (
-                    <img 
-                      src={mediaPreviewUrl} 
-                      alt="Uploaded thumbnail" 
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-300">
-                      <Video className="w-6 h-6 text-gray-600" />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 truncate">{uploadedMedia.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {(uploadedMedia.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* AI Configuration Card with Glassmorphism */}
         <Card className="relative overflow-hidden backdrop-blur-xl border border-white/40 shadow-2xl shadow-purple-500/20 hover:shadow-purple-500/30 transition-all duration-700">
