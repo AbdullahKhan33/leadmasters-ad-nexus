@@ -7,6 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { TwitterIntegrationDialog } from "./TwitterIntegrationDialog";
+import { useSocialIntegration } from "@/hooks/useSocialIntegration";
+import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   Calendar,
@@ -29,6 +32,8 @@ import {
 } from "lucide-react";
 
 export function TwitterPostBuilder() {
+  const { isTwitterConnected } = useSocialIntegration();
+  const { toast } = useToast();
   const [selectedAudience, setSelectedAudience] = useState('');
   const [selectedPage, setSelectedPage] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
@@ -38,6 +43,7 @@ export function TwitterPostBuilder() {
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
+  const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
 
   const audiences = [
     'Students',
@@ -111,6 +117,21 @@ Ready to transform? Drop a 💯 below or DM us!
       setShowResponse(true);
       setIsGenerating(false);
     }, 2000);
+  };
+
+  const handleTweetNow = () => {
+    if (!isTwitterConnected()) {
+      setShowIntegrationDialog(true);
+      return;
+    }
+
+    // Twitter is connected, proceed with posting
+    toast({
+      title: "Posting to X (Twitter)",
+      description: "Your tweet is being published to X.",
+    });
+    
+    console.log('Publishing to Twitter:', { content: generatedPost });
   };
 
   return (
@@ -430,7 +451,10 @@ Ready to transform? Drop a 💯 below or DM us!
 
                   {/* Action Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-                    <Button className="group relative h-10 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 text-sm">
+                    <Button 
+                      onClick={handleTweetNow}
+                      className="group relative h-10 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 text-sm"
+                    >
                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                       <span className="font-semibold">Tweet Now</span>
                     </Button>
@@ -453,6 +477,12 @@ Ready to transform? Drop a 💯 below or DM us!
           </div>
         )}
       </div>
+      
+      {/* Twitter Integration Dialog */}
+      <TwitterIntegrationDialog 
+        open={showIntegrationDialog}
+        onOpenChange={setShowIntegrationDialog}
+      />
     </div>
   );
 }

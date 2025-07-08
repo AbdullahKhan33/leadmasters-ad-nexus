@@ -7,6 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { FacebookIntegrationDialog } from "./FacebookIntegrationDialog";
+import { useSocialIntegration } from "@/hooks/useSocialIntegration";
+import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   Calendar,
@@ -31,6 +34,8 @@ import {
 type PostType = 'post' | 'reel';
 
 export function FacebookPostBuilder() {
+  const { isFacebookConnected } = useSocialIntegration();
+  const { toast } = useToast();
   const [selectedPostType, setSelectedPostType] = useState<PostType>('post');
   const [selectedAudience, setSelectedAudience] = useState('');
   const [selectedPage, setSelectedPage] = useState('');
@@ -41,6 +46,7 @@ export function FacebookPostBuilder() {
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
+  const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
@@ -127,6 +133,21 @@ Ready to take the next step? Comment below or DM us!
       case 'reel': return 'Reel';
       default: return 'Post';
     }
+  };
+
+  const handlePostNow = () => {
+    if (!isFacebookConnected()) {
+      setShowIntegrationDialog(true);
+      return;
+    }
+
+    // Facebook is connected, proceed with posting
+    toast({
+      title: "Posting to Facebook",
+      description: `Your ${selectedPostType} is being published to Facebook.`,
+    });
+    
+    console.log('Publishing to Facebook:', { content: generatedPost, postType: selectedPostType });
   };
 
   return (
@@ -473,7 +494,10 @@ Ready to take the next step? Comment below or DM us!
 
                   {/* Action Buttons with Enhanced Hover */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-                    <Button className="group relative h-12 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                    <Button 
+                      onClick={handlePostNow}
+                      className="group relative h-12 bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+                    >
                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                       <span className="font-semibold">Post Now</span>
                     </Button>
@@ -492,6 +516,12 @@ Ready to take the next step? Comment below or DM us!
           </div>
         )}
       </div>
+      
+      {/* Facebook Integration Dialog */}
+      <FacebookIntegrationDialog 
+        open={showIntegrationDialog}
+        onOpenChange={setShowIntegrationDialog}
+      />
     </div>
   );
 }

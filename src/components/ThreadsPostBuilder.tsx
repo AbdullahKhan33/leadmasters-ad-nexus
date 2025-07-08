@@ -7,6 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ThreadsIntegrationDialog } from "./ThreadsIntegrationDialog";
+import { useSocialIntegration } from "@/hooks/useSocialIntegration";
+import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   Calendar,
@@ -30,6 +33,8 @@ import {
 } from "lucide-react";
 
 export function ThreadsPostBuilder() {
+  const { isThreadsConnected } = useSocialIntegration();
+  const { toast } = useToast();
   const [selectedAudience, setSelectedAudience] = useState('');
   const [selectedPage, setSelectedPage] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
@@ -38,6 +43,8 @@ export function ThreadsPostBuilder() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
+  const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
+  const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
 
   console.log('ThreadsPostBuilder component rendered');
 
@@ -104,6 +111,20 @@ Drop your thoughts below 👇 Would love to hear your experiences!
       setShowResponse(true);
       setIsGenerating(false);
     }, 2000);
+  };
+
+  const handlePostNow = () => {
+    if (!isThreadsConnected()) {
+      setShowIntegrationDialog(true);
+      return;
+    }
+
+    toast({
+      title: "Posting to Threads",
+      description: "Your post is being published to Threads.",
+    });
+    
+    console.log('Publishing to Threads:', { content: generatedPost });
   };
 
   return (
@@ -405,7 +426,10 @@ Drop your thoughts below 👇 Would love to hear your experiences!
 
                   {/* Action Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-                    <Button className="group relative h-10 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 text-sm">
+                    <Button 
+                      onClick={handlePostNow}
+                      className="group relative h-10 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 text-sm"
+                    >
                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                       <span className="font-semibold">Post Now</span>
                     </Button>
@@ -428,6 +452,12 @@ Drop your thoughts below 👇 Would love to hear your experiences!
           </div>
         )}
       </div>
+      
+      {/* Threads Integration Dialog */}
+      <ThreadsIntegrationDialog 
+        open={showIntegrationDialog}
+        onOpenChange={setShowIntegrationDialog}
+      />
     </div>
   );
 }

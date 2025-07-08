@@ -7,27 +7,15 @@ interface ConnectedAccount {
 }
 
 // Mock connected accounts - in a real app, this would come from an API or context
+// Currently only Google and some others are connected to demonstrate the popup functionality
 const mockConnectedAccounts: ConnectedAccount[] = [
-  {
-    id: "facebook_1",
-    platform: "Facebook",
-    email: "business@leadmasters.ai"
-  },
-  {
-    id: "linkedin_1",
-    platform: "LinkedIn",
-    email: "team@leadmasters.ai"
-  },
   {
     id: "google_1",
     platform: "Google",
     email: "marketing@leadmasters.ai"
-  },
-  {
-    id: "threads_1",
-    platform: "Threads",
-    email: "@leadmasters_official"
   }
+  // Facebook, Instagram, Twitter, LinkedIn, and Threads are intentionally not included
+  // so the integration popups will show when users try to post
 ];
 
 export function useSocialIntegration() {
@@ -49,6 +37,10 @@ export function useSocialIntegration() {
     return connectedAccounts.some(account => account.platform.toLowerCase() === 'linkedin');
   };
 
+  const isThreadsConnected = () => {
+    return connectedAccounts.some(account => account.platform.toLowerCase() === 'threads');
+  };
+
   const isPlatformConnected = (platform: string) => {
     return connectedAccounts.some(account => account.platform.toLowerCase() === platform.toLowerCase());
   };
@@ -59,6 +51,7 @@ export function useSocialIntegration() {
     isFacebookConnected,
     isTwitterConnected,
     isLinkedInConnected,
+    isThreadsConnected,
     isPlatformConnected
   };
 }

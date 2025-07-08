@@ -5,6 +5,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LinkedInIntegrationDialog } from "./LinkedInIntegrationDialog";
+import { useSocialIntegration } from "@/hooks/useSocialIntegration";
+import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   Calendar,
@@ -30,6 +33,8 @@ import {
 } from "lucide-react";
 
 export function LinkedInPostBuilder() {
+  const { isLinkedInConnected } = useSocialIntegration();
+  const { toast } = useToast();
   const [selectedAudience, setSelectedAudience] = useState('');
   const [selectedPage, setSelectedPage] = useState('');
   const [selectedModel, setSelectedModel] = useState('');
@@ -39,6 +44,7 @@ export function LinkedInPostBuilder() {
   const [showResponse, setShowResponse] = useState(false);
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
+  const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
 
   const audiences = [
     'Business Professionals',
@@ -117,6 +123,21 @@ Ready to transform your career trajectory?
       setShowResponse(true);
       setIsGenerating(false);
     }, 2000);
+  };
+
+  const handlePostNow = () => {
+    if (!isLinkedInConnected()) {
+      setShowIntegrationDialog(true);
+      return;
+    }
+
+    // LinkedIn is connected, proceed with posting
+    toast({
+      title: "Posting to LinkedIn",
+      description: "Your post is being published to LinkedIn.",
+    });
+    
+    console.log('Publishing to LinkedIn:', { content: generatedPost });
   };
 
   return (
@@ -426,7 +447,10 @@ Ready to transform your career trajectory?
 
                   {/* Action Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
-                    <Button className="group relative h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105">
+                    <Button 
+                      onClick={handlePostNow}
+                      className="group relative h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105"
+                    >
                       <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
                       <span className="font-semibold">Post Now</span>
                     </Button>
@@ -449,6 +473,12 @@ Ready to transform your career trajectory?
           </div>
         )}
       </div>
+      
+      {/* LinkedIn Integration Dialog */}
+      <LinkedInIntegrationDialog 
+        open={showIntegrationDialog}
+        onOpenChange={setShowIntegrationDialog}
+      />
     </div>
   );
 }
