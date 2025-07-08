@@ -77,11 +77,19 @@ export function ThreadsPostBuilder() {
     const file = event.target.files?.[0];
     if (file) {
       setUploadedMedia(file);
+      
+      // Create preview URL for the uploaded file
+      const url = URL.createObjectURL(file);
+      setMediaPreviewUrl(url);
     }
   };
 
   const removeUploadedMedia = () => {
+    if (mediaPreviewUrl) {
+      URL.revokeObjectURL(mediaPreviewUrl);
+    }
     setUploadedMedia(null);
+    setMediaPreviewUrl(null);
   };
 
   const handleGeneratePost = async () => {
@@ -436,22 +444,24 @@ Drop your thoughts below 👇 Would love to hear your experiences!
                         </p>
                       )}
 
-                      {/* Show uploaded media preview if available */}
-                      {uploadedMedia && (
-                        <div className="w-full bg-gray-800 rounded-lg p-3 flex items-center justify-center">
-                          {uploadedMedia.type.startsWith('image/') ? (
-                            <div className="flex items-center space-x-2 text-gray-300">
-                              <ImageIcon className="w-5 h-5" />
-                              <span className="text-sm">{uploadedMedia.name}</span>
-                            </div>
-                          ) : (
-                            <div className="flex items-center space-x-2 text-gray-300">
-                              <Video className="w-5 h-5" />
-                              <span className="text-sm">{uploadedMedia.name}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                       {/* Show uploaded media preview if available */}
+                       {uploadedMedia && mediaPreviewUrl && (
+                         <div className="w-full rounded-lg overflow-hidden shadow-lg border border-gray-700 mb-4">
+                           {uploadedMedia.type.startsWith('image/') ? (
+                             <img 
+                               src={mediaPreviewUrl} 
+                               alt="Uploaded preview" 
+                               className="w-full h-auto object-cover max-h-96"
+                             />
+                           ) : (
+                             <video 
+                               src={mediaPreviewUrl} 
+                               className="w-full h-auto object-cover max-h-96"
+                               controls
+                             />
+                           )}
+                         </div>
+                       )}
                     </div>
                     
                     {/* Threads Engagement Buttons */}
