@@ -45,6 +45,8 @@ export function ThreadsPostBuilder() {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
 
   console.log('ThreadsPostBuilder component rendered');
 
@@ -125,6 +127,25 @@ Drop your thoughts below 👇 Would love to hear your experiences!
     });
     
     console.log('Publishing to Threads:', { content: generatedPost });
+  };
+
+  const handleEditPost = () => {
+    setEditedContent(generatedPost);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    setGeneratedPost(editedContent);
+    setIsEditing(false);
+    toast({
+      title: "Post Updated", 
+      description: "Your post content has been updated successfully.",
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditedContent("");
+    setIsEditing(false);
   };
 
   return (
@@ -441,10 +462,14 @@ Drop your thoughts below 👇 Would love to hear your experiences!
                       <Calendar className="w-4 h-4 mr-2" />
                       <span className="font-semibold">Schedule</span>
                     </Button>
-                    <Button variant="outline" className="h-10 bg-white border-gray-300 hover:bg-gray-50 hover:shadow-lg rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 text-sm">
-                      <Edit className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Edit Post</span>
-                    </Button>
+                     <Button 
+                       onClick={handleEditPost}
+                       variant="outline" 
+                       className="h-10 bg-white border-gray-300 hover:bg-gray-50 hover:shadow-lg rounded-lg transition-all duration-300 hover:scale-105 text-gray-700 text-sm"
+                     >
+                       <Edit className="w-4 h-4 mr-2" />
+                       <span className="font-semibold">Edit Post</span>
+                     </Button>
                   </div>
                 </CardContent>
               </Card>

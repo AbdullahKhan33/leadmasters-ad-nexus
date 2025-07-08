@@ -409,11 +409,34 @@ Ready to transform? Drop a 💯 below or DM us!
                       <MoreHorizontal className="w-4 h-4 text-gray-400" />
                     </div>
                     
-                    {/* Tweet Content */}
-                    <div className="space-y-3">
-                      <p className="text-gray-800 whitespace-pre-line leading-relaxed text-sm">
-                        {generatedPost}
-                      </p>
+                     {/* Tweet Content */}
+                     <div className="space-y-3">
+                       {isEditing ? (
+                         <div className="space-y-3">
+                           <Textarea
+                             value={editedContent}
+                             onChange={(e) => setEditedContent(e.target.value)}
+                             className="min-h-[100px] text-sm whitespace-pre-wrap"
+                             placeholder="Edit your tweet..."
+                             maxLength={280}
+                           />
+                           <div className="flex justify-between items-center">
+                             <div className="flex space-x-2">
+                               <Button size="sm" onClick={handleSaveEdit} className="bg-green-600 hover:bg-green-700 text-white">
+                                 Save
+                               </Button>
+                               <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                                 Cancel
+                               </Button>
+                             </div>
+                             <span className="text-xs text-gray-500">{editedContent.length}/280</span>
+                           </div>
+                         </div>
+                       ) : (
+                         <p className="text-gray-800 whitespace-pre-line leading-relaxed text-sm">
+                           {generatedPost}
+                         </p>
+                       )}
                       
                       {/* Media Section */}
                       {uploadedMedia && mediaPreviewUrl && (

@@ -45,6 +45,8 @@ export function LinkedInPostBuilder() {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
 
   const audiences = [
     'Business Professionals',
@@ -138,6 +140,25 @@ Ready to transform your career trajectory?
     });
     
     console.log('Publishing to LinkedIn:', { content: generatedPost });
+  };
+
+  const handleEditPost = () => {
+    setEditedContent(generatedPost);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    setGeneratedPost(editedContent);
+    setIsEditing(false);
+    toast({
+      title: "Post Updated",
+      description: "Your post content has been updated successfully.",
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditedContent("");
+    setIsEditing(false);
   };
 
   return (
@@ -462,10 +483,14 @@ Ready to transform your career trajectory?
                       <Calendar className="w-4 h-4 mr-2" />
                       <span className="font-semibold">Schedule</span>
                     </Button>
-                    <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-blue-200 hover:bg-blue-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-blue-700">
-                      <Edit className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Edit Post</span>
-                    </Button>
+                     <Button 
+                       onClick={handleEditPost}
+                       variant="outline" 
+                       className="h-12 bg-white/80 backdrop-blur-sm border-blue-200 hover:bg-blue-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-blue-700"
+                     >
+                       <Edit className="w-4 h-4 mr-2" />
+                       <span className="font-semibold">Edit Post</span>
+                     </Button>
                   </div>
                 </CardContent>
               </Card>
