@@ -410,7 +410,7 @@ Ready to take the next step? Comment below or DM us!
 
             {/* Loading State or Generated Post Card */}
             {isGenerating ? (
-              <Card className="max-w-2xl mx-auto bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
+              <Card className="max-w-4xl mx-auto bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <div className="flex items-center space-x-3 mb-4">
                     <Sparkles className="w-6 h-6 text-purple-600 animate-spin" />
@@ -424,7 +424,7 @@ Ready to take the next step? Comment below or DM us!
                 </CardContent>
               </Card>
             ) : (
-              <Card className="max-w-2xl mx-auto relative overflow-hidden bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl shadow-purple-500/20 animate-in fade-in duration-700 slide-in-from-bottom-8 hover:shadow-3xl hover:shadow-purple-500/30 transition-all duration-500">
+              <Card className="max-w-4xl mx-auto relative overflow-hidden bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl shadow-purple-500/20 animate-in fade-in duration-700 slide-in-from-bottom-8 hover:shadow-3xl hover:shadow-purple-500/30 transition-all duration-500">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500" />
                 <CardContent className="p-8">
                   {/* Mock Facebook Post Preview */}

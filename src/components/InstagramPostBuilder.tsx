@@ -408,7 +408,7 @@ Ready to level up? Drop a 🔥 in the comments!
 
             {/* Loading State or Generated Post Card */}
             {isGenerating ? (
-              <Card className="max-w-2xl mx-auto bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
+              <Card className="max-w-4xl mx-auto bg-white/60 backdrop-blur-xl border border-white/30 shadow-xl">
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <div className="flex items-center space-x-3 mb-4">
                     <Sparkles className="w-6 h-6 text-pink-600 animate-spin" />
@@ -422,7 +422,7 @@ Ready to level up? Drop a 🔥 in the comments!
                 </CardContent>
               </Card>
             ) : (
-              <Card className="max-w-2xl mx-auto relative overflow-hidden bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl shadow-pink-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
+              <Card className="max-w-4xl mx-auto relative overflow-hidden bg-white/90 backdrop-blur-xl border border-white/40 shadow-2xl shadow-pink-500/10 animate-in fade-in duration-700 slide-in-from-bottom-8">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-orange-500" />
                 <CardContent className="p-8">
                   {/* Mock Instagram Post Preview */}
