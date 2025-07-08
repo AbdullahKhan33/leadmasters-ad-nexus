@@ -47,6 +47,8 @@ export function InstagramPostBuilder() {
   const [uploadedMedia, setUploadedMedia] = useState<File | null>(null);
   const [mediaPreviewUrl, setMediaPreviewUrl] = useState<string | null>(null);
   const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
@@ -140,7 +142,26 @@ Ready to level up? Drop a 🔥 in the comments!
       description: `Your ${selectedPostType} is being published to Instagram.`,
     });
     
-    console.log('Publishing to Instagram:', { content: generatedPost, postType: selectedPostType });
+    console.log("Publishing to Instagram:", { content: generatedPost, postType: selectedPostType });
+  };
+
+  const handleEditPost = () => {
+    setEditedContent(generatedPost);
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    setGeneratedPost(editedContent);
+    setIsEditing(false);
+    toast({
+      title: "Post Updated",
+      description: "Your post content has been updated successfully.",
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditedContent("");
+    setIsEditing(false);
   };
 
   return (
@@ -467,12 +488,31 @@ Ready to level up? Drop a 🔥 in the comments!
                         </button>
                       </div>
                       
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold">247 likes</p>
-                        <p className="text-sm text-gray-800">
-                          <span className="font-semibold">{selectedPage?.toLowerCase().replace(/\s+/g, '') || 'leadmastersai'}</span>{' '}
-                          {generatedPost}
-                        </p>
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold">247 likes</p>
+                          {isEditing ? (
+                            <div className="space-y-3">
+                              <Textarea
+                                value={editedContent}
+                                onChange={(e) => setEditedContent(e.target.value)}
+                                className="min-h-[120px] text-sm"
+                                placeholder="Edit your post content..."
+                              />
+                              <div className="flex space-x-2">
+                                <Button size="sm" onClick={handleSaveEdit} className="bg-green-600 hover:bg-green-700 text-white">
+                                  Save
+                                </Button>
+                                <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                                  Cancel
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-gray-800">
+                              <span className="font-semibold">{selectedPage?.toLowerCase().replace(/\s+/g, "") || "leadmastersai"}</span>{" "}
+                              {generatedPost}
+                            </p>
+                          )}
                         <p className="text-sm text-gray-500">View all 12 comments</p>
                         <p className="text-xs text-gray-400 uppercase tracking-wide">2 hours ago</p>
                       </div>
@@ -498,7 +538,7 @@ Ready to level up? Drop a 🔥 in the comments!
                     </Button>
                     <Button variant="outline" className="h-12 bg-white/80 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 text-pink-700">
                       <Edit className="w-4 h-4 mr-2" />
-                      <span className="font-semibold">Edit Post</span>
+                      <span className="font-semibold" onClick={handleEditPost}>Edit Post</span>
                     </Button>
                   </div>
                 </CardContent>
