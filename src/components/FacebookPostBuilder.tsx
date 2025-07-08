@@ -80,12 +80,16 @@ export function FacebookPostBuilder() {
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    console.log('Facebook - File selected:', file);
     if (file) {
       setUploadedMedia(file);
+      console.log('Facebook - Set uploadedMedia to:', file.name);
       
       // Create preview URL for the uploaded file
       const url = URL.createObjectURL(file);
+      console.log('Facebook - Created URL:', url);
       setMediaPreviewUrl(url);
+      console.log('Facebook - Set mediaPreviewUrl to:', url);
     }
   };
 
@@ -245,6 +249,18 @@ Ready to take the next step? Comment below or DM us!
                 </div>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Debug Section - TEMPORARY */}
+        <Card className="bg-yellow-50 border border-yellow-200">
+          <CardContent className="p-4">
+            <h3 className="font-bold text-yellow-800 mb-2">Debug Info (Facebook):</h3>
+            <div className="text-sm text-yellow-700 space-y-1">
+              <p>uploadedMedia: {uploadedMedia ? `${uploadedMedia.name} (${uploadedMedia.type})` : 'null'}</p>
+              <p>mediaPreviewUrl: {mediaPreviewUrl || 'null'}</p>
+              <p>Preview condition result: {uploadedMedia && mediaPreviewUrl ? 'TRUE - should show' : 'FALSE - will not show'}</p>
+            </div>
           </CardContent>
         </Card>
 
