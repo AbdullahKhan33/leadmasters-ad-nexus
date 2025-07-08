@@ -72,12 +72,15 @@ export function TwitterPostBuilder() {
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    console.log('TwitterPostBuilder - File selected:', file);
     if (file) {
       setUploadedMedia(file);
       
       // Create preview URL for the uploaded file
       const url = URL.createObjectURL(file);
+      console.log('TwitterPostBuilder - Preview URL created:', url);
       setMediaPreviewUrl(url);
+      console.log('TwitterPostBuilder - mediaPreviewUrl state should be set to:', url);
     }
   };
 
@@ -356,6 +359,21 @@ Ready to transform? Drop a 💯 below or DM us!
             </div>
           </CardContent>
         </Card>
+
+        {/* Debug Section - Remove this once issue is fixed */}
+        {process.env.NODE_ENV === 'development' && (
+          <Card className="bg-yellow-50 border border-yellow-200">
+            <CardContent className="p-4">
+              <h3 className="font-bold text-yellow-800 mb-2">Debug Info:</h3>
+              <div className="text-sm text-yellow-700 space-y-1">
+                <p>uploadedMedia: {uploadedMedia ? `${uploadedMedia.name} (${uploadedMedia.type})` : 'null'}</p>
+                <p>mediaPreviewUrl: {mediaPreviewUrl || 'null'}</p>
+                <p>Preview should show: {uploadedMedia && mediaPreviewUrl ? 'YES' : 'NO'}</p>
+                <p>Generated post visible: {showResponse ? 'YES' : 'NO'}</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Generated Post Results Section */}
         {(isGenerating || showResponse) && (
