@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle2, Circle } from "lucide-react";
 import { TemplateSelection } from "./campaign/TemplateSelection";
 import { TemplateCreation } from "./campaign/TemplateCreation";
+import { CampaignConfiguration } from "./campaign/CampaignConfiguration";
 
 interface Template {
   id: string;
@@ -38,6 +39,18 @@ export function WhatsAppCampaignBuilder({ onBack }: WhatsAppCampaignBuilderProps
     if (selectedTemplate) {
       setCurrentStep('configure-campaign');
     }
+  };
+
+  // Campaign configuration handlers
+  const handleCampaignBack = () => {
+    setCurrentStep('template-selection');
+  };
+
+  const handleCampaignSubmit = (campaignData: any) => {
+    console.log('Campaign submitted:', campaignData);
+    console.log('Selected template:', selectedTemplate);
+    // Here you would typically submit the campaign data to your backend
+    // For now, we'll just log it and potentially show a success message
   };
 
   const getStepTitle = () => {
@@ -106,10 +119,10 @@ export function WhatsAppCampaignBuilder({ onBack }: WhatsAppCampaignBuilderProps
         );
       case 'configure-campaign':
         return (
-          <div className="text-center p-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Configure Campaign</h3>
-            <p className="text-gray-600">This screen will be implemented next...</p>
-          </div>
+          <CampaignConfiguration
+            onBack={handleCampaignBack}
+            onSubmit={handleCampaignSubmit}
+          />
         );
       default:
         return null;
