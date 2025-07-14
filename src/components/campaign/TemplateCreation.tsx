@@ -193,10 +193,7 @@ export function TemplateCreation({ onTemplateCreated, onCancel }: TemplateCreati
                 setFormData(prev => ({ ...prev, type: value, mediaFile: null, mediaPreview: '' }))
               }>
                 <SelectTrigger className="h-11 border-2 border-gray-200 focus:border-purple-500">
-                  <div className="flex items-center space-x-2">
-                    {getTypeIcon(formData.type)}
-                    <SelectValue placeholder="Select template type" />
-                  </div>
+                  <SelectValue placeholder="Select template type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="text">
@@ -338,9 +335,10 @@ export function TemplateCreation({ onTemplateCreated, onCancel }: TemplateCreati
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="english">English</SelectItem>
-                    <SelectItem value="spanish">Spanish</SelectItem>
-                    <SelectItem value="french">French</SelectItem>
+                    <SelectItem value="arabic">Arabic</SelectItem>
                     <SelectItem value="hindi">Hindi</SelectItem>
+                    <SelectItem value="telugu">Telugu</SelectItem>
+                    <SelectItem value="tamil">Tamil</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
