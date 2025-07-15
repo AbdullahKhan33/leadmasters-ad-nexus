@@ -31,7 +31,7 @@ function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange }:
       <div className="flex items-center space-x-2">
         {platforms.map((platform) => {
           const isActive = selectedPlatform === platform.id;
-          const isImplemented = platform.id === "overview" || platform.id === "facebook";
+          const isImplemented = true;
           
           return (
             <Button
@@ -240,12 +240,12 @@ const FacebookInsights = () => {
                 bgColor: "bg-blue-50"
               },
               { 
-                label: "Following", 
-                value: "1", 
-                sublabel: "Accounts followed", 
-                icon: UserCheck,
-                color: "from-gray-500 to-gray-600",
-                bgColor: "bg-gray-50"
+                label: "Page Likes", 
+                value: "1,089", 
+                sublabel: "Total page likes", 
+                icon: Heart,
+                color: "from-pink-500 to-pink-600",
+                bgColor: "bg-pink-50"
               },
               { 
                 label: "Posts", 
@@ -396,19 +396,383 @@ const FacebookInsights = () => {
   );
 };
 
-const ComingSoonPlatform = ({ platform }: { platform: string }) => (
-  <div className="p-6 max-w-7xl mx-auto bg-gray-50 min-h-screen">
-    <div className="flex flex-col items-center justify-center h-64 space-y-4">
-      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
-        <span className="text-2xl">🚧</span>
-      </div>
-      <div className="text-center">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">{platform} Insights</h3>
-        <p className="text-gray-600">Coming soon! We're working hard to bring you detailed insights for {platform}.</p>
-      </div>
+const InstagramInsights = () => {
+  const [selectedAccount, setSelectedAccount] = useState("lead-masters-ai");
+
+  const accounts = [
+    { id: "lead-masters-ai", name: "Lead Masters AI", followers: "2,543", engagement: "4.8%" },
+    { id: "secondary-account", name: "Secondary Business Account", followers: "1,234", engagement: "3.2%" },
+    { id: "test-account", name: "Test Account", followers: "567", engagement: "2.1%" }
+  ];
+
+  const currentAccount = accounts.find(a => a.id === selectedAccount) || accounts[0];
+
+  return (
+    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-slate-50 via-white to-pink-50/20 min-h-screen font-inter">
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200">
+        <div className="p-8">
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center space-x-6">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+              
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter">Instagram Performance</h1>
+                <p className="text-lg font-medium text-gray-700 mb-3 font-inter">{currentAccount.name}</p>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-pink-500" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentAccount.followers} followers</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Heart className="w-4 h-4 text-pink-500" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentAccount.engagement} engagement</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <Select value={selectedAccount} onValueChange={setSelectedAccount}>
+                <SelectTrigger className="w-64 bg-white border-gray-300 text-gray-900 font-inter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {accounts.map((account) => (
+                    <SelectItem key={account.id} value={account.id} className="font-inter">
+                      <div className="flex items-center justify-between w-full">
+                        <span>{account.name}</span>
+                        <span className="text-gray-500 text-sm ml-4">{account.followers}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-5 gap-6">
+            {[
+              { 
+                label: "Followers", 
+                value: "2,543", 
+                sublabel: "Total audience", 
+                icon: Users,
+                color: "from-pink-500 to-pink-600",
+                bgColor: "bg-pink-50"
+              },
+              { 
+                label: "Following", 
+                value: "234", 
+                sublabel: "Accounts followed", 
+                icon: UserCheck,
+                color: "from-gray-500 to-gray-600",
+                bgColor: "bg-gray-50"
+              },
+              { 
+                label: "Posts", 
+                value: "156", 
+                sublabel: "This month", 
+                icon: MessageSquare,
+                color: "from-purple-500 to-purple-600",
+                bgColor: "bg-purple-50"
+              },
+              { 
+                label: "Impressions", 
+                value: "89.3K", 
+                sublabel: "Monthly reach", 
+                icon: Eye,
+                color: "from-indigo-500 to-indigo-600",
+                bgColor: "bg-indigo-50"
+              },
+              { 
+                label: "Engagement Rate", 
+                value: "4.8%", 
+                sublabel: "Average interaction", 
+                icon: Heart,
+                color: "from-pink-500 to-pink-600",
+                bgColor: "bg-pink-50"
+              }
+            ].map((stat, index) => (
+              <div key={index} className={`${stat.bgColor} rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105`}>
+                <div className="text-center">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.color} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900 mb-1 font-inter">{stat.value}</div>
+                  <div className="text-sm text-gray-700 font-semibold mb-1 font-inter">{stat.label}</div>
+                  <div className="text-xs text-gray-500 font-inter">{stat.sublabel}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
     </div>
-  </div>
-);
+  );
+};
+
+const ThreadsInsights = () => {
+  const [selectedAccount, setSelectedAccount] = useState("lead-masters-ai");
+
+  const accounts = [
+    { id: "lead-masters-ai", name: "Lead Masters AI", followers: "892", engagement: "5.2%" },
+    { id: "secondary-account", name: "Secondary Business Account", followers: "456", engagement: "3.8%" },
+    { id: "test-account", name: "Test Account", followers: "123", engagement: "2.5%" }
+  ];
+
+  const currentAccount = accounts.find(a => a.id === selectedAccount) || accounts[0];
+
+  return (
+    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-slate-50 via-white to-gray-50/20 min-h-screen font-inter">
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200">
+        <div className="p-8">
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center space-x-6">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+              
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter">Threads Performance</h1>
+                <p className="text-lg font-medium text-gray-700 mb-3 font-inter">{currentAccount.name}</p>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-gray-600" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentAccount.followers} followers</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Heart className="w-4 h-4 text-pink-500" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentAccount.engagement} engagement</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <Select value={selectedAccount} onValueChange={setSelectedAccount}>
+                <SelectTrigger className="w-64 bg-white border-gray-300 text-gray-900 font-inter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {accounts.map((account) => (
+                    <SelectItem key={account.id} value={account.id} className="font-inter">
+                      <div className="flex items-center justify-between w-full">
+                        <span>{account.name}</span>
+                        <span className="text-gray-500 text-sm ml-4">{account.followers}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-5 gap-6">
+            {[
+              { 
+                label: "Followers", 
+                value: "892", 
+                sublabel: "Total audience", 
+                icon: Users,
+                color: "from-gray-500 to-gray-600",
+                bgColor: "bg-gray-50"
+              },
+              { 
+                label: "Following", 
+                value: "67", 
+                sublabel: "Accounts followed", 
+                icon: UserCheck,
+                color: "from-slate-500 to-slate-600",
+                bgColor: "bg-slate-50"
+              },
+              { 
+                label: "Posts", 
+                value: "43", 
+                sublabel: "This month", 
+                icon: MessageSquare,
+                color: "from-indigo-500 to-indigo-600",
+                bgColor: "bg-indigo-50"
+              },
+              { 
+                label: "Impressions", 
+                value: "23.1K", 
+                sublabel: "Monthly reach", 
+                icon: Eye,
+                color: "from-blue-500 to-blue-600",
+                bgColor: "bg-blue-50"
+              },
+              { 
+                label: "Engagement Rate", 
+                value: "5.2%", 
+                sublabel: "Average interaction", 
+                icon: Heart,
+                color: "from-pink-500 to-pink-600",
+                bgColor: "bg-pink-50"
+              }
+            ].map((stat, index) => (
+              <div key={index} className={`${stat.bgColor} rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105`}>
+                <div className="text-center">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.color} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900 mb-1 font-inter">{stat.value}</div>
+                  <div className="text-sm text-gray-700 font-semibold mb-1 font-inter">{stat.label}</div>
+                  <div className="text-xs text-gray-500 font-inter">{stat.sublabel}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+const LinkedInInsights = () => {
+  const [selectedPage, setSelectedPage] = useState("lead-masters-ai");
+
+  const pages = [
+    { id: "lead-masters-ai", name: "Lead Masters AI", followers: "3,421", engagement: "6.1%" },
+    { id: "secondary-page", name: "Secondary Business Page", followers: "1,876", engagement: "4.3%" },
+    { id: "test-page", name: "Test Page", followers: "567", engagement: "2.8%" }
+  ];
+
+  const currentPage = pages.find(p => p.id === selectedPage) || pages[0];
+
+  return (
+    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-slate-50 via-white to-blue-50/20 min-h-screen font-inter">
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200">
+        <div className="p-8">
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center space-x-6">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                </div>
+              </div>
+              
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter">LinkedIn Performance</h1>
+                <p className="text-lg font-medium text-gray-700 mb-3 font-inter">{currentPage.name}</p>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-blue-600" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.followers} followers</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Heart className="w-4 h-4 text-pink-500" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.engagement} engagement</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <Select value={selectedPage} onValueChange={setSelectedPage}>
+                <SelectTrigger className="w-64 bg-white border-gray-300 text-gray-900 font-inter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {pages.map((page) => (
+                    <SelectItem key={page.id} value={page.id} className="font-inter">
+                      <div className="flex items-center justify-between w-full">
+                        <span>{page.name}</span>
+                        <span className="text-gray-500 text-sm ml-4">{page.followers}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-5 gap-6">
+            {[
+              { 
+                label: "Followers", 
+                value: "3,421", 
+                sublabel: "Total audience", 
+                icon: Users,
+                color: "from-blue-500 to-blue-600",
+                bgColor: "bg-blue-50"
+              },
+              { 
+                label: "Page Likes", 
+                value: "2,987", 
+                sublabel: "Total page likes", 
+                icon: Heart,
+                color: "from-pink-500 to-pink-600",
+                bgColor: "bg-pink-50"
+              },
+              { 
+                label: "Posts", 
+                value: "62", 
+                sublabel: "This month", 
+                icon: MessageSquare,
+                color: "from-indigo-500 to-indigo-600",
+                bgColor: "bg-indigo-50"
+              },
+              { 
+                label: "Impressions", 
+                value: "127.8K", 
+                sublabel: "Monthly reach", 
+                icon: Eye,
+                color: "from-purple-500 to-purple-600",
+                bgColor: "bg-purple-50"
+              },
+              { 
+                label: "Engagement Rate", 
+                value: "6.1%", 
+                sublabel: "Average interaction", 
+                icon: Heart,
+                color: "from-pink-500 to-pink-600",
+                bgColor: "bg-pink-50"
+              }
+            ].map((stat, index) => (
+              <div key={index} className={`${stat.bgColor} rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105`}>
+                <div className="text-center">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.color} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900 mb-1 font-inter">{stat.value}</div>
+                  <div className="text-sm text-gray-700 font-semibold mb-1 font-inter">{stat.label}</div>
+                  <div className="text-xs text-gray-500 font-inter">{stat.sublabel}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
 
 // Import existing InsightsSummary component content
 const OverviewInsights = () => {
@@ -598,11 +962,11 @@ export function InsightsOverview() {
       case 'facebook':
         return <FacebookInsights />;
       case 'instagram':
-        return <ComingSoonPlatform platform="Instagram" />;
+        return <InstagramInsights />;
       case 'threads':
-        return <ComingSoonPlatform platform="Threads" />;
+        return <ThreadsInsights />;
       case 'linkedin':
-        return <ComingSoonPlatform platform="LinkedIn" />;
+        return <LinkedInInsights />;
       default:
         return <OverviewInsights />;
     }
