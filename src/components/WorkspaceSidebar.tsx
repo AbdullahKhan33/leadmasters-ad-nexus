@@ -355,12 +355,12 @@ export function WorkspaceSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Insights Overview</span>
+                  <span className="text-xs font-medium">Insights</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Insights Overview</span>
+                  <span className="font-semibold">Insights</span>
                 </div>
               )}
             </SidebarMenuButton>
