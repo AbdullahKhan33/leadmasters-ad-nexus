@@ -69,139 +69,295 @@ const FacebookInsights = () => {
   const [selectedPage, setSelectedPage] = useState("lead-masters-ai");
 
   const pages = [
-    { id: "lead-masters-ai", name: "Lead Masters AI" },
-    { id: "secondary-page", name: "Secondary Business Page" },
-    { id: "test-page", name: "Test Page" }
+    { id: "lead-masters-ai", name: "Lead Masters AI", followers: "1,175", engagement: "3.2%" },
+    { id: "secondary-page", name: "Secondary Business Page", followers: "892", engagement: "2.8%" },
+    { id: "test-page", name: "Test Page", followers: "245", engagement: "1.9%" }
   ];
 
+  const currentPage = pages.find(p => p.id === selectedPage) || pages[0];
+
   const discoveryMetrics = [
-    { title: "Post Reach", value: "—", icon: Users, color: "from-purple-500 to-purple-600" },
-    { title: "Post Engagement", value: "0", icon: Heart, color: "from-pink-500 to-pink-600" },
-    { title: "New Page Likes", value: "0", icon: Heart, color: "from-blue-500 to-blue-600" },
-    { title: "New Page Followers", value: "0", icon: Users, color: "from-indigo-500 to-indigo-600" }
+    { 
+      title: "Post Reach", 
+      value: "12,543", 
+      change: "+15.2%", 
+      trend: "up",
+      icon: Users, 
+      color: "from-blue-500 to-blue-600",
+      bgColor: "bg-blue-50",
+      progress: 78
+    },
+    { 
+      title: "Post Engagement", 
+      value: "892", 
+      change: "+8.4%", 
+      trend: "up",
+      icon: Heart, 
+      color: "from-pink-500 to-pink-600",
+      bgColor: "bg-pink-50",
+      progress: 65
+    },
+    { 
+      title: "New Page Likes", 
+      value: "156", 
+      change: "+23.1%", 
+      trend: "up",
+      icon: Heart, 
+      color: "from-purple-500 to-purple-600",
+      bgColor: "bg-purple-50",
+      progress: 45
+    },
+    { 
+      title: "New Page Followers", 
+      value: "89", 
+      change: "+12.8%", 
+      trend: "up",
+      icon: Users, 
+      color: "from-indigo-500 to-indigo-600",
+      bgColor: "bg-indigo-50",
+      progress: 56
+    }
   ];
 
   const interactionMetrics = [
-    { title: "Reactions", value: "0", icon: Heart, color: "from-purple-500 to-purple-600" },
-    { title: "Comments", value: "0", icon: MessageSquare, color: "from-blue-500 to-blue-600" },
-    { title: "Shares", value: "0", icon: Users, color: "from-green-500 to-green-600" },
-    { title: "Photo Views", value: "0", icon: Eye, color: "from-orange-500 to-orange-600" },
-    { title: "Link Clicks", value: "1", icon: MousePointer, color: "from-red-500 to-red-600" }
+    { 
+      title: "Reactions", 
+      value: "1,234", 
+      change: "+18.5%", 
+      trend: "up",
+      icon: Heart, 
+      color: "from-red-500 to-red-600",
+      bgColor: "bg-red-50",
+      breakdown: [
+        { type: "Love", count: 567, percentage: 46 },
+        { type: "Like", count: 445, percentage: 36 },
+        { type: "Wow", count: 222, percentage: 18 }
+      ]
+    },
+    { 
+      title: "Comments", 
+      value: "387", 
+      change: "+12.3%", 
+      trend: "up",
+      icon: MessageSquare, 
+      color: "from-blue-500 to-blue-600",
+      bgColor: "bg-blue-50"
+    },
+    { 
+      title: "Shares", 
+      value: "156", 
+      change: "+7.8%", 
+      trend: "up",
+      icon: Users, 
+      color: "from-green-500 to-green-600",
+      bgColor: "bg-green-50"
+    },
+    { 
+      title: "Photo Views", 
+      value: "3,421", 
+      change: "+25.4%", 
+      trend: "up",
+      icon: Eye, 
+      color: "from-orange-500 to-orange-600",
+      bgColor: "bg-orange-50"
+    },
+    { 
+      title: "Link Clicks", 
+      value: "234", 
+      change: "+45.2%", 
+      trend: "up",
+      icon: MousePointer, 
+      color: "from-purple-500 to-purple-600",
+      bgColor: "bg-purple-50"
+    }
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6 bg-gray-50 min-h-screen">
-      {/* Facebook Performance Overview Header */}
-      <Card className="border-none shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 p-6 text-white">
-          <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 bg-black/20 rounded-full flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-4 flex items-center space-x-2">
-                <span>Facebook Performance Overview</span>
-                <span className="text-xl">✨</span>
-              </h2>
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-                <div className="grid grid-cols-5 gap-6 text-center">
-                  <div>
-                    <div className="text-sm opacity-90 mb-1">Followers</div>
-                    <div className="text-2xl font-bold">1175</div>
+    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 min-h-screen font-inter">
+      {/* Elegant Header Section */}
+      <div className="relative overflow-hidden">
+        <Card className="border-none shadow-2xl overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-white/20 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
+          
+          <div className="relative p-8">
+            <div className="flex items-start justify-between mb-8">
+              <div className="flex items-center space-x-6">
+                <div className="relative">
+                  <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 shadow-xl">
+                    <img 
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face" 
+                      alt="Profile" 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <div>
-                    <div className="text-sm opacity-90 mb-1">Following</div>
-                    <div className="text-2xl font-bold">1</div>
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
-                  <div>
-                    <div className="text-sm opacity-90 mb-1">Total posts</div>
-                    <div className="text-2xl font-bold">—</div>
-                  </div>
-                  <div>
-                    <div className="text-sm opacity-90 mb-1">Posts Impressions</div>
-                    <div className="text-2xl font-bold">—</div>
-                  </div>
-                  <div>
-                    <div className="text-sm opacity-90 mb-1">Replies avg</div>
-                    <div className="text-2xl font-bold">1175</div>
+                </div>
+                
+                <div className="text-white">
+                  <h1 className="text-3xl font-playfair font-bold mb-2">Facebook Performance</h1>
+                  <p className="text-blue-100 text-lg font-medium">{currentPage.name}</p>
+                  <div className="flex items-center space-x-4 mt-3">
+                    <div className="flex items-center space-x-2">
+                      <Users className="w-4 h-4 text-blue-200" />
+                      <span className="text-blue-100 text-sm">{currentPage.followers} followers</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Heart className="w-4 h-4 text-pink-300" />
+                      <span className="text-blue-100 text-sm">{currentPage.engagement} engagement</span>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              {/* Page Selector */}
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                <Select value={selectedPage} onValueChange={setSelectedPage}>
+                  <SelectTrigger className="w-64 bg-white/20 border-white/30 text-white placeholder:text-blue-200">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white">
+                    {pages.map((page) => (
+                      <SelectItem key={page.id} value={page.id}>
+                        <div className="flex items-center justify-between w-full">
+                          <span>{page.name}</span>
+                          <span className="text-gray-500 text-sm ml-4">{page.followers}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Key Stats Grid */}
+            <div className="grid grid-cols-5 gap-6">
+              {[
+                { label: "Followers", value: "1,175", sublabel: "Total audience" },
+                { label: "Following", value: "1", sublabel: "Accounts followed" },
+                { label: "Posts", value: "87", sublabel: "This month" },
+                { label: "Impressions", value: "45.2K", sublabel: "Monthly reach" },
+                { label: "Engagement Rate", value: "3.2%", sublabel: "Average interaction" }
+              ].map((stat, index) => (
+                <div key={index} className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                    <div className="text-sm text-blue-200 font-medium">{stat.label}</div>
+                    <div className="text-xs text-blue-300 mt-1">{stat.sublabel}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </Card>
-
-      {/* Page Selection Dropdown */}
-      <div className="flex items-center space-x-3">
-        <span className="text-sm font-medium text-gray-600">Selected:</span>
-        <Select value={selectedPage} onValueChange={setSelectedPage}>
-          <SelectTrigger className="w-64 bg-white border-gray-200 shadow-sm">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {pages.map((page) => (
-              <SelectItem key={page.id} value={page.id}>
-                {page.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        </Card>
       </div>
 
-      {/* Page Overview Section */}
+      {/* Time Period */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-playfair font-bold text-gray-900">Performance Analytics</h2>
+          <p className="text-gray-600 mt-1">Detailed insights for the last 28 days</p>
+        </div>
+        <div className="flex items-center space-x-2 text-sm text-gray-500">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          <span>Live data • Updated 5 minutes ago</span>
+        </div>
+      </div>
+
+      {/* Discovery Section */}
       <div className="space-y-6">
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Page Overview</h3>
-          <p className="text-gray-600">Last 28 days</p>
-        </div>
-
-        {/* Discovery Section */}
-        <div>
-          <h4 className="text-xl font-bold text-gray-900 mb-4">Discovery</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {discoveryMetrics.map((metric) => (
-              <Card key={metric.title} className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}>
-                      <metric.icon className="w-6 h-6 text-white" />
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+          <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded mr-3"></div>
+          Discovery & Reach
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {discoveryMetrics.map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-lg`}>
+                    <metric.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
+                    {metric.change}
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
+                    <p className="text-sm text-gray-600 font-medium">{metric.title}</p>
+                  </div>
+                  
+                  {/* Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-500">Progress</span>
+                      <span className="text-gray-700 font-medium">{metric.progress}%</span>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">{metric.title}</p>
-                      <p className="text-2xl font-bold text-purple-600">{metric.value}</p>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full bg-gradient-to-r ${metric.color} transition-all duration-1000 ease-out`}
+                        style={{ width: `${metric.progress}%` }}
+                      ></div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
+      </div>
 
-        {/* Interactions Section */}
-        <div>
-          <h4 className="text-xl font-bold text-gray-900 mb-4">Interactions</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {interactionMetrics.map((metric) => (
-              <Card key={metric.title} className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}>
-                      <metric.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">{metric.title}</p>
-                      <p className="text-2xl font-bold text-purple-600">{metric.value}</p>
+      {/* Interactions Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+          <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-red-600 rounded mr-3"></div>
+          Engagement & Interactions
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {interactionMetrics.map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-md`}>
+                    <metric.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      {metric.change}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
+                  <p className="text-sm text-gray-600 font-medium">{metric.title}</p>
+                  
+                  {/* Special breakdown for Reactions */}
+                  {metric.breakdown && (
+                    <div className="mt-3 space-y-1">
+                      {metric.breakdown.map((item, idx) => (
+                        <div key={idx} className="flex justify-between text-xs">
+                          <span className="text-gray-500">{item.type}</span>
+                          <span className="text-gray-700 font-medium">{item.count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </div>
