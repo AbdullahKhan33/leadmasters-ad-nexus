@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { 
   ArrowLeft, 
   MessageSquare, 
@@ -9,17 +11,23 @@ import {
   Eye, 
   MessageCircle,
   Download,
-  TrendingUp
+  BarChart3,
+  TableIcon
 } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { useState } from "react";
 
 interface WhatsAppAnalyticsProps {
   onBack: () => void;
 }
 
 export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [showChart, setShowChart] = useState(false);
+
   const metrics = [
     { title: "Messages Sent", value: "12,547", icon: MessageSquare, trend: "+8.2%" },
     { title: "Messages Delivered", value: "11,892", icon: CheckCircle, trend: "+7.1%" },
@@ -70,15 +78,48 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
     }
   ];
 
-  const chartData = [
-    { day: "Mon", delivered: 2100 },
-    { day: "Tue", delivered: 2300 },
-    { day: "Wed", delivered: 2200 },
-    { day: "Thu", delivered: 2400 },
-    { day: "Fri", delivered: 2600 },
-    { day: "Sat", delivered: 2200 },
-    { day: "Sun", delivered: 1900 },
+  // Button Click Analysis data
+  const buttonClickData = [
+    { name: "URL Clicks", value: 850, color: "#7C3AED" },
+    { name: "Unique Clicks", value: 650, color: "#D946EF" }
   ];
+
+  // Cost Efficiency Breakdown data
+  const costEfficiencyData = [
+    { name: "ferocious", totalCost: 0.8 },
+    { name: "kingdom", totalCost: 0 },
+    { name: "entropy", totalCost: 0 }
+  ];
+
+  // Cost Distribution data
+  const costDistributionData = [
+    { name: "leadmastersad", value: 100, color: "#7C3AED" },
+    { name: "ferocious", value: 0, color: "#EC4899" },
+    { name: "botcampusai", value: 0, color: "#F97316" },
+    { name: "kingdom", value: 0, color: "#8B5CF6" },
+    { name: "entropy", value: 0, color: "#06B6D4" }
+  ];
+
+  // Read Rate Trends data
+  const readRateData = [
+    { name: "ferocious", readRate: 100 },
+    { name: "kingdom", readRate: 0 },
+    { name: "entropy", readRate: 0 }
+  ];
+
+  // Campaign chart data for table toggle
+  const campaignChartData = campaignData.map(campaign => ({
+    name: campaign.name.length > 20 ? campaign.name.substring(0, 20) + "..." : campaign.name,
+    sent: campaign.sent,
+    delivered: campaign.delivered,
+    readRate: parseFloat(campaign.readRate.replace('%', '')),
+    responseRate: parseFloat(campaign.responseRate.replace('%', ''))
+  }));
+
+  const handleFetchAnalytics = () => {
+    // Add your analytics fetching logic here
+    console.log(`Fetching analytics from ${fromDate} to ${toDate}`);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -122,6 +163,44 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </Button>
         </div>
 
+        {/* Date Filters */}
+        <Card className="border border-gray-200 shadow-sm bg-white">
+          <CardContent className="p-6">
+            <div className="flex items-end gap-4">
+              <div className="flex-1">
+                <Label htmlFor="fromDate" className="text-sm font-medium text-gray-700 mb-2 block">
+                  From Date
+                </Label>
+                <Input
+                  id="fromDate"
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => setFromDate(e.target.value)}
+                  className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                />
+              </div>
+              <div className="flex-1">
+                <Label htmlFor="toDate" className="text-sm font-medium text-gray-700 mb-2 block">
+                  To Date
+                </Label>
+                <Input
+                  id="toDate"
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => setToDate(e.target.value)}
+                  className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                />
+              </div>
+              <Button 
+                onClick={handleFetchAnalytics}
+                className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                Fetch Analytics
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {metrics.map((metric, index) => (
@@ -130,42 +209,86 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Campaign Performance Table */}
+          {/* Campaign Performance Table with Chart Toggle */}
           <div className="lg:col-span-2">
             <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
               <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900">Campaign Performance</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl font-semibold text-gray-900">Campaign Performance</CardTitle>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowChart(!showChart)}
+                    className="text-gray-600 hover:text-purple-600 hover:bg-purple-50"
+                  >
+                    {showChart ? <TableIcon className="w-5 h-5" /> : <BarChart3 className="w-5 h-5" />}
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="font-semibold text-gray-700">Campaign Name</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Sent</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Delivered</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Read Rate</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Response Rate</TableHead>
-                        <TableHead className="font-semibold text-gray-700">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {campaignData.map((campaign, index) => (
-                        <TableRow 
-                          key={index} 
-                          className="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
-                        >
-                          <TableCell className="font-medium text-gray-900">{campaign.name}</TableCell>
-                          <TableCell className="text-gray-700">{campaign.sent.toLocaleString()}</TableCell>
-                          <TableCell className="text-gray-700">{campaign.delivered.toLocaleString()}</TableCell>
-                          <TableCell className="text-gray-700">{campaign.readRate}</TableCell>
-                          <TableCell className="text-gray-700">{campaign.responseRate}</TableCell>
-                          <TableCell>{getStatusBadge(campaign.status)}</TableCell>
+                {!showChart ? (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-semibold text-gray-700">Campaign Name</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Sent</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Delivered</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Read Rate</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Response Rate</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Status</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                      </TableHeader>
+                      <TableBody>
+                        {campaignData.map((campaign, index) => (
+                          <TableRow 
+                            key={index} 
+                            className="hover:bg-gray-50 cursor-pointer transition-colors duration-150"
+                          >
+                            <TableCell className="font-medium text-gray-900">{campaign.name}</TableCell>
+                            <TableCell className="text-gray-700">{campaign.sent.toLocaleString()}</TableCell>
+                            <TableCell className="text-gray-700">{campaign.delivered.toLocaleString()}</TableCell>
+                            <TableCell className="text-gray-700">{campaign.readRate}</TableCell>
+                            <TableCell className="text-gray-700">{campaign.responseRate}</TableCell>
+                            <TableCell>{getStatusBadge(campaign.status)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <div className="p-6">
+                    <div className="w-full" style={{ height: '400px' }}>
+                      <ChartContainer
+                        config={{
+                          sent: { label: "Messages Sent", color: "#7C3AED" },
+                          delivered: { label: "Messages Delivered", color: "#D946EF" },
+                          readRate: { label: "Read Rate %", color: "#10B981" },
+                          responseRate: { label: "Response Rate %", color: "#F59E0B" }
+                        }}
+                        className="w-full h-full"
+                      >
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={campaignChartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                            <XAxis 
+                              dataKey="name" 
+                              tick={{ fontSize: 10 }}
+                              angle={-45}
+                              textAnchor="end"
+                              height={80}
+                            />
+                            <YAxis tick={{ fontSize: 12 }} />
+                            <ChartTooltip content={<ChartTooltipContent />} />
+                            <Bar dataKey="sent" fill="#7C3AED" name="Sent" />
+                            <Bar dataKey="delivered" fill="#D946EF" name="Delivered" />
+                            <Bar dataKey="readRate" fill="#10B981" name="Read Rate %" />
+                            <Bar dataKey="responseRate" fill="#F59E0B" name="Response Rate %" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </ChartContainer>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -199,59 +322,133 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </div>
         </div>
 
-        {/* Message Delivery Trends Chart - Fixed with BarChart */}
-        <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold text-gray-900 flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2 text-purple-600" />
-              Message Delivery Trends
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="w-full" style={{ height: '300px' }}>
-              <ChartContainer
-                config={{
-                  delivered: {
-                    label: "Messages Delivered",
-                    color: "#7C3AED",
-                  },
-                }}
-                className="w-full h-full"
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
-                    data={chartData} 
-                    margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
-                  >
-                    <XAxis 
-                      dataKey="day" 
-                      tick={{ fontSize: 12 }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-                    <YAxis 
-                      tick={{ fontSize: 12 }}
-                      axisLine={false}
-                      tickLine={false}
-                      width={60}
-                    />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar 
-                      dataKey="delivered" 
-                      fill="#7C3AED" 
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </div>
-            <div className="pt-4 border-t border-gray-100 mt-4">
-              <p className="text-sm text-gray-600">
-                Weekly message delivery performance shows consistent engagement with peak activity on Friday.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        {/* New Analytics Charts Grid */}
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Button Click Analysis */}
+          <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-semibold text-gray-900">Button Click Analysis</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="w-full" style={{ height: '300px' }}>
+                <ChartContainer
+                  config={{
+                    urlClicks: { label: "URL Clicks", color: "#7C3AED" },
+                    uniqueClicks: { label: "Unique Clicks", color: "#D946EF" }
+                  }}
+                  className="w-full h-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={buttonClickData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar dataKey="value" fill="#7C3AED" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Cost Efficiency Breakdown */}
+          <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-semibold text-gray-900">Cost Efficiency Breakdown</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="w-full" style={{ height: '300px' }}>
+                <ChartContainer
+                  config={{
+                    totalCost: { label: "Total Cost", color: "#7C3AED" }
+                  }}
+                  className="w-full h-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={costEfficiencyData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} domain={[0, 1]} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar dataKey="totalCost" fill="#7C3AED" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Cost Distribution Across Templates */}
+          <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-semibold text-gray-900">Cost Distribution Across Templates</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="w-full" style={{ height: '300px' }}>
+                <ChartContainer
+                  config={{
+                    distribution: { label: "Distribution", color: "#7C3AED" }
+                  }}
+                  className="w-full h-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={costDistributionData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={40}
+                        outerRadius={100}
+                        dataKey="value"
+                      >
+                        {costDistributionData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {costDistributionData.map((item, index) => (
+                  <div key={index} className="flex items-center gap-2 text-sm">
+                    <div 
+                      className="w-3 h-3 rounded-full" 
+                      style={{ backgroundColor: item.color }}
+                    ></div>
+                    <span className="text-gray-600">{item.name}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Read Rate Trends */}
+          <Card className="border border-gray-200 shadow-sm bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-semibold text-gray-900">Read Rate Trends (%)</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="w-full" style={{ height: '300px' }}>
+                <ChartContainer
+                  config={{
+                    readRate: { label: "Read Rate", color: "#10B981" }
+                  }}
+                  className="w-full h-full"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={readRateData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} domain={[0, 100]} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar dataKey="readRate" fill="#10B981" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
