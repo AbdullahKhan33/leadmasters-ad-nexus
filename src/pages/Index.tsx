@@ -7,7 +7,7 @@ import { PostBuilder } from "@/components/PostBuilder";
 import { SocialLogins } from "@/components/SocialLogins";
 import { Dashboard } from "@/components/Dashboard";
 import { InspirationHub } from "@/components/InspirationHub";
-import { Analytics } from "@/components/Analytics";
+import { InsightsOverview } from "@/components/InsightsOverview";
 import { Schedule } from "@/components/Schedule";
 import { Workspaces } from "@/components/Workspaces";
 import { WorkspaceSettings } from "@/components/WorkspaceSettings";
@@ -302,7 +302,7 @@ function IndexContent() {
             ) : currentView === 'inspiration-hub' ? (
               <InspirationHub />
             ) : currentView === 'analytics' ? (
-              <Analytics />
+              <InsightsOverview />
             ) : currentView === 'schedule' ? (
               <Schedule />
             ) : currentView === 'crm' ? (
