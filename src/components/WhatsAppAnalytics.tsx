@@ -149,7 +149,8 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
 
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
+          <div className="flex-1"></div>
+          <div className="text-center">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
               Performance & Analytics
             </h1>
@@ -157,12 +158,14 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
               Track your WhatsApp campaign performance and engagement metrics
             </p>
           </div>
-          <Button 
-            className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Export Data
-          </Button>
+          <div className="flex-1 flex justify-end">
+            <Button 
+              className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export Data
+            </Button>
+          </div>
         </div>
 
         {/* Date Filters */}
