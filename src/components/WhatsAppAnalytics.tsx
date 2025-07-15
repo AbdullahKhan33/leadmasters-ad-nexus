@@ -211,61 +211,58 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Campaign Performance Table with Chart Toggle */}
           <div className="lg:col-span-2">
-            <Card className="border-2 border-purple-100 shadow-xl bg-gradient-to-br from-white to-purple-50/30 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+              <CardHeader className="border-b border-gray-100">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
-                    <BarChart3 className="w-6 h-6 mr-3 text-purple-600" />
+                  <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                    <BarChart3 className="w-5 h-5 mr-2 text-gray-600" />
                     Campaign Performance
                   </CardTitle>
-                  <div className="relative">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowChart(!showChart)}
-                      className="border-2 border-purple-300 bg-white hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:text-white hover:border-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl group"
-                    >
-                      {showChart ? (
-                        <>
-                          <TableIcon className="w-5 h-5 mr-2 group-hover:animate-pulse" />
-                          Table View
-                        </>
-                      ) : (
-                        <>
-                          <BarChart3 className="w-5 h-5 mr-2 group-hover:animate-pulse" />
-                          Chart View
-                        </>
-                      )}
-                    </Button>
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-ping"></div>
-                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowChart(!showChart)}
+                    className="hover:bg-gray-50"
+                  >
+                    {showChart ? (
+                      <>
+                        <TableIcon className="w-4 h-4 mr-2" />
+                        Table View
+                      </>
+                    ) : (
+                      <>
+                        <BarChart3 className="w-4 h-4 mr-2" />
+                        Chart View
+                      </>
+                    )}
+                  </Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-0 bg-white">
+              <CardContent className="p-0">
                 {!showChart ? (
                   <div className="overflow-x-auto">
                     <Table>
-                      <TableHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
-                        <TableRow className="border-purple-100">
-                          <TableHead className="font-bold text-purple-900">Campaign Name</TableHead>
-                          <TableHead className="font-bold text-purple-900">Sent</TableHead>
-                          <TableHead className="font-bold text-purple-900">Delivered</TableHead>
-                          <TableHead className="font-bold text-purple-900">Read Rate</TableHead>
-                          <TableHead className="font-bold text-purple-900">Response Rate</TableHead>
-                          <TableHead className="font-bold text-purple-900">Status</TableHead>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-medium">Campaign Name</TableHead>
+                          <TableHead className="font-medium">Sent</TableHead>
+                          <TableHead className="font-medium">Delivered</TableHead>
+                          <TableHead className="font-medium">Read Rate</TableHead>
+                          <TableHead className="font-medium">Response Rate</TableHead>
+                          <TableHead className="font-medium">Status</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {campaignData.map((campaign, index) => (
                           <TableRow 
                             key={index} 
-                            className="hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 cursor-pointer transition-all duration-300 border-gray-100 group"
+                            className="hover:bg-gray-50"
                           >
-                            <TableCell className="font-bold text-gray-900 group-hover:text-purple-900">{campaign.name}</TableCell>
-                            <TableCell className="text-gray-700 font-semibold group-hover:text-purple-700">{campaign.sent.toLocaleString()}</TableCell>
-                            <TableCell className="text-gray-700 font-semibold group-hover:text-purple-700">{campaign.delivered.toLocaleString()}</TableCell>
-                            <TableCell className="text-gray-700 font-semibold group-hover:text-purple-700">{campaign.readRate}</TableCell>
-                            <TableCell className="text-gray-700 font-semibold group-hover:text-purple-700">{campaign.responseRate}</TableCell>
+                            <TableCell className="font-medium">{campaign.name}</TableCell>
+                            <TableCell>{campaign.sent.toLocaleString()}</TableCell>
+                            <TableCell>{campaign.delivered.toLocaleString()}</TableCell>
+                            <TableCell>{campaign.readRate}</TableCell>
+                            <TableCell>{campaign.responseRate}</TableCell>
                             <TableCell>{getStatusBadge(campaign.status)}</TableCell>
                           </TableRow>
                         ))}
@@ -273,7 +270,7 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
                     </Table>
                   </div>
                 ) : (
-                  <div className="p-6 bg-gradient-to-br from-white to-purple-50">
+                  <div className="p-6">
                     <div className="w-full" style={{ height: '400px' }}>
                       <ChartContainer
                         config={{
@@ -311,29 +308,29 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
 
           {/* Analytics Overview */}
           <div>
-            <Card className="border-2 border-purple-100 shadow-xl bg-gradient-to-br from-white to-purple-50/30 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-              <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100">
-                <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
-                  <Eye className="w-6 h-6 mr-3 text-purple-600" />
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+              <CardHeader className="border-b border-gray-100">
+                <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                  <Eye className="w-5 h-5 mr-2 text-gray-600" />
                   Analytics Overview
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 bg-white">
-                <div className="grid grid-cols-1 gap-6 text-center">
-                  <div className="space-y-2 p-4 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100">
-                    <h3 className="text-sm font-bold text-purple-800">Total Campaigns</h3>
-                    <p className="text-3xl font-black text-purple-900">24</p>
-                    <p className="text-xs text-emerald-600 font-semibold">+3 this month</p>
+              <CardContent className="space-y-4 p-6">
+                <div className="grid grid-cols-1 gap-4 text-center">
+                  <div className="space-y-2 p-4 rounded-lg bg-gray-50 border border-gray-100">
+                    <h3 className="text-sm font-medium text-gray-600">Total Campaigns</h3>
+                    <p className="text-2xl font-bold text-gray-900">24</p>
+                    <p className="text-xs text-green-600">+3 this month</p>
                   </div>
-                  <div className="space-y-2 p-4 rounded-lg bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100">
-                    <h3 className="text-sm font-bold text-blue-800">Average Delivery Rate</h3>
-                    <p className="text-3xl font-black text-blue-900">94.8%</p>
-                    <p className="text-xs text-emerald-600 font-semibold">+1.2% from last month</p>
+                  <div className="space-y-2 p-4 rounded-lg bg-gray-50 border border-gray-100">
+                    <h3 className="text-sm font-medium text-gray-600">Average Delivery Rate</h3>
+                    <p className="text-2xl font-bold text-gray-900">94.8%</p>
+                    <p className="text-xs text-green-600">+1.2% from last month</p>
                   </div>
-                  <div className="space-y-2 p-4 rounded-lg bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
-                    <h3 className="text-sm font-bold text-emerald-800">Best Performing Time</h3>
-                    <p className="text-3xl font-black text-emerald-900">2-4 PM</p>
-                    <p className="text-xs text-gray-600 font-semibold">Peak engagement window</p>
+                  <div className="space-y-2 p-4 rounded-lg bg-gray-50 border border-gray-100">
+                    <h3 className="text-sm font-medium text-gray-600">Best Performing Time</h3>
+                    <p className="text-2xl font-bold text-gray-900">2-4 PM</p>
+                    <p className="text-xs text-gray-500">Peak engagement window</p>
                   </div>
                 </div>
               </CardContent>
@@ -344,14 +341,14 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
         {/* New Analytics Charts Grid */}
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Button Click Analysis */}
-          <Card className="border-2 border-purple-100 shadow-xl bg-gradient-to-br from-white to-purple-50/30 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-            <CardHeader className="pb-4 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100">
-              <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
-                <MessageCircle className="w-6 h-6 mr-3 text-purple-600" />
+          <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                <MessageCircle className="w-5 h-5 mr-2 text-gray-600" />
                 Button Click Analysis
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 bg-white">
+            <CardContent className="p-6">
               <div className="w-full" style={{ height: '300px' }}>
                 <ChartContainer
                   config={{
@@ -374,10 +371,10 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </Card>
 
           {/* Cost Efficiency Breakdown */}
-          <Card className="border-2 border-blue-100 shadow-xl bg-gradient-to-br from-white to-blue-50/30 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-            <CardHeader className="pb-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-b border-blue-100">
-              <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
-                <CheckCircle className="w-6 h-6 mr-3 text-blue-600" />
+          <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2 text-gray-600" />
                 Cost Efficiency Breakdown
               </CardTitle>
             </CardHeader>
@@ -403,14 +400,14 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </Card>
 
           {/* Cost Distribution Across Templates */}
-          <Card className="border-2 border-emerald-100 shadow-xl bg-gradient-to-br from-white to-emerald-50/30 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-            <CardHeader className="pb-4 bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-100">
-              <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
-                <MessageSquare className="w-6 h-6 mr-3 text-emerald-600" />
+          <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                <MessageSquare className="w-5 h-5 mr-2 text-gray-600" />
                 Cost Distribution Across Templates
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 bg-white">
+            <CardContent className="p-6">
               <div className="w-full" style={{ height: '300px' }}>
                 <ChartContainer
                   config={{
@@ -452,14 +449,14 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
           </Card>
 
           {/* Read Rate Trends */}
-          <Card className="border-2 border-teal-100 shadow-xl bg-gradient-to-br from-white to-teal-50/30 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-            <CardHeader className="pb-4 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100">
-              <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
-                <Eye className="w-6 h-6 mr-3 text-teal-600" />
+          <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold text-gray-900 flex items-center">
+                <Eye className="w-5 h-5 mr-2 text-gray-600" />
                 Read Rate Trends (%)
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 bg-white">
+            <CardContent className="p-6">
               <div className="w-full" style={{ height: '300px' }}>
                 <ChartContainer
                   config={{
