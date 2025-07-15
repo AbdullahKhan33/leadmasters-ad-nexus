@@ -173,55 +173,54 @@ const FacebookInsights = () => {
   ];
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 min-h-screen font-inter">
-      {/* Elegant Header Section */}
+    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-slate-50 via-white to-blue-50/20 min-h-screen font-inter">
+      {/* Clean, Modern Header Section */}
       <div className="relative overflow-hidden">
-        <Card className="border-none shadow-2xl overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-white/20 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
+        <Card className="border-none shadow-xl overflow-hidden bg-white">
+          {/* Subtle gradient accent */}
+          <div className="h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"></div>
           
-          <div className="relative p-8">
+          <div className="p-8 bg-white">
             <div className="flex items-start justify-between mb-8">
               <div className="flex items-center space-x-6">
                 <div className="relative">
-                  <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 shadow-xl">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-lg">
                     <img 
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face" 
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
                       alt="Profile" 
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md flex items-center justify-center">
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                 </div>
                 
-                <div className="text-white">
-                  <h1 className="text-3xl font-playfair font-bold mb-2">Facebook Performance</h1>
-                  <p className="text-blue-100 text-lg font-medium">{currentPage.name}</p>
-                  <div className="flex items-center space-x-4 mt-3">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter">Facebook Performance</h1>
+                  <p className="text-lg font-medium text-gray-700 mb-3 font-inter">{currentPage.name}</p>
+                  <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-2">
-                      <Users className="w-4 h-4 text-blue-200" />
-                      <span className="text-blue-100 text-sm">{currentPage.followers} followers</span>
+                      <Users className="w-4 h-4 text-blue-500" />
+                      <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.followers} followers</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Heart className="w-4 h-4 text-pink-300" />
-                      <span className="text-blue-100 text-sm">{currentPage.engagement} engagement</span>
+                      <Heart className="w-4 h-4 text-pink-500" />
+                      <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.engagement} engagement</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Page Selector */}
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                 <Select value={selectedPage} onValueChange={setSelectedPage}>
-                  <SelectTrigger className="w-64 bg-white/20 border-white/30 text-white placeholder:text-blue-200">
+                  <SelectTrigger className="w-64 bg-white border-gray-300 text-gray-900 font-inter">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
                     {pages.map((page) => (
-                      <SelectItem key={page.id} value={page.id}>
+                      <SelectItem key={page.id} value={page.id} className="font-inter">
                         <div className="flex items-center justify-between w-full">
                           <span>{page.name}</span>
                           <span className="text-gray-500 text-sm ml-4">{page.followers}</span>
@@ -233,20 +232,23 @@ const FacebookInsights = () => {
               </div>
             </div>
 
-            {/* Key Stats Grid */}
+            {/* Key Stats Grid with Better Contrast */}
             <div className="grid grid-cols-5 gap-6">
               {[
-                { label: "Followers", value: "1,175", sublabel: "Total audience" },
-                { label: "Following", value: "1", sublabel: "Accounts followed" },
-                { label: "Posts", value: "87", sublabel: "This month" },
-                { label: "Impressions", value: "45.2K", sublabel: "Monthly reach" },
-                { label: "Engagement Rate", value: "3.2%", sublabel: "Average interaction" }
+                { label: "Followers", value: "1,175", sublabel: "Total audience", color: "from-blue-500 to-blue-600" },
+                { label: "Following", value: "1", sublabel: "Accounts followed", color: "from-gray-500 to-gray-600" },
+                { label: "Posts", value: "87", sublabel: "This month", color: "from-purple-500 to-purple-600" },
+                { label: "Impressions", value: "45.2K", sublabel: "Monthly reach", color: "from-indigo-500 to-indigo-600" },
+                { label: "Engagement Rate", value: "3.2%", sublabel: "Average interaction", color: "from-pink-500 to-pink-600" }
               ].map((stat, index) => (
-                <div key={index} className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                    <div className="text-sm text-blue-200 font-medium">{stat.label}</div>
-                    <div className="text-xs text-blue-300 mt-1">{stat.sublabel}</div>
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} mx-auto mb-3 flex items-center justify-center shadow-lg`}>
+                      <div className="w-4 h-4 bg-white rounded-sm opacity-90"></div>
+                    </div>
+                    <div className="text-3xl font-bold text-gray-900 mb-1 font-inter">{stat.value}</div>
+                    <div className="text-sm text-gray-700 font-semibold mb-1 font-inter">{stat.label}</div>
+                    <div className="text-xs text-gray-500 font-inter">{stat.sublabel}</div>
                   </div>
                 </div>
               ))}
@@ -255,34 +257,34 @@ const FacebookInsights = () => {
         </Card>
       </div>
 
-      {/* Time Period */}
+      {/* Performance Analytics Section Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-playfair font-bold text-gray-900">Performance Analytics</h2>
-          <p className="text-gray-600 mt-1">Detailed insights for the last 28 days</p>
+          <h2 className="text-2xl font-bold text-gray-900 font-inter">Performance Analytics</h2>
+          <p className="text-gray-600 mt-1 font-inter">Detailed insights for the last 28 days</p>
         </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-500">
-          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+        <div className="flex items-center space-x-2 text-sm text-gray-500 font-inter">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           <span>Live data • Updated 5 minutes ago</span>
         </div>
       </div>
 
       {/* Discovery Section */}
       <div className="space-y-6">
-        <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
           <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded mr-3"></div>
           Discovery & Reach
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {discoveryMetrics.map((metric, index) => (
-            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 bg-white hover:scale-105">
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-lg`}>
                     <metric.icon className="w-6 h-6 text-white" />
                   </div>
-                  <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  <div className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${
                     metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                   }`}>
                     {metric.change}
@@ -291,15 +293,15 @@ const FacebookInsights = () => {
                 
                 <div className="space-y-3">
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
-                    <p className="text-sm text-gray-600 font-medium">{metric.title}</p>
+                    <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                    <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
                   </div>
                   
                   {/* Progress Bar */}
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xs">
+                    <div className="flex justify-between text-xs font-inter">
                       <span className="text-gray-500">Progress</span>
-                      <span className="text-gray-700 font-medium">{metric.progress}%</span>
+                      <span className="text-gray-700 font-semibold">{metric.progress}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
@@ -317,7 +319,7 @@ const FacebookInsights = () => {
 
       {/* Interactions Section */}
       <div className="space-y-6">
-        <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
           <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-red-600 rounded mr-3"></div>
           Engagement & Interactions
         </h3>
@@ -331,7 +333,7 @@ const FacebookInsights = () => {
                     <metric.icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="text-right">
-                    <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <div className={`px-2 py-1 rounded-full text-xs font-semibold font-inter ${
                       metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                     }`}>
                       {metric.change}
@@ -340,14 +342,14 @@ const FacebookInsights = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
-                  <p className="text-sm text-gray-600 font-medium">{metric.title}</p>
+                  <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                  <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
                   
                   {/* Special breakdown for Reactions */}
                   {metric.breakdown && (
                     <div className="mt-3 space-y-1">
                       {metric.breakdown.map((item, idx) => (
-                        <div key={idx} className="flex justify-between text-xs">
+                        <div key={idx} className="flex justify-between text-xs font-inter">
                           <span className="text-gray-500">{item.type}</span>
                           <span className="text-gray-700 font-medium">{item.count}</span>
                         </div>
