@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Facebook, Instagram, Twitter, Linkedin, ChevronDown, Users, MessageSquare, Heart, Eye, MousePointer, BarChart3 } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, ChevronDown, Users, MessageSquare, Heart, Eye, MousePointer, BarChart3, UserCheck } from "lucide-react";
 
 // Platform Navigation Component (matching AdPlatformMenu style)
 const platforms = [
@@ -175,87 +175,117 @@ const FacebookInsights = () => {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-slate-50 via-white to-blue-50/20 min-h-screen font-inter">
       {/* Clean, Modern Header Section */}
-      <div className="relative overflow-hidden">
-        <Card className="border-none shadow-xl overflow-hidden bg-white">
-          {/* Subtle gradient accent */}
-          <div className="h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"></div>
-          
-          <div className="p-8 bg-white">
-            <div className="flex items-start justify-between mb-8">
-              <div className="flex items-center space-x-6">
-                <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-lg">
-                    <img 
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
-                      alt="Profile" 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                  </div>
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200">
+        <div className="p-8">
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center space-x-6">
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter">Facebook Performance</h1>
-                  <p className="text-lg font-medium text-gray-700 mb-3 font-inter">{currentPage.name}</p>
-                  <div className="flex items-center space-x-6">
-                    <div className="flex items-center space-x-2">
-                      <Users className="w-4 h-4 text-blue-500" />
-                      <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.followers} followers</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Heart className="w-4 h-4 text-pink-500" />
-                      <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.engagement} engagement</span>
-                    </div>
-                  </div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-md flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
                 </div>
               </div>
-
-              {/* Page Selector */}
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                <Select value={selectedPage} onValueChange={setSelectedPage}>
-                  <SelectTrigger className="w-64 bg-white border-gray-300 text-gray-900 font-inter">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    {pages.map((page) => (
-                      <SelectItem key={page.id} value={page.id} className="font-inter">
-                        <div className="flex items-center justify-between w-full">
-                          <span>{page.name}</span>
-                          <span className="text-gray-500 text-sm ml-4">{page.followers}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter">Facebook Performance</h1>
+                <p className="text-lg font-medium text-gray-700 mb-3 font-inter">{currentPage.name}</p>
+                <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-blue-500" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.followers} followers</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Heart className="w-4 h-4 text-pink-500" />
+                    <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.engagement} engagement</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Key Stats Grid with Better Contrast */}
-            <div className="grid grid-cols-5 gap-6">
-              {[
-                { label: "Followers", value: "1,175", sublabel: "Total audience", color: "from-blue-500 to-blue-600" },
-                { label: "Following", value: "1", sublabel: "Accounts followed", color: "from-gray-500 to-gray-600" },
-                { label: "Posts", value: "87", sublabel: "This month", color: "from-purple-500 to-purple-600" },
-                { label: "Impressions", value: "45.2K", sublabel: "Monthly reach", color: "from-indigo-500 to-indigo-600" },
-                { label: "Engagement Rate", value: "3.2%", sublabel: "Average interaction", color: "from-pink-500 to-pink-600" }
-              ].map((stat, index) => (
-                <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
-                  <div className="text-center">
-                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} mx-auto mb-3 flex items-center justify-center shadow-lg`}>
-                      <div className="w-4 h-4 bg-white rounded-sm opacity-90"></div>
-                    </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-1 font-inter">{stat.value}</div>
-                    <div className="text-sm text-gray-700 font-semibold mb-1 font-inter">{stat.label}</div>
-                    <div className="text-xs text-gray-500 font-inter">{stat.sublabel}</div>
-                  </div>
-                </div>
-              ))}
+            {/* Page Selector */}
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <Select value={selectedPage} onValueChange={setSelectedPage}>
+                <SelectTrigger className="w-64 bg-white border-gray-300 text-gray-900 font-inter">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {pages.map((page) => (
+                    <SelectItem key={page.id} value={page.id} className="font-inter">
+                      <div className="flex items-center justify-between w-full">
+                        <span>{page.name}</span>
+                        <span className="text-gray-500 text-sm ml-4">{page.followers}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        </Card>
-      </div>
+
+          {/* Key Stats Grid with Proper Icons */}
+          <div className="grid grid-cols-5 gap-6">
+            {[
+              { 
+                label: "Followers", 
+                value: "1,175", 
+                sublabel: "Total audience", 
+                icon: Users,
+                color: "from-blue-500 to-blue-600",
+                bgColor: "bg-blue-50"
+              },
+              { 
+                label: "Following", 
+                value: "1", 
+                sublabel: "Accounts followed", 
+                icon: UserCheck,
+                color: "from-gray-500 to-gray-600",
+                bgColor: "bg-gray-50"
+              },
+              { 
+                label: "Posts", 
+                value: "87", 
+                sublabel: "This month", 
+                icon: MessageSquare,
+                color: "from-purple-500 to-purple-600",
+                bgColor: "bg-purple-50"
+              },
+              { 
+                label: "Impressions", 
+                value: "45.2K", 
+                sublabel: "Monthly reach", 
+                icon: Eye,
+                color: "from-indigo-500 to-indigo-600",
+                bgColor: "bg-indigo-50"
+              },
+              { 
+                label: "Engagement Rate", 
+                value: "3.2%", 
+                sublabel: "Average interaction", 
+                icon: Heart,
+                color: "from-pink-500 to-pink-600",
+                bgColor: "bg-pink-50"
+              }
+            ].map((stat, index) => (
+              <div key={index} className={`${stat.bgColor} rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105`}>
+                <div className="text-center">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.color} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
+                    <stat.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900 mb-1 font-inter">{stat.value}</div>
+                  <div className="text-sm text-gray-700 font-semibold mb-1 font-inter">{stat.label}</div>
+                  <div className="text-xs text-gray-500 font-inter">{stat.sublabel}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
 
       {/* Performance Analytics Section Header */}
       <div className="flex items-center justify-between">
