@@ -518,6 +518,177 @@ const InstagramInsights = () => {
           </div>
         </div>
       </Card>
+
+      {/* Performance Analytics Section Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 font-inter">Performance Analytics</h2>
+          <p className="text-gray-600 mt-1 font-inter">Detailed insights for the last 28 days</p>
+        </div>
+        <div className="flex items-center space-x-2 text-sm text-gray-500 font-inter">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span>Live data • Updated 5 minutes ago</span>
+        </div>
+      </div>
+
+      {/* Discovery Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
+          <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-purple-600 rounded mr-3"></div>
+          Discovery & Reach
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { 
+              title: "Story Reach", 
+              value: "18,432", 
+              change: "+22.3%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-pink-500 to-pink-600",
+              progress: 85
+            },
+            { 
+              title: "Post Engagement", 
+              value: "1,245", 
+              change: "+15.7%", 
+              trend: "up",
+              icon: Heart, 
+              color: "from-purple-500 to-purple-600",
+              progress: 72
+            },
+            { 
+              title: "Profile Views", 
+              value: "3,421", 
+              change: "+18.9%", 
+              trend: "up",
+              icon: Eye, 
+              color: "from-indigo-500 to-indigo-600",
+              progress: 68
+            },
+            { 
+              title: "New Followers", 
+              value: "234", 
+              change: "+28.1%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-blue-500 to-blue-600",
+              progress: 61
+            }
+          ].map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-lg`}>
+                    <metric.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${
+                    metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
+                    {metric.change}
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                    <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs font-inter">
+                      <span className="text-gray-500">Progress</span>
+                      <span className="text-gray-700 font-semibold">{metric.progress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full bg-gradient-to-r ${metric.color} transition-all duration-1000 ease-out`}
+                        style={{ width: `${metric.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Interactions Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
+          <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-red-600 rounded mr-3"></div>
+          Engagement & Interactions
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {[
+            { 
+              title: "Likes", 
+              value: "2,143", 
+              change: "+25.3%", 
+              trend: "up",
+              icon: Heart, 
+              color: "from-pink-500 to-pink-600"
+            },
+            { 
+              title: "Comments", 
+              value: "456", 
+              change: "+18.7%", 
+              trend: "up",
+              icon: MessageSquare, 
+              color: "from-blue-500 to-blue-600"
+            },
+            { 
+              title: "Shares", 
+              value: "234", 
+              change: "+12.4%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-green-500 to-green-600"
+            },
+            { 
+              title: "Story Views", 
+              value: "5,632", 
+              change: "+31.2%", 
+              trend: "up",
+              icon: Eye, 
+              color: "from-orange-500 to-orange-600"
+            },
+            { 
+              title: "Profile Visits", 
+              value: "892", 
+              change: "+19.8%", 
+              trend: "up",
+              icon: MousePointer, 
+              color: "from-purple-500 to-purple-600"
+            }
+          ].map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-md`}>
+                    <metric.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <div className={`px-2 py-1 rounded-full text-xs font-semibold font-inter ${
+                      metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      {metric.change}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                  <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -644,6 +815,177 @@ const ThreadsInsights = () => {
           </div>
         </div>
       </Card>
+
+      {/* Performance Analytics Section Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 font-inter">Performance Analytics</h2>
+          <p className="text-gray-600 mt-1 font-inter">Detailed insights for the last 28 days</p>
+        </div>
+        <div className="flex items-center space-x-2 text-sm text-gray-500 font-inter">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span>Live data • Updated 5 minutes ago</span>
+        </div>
+      </div>
+
+      {/* Discovery Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
+          <div className="w-1 h-6 bg-gradient-to-b from-gray-500 to-slate-600 rounded mr-3"></div>
+          Discovery & Reach
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { 
+              title: "Thread Reach", 
+              value: "8,234", 
+              change: "+19.4%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-gray-500 to-gray-600",
+              progress: 76
+            },
+            { 
+              title: "Thread Engagement", 
+              value: "567", 
+              change: "+14.2%", 
+              trend: "up",
+              icon: Heart, 
+              color: "from-slate-500 to-slate-600",
+              progress: 63
+            },
+            { 
+              title: "Profile Views", 
+              value: "1,892", 
+              change: "+21.7%", 
+              trend: "up",
+              icon: Eye, 
+              color: "from-indigo-500 to-indigo-600",
+              progress: 71
+            },
+            { 
+              title: "New Followers", 
+              value: "89", 
+              change: "+16.3%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-blue-500 to-blue-600",
+              progress: 58
+            }
+          ].map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-lg`}>
+                    <metric.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${
+                    metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
+                    {metric.change}
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                    <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs font-inter">
+                      <span className="text-gray-500">Progress</span>
+                      <span className="text-gray-700 font-semibold">{metric.progress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full bg-gradient-to-r ${metric.color} transition-all duration-1000 ease-out`}
+                        style={{ width: `${metric.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Interactions Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
+          <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-red-600 rounded mr-3"></div>
+          Engagement & Interactions
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {[
+            { 
+              title: "Likes", 
+              value: "892", 
+              change: "+20.1%", 
+              trend: "up",
+              icon: Heart, 
+              color: "from-pink-500 to-pink-600"
+            },
+            { 
+              title: "Replies", 
+              value: "234", 
+              change: "+15.4%", 
+              trend: "up",
+              icon: MessageSquare, 
+              color: "from-blue-500 to-blue-600"
+            },
+            { 
+              title: "Reposts", 
+              value: "156", 
+              change: "+9.8%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-green-500 to-green-600"
+            },
+            { 
+              title: "Quote Posts", 
+              value: "67", 
+              change: "+12.7%", 
+              trend: "up",
+              icon: MessageSquare, 
+              color: "from-purple-500 to-purple-600"
+            },
+            { 
+              title: "Profile Visits", 
+              value: "445", 
+              change: "+18.3%", 
+              trend: "up",
+              icon: MousePointer, 
+              color: "from-orange-500 to-orange-600"
+            }
+          ].map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-md`}>
+                    <metric.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <div className={`px-2 py-1 rounded-full text-xs font-semibold font-inter ${
+                      metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      {metric.change}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                  <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -770,6 +1112,177 @@ const LinkedInInsights = () => {
           </div>
         </div>
       </Card>
+
+      {/* Performance Analytics Section Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 font-inter">Performance Analytics</h2>
+          <p className="text-gray-600 mt-1 font-inter">Detailed insights for the last 28 days</p>
+        </div>
+        <div className="flex items-center space-x-2 text-sm text-gray-500 font-inter">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span>Live data • Updated 5 minutes ago</span>
+        </div>
+      </div>
+
+      {/* Discovery Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
+          <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-indigo-600 rounded mr-3"></div>
+          Discovery & Reach
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { 
+              title: "Post Reach", 
+              value: "25,432", 
+              change: "+28.7%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-blue-500 to-blue-600",
+              progress: 89
+            },
+            { 
+              title: "Post Engagement", 
+              value: "1,876", 
+              change: "+24.1%", 
+              trend: "up",
+              icon: Heart, 
+              color: "from-indigo-500 to-indigo-600",
+              progress: 82
+            },
+            { 
+              title: "Company Page Views", 
+              value: "8,543", 
+              change: "+32.4%", 
+              trend: "up",
+              icon: Eye, 
+              color: "from-purple-500 to-purple-600",
+              progress: 75
+            },
+            { 
+              title: "New Followers", 
+              value: "312", 
+              change: "+19.8%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-teal-500 to-teal-600",
+              progress: 67
+            }
+          ].map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-lg`}>
+                    <metric.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${
+                    metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
+                    {metric.change}
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                    <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs font-inter">
+                      <span className="text-gray-500">Progress</span>
+                      <span className="text-gray-700 font-semibold">{metric.progress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full bg-gradient-to-r ${metric.color} transition-all duration-1000 ease-out`}
+                        style={{ width: `${metric.progress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Interactions Section */}
+      <div className="space-y-6">
+        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter">
+          <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-red-600 rounded mr-3"></div>
+          Engagement & Interactions
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          {[
+            { 
+              title: "Reactions", 
+              value: "3,542", 
+              change: "+26.8%", 
+              trend: "up",
+              icon: Heart, 
+              color: "from-pink-500 to-pink-600"
+            },
+            { 
+              title: "Comments", 
+              value: "892", 
+              change: "+18.9%", 
+              trend: "up",
+              icon: MessageSquare, 
+              color: "from-blue-500 to-blue-600"
+            },
+            { 
+              title: "Shares", 
+              value: "567", 
+              change: "+22.1%", 
+              trend: "up",
+              icon: Users, 
+              color: "from-green-500 to-green-600"
+            },
+            { 
+              title: "Article Views", 
+              value: "4,231", 
+              change: "+35.7%", 
+              trend: "up",
+              icon: Eye, 
+              color: "from-orange-500 to-orange-600"
+            },
+            { 
+              title: "Profile Clicks", 
+              value: "1,234", 
+              change: "+29.4%", 
+              trend: "up",
+              icon: MousePointer, 
+              color: "from-purple-500 to-purple-600"
+            }
+          ].map((metric, index) => (
+            <Card key={metric.title} className="group border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 bg-white hover:scale-105">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center shadow-md`}>
+                    <metric.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="text-right">
+                    <div className={`px-2 py-1 rounded-full text-xs font-semibold font-inter ${
+                      metric.trend === 'up' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      {metric.change}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-2xl font-bold text-gray-900 font-inter">{metric.value}</p>
+                  <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
