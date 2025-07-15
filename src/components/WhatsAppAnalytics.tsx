@@ -135,25 +135,27 @@ export function WhatsAppAnalytics({ onBack }: WhatsAppAnalyticsProps) {
   return (
     <div className="flex-1 p-6 bg-gray-50 overflow-auto">
       <div className="max-w-7xl mx-auto space-y-8">
+        {/* Back Button */}
+        <div className="flex items-center">
+          <Button 
+            variant="ghost" 
+            onClick={onBack}
+            className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              onClick={onBack}
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors duration-200"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
-                Performance & Analytics
-              </h1>
-              <p className="text-gray-600">
-                Track your WhatsApp campaign performance and engagement metrics
-              </p>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
+              Performance & Analytics
+            </h1>
+            <p className="text-gray-600">
+              Track your WhatsApp campaign performance and engagement metrics
+            </p>
           </div>
           <Button 
             className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
