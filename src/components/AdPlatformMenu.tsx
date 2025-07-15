@@ -42,9 +42,9 @@ export function AdPlatformMenu({ activePlatform = "whatsapp", onPlatformChange }
               className={`
                 px-5 py-2 rounded-full transition-all duration-200 ease-out flex items-center space-x-2.5 relative group cursor-pointer
                 ${isActive 
-                  ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white font-semibold shadow-lg hover:from-purple-700 hover:to-pink-600' 
+                  ? 'bg-gradient-to-r from-[#7C3AED] to-[#D946EF] text-white font-semibold shadow-lg hover:from-purple-700 hover:to-pink-600 hover:text-white' 
                   : isImplemented
-                    ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium'
+                    ? 'text-gray-600 hover:text-white hover:bg-gray-700 font-medium'
                     : 'text-gray-400 cursor-not-allowed opacity-50'
                 }
               `}
