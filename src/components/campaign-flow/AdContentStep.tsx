@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Save, ArrowLeft, Upload, Eye, Edit2, Trash2, Plus } from "lucide-react";
+import { Save, ArrowLeft, Upload, Eye, Edit2, Trash2, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { CampaignData, CarouselCard } from "../FacebookAdCampaignFlow";
 import { CarouselCardEditModal } from "./CarouselCardEditModal";
 
@@ -30,6 +30,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
   const [carouselCards, setCarouselCards] = useState<CarouselCard[]>(data.carouselCards || []);
   const [editingCard, setEditingCard] = useState<CarouselCard | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -364,23 +365,52 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
             </div>
             
             {/* Image/Carousel Preview */}
-            <div className="bg-gray-200 h-48 flex items-center justify-center">
+            <div className="bg-gray-200 h-48 flex items-center justify-center relative">
               {formData.adFormat === "carousel" && carouselCards.length > 0 ? (
-                <div className="w-full h-full overflow-x-auto flex">
-                  {carouselCards.map((card, index) => (
-                    <div key={card.id} className="flex-shrink-0 w-full h-full relative">
-                      <img 
-                        src={card.imagePreview} 
-                        alt={`Carousel ${index + 1}`} 
-                        className="w-full h-full object-cover"
-                      />
-                      {carouselCards.length > 1 && (
-                        <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                          {index + 1}/{carouselCards.length}
-                        </div>
-                      )}
+                <div className="w-full h-full relative overflow-hidden">
+                  <div 
+                    className="flex transition-transform duration-300 ease-in-out h-full"
+                    style={{ transform: `translateX(-${currentCarouselIndex * 100}%)` }}
+                  >
+                    {carouselCards.map((card, index) => (
+                      <div key={card.id} className="flex-shrink-0 w-full h-full relative">
+                        <img 
+                          src={card.imagePreview} 
+                          alt={`Carousel ${index + 1}`} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Navigation Arrows */}
+                  {carouselCards.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setCurrentCarouselIndex(prev => 
+                          prev === 0 ? carouselCards.length - 1 : prev - 1
+                        )}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setCurrentCarouselIndex(prev => 
+                          prev === carouselCards.length - 1 ? 0 : prev + 1
+                        )}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
+                  
+                  {/* Slide Indicator */}
+                  {carouselCards.length > 1 && (
+                    <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                      {currentCarouselIndex + 1}/{carouselCards.length}
                     </div>
-                  ))}
+                  )}
                 </div>
               ) : formData.adFormat === "single" && imagePreview ? (
                 <img 
@@ -401,17 +431,17 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
             {/* Link Preview */}
             <div className="p-3 bg-gray-50 border-t">
               {formData.adFormat === "carousel" && carouselCards.length > 0 ? (
-                // Show first carousel card's details or default
+                // Show current carousel card's details or default
                 <>
                   <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                    {carouselCards[0]?.url || formData.adLinkUrl || "your-website.com"}
+                    {carouselCards[currentCarouselIndex]?.url || formData.adLinkUrl || "your-website.com"}
                   </div>
                   <div className="font-semibold text-sm text-gray-900">
-                    {carouselCards[0]?.headline || formData.heading || "Your Headline Here"}
+                    {carouselCards[currentCarouselIndex]?.headline || formData.heading || "Your Headline Here"}
                   </div>
-                  {(carouselCards[0]?.description || formData.description) && (
+                  {(carouselCards[currentCarouselIndex]?.description || formData.description) && (
                     <div className="text-sm text-gray-600 mt-1">
-                      {carouselCards[0]?.description || formData.description}
+                      {carouselCards[currentCarouselIndex]?.description || formData.description}
                     </div>
                   )}
                 </>
