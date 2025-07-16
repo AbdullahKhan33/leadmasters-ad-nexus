@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Save, ArrowLeft, Upload, Eye } from "lucide-react";
-import { CampaignData } from "../FacebookAdCampaignFlow";
+import { Save, ArrowLeft, Upload, Eye, Edit2, Trash2, Plus } from "lucide-react";
+import { CampaignData, CarouselCard } from "../FacebookAdCampaignFlow";
+import { CarouselCardEditModal } from "./CarouselCardEditModal";
 
 interface AdContentStepProps {
   data: CampaignData;
@@ -26,6 +27,9 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
     callToAction: data.callToAction || ""
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [carouselCards, setCarouselCards] = useState<CarouselCard[]>(data.carouselCards || []);
+  const [editingCard, setEditingCard] = useState<CarouselCard | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -34,17 +38,70 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onUpdate({ uploadedImage: file });
-      
-      // Create preview URL for the uploaded image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+    const files = event.target.files;
+    if (!files) return;
+
+    if (formData.adFormat === "single") {
+      const file = files[0];
+      if (file) {
+        onUpdate({ uploadedImage: file });
+        
+        // Create preview URL for the uploaded image
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setImagePreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    } else if (formData.adFormat === "carousel") {
+      // Handle multiple file uploads for carousel
+      Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newCard: CarouselCard = {
+            id: `card-${Date.now()}-${index}`,
+            image: file,
+            imagePreview: e.target?.result as string,
+            headline: "",
+            description: "",
+            url: ""
+          };
+          
+          setCarouselCards(prev => {
+            const updated = [...prev, newCard];
+            onUpdate({ carouselCards: updated });
+            return updated;
+          });
+        };
+        reader.readAsDataURL(file);
+      });
     }
+    
+    // Reset the input
+    event.target.value = '';
+  };
+
+  const handleCarouselCardEdit = (card: CarouselCard) => {
+    setEditingCard(card);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCarouselCardSave = (updatedCard: CarouselCard) => {
+    setCarouselCards(prev => {
+      const updated = prev.map(card => 
+        card.id === updatedCard.id ? updatedCard : card
+      );
+      onUpdate({ carouselCards: updated });
+      return updated;
+    });
+  };
+
+  const handleCarouselCardDelete = (cardId: string) => {
+    setCarouselCards(prev => {
+      const updated = prev.filter(card => card.id !== cardId);
+      onUpdate({ carouselCards: updated });
+      return updated;
+    });
   };
 
   const isFormValid = () => {
@@ -159,29 +216,93 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
             {/* Image Upload */}
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
-                Upload Image
+                {formData.adFormat === "carousel" ? "Upload Carousel Images" : "Upload Image"}
               </Label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
                 <input
                   type="file"
                   id="imageUpload"
                   accept="image/*"
+                  multiple={formData.adFormat === "carousel"}
                   onChange={handleImageUpload}
                   className="hidden"
                 />
                 <label htmlFor="imageUpload" className="cursor-pointer">
                   <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">
-                    Click to upload or drag and drop
+                    {formData.adFormat === "carousel" 
+                      ? "Click to upload multiple images or drag and drop"
+                      : "Click to upload or drag and drop"}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG up to 10MB
+                    PNG, JPG up to 10MB {formData.adFormat === "carousel" ? "each" : ""}
                   </p>
                 </label>
               </div>
-              {data.uploadedImage && (
+              
+              {/* Single Image Upload Status */}
+              {formData.adFormat === "single" && data.uploadedImage && (
                 <div className="mt-2 text-sm text-green-600">
                   ✓ Image uploaded: {data.uploadedImage.name}
+                </div>
+              )}
+
+              {/* Carousel Cards Display */}
+              {formData.adFormat === "carousel" && carouselCards.length > 0 && (
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">
+                      Carousel Cards ({carouselCards.length})
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('imageUpload')?.click()}
+                      className="flex items-center space-x-1"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Add More</span>
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    {carouselCards.map((card, index) => (
+                      <div key={card.id} className="relative border rounded-lg overflow-hidden">
+                        <img
+                          src={card.imagePreview}
+                          alt={`Carousel card ${index + 1}`}
+                          className="w-full h-24 object-cover"
+                        />
+                        <div className="p-2 bg-white">
+                          <div className="text-xs text-gray-600 truncate">
+                            {card.headline || `Card ${index + 1}`}
+                          </div>
+                          <div className="flex items-center justify-between mt-1">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleCarouselCardEdit(card)}
+                              className="h-6 px-2 text-xs"
+                            >
+                              <Edit2 className="w-3 h-3 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleCarouselCardDelete(card.id)}
+                              className="h-6 px-2 text-xs text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -242,9 +363,26 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
               )}
             </div>
             
-            {/* Image Preview */}
+            {/* Image/Carousel Preview */}
             <div className="bg-gray-200 h-48 flex items-center justify-center">
-              {imagePreview ? (
+              {formData.adFormat === "carousel" && carouselCards.length > 0 ? (
+                <div className="w-full h-full overflow-x-auto flex">
+                  {carouselCards.map((card, index) => (
+                    <div key={card.id} className="flex-shrink-0 w-full h-full relative">
+                      <img 
+                        src={card.imagePreview} 
+                        alt={`Carousel ${index + 1}`} 
+                        className="w-full h-full object-cover"
+                      />
+                      {carouselCards.length > 1 && (
+                        <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                          {index + 1}/{carouselCards.length}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : formData.adFormat === "single" && imagePreview ? (
                 <img 
                   src={imagePreview} 
                   alt="Ad preview" 
@@ -253,23 +391,44 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
               ) : (
                 <div className="text-gray-500 text-center">
                   <Upload className="w-8 h-8 mx-auto mb-2" />
-                  <p className="text-sm">Image Preview</p>
+                  <p className="text-sm">
+                    {formData.adFormat === "carousel" ? "Carousel Preview" : "Image Preview"}
+                  </p>
                 </div>
               )}
             </div>
             
             {/* Link Preview */}
             <div className="p-3 bg-gray-50 border-t">
-              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                {formData.adLinkUrl || "your-website.com"}
-              </div>
-              <div className="font-semibold text-sm text-gray-900">
-                {formData.heading || "Your Headline Here"}
-              </div>
-              {formData.description && (
-                <div className="text-sm text-gray-600 mt-1">
-                  {formData.description}
-                </div>
+              {formData.adFormat === "carousel" && carouselCards.length > 0 ? (
+                // Show first carousel card's details or default
+                <>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                    {carouselCards[0]?.url || formData.adLinkUrl || "your-website.com"}
+                  </div>
+                  <div className="font-semibold text-sm text-gray-900">
+                    {carouselCards[0]?.headline || formData.heading || "Your Headline Here"}
+                  </div>
+                  {(carouselCards[0]?.description || formData.description) && (
+                    <div className="text-sm text-gray-600 mt-1">
+                      {carouselCards[0]?.description || formData.description}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                    {formData.adLinkUrl || "your-website.com"}
+                  </div>
+                  <div className="font-semibold text-sm text-gray-900">
+                    {formData.heading || "Your Headline Here"}
+                  </div>
+                  {formData.description && (
+                    <div className="text-sm text-gray-600 mt-1">
+                      {formData.description}
+                    </div>
+                  )}
+                </>
               )}
               {formData.callToAction && (
                 <div className="mt-3">
@@ -326,6 +485,19 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Carousel Card Edit Modal */}
+      {editingCard && (
+        <CarouselCardEditModal
+          card={editingCard}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingCard(null);
+          }}
+          onSave={handleCarouselCardSave}
+        />
+      )}
     </div>
   );
 }

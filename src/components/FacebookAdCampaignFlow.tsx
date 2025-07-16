@@ -6,6 +6,15 @@ import { CampaignSetupStep } from "./campaign-flow/CampaignSetupStep";
 import { TargetAudienceStep } from "./campaign-flow/TargetAudienceStep";
 import { AdContentStep } from "./campaign-flow/AdContentStep";
 
+export interface CarouselCard {
+  id: string;
+  image: File;
+  imagePreview: string;
+  headline: string;
+  description: string;
+  url: string;
+}
+
 export interface CampaignData {
   // Campaign Setup
   adAccount?: string;
@@ -29,6 +38,7 @@ export interface CampaignData {
   description?: string;
   adFormat?: string;
   uploadedImage?: File | null;
+  carouselCards?: CarouselCard[];
   callToAction?: string;
 }
 
