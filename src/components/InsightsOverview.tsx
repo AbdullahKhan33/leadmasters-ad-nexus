@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Facebook, Instagram, Twitter, Linkedin, ChevronDown, Users, MessageSquare, Heart, Eye, MousePointer, BarChart3, UserCheck } from "lucide-react";
+import { PremiumLockCard } from "@/components/premium/PremiumLockCard";
+import { usePremium } from "@/contexts/PremiumContext";
+import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
+import { Facebook, Instagram, Twitter, Linkedin, ChevronDown, Users, MessageSquare, Heart, Eye, MousePointer, BarChart3, UserCheck, Lock } from "lucide-react";
 
 // Platform Navigation Component (matching AdPlatformMenu style)
 const platforms = [
@@ -18,10 +21,17 @@ interface InsightsPlatformMenuProps {
   onPlatformChange?: (platformId: string) => void;
 }
 
-function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange }: InsightsPlatformMenuProps) {
+function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange, onUpgradeClick }: InsightsPlatformMenuProps & { onUpgradeClick: (feature: string) => void }) {
   const [selectedPlatform, setSelectedPlatform] = useState(activePlatform);
+  const { isPremium } = usePremium();
 
   const handlePlatformClick = (platformId: string) => {
+    // Check if platform requires premium
+    if ((platformId === 'instagram' || platformId === 'linkedin') && !isPremium) {
+      onUpgradeClick(platformId === 'instagram' ? 'Instagram Insights' : 'LinkedIn Insights');
+      return;
+    }
+    
     setSelectedPlatform(platformId);
     onPlatformChange?.(platformId);
   };
@@ -31,13 +41,14 @@ function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange }:
       <div className="flex items-center space-x-2">
         {platforms.map((platform) => {
           const isActive = selectedPlatform === platform.id;
+          const isLocked = (platform.id === 'instagram' || platform.id === 'linkedin') && !isPremium;
           const isImplemented = true;
           
           return (
             <Button
               key={platform.name}
               variant="ghost"
-              onClick={() => isImplemented && handlePlatformClick(platform.id)}
+              onClick={() => handlePlatformClick(platform.id)}
               disabled={!isImplemented}
               className={`
                 px-5 py-2 rounded-full transition-all duration-200 ease-out flex items-center space-x-2.5 relative group cursor-pointer
@@ -51,6 +62,7 @@ function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange }:
             >
               <platform.icon className={`w-4 h-4 transition-colors duration-200 ${isActive ? 'text-white' : ''}`} />
               <span className="text-sm transition-colors duration-200">{platform.name}</span>
+              {isLocked && <Lock className="w-3 h-3 ml-1" />}
               {isActive && (
                 <div className="absolute -bottom-0.5 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-white rounded-full shadow-sm" />
               )}
@@ -1463,6 +1475,17 @@ const OverviewInsights = () => {
 
 export function InsightsOverview() {
   const [selectedPlatform, setSelectedPlatform] = useState("overview");
+  const { isPremium, setIsPremium } = usePremium();
+  const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
+
+  const handleUpgradeClick = (feature: string) => {
+    setUpgradeModal({ isOpen: true, feature });
+  };
+
+  const handleUpgrade = () => {
+    setIsPremium(true);
+    setUpgradeModal({ isOpen: false, feature: "" });
+  };
 
   const handlePlatformChange = (platformId: string) => {
     setSelectedPlatform(platformId);
@@ -1475,10 +1498,34 @@ export function InsightsOverview() {
       case 'facebook':
         return <FacebookInsights />;
       case 'instagram':
+        if (!isPremium) {
+          return (
+            <div className="p-8">
+              <PremiumLockCard
+                title="Instagram Insights - Premium Feature"
+                description="Access detailed Instagram analytics, engagement metrics, and performance insights with our Premium plan."
+                onUpgrade={() => handleUpgradeClick("Instagram Insights")}
+                className="max-w-2xl mx-auto"
+              />
+            </div>
+          );
+        }
         return <InstagramInsights />;
       case 'threads':
         return <ThreadsInsights />;
       case 'linkedin':
+        if (!isPremium) {
+          return (
+            <div className="p-8">
+              <PremiumLockCard
+                title="LinkedIn Insights - Premium Feature"
+                description="Get comprehensive LinkedIn analytics, professional network insights, and business performance metrics with Premium."
+                onUpgrade={() => handleUpgradeClick("LinkedIn Insights")}
+                className="max-w-2xl mx-auto"
+              />
+            </div>
+          );
+        }
         return <LinkedInInsights />;
       default:
         return <OverviewInsights />;
@@ -1489,11 +1536,19 @@ export function InsightsOverview() {
     <div className="flex-1 flex flex-col min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50/30">
       <InsightsPlatformMenu 
         activePlatform={selectedPlatform} 
-        onPlatformChange={handlePlatformChange} 
+        onPlatformChange={handlePlatformChange}
+        onUpgradeClick={handleUpgradeClick}
       />
       <div className="flex-1">
         {renderPlatformInsights()}
       </div>
+      
+      <PremiumUpgradeModal
+        isOpen={upgradeModal.isOpen}
+        onClose={() => setUpgradeModal({ isOpen: false, feature: "" })}
+        feature={upgradeModal.feature}
+        onUpgrade={handleUpgrade}
+      />
     </div>
   );
 }
