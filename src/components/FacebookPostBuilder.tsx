@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FacebookIntegrationDialog } from "./FacebookIntegrationDialog";
 import { useSocialIntegration } from "@/hooks/useSocialIntegration";
 import { useToast } from "@/hooks/use-toast";
+import { useSegments } from "@/hooks/useSegments";
 import {
   ArrowRight,
   Calendar,
@@ -49,20 +50,16 @@ export function FacebookPostBuilder() {
   const [showIntegrationDialog, setShowIntegrationDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState('');
+  
+  const { segments } = useSegments();
 
   const postTypes = [
     { value: 'post', label: 'Post', icon: FileText, emoji: '📝' },
     { value: 'reel', label: 'Reel', icon: Video, emoji: '🎬' }
   ];
 
-  const audiences = [
-    'Students',
-    'Business Owners',
-    'Job Seekers',
-    'Entrepreneurs',
-    'Marketing Professionals',
-    'Small Business Owners'
-  ];
+  // Convert segments to audience options
+  const audiences = segments.map(segment => segment.name);
 
   const pages = [
     'LeadMasters AI',
