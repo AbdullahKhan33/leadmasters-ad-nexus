@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useSegments } from '@/hooks/useSegments';
 
 interface CampaignConfigurationProps {
   onBack: () => void;
@@ -15,24 +16,23 @@ interface CampaignConfigurationProps {
 interface CampaignData {
   campaignName: string;
   sendToAllContacts: boolean;
-  selectedCategories: string[];
+  selectedSegments: string[];
   selectedLists: string[];
 }
 
 export function CampaignConfiguration({ onBack, onSubmit }: CampaignConfigurationProps) {
   const [campaignName, setCampaignName] = useState("");
   const [sendToAllContacts, setSendToAllContacts] = useState<string>("yes");
-  const [selectedCategories, setSelectedCategories] = useState<string>("");
+  const [selectedSegments, setSelectedSegments] = useState<string>("");
   const [selectedLists, setSelectedLists] = useState<string>("");
   const { toast } = useToast();
-
-  // Mock data for categories and lists
-  const categories = [
-    { value: "marketing", label: "Marketing" },
-    { value: "transactional", label: "Transactional" },
-    { value: "reminder", label: "Reminder" },
-    { value: "promotional", label: "Promotional" },
-  ];
+  const { segments } = useSegments();
+  
+  // Convert segments to dropdown options
+  const segmentOptions = segments.map(segment => ({
+    value: segment.id,
+    label: segment.name
+  }));
 
   const lists = [
     { value: "customers", label: "All Customers" },
@@ -54,7 +54,7 @@ export function CampaignConfiguration({ onBack, onSubmit }: CampaignConfiguratio
     const campaignData: CampaignData = {
       campaignName: campaignName.trim(),
       sendToAllContacts: sendToAllContacts === "yes",
-      selectedCategories: selectedCategories ? [selectedCategories] : [],
+      selectedSegments: selectedSegments ? [selectedSegments] : [],
       selectedLists: selectedLists ? [selectedLists] : [],
     };
 
@@ -105,19 +105,19 @@ export function CampaignConfiguration({ onBack, onSubmit }: CampaignConfiguratio
             </RadioGroup>
           </div>
 
-          {/* Select Categories */}
+          {/* Select Segments */}
           <div className="space-y-2">
             <Label className="text-base font-medium text-gray-900">
-              Select Categories:
+              Select Audience Segment:
             </Label>
-            <Select value={selectedCategories} onValueChange={setSelectedCategories}>
+            <Select value={selectedSegments} onValueChange={setSelectedSegments}>
               <SelectTrigger className="h-12 text-base">
-                <SelectValue placeholder="Select categories" />
+                <SelectValue placeholder="Select segment" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.value} value={category.value}>
-                    {category.label}
+                {segmentOptions.map((segment) => (
+                  <SelectItem key={segment.value} value={segment.value}>
+                    {segment.label}
                   </SelectItem>
                 ))}
               </SelectContent>
