@@ -99,10 +99,19 @@ const mockSegments: CustomSegment[] = [
 ];
 
 export function useSegments() {
-  const [segments, setSegments] = useState<CustomSegment[]>(mockSegments);
+  const [segments, setSegments] = useState<CustomSegment[]>(() => {
+    // Load segments from localStorage on initialization
+    const savedSegments = localStorage.getItem('custom-segments');
+    return savedSegments ? JSON.parse(savedSegments) : mockSegments;
+  });
   const [templates] = useState<SegmentTemplate[]>(SEGMENT_TEMPLATES);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Save segments to localStorage whenever segments change
+  useEffect(() => {
+    localStorage.setItem('custom-segments', JSON.stringify(segments));
+  }, [segments]);
 
   // Simulate API loading
   useEffect(() => {
