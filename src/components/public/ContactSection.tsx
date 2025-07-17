@@ -261,17 +261,6 @@ export function ContactSection() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-orange-100 rounded-lg p-3">
-                    <MapPin className="w-6 h-6 text-orange-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Dubai Office</h4>
-                    <p className="text-gray-600">IFZA, Technohub 1</p>
-                    <p className="text-gray-600">Dubai Silicon Oasis, Dubai, UAE</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
                   <div className="bg-indigo-100 rounded-lg p-3">
                     <MapPin className="w-6 h-6 text-indigo-600" />
                   </div>
@@ -280,6 +269,17 @@ export function ContactSection() {
                     <p className="text-gray-600">Spellbound Towers, Plot No 147, OUT Colony</p>
                     <p className="text-gray-600">Hightension Road, Sainikpuri</p>
                     <p className="text-gray-600">Hyderabad Telangana 500094</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-4">
+                  <div className="bg-orange-100 rounded-lg p-3">
+                    <MapPin className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">Dubai Office</h4>
+                    <p className="text-gray-600">IFZA, Technohub 1</p>
+                    <p className="text-gray-600">Dubai Silicon Oasis, Dubai, UAE</p>
                   </div>
                 </div>
               </div>
