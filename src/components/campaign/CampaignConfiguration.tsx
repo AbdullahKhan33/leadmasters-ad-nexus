@@ -15,24 +15,25 @@ interface CampaignConfigurationProps {
 
 interface CampaignData {
   campaignName: string;
-  sendToAllContacts: boolean;
-  selectedSegments: string[];
+  selectedAudience: string;
   selectedLists: string[];
 }
 
 export function CampaignConfiguration({ onBack, onSubmit }: CampaignConfigurationProps) {
   const [campaignName, setCampaignName] = useState("");
-  const [sendToAllContacts, setSendToAllContacts] = useState<string>("yes");
-  const [selectedSegments, setSelectedSegments] = useState<string>("");
+  const [selectedAudience, setSelectedAudience] = useState<string>("all_contacts");
   const [selectedLists, setSelectedLists] = useState<string>("");
   const { toast } = useToast();
   const { segments } = useSegments();
   
-  // Convert segments to dropdown options
-  const segmentOptions = segments.map(segment => ({
-    value: segment.id,
-    label: segment.name
-  }));
+  // Create audience options with "All Contacts" plus custom segments
+  const audienceOptions = [
+    { value: "all_contacts", label: "All Contacts" },
+    ...segments.map(segment => ({
+      value: segment.id,
+      label: segment.name
+    }))
+  ];
 
   const lists = [
     { value: "customers", label: "All Customers" },
@@ -53,8 +54,7 @@ export function CampaignConfiguration({ onBack, onSubmit }: CampaignConfiguratio
 
     const campaignData: CampaignData = {
       campaignName: campaignName.trim(),
-      sendToAllContacts: sendToAllContacts === "yes",
-      selectedSegments: selectedSegments ? [selectedSegments] : [],
+      selectedAudience: selectedAudience,
       selectedLists: selectedLists ? [selectedLists] : [],
     };
 
@@ -84,44 +84,28 @@ export function CampaignConfiguration({ onBack, onSubmit }: CampaignConfiguratio
             />
           </div>
 
-          {/* Send to All Contacts */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium text-gray-900">
-              Send to All Contacts:
-            </Label>
-            <RadioGroup 
-              value={sendToAllContacts} 
-              onValueChange={setSendToAllContacts}
-              className="flex space-x-6"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="yes" id="yes" />
-                <Label htmlFor="yes" className="text-gray-700 font-normal">Yes</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="no" id="no" />
-                <Label htmlFor="no" className="text-gray-700 font-normal">No</Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          {/* Select Segments */}
+          {/* Select Audience */}
           <div className="space-y-2">
             <Label className="text-base font-medium text-gray-900">
-              Select Audience Segment:
+              Select Audience:
             </Label>
-            <Select value={selectedSegments} onValueChange={setSelectedSegments}>
+            <Select value={selectedAudience} onValueChange={setSelectedAudience}>
               <SelectTrigger className="h-12 text-base">
-                <SelectValue placeholder="Select segment" />
+                <SelectValue placeholder="Select audience" />
               </SelectTrigger>
-              <SelectContent>
-                {segmentOptions.map((segment) => (
-                  <SelectItem key={segment.value} value={segment.value}>
-                    {segment.label}
+              <SelectContent className="bg-white z-50">
+                {audienceOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {selectedAudience !== "all_contacts" && (
+              <p className="text-sm text-gray-600">
+                Selected segment: {audienceOptions.find(opt => opt.value === selectedAudience)?.label}
+              </p>
+            )}
           </div>
 
           {/* Select Lists */}
