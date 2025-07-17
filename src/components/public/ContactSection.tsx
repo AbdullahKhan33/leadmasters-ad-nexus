@@ -126,7 +126,7 @@ export function ContactSection() {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 h-fit">
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Send us a Message</h3>
               <p className="text-gray-600">Fill out the form below and we'll get back to you within 4 hours.</p>
