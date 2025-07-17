@@ -107,18 +107,18 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
     });
   };
 
-  const handleGalleryImageSelect = (galleryImage: any) => {
-    const newCard: CarouselCard = {
-      id: `card-${Date.now()}`,
+  const handleGalleryImagesSelect = (galleryImages: any[]) => {
+    const newCards: CarouselCard[] = galleryImages.map((galleryImage, index) => ({
+      id: `card-${Date.now()}-${index}`,
       image: galleryImage.file || null,
       imagePreview: galleryImage.url,
       headline: "",
       description: "",
       url: ""
-    };
+    }));
     
     setCarouselCards(prev => {
-      const updated = [...prev, newCard];
+      const updated = [...prev, ...newCards];
       onUpdate({ carouselCards: updated });
       return updated;
     });
@@ -571,7 +571,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
       <FacebookAdGallery
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
-        onSelectImage={handleGalleryImageSelect}
+        onSelectImages={handleGalleryImagesSelect}
       />
     </div>
   );

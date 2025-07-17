@@ -23,12 +23,12 @@ interface GalleryImage {
 interface FacebookAdGalleryProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectImage: (image: GalleryImage) => void;
+  onSelectImages: (images: GalleryImage[]) => void;
 }
 
-export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAdGalleryProps) {
+export function FacebookAdGallery({ isOpen, onClose, onSelectImages }: FacebookAdGalleryProps) {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>(mockGalleryImages);
-  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [selectedImageIds, setSelectedImageIds] = useState<string[]>([]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -44,7 +44,7 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
       };
       
       setGalleryImages(prev => [...prev, newImage]);
-      setSelectedImageId(newImage.id);
+      setSelectedImageIds(prev => [...prev, newImage.id]);
     };
     reader.readAsDataURL(file);
     
@@ -52,15 +52,21 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
     event.target.value = '';
   };
 
-  const handleSelectImage = () => {
-    if (!selectedImageId) return;
+  const handleToggleImageSelection = (imageId: string) => {
+    setSelectedImageIds(prev => 
+      prev.includes(imageId) 
+        ? prev.filter(id => id !== imageId)
+        : [...prev, imageId]
+    );
+  };
+
+  const handleSelectImages = () => {
+    if (selectedImageIds.length === 0) return;
     
-    const selectedImage = galleryImages.find(img => img.id === selectedImageId);
-    if (selectedImage) {
-      onSelectImage(selectedImage);
-      onClose();
-      setSelectedImageId(null);
-    }
+    const selectedImages = galleryImages.filter(img => selectedImageIds.includes(img.id));
+    onSelectImages(selectedImages);
+    onClose();
+    setSelectedImageIds([]);
   };
 
   return (
@@ -102,11 +108,11 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
                 <div
                   key={image.id}
                   className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImageId === image.id
+                    selectedImageIds.includes(image.id)
                       ? "border-purple-500 ring-2 ring-purple-200"
                       : "border-gray-200 hover:border-gray-300"
                   }`}
-                  onClick={() => setSelectedImageId(image.id)}
+                  onClick={() => handleToggleImageSelection(image.id)}
                 >
                   <img
                     src={image.url}
@@ -115,7 +121,7 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
                   />
                   
                   {/* Selected Indicator */}
-                  {selectedImageId === image.id && (
+                  {selectedImageIds.includes(image.id) && (
                     <div className="absolute inset-0 bg-purple-500/20 flex items-center justify-center">
                       <div className="bg-purple-500 text-white rounded-full p-1">
                         <Check className="w-4 h-4" />
@@ -143,11 +149,11 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
               Cancel
             </Button>
             <Button
-              onClick={handleSelectImage}
-              disabled={!selectedImageId}
+              onClick={handleSelectImages}
+              disabled={selectedImageIds.length === 0}
               className="bg-purple-600 hover:bg-purple-700 text-white"
             >
-              Select Image
+              Select Images ({selectedImageIds.length})
             </Button>
           </div>
         </div>
