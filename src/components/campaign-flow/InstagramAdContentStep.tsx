@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Save, ArrowLeft, Upload, Eye, Instagram } from "lucide-react";
+import { Save, ArrowLeft, Upload, Eye, Instagram, Globe, MessageCircle } from "lucide-react";
 import { InstagramCampaignData } from "../InstagramAdCampaignFlow";
 
 interface InstagramAdContentStepProps {
@@ -19,16 +19,25 @@ interface InstagramAdContentStepProps {
 export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdContentStepProps) {
   const [formData, setFormData] = useState({
     primaryText: data.primaryText || "",
-    adLinkUrl: data.adLinkUrl || "",
     heading: data.heading || "",
     description: data.description || "",
     adFormat: data.adFormat || "single",
-    callToAction: data.callToAction || ""
+    callToAction: data.callToAction || "",
+    selectedChannel: data.selectedChannel || "website",
+    websiteUrl: data.websiteUrl || "",
+    whatsappNumber: data.whatsappNumber || "",
+    instagramHandle: data.instagramHandle || ""
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
+    setFormData(newData);
+    onUpdate(newData);
+  };
+
+  const handleChannelChange = (channel: 'website' | 'whatsapp' | 'instagram') => {
+    const newData = { ...formData, selectedChannel: channel };
     setFormData(newData);
     onUpdate(newData);
   };
@@ -47,8 +56,13 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
   };
 
   const isFormValid = () => {
+    const channelFieldValid = 
+      (formData.selectedChannel === 'website' && formData.websiteUrl) ||
+      (formData.selectedChannel === 'whatsapp' && formData.whatsappNumber) ||
+      (formData.selectedChannel === 'instagram' && formData.instagramHandle);
+    
     return formData.primaryText && 
-           formData.adLinkUrl && 
+           channelFieldValid && 
            formData.heading && 
            formData.callToAction;
   };
@@ -59,6 +73,28 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
 
   const saveDraft = () => {
     console.log("Saving Instagram draft:", formData);
+  };
+
+  const getChannelInfo = () => {
+    switch (formData.selectedChannel) {
+      case 'website':
+        return {
+          url: formData.websiteUrl,
+          displayText: formData.websiteUrl ? new URL(formData.websiteUrl).hostname : "your-website.com"
+        };
+      case 'whatsapp':
+        return {
+          url: `https://wa.me/${formData.whatsappNumber.replace(/[^\d]/g, '')}`,
+          displayText: formData.whatsappNumber || "WhatsApp"
+        };
+      case 'instagram':
+        return {
+          url: `https://instagram.com/${formData.instagramHandle}`,
+          displayText: formData.instagramHandle ? `@${formData.instagramHandle}` : "@your_handle"
+        };
+      default:
+        return { url: "", displayText: "" };
+    }
   };
 
   return (
@@ -85,19 +121,106 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
               </div>
             </div>
 
-            {/* Ad Link URL */}
-            <div className="space-y-2">
-              <Label htmlFor="adLinkUrl" className="text-sm font-medium text-gray-700">
-                Website URL *
+            {/* Channel Selection */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-gray-700">
+                Choose Channel
               </Label>
-              <Input
-                id="adLinkUrl"
-                type="url"
-                value={formData.adLinkUrl}
-                onChange={(e) => handleChange("adLinkUrl", e.target.value)}
-                placeholder="https://your-website.com"
-              />
+              <div className="flex space-x-3">
+                <Button
+                  type="button"
+                  variant={formData.selectedChannel === 'website' ? 'default' : 'outline'}
+                  onClick={() => handleChannelChange('website')}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 ${
+                    formData.selectedChannel === 'website' 
+                      ? 'bg-blue-500 hover:bg-blue-600 text-white border-blue-500' 
+                      : 'border-gray-300 text-gray-700 hover:border-blue-400'
+                  }`}
+                >
+                  <Globe className="w-5 h-5" />
+                  <span>Website</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={formData.selectedChannel === 'whatsapp' ? 'default' : 'outline'}
+                  onClick={() => handleChannelChange('whatsapp')}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 ${
+                    formData.selectedChannel === 'whatsapp' 
+                      ? 'bg-green-500 hover:bg-green-600 text-white border-green-500' 
+                      : 'border-gray-300 text-gray-700 hover:border-green-400'
+                  }`}
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  <span>WhatsApp</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={formData.selectedChannel === 'instagram' ? 'default' : 'outline'}
+                  onClick={() => handleChannelChange('instagram')}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 ${
+                    formData.selectedChannel === 'instagram' 
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-purple-500' 
+                      : 'border-gray-300 text-gray-700 hover:border-purple-400'
+                  }`}
+                >
+                  <Instagram className="w-5 h-5" />
+                  <span>Instagram</span>
+                </Button>
+              </div>
+              
+              {/* Channel-specific input */}
+              {formData.selectedChannel === 'website' && (
+                <div className="space-y-2">
+                  <Label htmlFor="websiteUrl" className="text-sm font-medium text-gray-700">
+                    Website URL *
+                  </Label>
+                  <Input
+                    id="websiteUrl"
+                    type="url"
+                    value={formData.websiteUrl}
+                    onChange={(e) => handleChange("websiteUrl", e.target.value)}
+                    placeholder="https://your-website.com"
+                  />
+                </div>
+              )}
+              
+              {formData.selectedChannel === 'whatsapp' && (
+                <div className="space-y-2">
+                  <Label htmlFor="whatsappNumber" className="text-sm font-medium text-gray-700">
+                    WhatsApp Number *
+                  </Label>
+                  <Input
+                    id="whatsappNumber"
+                    type="tel"
+                    value={formData.whatsappNumber}
+                    onChange={(e) => handleChange("whatsappNumber", e.target.value)}
+                    placeholder="+1234567890"
+                  />
+                </div>
+              )}
+              
+              {formData.selectedChannel === 'instagram' && (
+                <div className="space-y-2">
+                  <Label htmlFor="instagramHandle" className="text-sm font-medium text-gray-700">
+                    Instagram Handle *
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-500">
+                      @
+                    </div>
+                    <Input
+                      id="instagramHandle"
+                      value={formData.instagramHandle}
+                      onChange={(e) => handleChange("instagramHandle", e.target.value)}
+                      placeholder="bot_campus_ai"
+                      className="pl-8"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Remove the old Ad Link URL field - replaced by channel-specific inputs */}
 
             {/* Heading */}
             <div className="space-y-2">
@@ -262,10 +385,10 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
               )}
               
               {/* Link Preview */}
-              {formData.adLinkUrl && (
+              {getChannelInfo().url && (
                 <div className="border rounded-lg p-3 bg-gray-50 mt-3">
                   <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
-                    {formData.adLinkUrl || "your-website.com"}
+                    {getChannelInfo().displayText}
                   </div>
                   <div className="font-semibold text-sm text-gray-900">
                     {formData.heading || "Your Headline Here"}

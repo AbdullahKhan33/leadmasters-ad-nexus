@@ -28,8 +28,14 @@ export interface InstagramCampaignData {
   heading?: string;
   description?: string;
   adFormat?: string;
-  uploadedImage?: File | null;
   callToAction?: string;
+  uploadedImage?: File | null;
+  
+  // Channel Selection
+  selectedChannel?: 'website' | 'whatsapp' | 'instagram';
+  websiteUrl?: string;
+  whatsappNumber?: string;
+  instagramHandle?: string;
 }
 
 export function InstagramAdCampaignFlow() {
