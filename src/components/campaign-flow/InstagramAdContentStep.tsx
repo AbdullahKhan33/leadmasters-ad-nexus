@@ -98,10 +98,11 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Form Section */}
-      <Card className="border border-gray-200 shadow-sm bg-white">
-        <CardContent className="p-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Form Section - Takes 2/3 of the space */}
+      <div className="lg:col-span-2">
+        <Card className="border border-gray-200 shadow-sm bg-white">
+          <CardContent className="p-8">
           <div className="space-y-6">
             {/* Primary Text */}
             <div className="space-y-2">
@@ -335,9 +336,11 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
           </div>
         </CardContent>
       </Card>
+      </div>
 
       {/* Live Preview Panel */}
-      <Card className="border border-gray-200 shadow-sm bg-white">
+      <div className="lg:col-span-1">
+        <Card className="border border-gray-200 shadow-sm bg-white">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
@@ -417,10 +420,11 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
             </p>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
 
-      {/* Fixed Bottom Actions */}
-      <div className="lg:col-span-2 mt-8">
+      {/* Fixed Bottom Actions - Full width */}
+      <div className="lg:col-span-3 mt-8">
         <Card className="border border-gray-200 shadow-sm bg-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
