@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Eye, Edit, Copy, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { CampaignRecipientsDialog } from "./CampaignRecipientsDialog";
 
 interface Campaign {
   id: string;
@@ -70,6 +71,18 @@ const sampleCampaigns: Campaign[] = [
 
 export function CampaignManager({ onBack }: CampaignManagerProps) {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleRowClick = (campaign: Campaign) => {
+    setSelectedCampaign(campaign);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedCampaign(null);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -168,6 +181,7 @@ export function CampaignManager({ onBack }: CampaignManagerProps) {
                       className="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200 cursor-pointer group"
                       onMouseEnter={() => setHoveredRow(campaign.id)}
                       onMouseLeave={() => setHoveredRow(null)}
+                      onClick={() => handleRowClick(campaign)}
                     >
                       <td className="p-4 text-sm text-gray-900 font-medium">{campaign.name}</td>
                       <td className="p-4 text-sm text-gray-600">{campaign.templateName}</td>
@@ -238,6 +252,17 @@ export function CampaignManager({ onBack }: CampaignManagerProps) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Campaign Recipients Dialog */}
+      {selectedCampaign && (
+        <CampaignRecipientsDialog
+          isOpen={isDialogOpen}
+          onClose={handleCloseDialog}
+          campaignName={selectedCampaign.name}
+          campaignId={selectedCampaign.id}
+          totalRecipients={selectedCampaign.allContacts}
+        />
+      )}
     </div>
   );
 }
