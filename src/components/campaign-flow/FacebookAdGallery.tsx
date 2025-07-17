@@ -65,16 +65,16 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden">
+      <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-gray-900">
             Facebook Ad Gallery
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col flex-1 overflow-hidden">
           {/* Upload Section */}
-          <div className="mb-6">
+          <div className="mb-6 flex-shrink-0">
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-purple-400 transition-colors">
               <input
                 type="file"
@@ -95,9 +95,9 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
             </div>
           </div>
 
-          {/* Gallery Grid */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="grid grid-cols-3 gap-4">
+          {/* Gallery Grid - Scrollable */}
+          <div className="flex-1 overflow-y-auto pr-2">
+            <div className="grid grid-cols-3 gap-4 pb-4">
               {galleryImages.map((image) => (
                 <div
                   key={image.id}
@@ -134,8 +134,8 @@ export function FacebookAdGallery({ isOpen, onClose, onSelectImage }: FacebookAd
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-end space-x-3 mt-6 pt-4 border-t">
+          {/* Action Buttons - Fixed at bottom */}
+          <div className="flex-shrink-0 flex justify-end space-x-3 mt-4 pt-4 border-t bg-white">
             <Button
               variant="outline"
               onClick={onClose}
