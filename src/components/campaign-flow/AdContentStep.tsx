@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Save, ArrowLeft, Upload, Eye, Edit2, Trash2, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { CampaignData, CarouselCard } from "../FacebookAdCampaignFlow";
 import { CarouselCardEditModal } from "./CarouselCardEditModal";
+import { FacebookAdGallery } from "./FacebookAdGallery";
 
 interface AdContentStepProps {
   data: CampaignData;
@@ -31,6 +32,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
   const [editingCard, setEditingCard] = useState<CarouselCard | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -100,6 +102,23 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
   const handleCarouselCardDelete = (cardId: string) => {
     setCarouselCards(prev => {
       const updated = prev.filter(card => card.id !== cardId);
+      onUpdate({ carouselCards: updated });
+      return updated;
+    });
+  };
+
+  const handleGalleryImageSelect = (galleryImage: any) => {
+    const newCard: CarouselCard = {
+      id: `card-${Date.now()}`,
+      image: galleryImage.file || null,
+      imagePreview: galleryImage.url,
+      headline: "",
+      description: "",
+      url: ""
+    };
+    
+    setCarouselCards(prev => {
+      const updated = [...prev, newCard];
       onUpdate({ carouselCards: updated });
       return updated;
     });
@@ -217,29 +236,48 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
             {/* Image Upload */}
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
-                {formData.adFormat === "carousel" ? "Upload Carousel Images" : "Upload Image"}
+                {formData.adFormat === "carousel" ? "Add Carousel Images" : "Upload Image"}
               </Label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
-                <input
-                  type="file"
-                  id="imageUpload"
-                  accept="image/*"
-                  multiple={formData.adFormat === "carousel"}
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-                <label htmlFor="imageUpload" className="cursor-pointer">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">
-                    {formData.adFormat === "carousel" 
-                      ? "Click to upload multiple images or drag and drop"
-                      : "Click to upload or drag and drop"}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG up to 10MB {formData.adFormat === "carousel" ? "each" : ""}
-                  </p>
-                </label>
-              </div>
+              
+              {formData.adFormat === "carousel" ? (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsGalleryOpen(true)}
+                    className="w-full h-full flex flex-col items-center space-y-2 border-none hover:bg-transparent"
+                  >
+                    <Upload className="w-8 h-8 text-gray-400" />
+                    <div>
+                      <p className="text-sm text-gray-600">
+                        Choose from gallery or upload new images
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        PNG, JPG up to 10MB each
+                      </p>
+                    </div>
+                  </Button>
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                  <input
+                    type="file"
+                    id="imageUpload"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <label htmlFor="imageUpload" className="cursor-pointer">
+                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600">
+                      Click to upload or drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      PNG, JPG up to 10MB
+                    </p>
+                  </label>
+                </div>
+              )}
               
               {/* Single Image Upload Status */}
               {formData.adFormat === "single" && data.uploadedImage && (
@@ -259,7 +297,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => document.getElementById('imageUpload')?.click()}
+                      onClick={() => setIsGalleryOpen(true)}
                       className="flex items-center space-x-1"
                     >
                       <Plus className="w-4 h-4" />
@@ -528,6 +566,13 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
           onSave={handleCarouselCardSave}
         />
       )}
+
+      {/* Facebook Ad Gallery Modal */}
+      <FacebookAdGallery
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+        onSelectImage={handleGalleryImageSelect}
+      />
     </div>
   );
 }
