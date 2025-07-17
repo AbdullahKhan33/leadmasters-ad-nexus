@@ -131,7 +131,7 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
                   type="button"
                   variant={formData.selectedChannel === 'website' ? 'default' : 'outline'}
                   onClick={() => handleChannelChange('website')}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 ${
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 h-12 ${
                     formData.selectedChannel === 'website' 
                       ? 'bg-blue-500 hover:bg-blue-600 text-white border-blue-500' 
                       : 'border-gray-300 text-gray-700 hover:border-blue-400'
@@ -144,7 +144,7 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
                   type="button"
                   variant={formData.selectedChannel === 'whatsapp' ? 'default' : 'outline'}
                   onClick={() => handleChannelChange('whatsapp')}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 ${
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 h-12 ${
                     formData.selectedChannel === 'whatsapp' 
                       ? 'bg-green-500 hover:bg-green-600 text-white border-green-500' 
                       : 'border-gray-300 text-gray-700 hover:border-green-400'
@@ -157,7 +157,7 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
                   type="button"
                   variant={formData.selectedChannel === 'instagram' ? 'default' : 'outline'}
                   onClick={() => handleChannelChange('instagram')}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 ${
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 h-12 ${
                     formData.selectedChannel === 'instagram' 
                       ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-purple-500' 
                       : 'border-gray-300 text-gray-700 hover:border-purple-400'
