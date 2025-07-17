@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download, X } from "lucide-react";
+import { Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface Recipient {
@@ -135,19 +135,9 @@ export function CampaignRecipientsDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col">
         <DialogHeader className="flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-semibold">
-              Campaign Recipients - {campaignName}
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <DialogTitle className="text-xl font-semibold">
+            Campaign Recipients - {campaignName}
+          </DialogTitle>
           <div className="flex items-center justify-between pt-2">
             <p className="text-sm text-muted-foreground">
               Showing top 10 of {totalRecipients.toLocaleString()} recipients
