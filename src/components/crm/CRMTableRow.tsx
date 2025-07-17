@@ -18,14 +18,26 @@ interface Lead {
   aiNextAction?: string;
 }
 
+interface ColumnVisibility {
+  lead: boolean;
+  contact: boolean;
+  source: boolean;
+  status: boolean;
+  lastMessage: boolean;
+  aiScore: boolean;
+  aiNextAction: boolean;
+  actions: boolean;
+}
+
 interface CRMTableRowProps {
   lead: Lead;
   canShowAIScore: boolean;
   canShowAIActions: boolean;
   onUpgradeClick: (feature: string) => void;
+  visibleColumns: ColumnVisibility;
 }
 
-export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick }: CRMTableRowProps) {
+export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick, visibleColumns }: CRMTableRowProps) {
   const getScoreColor = (score: number) => {
     if (score >= 90) return "text-green-600 bg-green-100";
     if (score >= 75) return "text-orange-600 bg-orange-100";
@@ -47,97 +59,113 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
 
   return (
     <TableRow className="hover:bg-gray-50/50">
-      <TableCell className="px-6 py-4">
-        <div className="flex items-center space-x-3">
-          <Avatar className="w-8 h-8 flex-shrink-0">
-            <AvatarFallback className="bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 text-xs">
-              {lead.name.split(' ').map(n => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
+      {visibleColumns.lead && (
+        <TableCell className="px-6 py-4">
+          <div className="flex items-center space-x-3">
+            <Avatar className="w-8 h-8 flex-shrink-0">
+              <AvatarFallback className="bg-gradient-to-r from-blue-100 to-purple-100 text-purple-700 text-xs">
+                {lead.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <p className="font-medium text-gray-900 truncate">{lead.name}</p>
+              <p className="text-sm text-gray-500 truncate">{lead.timestamp}</p>
+            </div>
+          </div>
+        </TableCell>
+      )}
+      {visibleColumns.contact && (
+        <TableCell className="px-4 py-4">
           <div className="min-w-0">
-            <p className="font-medium text-gray-900 truncate">{lead.name}</p>
-            <p className="text-sm text-gray-500 truncate">{lead.timestamp}</p>
+            <p className="text-sm font-medium truncate">{lead.phone}</p>
+            <p className="text-xs text-gray-500 truncate">{lead.source}</p>
           </div>
-        </div>
-      </TableCell>
-      <TableCell className="px-4 py-4">
-        <div className="min-w-0">
-          <p className="text-sm font-medium truncate">{lead.phone}</p>
-          <p className="text-xs text-gray-500 truncate">{lead.source}</p>
-        </div>
-      </TableCell>
-      <TableCell className="px-4 py-4">
-        <Badge variant="outline" className="text-xs whitespace-nowrap">
-          {lead.source}
-        </Badge>
-      </TableCell>
-      <TableCell className="px-4 py-4">
-        {getStatusBadge(lead.status)}
-      </TableCell>
-      <TableCell className="px-4 py-4">
-        <p className="text-sm text-gray-900 truncate" title={lead.lastMessage}>
-          {lead.lastMessage}
-        </p>
-      </TableCell>
-      <TableCell className="px-4 py-4">
-        {canShowAIScore ? (
-          <div className="flex items-center space-x-2">
-            <div className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getScoreColor(lead.aiScore!)}`}>
-              {lead.aiScore}%
+        </TableCell>
+      )}
+      {visibleColumns.source && (
+        <TableCell className="px-4 py-4">
+          <Badge variant="outline" className="text-xs whitespace-nowrap">
+            {lead.source}
+          </Badge>
+        </TableCell>
+      )}
+      {visibleColumns.status && (
+        <TableCell className="px-4 py-4">
+          {getStatusBadge(lead.status)}
+        </TableCell>
+      )}
+      {visibleColumns.lastMessage && (
+        <TableCell className="px-4 py-4">
+          <p className="text-sm text-gray-900 truncate" title={lead.lastMessage}>
+            {lead.lastMessage}
+          </p>
+        </TableCell>
+      )}
+      {visibleColumns.aiScore && (
+        <TableCell className="px-4 py-4">
+          {canShowAIScore ? (
+            <div className="flex items-center space-x-2">
+              <div className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getScoreColor(lead.aiScore!)}`}>
+                {lead.aiScore}%
+              </div>
+              <PremiumBadge className="flex-shrink-0">AI Score</PremiumBadge>
             </div>
-            <PremiumBadge className="flex-shrink-0">AI Score</PremiumBadge>
-          </div>
-        ) : (
-          <div className="flex items-center space-x-2">
-            <div className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-400 whitespace-nowrap">
-              --
+          ) : (
+            <div className="flex items-center space-x-2">
+              <div className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-400 whitespace-nowrap">
+                --
+              </div>
+              <Button
+                onClick={() => onUpgradeClick("AI Lead Scoring")}
+                size="sm"
+                variant="ghost"
+                className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
+              >
+                Upgrade to unlock
+              </Button>
             </div>
-            <Button
-              onClick={() => onUpgradeClick("AI Lead Scoring")}
-              size="sm"
-              variant="ghost"
-              className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
-            >
-              Upgrade to unlock
+          )}
+        </TableCell>
+      )}
+      {visibleColumns.aiNextAction && (
+        <TableCell className="px-4 py-4">
+          {canShowAIActions ? (
+            <div className="min-w-0">
+              <p className="text-sm text-gray-900 mb-1 truncate" title={lead.aiNextAction}>
+                {lead.aiNextAction}
+              </p>
+              <PremiumBadge className="flex-shrink-0">AI Suggested</PremiumBadge>
+            </div>
+          ) : (
+            <div className="min-w-0">
+              <p className="text-sm text-gray-400 mb-1 whitespace-nowrap">Premium Only</p>
+              <Button
+                onClick={() => onUpgradeClick("AI Next Actions")}
+                size="sm"
+                variant="ghost"
+                className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
+              >
+                Upgrade
+              </Button>
+            </div>
+          )}
+        </TableCell>
+      )}
+      {visibleColumns.actions && (
+        <TableCell className="px-4 py-4">
+          <div className="flex items-center space-x-1">
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+              <MessageSquare className="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+              <Phone className="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+              <MoreHorizontal className="w-4 h-4" />
             </Button>
           </div>
-        )}
-      </TableCell>
-      <TableCell className="px-4 py-4">
-        {canShowAIActions ? (
-          <div className="min-w-0">
-            <p className="text-sm text-gray-900 mb-1 truncate" title={lead.aiNextAction}>
-              {lead.aiNextAction}
-            </p>
-            <PremiumBadge className="flex-shrink-0">AI Suggested</PremiumBadge>
-          </div>
-        ) : (
-          <div className="min-w-0">
-            <p className="text-sm text-gray-400 mb-1 whitespace-nowrap">Premium Only</p>
-            <Button
-              onClick={() => onUpgradeClick("AI Next Actions")}
-              size="sm"
-              variant="ghost"
-              className="text-xs text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-1 h-auto whitespace-nowrap"
-            >
-              Upgrade
-            </Button>
-          </div>
-        )}
-      </TableCell>
-      <TableCell className="px-4 py-4">
-        <div className="flex items-center space-x-1">
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-            <MessageSquare className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-            <Phone className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
-        </div>
-      </TableCell>
+        </TableCell>
+      )}
     </TableRow>
   );
 }

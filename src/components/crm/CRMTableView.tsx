@@ -85,10 +85,32 @@ const mockLeads: Lead[] = [
 
 export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [visibleColumns, setVisibleColumns] = useState({
+    lead: true,
+    contact: true,
+    source: true,
+    status: true,
+    lastMessage: true,
+    aiScore: true,
+    aiNextAction: true,
+    actions: true
+  });
   const { isPremium, premiumFeatures } = usePremium();
   
   const canShowAIScore = isPremium && premiumFeatures.aiLeadScoring;
   const canShowAIActions = isPremium && premiumFeatures.aiSuggestedTemplates;
+
+  const filteredLeads = mockLeads.filter((lead) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      lead.name.toLowerCase().includes(query) ||
+      lead.phone.toLowerCase().includes(query) ||
+      lead.source.toLowerCase().includes(query) ||
+      lead.status.toLowerCase().includes(query) ||
+      lead.lastMessage.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="h-full bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20 p-4 flex flex-col">
@@ -102,6 +124,8 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
           <CRMSearchBar 
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
+            visibleColumns={visibleColumns}
+            onColumnVisibilityChange={setVisibleColumns}
           />
         </div>
 
@@ -119,15 +143,17 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
                   <CRMTableHeader 
                     canShowAIScore={canShowAIScore}
                     canShowAIActions={canShowAIActions}
+                    visibleColumns={visibleColumns}
                   />
                   <TableBody>
-                    {mockLeads.map((lead) => (
+                    {filteredLeads.map((lead) => (
                       <CRMTableRow
                         key={lead.id}
                         lead={lead}
                         canShowAIScore={canShowAIScore}
                         canShowAIActions={canShowAIActions}
                         onUpgradeClick={onUpgradeClick}
+                        visibleColumns={visibleColumns}
                       />
                     ))}
                   </TableBody>
