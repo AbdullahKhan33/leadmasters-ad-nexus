@@ -25,6 +25,15 @@ export function WhatsAppCampaignBuilder({ onBack }: WhatsAppCampaignBuilderProps
   const [currentStep, setCurrentStep] = useState<'template-selection' | 'template-creation' | 'configure-campaign'>('template-selection');
   const [templates, setTemplates] = useState<Template[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
+
+  const handleCreateNewTemplate = async () => {
+    setIsCreatingTemplate(true);
+    // Simulate loading time for template creation initialization
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setCurrentStep('template-creation');
+    setIsCreatingTemplate(false);
+  };
 
   const handleTemplateCreated = (newTemplate: Template) => {
     setTemplates(prev => [...prev, newTemplate]);
@@ -106,8 +115,9 @@ export function WhatsAppCampaignBuilder({ onBack }: WhatsAppCampaignBuilderProps
             templates={templates}
             selectedTemplate={selectedTemplate}
             onTemplateSelect={handleTemplateSelected}
-            onCreateNewTemplate={() => setCurrentStep('template-creation')}
+            onCreateNewTemplate={handleCreateNewTemplate}
             onNext={handleNextStep}
+            isCreatingTemplate={isCreatingTemplate}
           />
         );
       case 'template-creation':

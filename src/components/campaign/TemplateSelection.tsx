@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Plus, Edit, Copy, Trash2 } from "lucide-react";
+import { FileText, Plus, Edit, Copy, Trash2, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 interface Template {
@@ -21,6 +21,7 @@ interface TemplateSelectionProps {
   onTemplateSelect: (template: Template) => void;
   onCreateNewTemplate: () => void;
   onNext: () => void;
+  isCreatingTemplate?: boolean;
 }
 
 // Sample data for demonstration
@@ -59,7 +60,8 @@ export function TemplateSelection({
   selectedTemplate,
   onTemplateSelect,
   onCreateNewTemplate,
-  onNext
+  onNext,
+  isCreatingTemplate = false
 }: TemplateSelectionProps) {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
   
@@ -109,10 +111,15 @@ export function TemplateSelection({
             </p>
             <Button 
               onClick={onCreateNewTemplate}
-              className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
+              disabled={isCreatingTemplate}
+              className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              Create a New Template
+              {isCreatingTemplate ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Plus className="w-4 h-4 mr-2" />
+              )}
+              {isCreatingTemplate ? 'Creating Template...' : 'Create a New Template'}
             </Button>
           </CardContent>
         </Card>
@@ -127,10 +134,15 @@ export function TemplateSelection({
         <Button 
           onClick={onCreateNewTemplate}
           variant="outline"
-          className="border-purple-200 text-purple-600 hover:bg-purple-50"
+          disabled={isCreatingTemplate}
+          className="border-purple-200 text-purple-600 hover:bg-purple-50 disabled:opacity-50"
         >
-          <Plus className="w-4 h-4 mr-2" />
-          Create a New Template
+          {isCreatingTemplate ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <Plus className="w-4 h-4 mr-2" />
+          )}
+          {isCreatingTemplate ? 'Creating Template...' : 'Create a New Template'}
         </Button>
       </div>
 
