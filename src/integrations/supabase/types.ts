@@ -18,11 +18,17 @@ export type Database = {
         Row: {
           ai_next_action: string | null
           ai_score: number | null
+          category: string | null
           created_at: string
+          email: string | null
           id: string
           last_message: string | null
+          list: string | null
           name: string
+          notes: string | null
           phone: string
+          reminder_date: string | null
+          reminder_note: string | null
           source: string
           status: string
           timestamp: string
@@ -32,11 +38,17 @@ export type Database = {
         Insert: {
           ai_next_action?: string | null
           ai_score?: number | null
+          category?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           last_message?: string | null
+          list?: string | null
           name: string
+          notes?: string | null
           phone: string
+          reminder_date?: string | null
+          reminder_note?: string | null
           source?: string
           status?: string
           timestamp?: string
@@ -46,11 +58,17 @@ export type Database = {
         Update: {
           ai_next_action?: string | null
           ai_score?: number | null
+          category?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           last_message?: string | null
+          list?: string | null
           name?: string
+          notes?: string | null
           phone?: string
+          reminder_date?: string | null
+          reminder_note?: string | null
           source?: string
           status?: string
           timestamp?: string

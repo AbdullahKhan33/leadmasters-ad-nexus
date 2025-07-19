@@ -3,18 +3,25 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Phone, MessageSquare, MoreHorizontal, Trash2 } from "lucide-react";
+import { Phone, MessageSquare, Trash2 } from "lucide-react";
 import { PremiumBadge } from "@/components/premium/PremiumBadge";
 import { useToast } from "@/hooks/use-toast";
+import { LeadActionsDropdown } from "./LeadActionsDropdown";
 
 interface Lead {
   id: string;
   name: string;
   phone: string;
+  email?: string;
   source: string;
   status: string;
+  list?: string;
+  category?: string;
   lastMessage: string;
   timestamp: string;
+  notes?: string;
+  reminderDate?: string;
+  reminderNote?: string;
   aiScore?: number;
   aiNextAction?: string;
 }
@@ -37,9 +44,10 @@ interface CRMTableRowProps {
   onUpgradeClick: (feature: string) => void;
   visibleColumns: ColumnVisibility;
   onDelete?: (leadId: string) => void;
+  onLeadUpdate?: (leadId: string, updates: Partial<Lead>) => void;
 }
 
-export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick, visibleColumns, onDelete }: CRMTableRowProps) {
+export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick, visibleColumns, onDelete, onLeadUpdate }: CRMTableRowProps) {
   const { toast } = useToast();
   const getScoreColor = (score: number) => {
     if (score >= 90) return "text-green-600 bg-green-100";
@@ -182,9 +190,12 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
             >
               <Trash2 className="w-4 h-4" />
             </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-              <MoreHorizontal className="w-4 h-4" />
-            </Button>
+            {onLeadUpdate && (
+              <LeadActionsDropdown 
+                lead={lead} 
+                onLeadUpdate={onLeadUpdate}
+              />
+            )}
           </div>
         </TableCell>
       )}

@@ -18,8 +18,11 @@ interface CSVImportModalProps {
 interface CSVLead {
   name: string;
   phone: string;
+  email?: string;
   source: string;
   status: string;
+  list?: string;
+  category?: string;
   last_message?: string;
 }
 
@@ -48,7 +51,7 @@ export function CSVImportModal({ isOpen, onClose, onImportComplete }: CSVImportM
     const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
     
     // Validate required headers
-    const requiredHeaders = ['name', 'phone'];
+    const requiredHeaders = ['name', 'phonenumber'];
     const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
     if (missingHeaders.length > 0) {
       throw new Error(`Missing required columns: ${missingHeaders.join(', ')}`);
@@ -60,9 +63,12 @@ export function CSVImportModal({ isOpen, onClose, onImportComplete }: CSVImportM
       if (values.length === headers.length && values[0]) {
         const lead: CSVLead = {
           name: values[headers.indexOf('name')] || '',
-          phone: values[headers.indexOf('phone')] || '',
+          phone: values[headers.indexOf('phonenumber')] || values[headers.indexOf('phone')] || '',
+          email: values[headers.indexOf('email')] || '',
           source: values[headers.indexOf('source')] || 'CSV Import',
           status: values[headers.indexOf('status')] || 'New',
+          list: values[headers.indexOf('list')] || 'general',
+          category: values[headers.indexOf('category')] || 'customer',
           last_message: values[headers.indexOf('last_message')] || values[headers.indexOf('lastmessage')] || ''
         };
         leads.push(lead);
@@ -142,12 +148,12 @@ export function CSVImportModal({ isOpen, onClose, onImportComplete }: CSVImportM
   };
 
   const downloadSampleCSV = () => {
-    const sampleData = `name,phone,source,status,last_message
-Ahmed Hassan,+971501234567,WhatsApp,New,Interested in premium package
-Fatima Al Zahra,+971509876543,Facebook,Active,Thank you for the proposal
-Mohammed Ali,+971501111222,Instagram,Awaiting Reply,Looking for social media manager
-Sara Al Rashid,+971502345678,Website,New,Need help with digital marketing
-Omar Abdullah,+971503456789,LinkedIn,Active,Interested in your services package`;
+    const sampleData = `name,phoneNumber,email,status,list,category
+Abdullah India,919739212829,ssadssaas@gmail.com,Subscribed,general,customer
+Abdullah Dubai,971525642081,abdullah@gmail.com,New,general,customer
+Ahmed Hassan,+971501234567,ahmed.hassan@gmail.com,Active,premium,lead
+Fatima Al Zahra,+971509876543,fatima.alzahra@gmail.com,New,general,customer
+Sara Al Rashid,+971502345678,sara.rashid@gmail.com,Awaiting Reply,vip,prospect`;
 
     const blob = new Blob([sampleData], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);

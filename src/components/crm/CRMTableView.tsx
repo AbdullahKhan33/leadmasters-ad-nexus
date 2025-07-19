@@ -15,10 +15,16 @@ interface Lead {
   id: string;
   name: string;
   phone: string;
+  email?: string;
   source: string;
   status: string;
+  list?: string;
+  category?: string;
   lastMessage: string;
   timestamp: string;
+  notes?: string;
+  reminderDate?: string;
+  reminderNote?: string;
   aiScore?: number;
   aiNextAction?: string;
 }
@@ -33,10 +39,14 @@ const mockLeads: Lead[] = [
     id: "1",
     name: "Ahmed Hassan",
     phone: "+971501234567",
+    email: "ahmed.hassan@gmail.com",
     source: "WhatsApp",
     status: "New",
+    list: "premium",
+    category: "customer",
     lastMessage: "Interested in premium package",
     timestamp: "2 mins ago",
+    notes: "Very interested in our services",
     aiScore: 95,
     aiNextAction: "Send pricing details within 1 hour"
   },
@@ -44,8 +54,11 @@ const mockLeads: Lead[] = [
     id: "2",
     name: "Fatima Al Zahra",
     phone: "+971509876543",
+    email: "fatima.alzahra@gmail.com",
     source: "Facebook",
     status: "Active",
+    list: "general",
+    category: "customer",
     lastMessage: "Thank you for the proposal",
     timestamp: "1 hour ago",
     aiScore: 87,
@@ -55,8 +68,11 @@ const mockLeads: Lead[] = [
     id: "3",
     name: "Mohammed Ali",
     phone: "+971501111222",
+    email: "mohammed.ali@gmail.com",
     source: "Instagram",
     status: "Awaiting Reply",
+    list: "general",
+    category: "lead",
     lastMessage: "Looking for social media manager",
     timestamp: "3 hours ago",
     aiScore: 78,
@@ -66,8 +82,11 @@ const mockLeads: Lead[] = [
     id: "4",
     name: "Sara Al Rashid",
     phone: "+971502345678",
+    email: "sara.rashid@gmail.com",
     source: "WhatsApp",
     status: "New",
+    list: "vip",
+    category: "prospect",
     lastMessage: "Need help with digital marketing",
     timestamp: "5 hours ago",
     aiScore: 82,
@@ -77,8 +96,11 @@ const mockLeads: Lead[] = [
     id: "5",
     name: "Omar Abdullah",
     phone: "+971503456789",
+    email: "omar.abdullah@gmail.com",
     source: "LinkedIn",
     status: "Active",
+    list: "general",
+    category: "customer",
     lastMessage: "Interested in your services package",
     timestamp: "1 day ago",
     aiScore: 91,
@@ -108,12 +130,21 @@ export function CRMTableView({ onUpgradeClick, onImportClick }: CRMTableViewProp
     setLeads(prevLeads => prevLeads.filter(lead => lead.id !== leadId));
   };
 
+  const handleLeadUpdate = (leadId: string, updates: Partial<Lead>) => {
+    setLeads(prevLeads => 
+      prevLeads.map(lead => 
+        lead.id === leadId ? { ...lead, ...updates } : lead
+      )
+    );
+  };
+
   const filteredLeads = leads.filter((lead) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
       lead.name.toLowerCase().includes(query) ||
       lead.phone.toLowerCase().includes(query) ||
+      (lead.email && lead.email.toLowerCase().includes(query)) ||
       lead.source.toLowerCase().includes(query) ||
       lead.status.toLowerCase().includes(query) ||
       lead.lastMessage.toLowerCase().includes(query)
@@ -174,6 +205,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick }: CRMTableViewProp
                         onUpgradeClick={onUpgradeClick}
                         visibleColumns={visibleColumns}
                         onDelete={handleDeleteLead}
+                        onLeadUpdate={handleLeadUpdate}
                       />
                     ))}
                   </TableBody>
