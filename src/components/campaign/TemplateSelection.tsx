@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Plus, Edit, Copy, Trash2, Loader2 } from "lucide-react";
+import { FileText, Plus, Edit, Copy, Trash2, Loader2, RefreshCw } from "lucide-react";
 import { useState } from "react";
 
 interface Template {
@@ -22,6 +22,7 @@ interface TemplateSelectionProps {
   onCreateNewTemplate: () => void;
   onNext: () => void;
   isCreatingTemplate?: boolean;
+  onRefresh?: () => void;
 }
 
 // Sample data for demonstration
@@ -61,12 +62,26 @@ export function TemplateSelection({
   onTemplateSelect,
   onCreateNewTemplate,
   onNext,
-  isCreatingTemplate = false
+  isCreatingTemplate = false,
+  onRefresh
 }: TemplateSelectionProps) {
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Use sample data if no templates provided
   const displayTemplates = templates.length > 0 ? templates : sampleTemplates;
+
+  const handleRefresh = async () => {
+    if (onRefresh) {
+      setIsRefreshing(true);
+      try {
+        await onRefresh();
+      } finally {
+        // Add a small delay to show the loading state
+        setTimeout(() => setIsRefreshing(false), 500);
+      }
+    }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -129,8 +144,18 @@ export function TemplateSelection({
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Create New Template Button */}
-      <div className="flex justify-end">
+      {/* Action Buttons */}
+      <div className="flex justify-between items-center">
+        <Button 
+          onClick={handleRefresh}
+          variant="outline"
+          disabled={isRefreshing}
+          className="border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+        >
+          <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+          {isRefreshing ? 'Refreshing...' : 'Refresh'}
+        </Button>
+        
         <Button 
           onClick={onCreateNewTemplate}
           variant="outline"

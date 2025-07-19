@@ -62,6 +62,14 @@ export function WhatsAppCampaignBuilder({ onBack }: WhatsAppCampaignBuilderProps
     // For now, we'll just log it and potentially show a success message
   };
 
+  const handleRefreshTemplates = async () => {
+    // Simulate API call to refresh templates
+    console.log('Refreshing templates...');
+    // Here you would typically fetch updated templates from your backend
+    // For now, we'll just simulate a refresh
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
+
   const getStepTitle = () => {
     switch (currentStep) {
       case 'template-selection':
@@ -118,6 +126,7 @@ export function WhatsAppCampaignBuilder({ onBack }: WhatsAppCampaignBuilderProps
             onCreateNewTemplate={handleCreateNewTemplate}
             onNext={handleNextStep}
             isCreatingTemplate={isCreatingTemplate}
+            onRefresh={handleRefreshTemplates}
           />
         );
       case 'template-creation':
