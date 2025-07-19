@@ -42,6 +42,17 @@ export function CRMSearchBar({ searchQuery, onSearchChange, visibleColumns, onCo
       [column]: !visibleColumns[column]
     });
   };
+
+  const handleSelectAll = () => {
+    const allVisible = Object.values(visibleColumns).every(visible => visible);
+    const newVisibility = Object.keys(visibleColumns).reduce((acc, key) => ({
+      ...acc,
+      [key]: !allVisible
+    }), {} as ColumnVisibility);
+    onColumnVisibilityChange(newVisibility);
+  };
+
+  const allColumnsVisible = Object.values(visibleColumns).every(visible => visible);
   return (
     <div className="flex items-center space-x-3">
       <div className="relative">
@@ -61,20 +72,36 @@ export function CRMSearchBar({ searchQuery, onSearchChange, visibleColumns, onCo
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-56">
-          <div className="space-y-2">
-            <h4 className="font-medium text-sm">Show/Hide Columns</h4>
-            {Object.entries(columnLabels).map(([key, label]) => (
-              <div key={key} className="flex items-center space-x-2">
-                <Checkbox
-                  id={key}
-                  checked={visibleColumns[key as keyof ColumnVisibility]}
-                  onCheckedChange={() => handleColumnToggle(key as keyof ColumnVisibility)}
-                />
-                <label htmlFor={key} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  {label}
-                </label>
-              </div>
-            ))}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="font-medium text-sm">Show/Hide Columns</h4>
+            </div>
+            
+            <div className="flex items-center space-x-2 pb-2 border-b">
+              <Checkbox
+                id="select-all"
+                checked={allColumnsVisible}
+                onCheckedChange={handleSelectAll}
+              />
+              <label htmlFor="select-all" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                {allColumnsVisible ? 'Deselect All' : 'Select All'}
+              </label>
+            </div>
+
+            <div className="space-y-2">
+              {Object.entries(columnLabels).map(([key, label]) => (
+                <div key={key} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={key}
+                    checked={visibleColumns[key as keyof ColumnVisibility]}
+                    onCheckedChange={() => handleColumnToggle(key as keyof ColumnVisibility)}
+                  />
+                  <label htmlFor={key} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
         </PopoverContent>
       </Popover>
