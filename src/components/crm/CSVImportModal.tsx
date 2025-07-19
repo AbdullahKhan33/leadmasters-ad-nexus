@@ -214,26 +214,28 @@ Omar Abdullah,+971503456789,LinkedIn,Active,Interested in your services package`
             </p>
           </div>
 
-          {/* CSV Format Info */}
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="text-sm">
-              <strong>Required columns:</strong> name, phone<br />
-              <strong>Optional columns:</strong> source, status, last_message
-            </AlertDescription>
-          </Alert>
 
           {/* File Upload */}
           <div className="space-y-2">
             <Label htmlFor="csv-file">Select CSV File</Label>
-            <Input
-              id="csv-file"
-              type="file"
-              accept=".csv"
-              onChange={handleFileChange}
-              disabled={uploading}
-              className="cursor-pointer"
-            />
+            <div className="relative">
+              <input
+                id="csv-file"
+                type="file"
+                accept=".csv"
+                onChange={handleFileChange}
+                disabled={uploading}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+              <Button 
+                variant="outline" 
+                className="w-full justify-start border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50 text-gray-700 hover:text-blue-700 transition-all duration-200"
+                disabled={uploading}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {file ? file.name : "Choose file"}
+              </Button>
+            </div>
           </div>
 
           {/* Progress Bar */}

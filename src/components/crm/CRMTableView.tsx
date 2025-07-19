@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Upload } from "lucide-react";
 import { usePremium } from "@/contexts/PremiumContext";
 import { CRMSearchBar } from "./CRMSearchBar";
 import { CRMAIFeaturesBanner } from "./CRMAIFeaturesBanner";
@@ -23,6 +25,7 @@ interface Lead {
 
 interface CRMTableViewProps {
   onUpgradeClick: (feature: string) => void;
+  onImportClick: () => void;
 }
 
 const mockLeads: Lead[] = [
@@ -83,8 +86,9 @@ const mockLeads: Lead[] = [
   }
 ];
 
-export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
+export function CRMTableView({ onUpgradeClick, onImportClick }: CRMTableViewProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [leads, setLeads] = useState(mockLeads);
   const [visibleColumns, setVisibleColumns] = useState({
     lead: true,
     contact: true,
@@ -100,7 +104,11 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
   const canShowAIScore = isPremium && premiumFeatures.aiLeadScoring;
   const canShowAIActions = isPremium && premiumFeatures.aiSuggestedTemplates;
 
-  const filteredLeads = mockLeads.filter((lead) => {
+  const handleDeleteLead = (leadId: string) => {
+    setLeads(prevLeads => prevLeads.filter(lead => lead.id !== leadId));
+  };
+
+  const filteredLeads = leads.filter((lead) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
@@ -121,12 +129,23 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
             <h2 className="text-2xl font-bold text-gray-900">All Leads</h2>
             <p className="text-gray-600">Complete overview of your lead pipeline</p>
           </div>
-          <CRMSearchBar 
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            visibleColumns={visibleColumns}
-            onColumnVisibilityChange={setVisibleColumns}
-          />
+          <div className="flex items-center space-x-3">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-blue-200 hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-blue-50/50 hover:text-blue-700"
+              onClick={onImportClick}
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Import from CSV
+            </Button>
+            <CRMSearchBar 
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              visibleColumns={visibleColumns}
+              onColumnVisibilityChange={setVisibleColumns}
+            />
+          </div>
         </div>
 
         {/* AI Features Banner for Free Users */}
@@ -154,6 +173,7 @@ export function CRMTableView({ onUpgradeClick }: CRMTableViewProps) {
                         canShowAIActions={canShowAIActions}
                         onUpgradeClick={onUpgradeClick}
                         visibleColumns={visibleColumns}
+                        onDelete={handleDeleteLead}
                       />
                     ))}
                   </TableBody>

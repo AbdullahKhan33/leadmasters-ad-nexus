@@ -3,8 +3,9 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Phone, MessageSquare, MoreHorizontal } from "lucide-react";
+import { Phone, MessageSquare, MoreHorizontal, Trash2 } from "lucide-react";
 import { PremiumBadge } from "@/components/premium/PremiumBadge";
+import { useToast } from "@/hooks/use-toast";
 
 interface Lead {
   id: string;
@@ -35,9 +36,11 @@ interface CRMTableRowProps {
   canShowAIActions: boolean;
   onUpgradeClick: (feature: string) => void;
   visibleColumns: ColumnVisibility;
+  onDelete?: (leadId: string) => void;
 }
 
-export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick, visibleColumns }: CRMTableRowProps) {
+export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick, visibleColumns, onDelete }: CRMTableRowProps) {
+  const { toast } = useToast();
   const getScoreColor = (score: number) => {
     if (score >= 90) return "text-green-600 bg-green-100";
     if (score >= 75) return "text-orange-600 bg-orange-100";
@@ -54,6 +57,17 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
         return <Badge className="bg-orange-100 text-orange-800 border-orange-200 whitespace-nowrap">Awaiting Reply</Badge>;
       default:
         return <Badge variant="outline" className="whitespace-nowrap">{status}</Badge>;
+    }
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(lead.id);
+      toast({
+        title: "Lead Deleted",
+        description: `${lead.name} has been removed from your leads`,
+        variant: "default",
+      });
     }
   };
 
@@ -159,6 +173,14 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
             </Button>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
               <Phone className="w-4 h-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
+              onClick={handleDelete}
+            >
+              <Trash2 className="w-4 h-4" />
             </Button>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
               <MoreHorizontal className="w-4 h-4" />
