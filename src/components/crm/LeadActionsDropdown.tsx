@@ -39,10 +39,40 @@ export function LeadActionsDropdown({ lead, onLeadUpdate }: LeadActionsDropdownP
   const [notesModalOpen, setNotesModalOpen] = useState(false);
   const [reminderModalOpen, setReminderModalOpen] = useState(false);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleOpenModal = (modalType: 'edit' | 'notes' | 'reminder' | 'status') => {
+    setDropdownOpen(false); // Close dropdown first
+    
+    // Small delay to ensure dropdown closes before modal opens
+    setTimeout(() => {
+      switch (modalType) {
+        case 'edit':
+          setEditModalOpen(true);
+          break;
+        case 'notes':
+          setNotesModalOpen(true);
+          break;
+        case 'reminder':
+          setReminderModalOpen(true);
+          break;
+        case 'status':
+          setStatusModalOpen(true);
+          break;
+      }
+    }, 100);
+  };
+
+  const closeAllModals = () => {
+    setEditModalOpen(false);
+    setNotesModalOpen(false);
+    setReminderModalOpen(false);
+    setStatusModalOpen(false);
+  };
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
             <MoreHorizontal className="w-4 h-4" />
@@ -50,21 +80,21 @@ export function LeadActionsDropdown({ lead, onLeadUpdate }: LeadActionsDropdownP
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg z-50">
           <DropdownMenuItem 
-            onClick={() => setEditModalOpen(true)}
+            onClick={() => handleOpenModal('edit')}
             className="flex items-center space-x-2 hover:bg-gray-50 cursor-pointer"
           >
             <Edit className="w-4 h-4" />
             <span>Edit Lead</span>
           </DropdownMenuItem>
           <DropdownMenuItem 
-            onClick={() => setNotesModalOpen(true)}
+            onClick={() => handleOpenModal('notes')}
             className="flex items-center space-x-2 hover:bg-gray-50 cursor-pointer"
           >
             <MessageSquare className="w-4 h-4" />
             <span>Add Notes</span>
           </DropdownMenuItem>
           <DropdownMenuItem 
-            onClick={() => setReminderModalOpen(true)}
+            onClick={() => handleOpenModal('reminder')}
             className="flex items-center space-x-2 hover:bg-gray-50 cursor-pointer"
           >
             <Bell className="w-4 h-4" />
@@ -72,7 +102,7 @@ export function LeadActionsDropdown({ lead, onLeadUpdate }: LeadActionsDropdownP
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
-            onClick={() => setStatusModalOpen(true)}
+            onClick={() => handleOpenModal('status')}
             className="flex items-center space-x-2 hover:bg-gray-50 cursor-pointer"
           >
             <CheckCircle className="w-4 h-4" />
@@ -84,28 +114,40 @@ export function LeadActionsDropdown({ lead, onLeadUpdate }: LeadActionsDropdownP
       <EditLeadModal
         lead={lead}
         isOpen={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
+        onClose={() => {
+          setEditModalOpen(false);
+          closeAllModals();
+        }}
         onUpdate={onLeadUpdate}
       />
 
       <AddNotesModal
         lead={lead}
         isOpen={notesModalOpen}
-        onClose={() => setNotesModalOpen(false)}
+        onClose={() => {
+          setNotesModalOpen(false);
+          closeAllModals();
+        }}
         onUpdate={onLeadUpdate}
       />
 
       <SetReminderModal
         lead={lead}
         isOpen={reminderModalOpen}
-        onClose={() => setReminderModalOpen(false)}
+        onClose={() => {
+          setReminderModalOpen(false);
+          closeAllModals();
+        }}
         onUpdate={onLeadUpdate}
       />
 
       <ChangeStatusModal
         lead={lead}
         isOpen={statusModalOpen}
-        onClose={() => setStatusModalOpen(false)}
+        onClose={() => {
+          setStatusModalOpen(false);
+          closeAllModals();
+        }}
         onUpdate={onLeadUpdate}
       />
     </>
