@@ -33,18 +33,14 @@ interface SetReminderModalProps {
 }
 
 export function SetReminderModal({ lead, isOpen, onClose, onUpdate }: SetReminderModalProps) {
-  const [reminderDate, setReminderDate] = useState('');
-  const [reminderTime, setReminderTime] = useState('');
-  const [reminderNote, setReminderNote] = useState('');
-  const { toast } = useToast();
-
-  // Set default date to tomorrow
-  useState(() => {
+  const [reminderDate, setReminderDate] = useState(() => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    setReminderDate(format(tomorrow, 'yyyy-MM-dd'));
-    setReminderTime('09:00');
+    return format(tomorrow, 'yyyy-MM-dd');
   });
+  const [reminderTime, setReminderTime] = useState('09:00');
+  const [reminderNote, setReminderNote] = useState('');
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
