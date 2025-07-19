@@ -3,7 +3,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Phone, MessageSquare, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { PremiumBadge } from "@/components/premium/PremiumBadge";
 import { useToast } from "@/hooks/use-toast";
 import { LeadActionsDropdown } from "./LeadActionsDropdown";
@@ -176,12 +176,6 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
       {visibleColumns.actions && (
         <TableCell className="px-4 py-4">
           <div className="flex items-center space-x-1">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-              <MessageSquare className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-              <Phone className="w-4 h-4" />
-            </Button>
             <Button 
               variant="ghost" 
               size="sm" 

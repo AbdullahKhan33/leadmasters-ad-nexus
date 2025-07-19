@@ -48,7 +48,7 @@ export function LeadActionsDropdown({ lead, onLeadUpdate }: LeadActionsDropdownP
             <MoreHorizontal className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg">
+        <DropdownMenuContent align="end" className="w-48 bg-white border border-gray-200 shadow-lg z-50">
           <DropdownMenuItem 
             onClick={() => setEditModalOpen(true)}
             className="flex items-center space-x-2 hover:bg-gray-50 cursor-pointer"
