@@ -63,12 +63,19 @@ function IndexContent() {
       return;
     }
     
-    if (isInWorkspace && activeWorkspace && !location.state?.view) {
+    // If location state specifies a view, use it (important for agent redirects)
+    if (location.state?.view) {
+      setCurrentView(location.state.view);
+      return;
+    }
+    
+    if (isInWorkspace && activeWorkspace) {
       setCurrentView('dashboard');
     } else if (!hasWorkspaces && canManageWorkspaces) {
       // Force workspace view only for authenticated admins with no workspaces
       setCurrentView('workspaces');
-    } else if (!isInWorkspace && !location.state?.view && hasWorkspaces) {
+    } else if (!isInWorkspace && hasWorkspaces && canManageWorkspaces) {
+      // Only redirect admins to workspace selection if they have workspaces but none selected
       setCurrentView('workspaces');
     }
   }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname]);
@@ -233,8 +240,8 @@ function IndexContent() {
 
   console.log('Current view:', currentView);
 
-  // If no workspaces exist, only show workspaces view without sidebar
-  if (!hasWorkspaces) {
+  // If no workspaces exist and user can manage workspaces (admin), show workspaces view without sidebar
+  if (!hasWorkspaces && canManageWorkspaces) {
     return (
       <div className="min-h-screen flex w-full">
         <div className="flex-1 flex flex-col min-w-0">
