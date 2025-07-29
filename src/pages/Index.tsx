@@ -35,7 +35,7 @@ type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'socia
 type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'content-hub';
 
 function IndexContent() {
-  const { isInWorkspace, activeWorkspace, hasWorkspaces } = useWorkspace();
+  const { isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces } = useWorkspace();
   const { setIsPremium } = usePremium();
   const [currentView, setCurrentView] = useState<AllViews>('workspaces');
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
@@ -70,15 +70,13 @@ function IndexContent() {
 
   // Monitor workspace changes to redirect when all workspaces are deleted (admin only)
   useEffect(() => {
-    const { canManageWorkspaces } = useWorkspace();
     if (!hasWorkspaces && currentView !== 'workspaces' && canManageWorkspaces) {
       setCurrentView('workspaces');
     }
-  }, [hasWorkspaces, currentView]);
+  }, [hasWorkspaces, currentView, canManageWorkspaces]);
 
   // Prevent navigation if no workspaces exist (admin only)
   const handleNavigationClick = (view: AllViews, callback: () => void) => {
-    const { canManageWorkspaces } = useWorkspace();
     if (!hasWorkspaces && view !== 'workspaces' && canManageWorkspaces) {
       // Don't allow navigation away from workspaces if none exist for admins
       return;
