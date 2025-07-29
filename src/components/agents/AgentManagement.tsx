@@ -37,9 +37,12 @@ export function AgentManagement() {
     agent.agent_code.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const [isDeletingAgent, setIsDeletingAgent] = useState(false);
+
   const handleDeleteAgent = async () => {
-    if (!deleteAgent) return;
+    if (!deleteAgent || isDeletingAgent) return;
     
+    setIsDeletingAgent(true);
     try {
       await performDeleteAgent(deleteAgent.id);
       toast({
@@ -48,11 +51,14 @@ export function AgentManagement() {
       });
       setDeleteAgent(null);
     } catch (error) {
+      console.error('Delete agent error:', error);
       toast({
         title: "Error",
-        description: "Failed to delete agent",
+        description: error instanceof Error ? error.message : "Failed to delete agent",
         variant: "destructive"
       });
+    } finally {
+      setIsDeletingAgent(false);
     }
   };
 
@@ -234,9 +240,10 @@ export function AgentManagement() {
       {/* Delete Confirmation Dialog */}
       <DeleteAgentDialog
         open={!!deleteAgent}
-        onOpenChange={(open) => !open && setDeleteAgent(null)}
+        onOpenChange={(open) => !open && !isDeletingAgent && setDeleteAgent(null)}
         onConfirm={handleDeleteAgent}
         agentName={deleteAgent?.name || ""}
+        isDeleting={isDeletingAgent}
       />
     </div>
   );
