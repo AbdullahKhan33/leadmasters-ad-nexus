@@ -98,6 +98,45 @@ export type Database = {
         }
         Relationships: []
       }
+      auto_assignment_rules: {
+        Row: {
+          agent_filters: Json
+          assignment_method: string
+          created_at: string
+          created_by: string | null
+          criteria: Json
+          description: string | null
+          enabled: boolean
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          agent_filters?: Json
+          assignment_method: string
+          created_at?: string
+          created_by?: string | null
+          criteria?: Json
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          agent_filters?: Json
+          assignment_method?: string
+          created_at?: string
+          created_by?: string | null
+          criteria?: Json
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           ai_next_action: string | null
