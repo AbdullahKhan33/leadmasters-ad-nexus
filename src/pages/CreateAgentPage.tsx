@@ -93,9 +93,7 @@ export function CreateAgentPage() {
 
       toast({
         title: "Success",
-        description: data.emailSent 
-          ? "Agent created successfully. Welcome email sent with login instructions."
-          : "Agent created successfully. Note: Welcome email could not be sent."
+        description: `Agent created successfully! Default password: ${data.tempPassword || "Password123!"}`
       });
 
       // Navigate back to agents page

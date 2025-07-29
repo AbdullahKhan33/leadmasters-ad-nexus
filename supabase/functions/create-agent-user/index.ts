@@ -39,8 +39,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Creating agent user:", { email, displayName, agentCode });
 
-    // Generate a temporary password
-    const tempPassword = Math.random().toString(36).slice(-12) + "A1!";
+    // Use default password for testing
+    const tempPassword = "Password123!";
 
     // Create user with admin privileges
     const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
