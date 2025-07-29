@@ -12,6 +12,7 @@ interface CreateAgentRequest {
   displayName: string;
   phone?: string;
   agentCode: string;
+  workspaceId?: string;
   status: string;
   permissions: Record<string, boolean>;
 }
@@ -35,7 +36,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-    const { email, displayName, phone, agentCode, status, permissions }: CreateAgentRequest = await req.json();
+    const { email, displayName, phone, agentCode, workspaceId, status, permissions }: CreateAgentRequest = await req.json();
 
     console.log("Creating agent user:", { email, displayName, agentCode });
 
@@ -81,10 +82,11 @@ const handler = async (req: Request): Promise<Response> => {
         agent_code: agentCode,
         status,
         permissions,
+        workspace_id: workspaceId || null,
         first_login_password_changed: false, // Track if password has been changed
       })
       .select()
-      .single();
+      .maybeSingle();
 
     if (agentError) {
       console.error("Error creating agent:", agentError);
