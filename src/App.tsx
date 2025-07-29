@@ -38,9 +38,9 @@ function App() {
                 <Routes>
                   <Route path="/" element={<PublicWebsite />} />
                   <Route path="/login" element={<AuthPage />} />
-                  <Route path="/agents" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                  <Route path="/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
-                  <Route path="/agents/edit/:agentId" element={<ProtectedRoute><EditAgentPage /></ProtectedRoute>} />
+                  <Route path="/app/agents" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                  <Route path="/app/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
+                  <Route path="/app/agents/edit/:agentId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/about-us" element={<AboutUsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/pricing" element={<PricingPage />} />

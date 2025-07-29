@@ -134,7 +134,7 @@ export function CreateAgentPage() {
       });
 
       // Navigate back to agents page
-      navigate("/agents");
+      navigate("/app/agents");
 
     } catch (error) {
       console.error('Error creating agent:', error);
@@ -156,7 +156,7 @@ export function CreateAgentPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/agents")}
+            onClick={() => navigate("/app/agents")}
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -365,7 +365,7 @@ export function CreateAgentPage() {
 
           {/* Submit */}
           <div className="flex justify-end gap-4">
-            <Button type="button" variant="outline" onClick={() => navigate("/agents")}>
+            <Button type="button" variant="outline" onClick={() => navigate("/app/agents")}>
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading} className="min-w-32">

@@ -57,8 +57,8 @@ function IndexContent() {
     // Only apply workspace logic if user is authenticated
     if (!user) return;
     
-    // Check if we're on the /agents route
-    if (location.pathname === '/agents') {
+    // Check if we're on the /app/agents route or editing an agent
+    if (location.pathname === '/app/agents' || location.pathname.startsWith('/app/agents/')) {
       setCurrentView('agents');
       return;
     }

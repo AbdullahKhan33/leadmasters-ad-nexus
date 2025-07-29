@@ -104,7 +104,7 @@ export function EditAgentPage() {
         description: "Agent updated successfully"
       });
 
-      navigate('/agents');
+      navigate('/app/agents');
 
     } catch (error) {
       console.error('Error updating agent:', error);
@@ -130,7 +130,7 @@ export function EditAgentPage() {
     <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/agents')}>
+        <Button variant="ghost" size="sm" onClick={() => navigate('/app/agents')}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Agents
         </Button>
@@ -276,7 +276,7 @@ export function EditAgentPage() {
             </div>
 
             <div className="flex justify-end gap-4 pt-6">
-              <Button type="button" variant="outline" onClick={() => navigate('/agents')}>
+              <Button type="button" variant="outline" onClick={() => navigate('/app/agents')}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isLoading}>

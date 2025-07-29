@@ -85,7 +85,7 @@ export function AgentManagement() {
           <h1 className="text-2xl font-bold text-gray-900">Agent Management</h1>
           <p className="text-gray-600">Manage your sales agents and their performance</p>
         </div>
-        <Button onClick={() => navigate("/agents/create")} className="flex items-center gap-2">
+        <Button onClick={() => navigate("/app/agents/create")} className="flex items-center gap-2">
           <UserPlus className="w-4 h-4" />
           Add Agent
         </Button>
@@ -208,7 +208,7 @@ export function AgentManagement() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => navigate(`/agents/edit/${agent.id}`)}>
+                            <DropdownMenuItem onClick={() => navigate(`/app/agents/edit/${agent.id}`)}>
                               <Edit className="w-4 h-4 mr-2" />
                               Edit Agent
                             </DropdownMenuItem>
