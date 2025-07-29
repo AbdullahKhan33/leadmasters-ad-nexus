@@ -20,6 +20,7 @@ import { BlogPage } from "./components/public/BlogPage";
 import { BlogPostPage } from "./components/public/BlogPostPage";
 import { LegalPage } from "./components/public/LegalPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { CreateAgentPage } from "./pages/CreateAgentPage";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<PublicWebsite />} />
                   <Route path="/login" element={<AuthPage />} />
-                  <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
                   <Route path="/about-us" element={<AboutUsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/pricing" element={<PricingPage />} />

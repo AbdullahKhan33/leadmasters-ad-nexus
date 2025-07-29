@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,13 +20,12 @@ import {
   Award,
   Activity
 } from "lucide-react";
-import { CreateAgentModal } from "./CreateAgentModal";
 import { EditAgentModal } from "./EditAgentModal";
 import { AgentStatsCards } from "./AgentStatsCards";
 
 export function AgentManagement() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingAgent, setEditingAgent] = useState<any>(null);
   const { agents, isLoading, deleteAgent } = useAgents();
   const { userRole } = useAuth();
@@ -82,7 +82,7 @@ export function AgentManagement() {
           <h1 className="text-2xl font-bold text-gray-900">Agent Management</h1>
           <p className="text-gray-600">Manage your sales agents and their performance</p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)} className="flex items-center gap-2">
+        <Button onClick={() => navigate("/agents/create")} className="flex items-center gap-2">
           <UserPlus className="w-4 h-4" />
           Add Agent
         </Button>
@@ -229,11 +229,6 @@ export function AgentManagement() {
       </Card>
 
       {/* Modals */}
-      <CreateAgentModal 
-        open={showCreateModal}
-        onOpenChange={setShowCreateModal}
-      />
-      
       {editingAgent && (
         <EditAgentModal
           agent={editingAgent}
