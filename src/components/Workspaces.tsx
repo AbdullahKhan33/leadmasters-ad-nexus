@@ -125,6 +125,8 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     };
 
     addWorkspace(newWorkspace);
+    // Auto-select the newly created workspace to navigate to dashboard
+    selectWorkspace(newWorkspace);
 
     toast({
       title: "Workspace Created",
@@ -174,6 +176,8 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     };
 
     addWorkspace(newWorkspace);
+    // Auto-select the newly created workspace to navigate to dashboard
+    selectWorkspace(newWorkspace);
     
     toast({
       title: "Welcome to Your Workspace!",

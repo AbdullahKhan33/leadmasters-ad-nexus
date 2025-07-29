@@ -53,9 +53,12 @@ export function CreateAgentPage() {
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
+        if (!user) return;
+        
         const { data, error } = await supabase
           .from('workspaces')
           .select('id, name')
+          .eq('created_by', user.id)
           .order('name');
         
         if (error) throw error;
@@ -66,7 +69,7 @@ export function CreateAgentPage() {
     };
 
     fetchWorkspaces();
-  }, []);
+  }, [user]);
 
   const generateAgentCode = () => {
     const code = 'AG' + Math.random().toString(36).substr(2, 6).toUpperCase();

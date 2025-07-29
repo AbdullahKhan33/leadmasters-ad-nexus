@@ -77,6 +77,12 @@ function IndexContent() {
     } else if (!isInWorkspace && hasWorkspaces && canManageWorkspaces) {
       // Only redirect admins to workspace selection if they have workspaces but none selected
       setCurrentView('workspaces');
+    } else if (hasWorkspaces && !isInWorkspace) {
+      // If user has workspaces but isn't in one, go to workspaces view
+      setCurrentView('workspaces');
+    } else if (isInWorkspace) {
+      // If in workspace, go to dashboard
+      setCurrentView('dashboard');
     }
   }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname]);
 
