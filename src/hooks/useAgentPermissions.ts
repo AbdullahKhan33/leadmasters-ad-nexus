@@ -25,13 +25,17 @@ export function useAgentPermissions() {
 
   useEffect(() => {
     const fetchAgentPermissions = async () => {
+      console.log('useAgentPermissions - Starting with user:', user?.id, 'userRole:', userRole);
+      
       if (!user) {
+        console.log('useAgentPermissions - No user, setting loading to false');
         setIsLoading(false);
         return;
       }
 
       // If user is admin, they have all permissions
       if (userRole === 'admin') {
+        console.log('useAgentPermissions - User is admin, granting all permissions');
         setPermissions({
           crm: true,
           crm_dashboard: true,

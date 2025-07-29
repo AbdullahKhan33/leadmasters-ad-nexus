@@ -86,6 +86,12 @@ export function WorkspaceSidebar({
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const { permissions } = useAgentPermissions();
+  const { logout, userRole } = useAuth();
+
+  React.useEffect(() => {
+    console.log('WorkspaceSidebar - Current permissions:', permissions);
+    console.log('WorkspaceSidebar - User role:', userRole);
+  }, [permissions, userRole]);
 
   React.useEffect(() => {
     if (['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView)) {
@@ -122,8 +128,6 @@ export function WorkspaceSidebar({
       onCRMClick();
     }
   };
-
-  const { logout, userRole } = useAuth();
 
   const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView);
 
