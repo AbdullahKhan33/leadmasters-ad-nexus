@@ -24,15 +24,27 @@ export function CRM() {
   const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
   const [csvImportModal, setCsvImportModal] = useState(false);
 
+  const handleTabChange = (value: string) => {
+    console.log("CRM tab change:", value);
+    setActiveTab(value);
+  };
+
   const handleUpgrade = () => {
+    console.log("CRM upgrade button clicked");
     // Here you would integrate with your payment system
     console.log("Upgrading to premium...");
     setUpgradeModal({ isOpen: false, feature: "" });
   };
 
   const handleImportComplete = () => {
+    console.log("CRM import complete");
     // Refresh the data when import is complete
     window.location.reload();
+  };
+
+  const handleImportClick = () => {
+    console.log("CRM import button clicked");
+    setCsvImportModal(true);
   };
 
   return (
@@ -48,7 +60,12 @@ export function CRM() {
               <p className="text-gray-600 text-sm font-medium">WhatsApp Lead Management</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm" className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-purple-200 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-purple-50/50 hover:text-purple-700">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-purple-200 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-purple-50/50 hover:text-purple-700"
+                onClick={handleImportClick}
+              >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
                 </svg>
@@ -60,7 +77,7 @@ export function CRM() {
 
         {/* Navigation Tabs */}
         <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6 shadow-sm">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
               <TabsTrigger 
                 value="inbox" 
@@ -106,7 +123,7 @@ export function CRM() {
             <TabsContent value="table" className="h-full m-0">
               <CRMTableView 
                 onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} 
-                onImportClick={() => setCsvImportModal(true)}
+                onImportClick={handleImportClick}
               />
             </TabsContent>
             <TabsContent value="segments" className="h-full m-0">
