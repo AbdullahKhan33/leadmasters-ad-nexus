@@ -111,19 +111,50 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
             }
           }
         } else {
-          // For admins, use localStorage as before
-          const savedWorkspaces = localStorage.getItem('workspaces');
-          const savedActiveWorkspace = localStorage.getItem('activeWorkspace');
-          
-          if (savedWorkspaces) {
-            const parsedWorkspaces = JSON.parse(savedWorkspaces);
-            setWorkspaces(parsedWorkspaces);
+          // For admins, load workspaces from database first, then fallback to localStorage
+          const { data: adminWorkspaces, error: workspacesError } = await supabase
+            .from('workspaces')
+            .select('id, name, description')
+            .eq('created_by', user.id);
+
+          if (workspacesError) {
+            console.error('Error fetching admin workspaces:', workspacesError);
+          }
+
+          if (adminWorkspaces && adminWorkspaces.length > 0) {
+            // Convert database workspaces to match the local interface
+            const formattedWorkspaces = adminWorkspaces.map(ws => ({
+              id: ws.id,
+              name: ws.name,
+              description: ws.description || '',
+              country: '',
+              industry: '',
+              businessType: '',
+              memberCount: 0,
+              isActive: true
+            }));
+
+            setWorkspaces(formattedWorkspaces);
+
+            // Auto-select first workspace if none is selected
+            if (formattedWorkspaces.length > 0) {
+              setActiveWorkspace(formattedWorkspaces[0]);
+            }
+          } else {
+            // Fallback to localStorage if no database workspaces found
+            const savedWorkspaces = localStorage.getItem('workspaces');
+            const savedActiveWorkspace = localStorage.getItem('activeWorkspace');
             
-            if (savedActiveWorkspace) {
-              const parsedActiveWorkspace = JSON.parse(savedActiveWorkspace);
-              setActiveWorkspace(parsedActiveWorkspace);
-            } else if (parsedWorkspaces.length > 0) {
-              setActiveWorkspace(parsedWorkspaces[0]);
+            if (savedWorkspaces) {
+              const parsedWorkspaces = JSON.parse(savedWorkspaces);
+              setWorkspaces(parsedWorkspaces);
+              
+              if (savedActiveWorkspace) {
+                const parsedActiveWorkspace = JSON.parse(savedActiveWorkspace);
+                setActiveWorkspace(parsedActiveWorkspace);
+              } else if (parsedWorkspaces.length > 0) {
+                setActiveWorkspace(parsedWorkspaces[0]);
+              }
             }
           }
         }
