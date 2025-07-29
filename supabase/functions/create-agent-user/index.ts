@@ -40,6 +40,28 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Creating agent user:", { email, displayName, agentCode });
 
+    // Check if user already exists
+    const { data: existingUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers();
+    
+    if (listError) {
+      console.error("Error checking existing users:", listError);
+      throw listError;
+    }
+
+    const existingUser = existingUsers.users.find(user => user.email === email);
+    
+    if (existingUser) {
+      return new Response(
+        JSON.stringify({ 
+          error: `A user with email ${email} already exists. Please use a different email address.` 
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     // Use default password for testing
     const tempPassword = "Password123!";
 
