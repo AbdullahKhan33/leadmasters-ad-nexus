@@ -81,11 +81,9 @@ function IndexContent() {
       return;
     }
     
-    if (isInWorkspace && activeWorkspace) {
-      // Only auto-redirect to dashboard if not currently on workspaces or workspace-settings view
-      if (currentView !== 'workspaces' && currentView !== 'workspace-settings') {
-        setCurrentView('dashboard');
-      }
+    // Only auto-redirect to dashboard if not currently managing workspaces
+    if (isInWorkspace && activeWorkspace && currentView !== 'workspaces' && currentView !== 'workspace-settings') {
+      setCurrentView('dashboard');
     } else if (!hasWorkspaces && canManageWorkspaces) {
       // Force workspace view only for authenticated admins with no workspaces
       setCurrentView('workspaces');
@@ -95,20 +93,15 @@ function IndexContent() {
     } else if (hasWorkspaces && !isInWorkspace) {
       // If user has workspaces but isn't in one, go to workspaces view
       setCurrentView('workspaces');
-    } else if (isInWorkspace) {
-      // If in workspace, go to dashboard (only if not on workspace management views)
-      if (currentView !== 'workspaces' && currentView !== 'workspace-settings') {
-        setCurrentView('dashboard');
-      }
     }
-  }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname, currentView]);
+  }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname]);
 
   // Monitor workspace changes to redirect when all workspaces are deleted (authenticated admin only)
   useEffect(() => {
-    if (user && !hasWorkspaces && currentView !== 'workspaces' && canManageWorkspaces) {
+    if (user && !hasWorkspaces && canManageWorkspaces && currentView !== 'workspaces') {
       setCurrentView('workspaces');
     }
-  }, [user, hasWorkspaces, currentView, canManageWorkspaces]);
+  }, [user, hasWorkspaces, canManageWorkspaces]);
 
   // Prevent navigation if no workspaces exist (admin only)
   const handleNavigationClick = (view: AllViews, callback: () => void) => {
