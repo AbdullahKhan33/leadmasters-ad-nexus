@@ -96,6 +96,30 @@ const handler = async (req: Request): Promise<Response> => {
       throw profileError;
     }
 
+    // Check if agent code already exists
+    const { data: existingAgent, error: agentCheckError } = await supabaseAdmin
+      .from("agents")
+      .select("agent_code")
+      .eq("agent_code", agentCode)
+      .maybeSingle();
+
+    if (agentCheckError) {
+      console.error("Error checking existing agent:", agentCheckError);
+      throw agentCheckError;
+    }
+
+    if (existingAgent) {
+      return new Response(
+        JSON.stringify({ 
+          error: `An agent with code ${agentCode} already exists. Please use a different agent code.` 
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     // Create agent record
     const { data: agentData, error: agentError } = await supabaseAdmin
       .from("agents")
@@ -111,7 +135,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (agentError) {
       console.error("Error creating agent:", agentError);
-      throw agentError;
+      console.error("Agent error details:", JSON.stringify(agentError, null, 2));
+      return new Response(
+        JSON.stringify({ 
+          error: `Failed to create agent: ${agentError.message}. Details: ${agentError.details || 'No additional details'}` 
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
     // Assign agent to workspaces if provided
