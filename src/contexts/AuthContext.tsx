@@ -38,10 +38,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 .from('user_roles')
                 .select('role')
                 .eq('user_id', session.user.id)
-                .maybeSingle(); // Use maybeSingle instead of single to handle no rows
+                .order('role', { ascending: false }); // Order by role desc to get agent before user
               
-              if (!error && data) {
-                setUserRole(data.role);
+              if (!error && data && data.length > 0) {
+                // If user has multiple roles, prioritize agent > admin > user
+                const roles = data.map(r => r.role);
+                if (roles.includes('agent')) {
+                  setUserRole('agent');
+                } else if (roles.includes('admin')) {
+                  setUserRole('admin');
+                } else {
+                  setUserRole('user');
+                }
               } else {
                 setUserRole('user'); // Default to user role if no role found
               }
@@ -72,10 +80,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               .from('user_roles')
               .select('role')
               .eq('user_id', session.user.id)
-              .maybeSingle(); // Use maybeSingle instead of single to handle no rows
+              .order('role', { ascending: false }); // Order by role desc to get agent before user
             
-            if (!error && data) {
-              setUserRole(data.role);
+            if (!error && data && data.length > 0) {
+              // If user has multiple roles, prioritize agent > admin > user
+              const roles = data.map(r => r.role);
+              if (roles.includes('agent')) {
+                setUserRole('agent');
+              } else if (roles.includes('admin')) {
+                setUserRole('admin');
+              } else {
+                setUserRole('user');
+              }
             } else {
               setUserRole('user'); // Default to user role if no role found
             }
