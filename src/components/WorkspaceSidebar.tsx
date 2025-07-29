@@ -21,17 +21,14 @@ import { Logo } from "@/components/ui/logo";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAgentPermissions } from "@/hooks/useAgentPermissions";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Megaphone,
   PenTool,
   Users,
   BarChart3,
   Calendar,
-  Bot,
   LayoutDashboard,
   Lightbulb,
-  Briefcase,
   User,
   ChevronDown,
   MessageSquare,
@@ -43,6 +40,7 @@ import {
   Settings,
   ShoppingBag,
   Archive,
+  Briefcase,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -125,29 +123,9 @@ export function WorkspaceSidebar({
     }
   };
 
-  const { logout, user, userRole } = useAuth();
+  const { logout } = useAuth();
 
   const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView);
-
-  // Generate user initials and display name
-  const getUserInitials = () => {
-    if (user?.user_metadata?.display_name) {
-      return user.user_metadata.display_name
-        .split(' ')
-        .map((n: string) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2);
-    }
-    if (user?.email) {
-      return user.email.slice(0, 2).toUpperCase();
-    }
-    return 'AG';
-  };
-
-  const getUserDisplayName = () => {
-    return user?.user_metadata?.display_name || user?.email || 'Agent User';
-  };
 
   const handleLogout = async () => {
     console.log('Logout clicked from WorkspaceSidebar');
@@ -387,7 +365,7 @@ export function WorkspaceSidebar({
                 </div>
               )}
             </div>
-          </SidebarMenuItem>
+            </SidebarMenuItem>
           )}
 
           <SidebarMenuItem>
@@ -469,36 +447,22 @@ export function WorkspaceSidebar({
       </SidebarContent>
 
       <SidebarFooter className="border-t border-gray-200/50 p-4">
-        <SidebarMenu>
+        <SidebarMenu className="space-y-2">
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
-                  className={`w-full justify-start text-left ${isCollapsed ? 'h-20 px-2 flex-col' : 'h-16 px-4'} rounded-xl transition-all duration-300 group border border-gray-200/50 hover:border-purple-200 hover:shadow-sm hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50`}
+                  className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(false)}`}
                 >
                   {isCollapsed ? (
-                     <div className="flex flex-col items-center space-y-2">
-                       <Avatar className="w-10 h-10 ring-2 ring-white/20">
-                         <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-sm font-bold">
-                           {getUserInitials()}
-                         </AvatarFallback>
-                       </Avatar>
-                       <span className="text-xs font-semibold leading-tight text-center">
-                         {userRole === 'agent' ? 'Agent' : 'Account'}
-                       </span>
-                     </div>
-                   ) : (
-                     <div className="flex items-center space-x-4 w-full">
-                       <Avatar className="w-12 h-12 ring-2 ring-white/20 shadow-sm">
-                         <AvatarFallback className="bg-gradient-to-br from-blue-100 to-purple-100 text-purple-600 text-lg font-bold">
-                           {getUserInitials()}
-                         </AvatarFallback>
-                       </Avatar>
-                       <div className="flex flex-col min-w-0 flex-1">
-                         <span className="font-bold text-base truncate">{getUserDisplayName()}</span>
-                         <span className="text-sm opacity-75 truncate">{user?.email}</span>
-                       </div>
-                      <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                    <div className="flex flex-col items-center space-y-1">
+                      <Settings className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                      <span className="text-xs font-medium">Settings</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-3">
+                      <Settings className={`w-5 h-5 ${getIconStyles(false)} group-hover:scale-110 transition-transform duration-200`} />
+                      <span className="font-semibold">Settings</span>
                     </div>
                   )}
                 </SidebarMenuButton>
@@ -513,10 +477,10 @@ export function WorkspaceSidebar({
                   Account Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                 <DropdownMenuItem 
-                   onClick={handleLogout} 
-                   className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
-                 >
+                <DropdownMenuItem 
+                  onClick={handleLogout} 
+                  className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                >
                   <LogOut className="w-4 h-4 mr-2" />
                   Sign Out
                 </DropdownMenuItem>
