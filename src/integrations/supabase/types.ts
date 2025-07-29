@@ -62,8 +62,10 @@ export type Database = {
       agents: {
         Row: {
           agent_code: string
+          assigned_by: string | null
           assigned_leads_count: number
           created_at: string
+          first_login_password_changed: boolean | null
           id: string
           performance_score: number | null
           permissions: Json
@@ -71,11 +73,14 @@ export type Database = {
           total_leads_handled: number
           updated_at: string
           user_id: string
+          workspace_id: string | null
         }
         Insert: {
           agent_code: string
+          assigned_by?: string | null
           assigned_leads_count?: number
           created_at?: string
+          first_login_password_changed?: boolean | null
           id?: string
           performance_score?: number | null
           permissions?: Json
@@ -83,11 +88,14 @@ export type Database = {
           total_leads_handled?: number
           updated_at?: string
           user_id: string
+          workspace_id?: string | null
         }
         Update: {
           agent_code?: string
+          assigned_by?: string | null
           assigned_leads_count?: number
           created_at?: string
+          first_login_password_changed?: boolean | null
           id?: string
           performance_score?: number | null
           permissions?: Json
@@ -95,6 +103,7 @@ export type Database = {
           total_leads_handled?: number
           updated_at?: string
           user_id?: string
+          workspace_id?: string | null
         }
         Relationships: []
       }

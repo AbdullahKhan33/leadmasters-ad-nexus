@@ -34,6 +34,8 @@ export function CreateAgentModal({ open, onOpenChange }: CreateAgentModalProps) 
     displayName: "",
     phone: "",
     agentCode: "",
+    defaultPassword: "",
+    workspaceId: "",
     status: "active",
     permissions: {} as Record<string, boolean>
   });
@@ -90,6 +92,8 @@ export function CreateAgentModal({ open, onOpenChange }: CreateAgentModalProps) 
         displayName: "",
         phone: "",
         agentCode: "",
+        defaultPassword: "",
+        workspaceId: "",
         status: "active",
         permissions: {}
       });
