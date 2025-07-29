@@ -172,7 +172,35 @@ export function WorkspaceSidebar({
           {isCollapsed && (
             <Logo className="w-10 h-10 shadow-lg rounded-xl mx-auto" />
           )}
-          <SidebarTrigger className={isCollapsed ? "mx-auto mt-2" : "ml-auto"} />
+          
+          <div className="flex items-center space-x-2">
+            {/* Settings dropdown for agents */}
+            {userRole === 'agent' && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-white/50 transition-colors">
+                    <Settings className="w-5 h-5 text-gray-600" />
+                    {!isCollapsed && <span className="text-sm font-medium text-gray-700">Settings</span>}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={onUserSettingsClick} className="cursor-pointer">
+                    <User className="w-4 h-4 mr-2" />
+                    Account Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={handleLogout} 
+                    className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            <SidebarTrigger className={isCollapsed ? "mx-auto mt-2" : ""} />
+          </div>
         </div>
       </SidebarHeader>
 
