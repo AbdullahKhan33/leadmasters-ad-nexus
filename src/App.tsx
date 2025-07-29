@@ -37,6 +37,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<PublicWebsite />} />
                   <Route path="/login" element={<AuthPage />} />
+                  <Route path="/agents" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
                   <Route path="/about-us" element={<AboutUsPage />} />
                   <Route path="/contact" element={<ContactPage />} />

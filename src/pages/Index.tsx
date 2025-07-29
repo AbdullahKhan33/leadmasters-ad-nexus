@@ -52,6 +52,12 @@ function IndexContent() {
   }, [location.state]);
 
   useEffect(() => {
+    // Check if we're on the /agents route
+    if (location.pathname === '/agents') {
+      setCurrentView('agents');
+      return;
+    }
+    
     if (isInWorkspace && activeWorkspace && !location.state?.view) {
       setCurrentView('dashboard');
     } else if (!hasWorkspaces) {
@@ -60,7 +66,7 @@ function IndexContent() {
     } else if (!isInWorkspace && !location.state?.view) {
       setCurrentView('workspaces');
     }
-  }, [isInWorkspace, activeWorkspace, hasWorkspaces, location.state]);
+  }, [isInWorkspace, activeWorkspace, hasWorkspaces, location.state, location.pathname]);
 
   // Monitor workspace changes to redirect when all workspaces are deleted
   useEffect(() => {
