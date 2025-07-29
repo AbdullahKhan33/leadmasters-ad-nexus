@@ -82,7 +82,10 @@ function IndexContent() {
     }
     
     if (isInWorkspace && activeWorkspace) {
-      setCurrentView('dashboard');
+      // Only auto-redirect to dashboard if not currently on workspaces or workspace-settings view
+      if (currentView !== 'workspaces' && currentView !== 'workspace-settings') {
+        setCurrentView('dashboard');
+      }
     } else if (!hasWorkspaces && canManageWorkspaces) {
       // Force workspace view only for authenticated admins with no workspaces
       setCurrentView('workspaces');
@@ -93,8 +96,10 @@ function IndexContent() {
       // If user has workspaces but isn't in one, go to workspaces view
       setCurrentView('workspaces');
     } else if (isInWorkspace) {
-      // If in workspace, go to dashboard
-      setCurrentView('dashboard');
+      // If in workspace, go to dashboard (only if not on workspace management views)
+      if (currentView !== 'workspaces' && currentView !== 'workspace-settings') {
+        setCurrentView('dashboard');
+      }
     }
   }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname]);
 
