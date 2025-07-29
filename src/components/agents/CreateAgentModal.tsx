@@ -69,83 +69,30 @@ export function CreateAgentModal({ open, onOpenChange }: CreateAgentModalProps) 
     setIsLoading(true);
 
     try {
-      // Generate temporary password for the agent
-      const tempPassword = Math.random().toString(36).slice(-12);
-
-      // First, create a user account for the agent
-      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: formData.email,
-        password: tempPassword,
-        email_confirm: true,
-        user_metadata: {
-          display_name: formData.displayName
-        }
+      // Call the edge function to create the agent
+      const { data, error } = await supabase.functions.invoke("create-agent-user", {
+        body: {
+          email: formData.email,
+          displayName: formData.displayName,
+          phone: formData.phone,
+          agentCode: formData.agentCode,
+          status: formData.status,
+          specialization: formData.specialization,
+        },
       });
 
-      if (authError) {
-        throw new Error(`Failed to create user account: ${authError.message}`);
+      if (error) {
+        throw new Error(`Failed to create agent: ${error.message}`);
       }
 
-      if (!authData.user) {
-        throw new Error('Failed to create user account');
+      if (data.error) {
+        throw new Error(data.error);
       }
 
-      // Create the agent record
-      await createAgent({
-        user_id: authData.user.id,
-        agent_code: formData.agentCode,
-        status: formData.status,
-        specialization: formData.specialization
+      toast({
+        title: "Success",
+        description: "Agent created successfully. Welcome email sent with login instructions."
       });
-
-      // Update the profile with additional info
-      await supabase
-        .from('profiles')
-        .update({
-          display_name: formData.displayName,
-          phone: formData.phone
-        })
-        .eq('user_id', authData.user.id);
-
-      // Assign agent role
-      await supabase
-        .from('user_roles')
-        .insert({
-          user_id: authData.user.id,
-          role: 'agent'
-        });
-
-      // Send welcome email with login credentials
-      try {
-        const { error: emailError } = await supabase.functions.invoke('send-agent-welcome', {
-          body: {
-            agentName: formData.displayName,
-            agentEmail: formData.email,
-            agentCode: formData.agentCode,
-            tempPassword: tempPassword
-          }
-        });
-
-        if (emailError) {
-          console.warn('Failed to send welcome email:', emailError);
-          toast({
-            title: "Agent Created",
-            description: "Agent created successfully, but welcome email failed to send. Please share login details manually.",
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Success",
-            description: "Agent created successfully. Welcome email sent with login instructions."
-          });
-        }
-      } catch (emailError) {
-        console.warn('Email service unavailable:', emailError);
-        toast({
-          title: "Agent Created",
-          description: `Agent created successfully. Please share these login details: Email: ${formData.email}, Temp Password: ${tempPassword}`,
-        });
-      }
 
       // Reset form
       setFormData({
