@@ -99,6 +99,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.clear();
       sessionStorage.clear();
       
+      // Clear any cookies
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      
       // Sign out from Supabase (this may fail if session is already invalid)
       await supabase.auth.signOut({ scope: 'global' });
       
