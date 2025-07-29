@@ -76,7 +76,14 @@ export function CreateAgentPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submission started with data:', formData);
+    
     if (!formData.email || !formData.displayName || !formData.agentCode) {
+      console.log('Validation failed - missing required fields:', {
+        email: formData.email,
+        displayName: formData.displayName,
+        agentCode: formData.agentCode
+      });
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -85,8 +92,30 @@ export function CreateAgentPage() {
       return;
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      console.log('Email validation failed:', formData.email);
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
+      console.log('Calling edge function with payload:', {
+        email: formData.email,
+        displayName: formData.displayName,
+        phone: formData.phone,
+        agentCode: formData.agentCode,
+        workspaceIds: formData.workspaceIds,
+        status: formData.status,
+        permissions: formData.permissions,
+      });
+
       // Call the edge function to create the agent
       const { data, error } = await supabase.functions.invoke("create-agent-user", {
         body: {
@@ -100,16 +129,27 @@ export function CreateAgentPage() {
         },
       });
 
+      console.log('Edge function response:', { data, error });
+
       // Check if the response contains an error message (from 400+ status codes)
       if (data?.error) {
+        console.error('Edge function returned error:', data.error);
         throw new Error(data.error);
       }
 
       // Check for network/connection errors
       if (error) {
+        console.error('Network/connection error:', error);
         throw new Error(`Failed to create agent: ${error.message}`);
       }
 
+      // Check if we got a successful response
+      if (!data?.success) {
+        console.error('Unexpected response format:', data);
+        throw new Error('Agent creation failed - unexpected response format');
+      }
+
+      console.log('Agent created successfully:', data);
       toast({
         title: "Success",
         description: `Agent created successfully! Default password: ${data.tempPassword || "Password123!"}`
@@ -120,6 +160,7 @@ export function CreateAgentPage() {
 
     } catch (error) {
       console.error('Error creating agent:', error);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create agent",
