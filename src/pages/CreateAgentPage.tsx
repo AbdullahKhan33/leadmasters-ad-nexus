@@ -107,12 +107,14 @@ export function CreateAgentPage() {
         },
       });
 
-      if (error) {
-        throw new Error(`Failed to create agent: ${error.message}`);
+      // Check if the response contains an error message (from 400+ status codes)
+      if (data?.error) {
+        throw new Error(data.error);
       }
 
-      if (data.error) {
-        throw new Error(data.error);
+      // Check for network/connection errors
+      if (error) {
+        throw new Error(`Failed to create agent: ${error.message}`);
       }
 
       toast({
