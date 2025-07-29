@@ -21,6 +21,7 @@ import { BlogPostPage } from "./components/public/BlogPostPage";
 import { LegalPage } from "./components/public/LegalPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { CreateAgentPage } from "./pages/CreateAgentPage";
+import { EditAgentPage } from "./pages/EditAgentPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ function App() {
                   <Route path="/login" element={<AuthPage />} />
                   <Route path="/agents" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
+                  <Route path="/agents/edit/:agentId" element={<ProtectedRoute><EditAgentPage /></ProtectedRoute>} />
                   <Route path="/about-us" element={<AboutUsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/pricing" element={<PricingPage />} />

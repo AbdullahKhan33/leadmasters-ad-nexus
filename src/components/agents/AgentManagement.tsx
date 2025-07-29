@@ -20,14 +20,14 @@ import {
   Award,
   Activity
 } from "lucide-react";
-import { EditAgentModal } from "./EditAgentModal";
+import { DeleteAgentDialog } from "./DeleteAgentDialog";
 import { AgentStatsCards } from "./AgentStatsCards";
 
 export function AgentManagement() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [editingAgent, setEditingAgent] = useState<any>(null);
-  const { agents, isLoading, deleteAgent } = useAgents();
+  const [deleteAgent, setDeleteAgent] = useState<{ id: string; name: string } | null>(null);
+  const { agents, isLoading, deleteAgent: performDeleteAgent } = useAgents();
   const { userRole } = useAuth();
   const { toast } = useToast();
 
@@ -37,13 +37,16 @@ export function AgentManagement() {
     agent.agent_code.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDeleteAgent = async (agentId: string) => {
+  const handleDeleteAgent = async () => {
+    if (!deleteAgent) return;
+    
     try {
-      await deleteAgent(agentId);
+      await performDeleteAgent(deleteAgent.id);
       toast({
         title: "Success",
         description: "Agent deleted successfully"
       });
+      setDeleteAgent(null);
     } catch (error) {
       toast({
         title: "Error",
@@ -205,12 +208,12 @@ export function AgentManagement() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setEditingAgent(agent)}>
+                            <DropdownMenuItem onClick={() => navigate(`/agents/edit/${agent.id}`)}>
                               <Edit className="w-4 h-4 mr-2" />
                               Edit Agent
                             </DropdownMenuItem>
                             <DropdownMenuItem 
-                              onClick={() => handleDeleteAgent(agent.id)}
+                              onClick={() => setDeleteAgent({ id: agent.id, name: agent.display_name || agent.email || 'Unknown' })}
                               className="text-red-600 hover:text-red-700"
                             >
                               <Trash2 className="w-4 h-4 mr-2" />
@@ -228,14 +231,13 @@ export function AgentManagement() {
         </CardContent>
       </Card>
 
-      {/* Modals */}
-      {editingAgent && (
-        <EditAgentModal
-          agent={editingAgent}
-          open={!!editingAgent}
-          onOpenChange={(open) => !open && setEditingAgent(null)}
-        />
-      )}
+      {/* Delete Confirmation Dialog */}
+      <DeleteAgentDialog
+        open={!!deleteAgent}
+        onOpenChange={(open) => !open && setDeleteAgent(null)}
+        onConfirm={handleDeleteAgent}
+        agentName={deleteAgent?.name || ""}
+      />
     </div>
   );
 }
