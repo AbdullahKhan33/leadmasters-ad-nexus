@@ -101,7 +101,7 @@ function IndexContent() {
         setCurrentView('dashboard');
       }
     }
-  }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname]);
+  }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname, currentView]);
 
   // Monitor workspace changes to redirect when all workspaces are deleted (authenticated admin only)
   useEffect(() => {
