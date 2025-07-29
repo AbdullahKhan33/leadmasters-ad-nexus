@@ -13,7 +13,17 @@ import { useAuth } from "@/contexts/AuthContext";
 const FEATURE_PERMISSIONS = [
   { key: "ad_builder", label: "Ad Builder", description: "Create and manage ad campaigns" },
   { key: "post_builder", label: "Post Builder", description: "Create social media posts" },
-  { key: "crm", label: "CRM", description: "Access customer relationship management" },
+  { 
+    key: "crm", 
+    label: "CRM", 
+    description: "Access customer relationship management",
+    subPermissions: [
+      { key: "crm_inbox", label: "Inbox", description: "Access CRM inbox view" },
+      { key: "crm_pipeline", label: "Pipeline", description: "Access CRM pipeline view" },
+      { key: "crm_table_view", label: "Table View", description: "Access CRM table view" },
+      { key: "crm_segments", label: "Segments", description: "Access CRM segments view" }
+    ]
+  },
   { key: "analytics", label: "Analytics", description: "View performance analytics" },
   { key: "templates", label: "Templates", description: "Access and use templates" },
   { key: "schedule", label: "Schedule", description: "Schedule posts and campaigns" },
@@ -257,22 +267,49 @@ export function CreateAgentPage() {
               <CardDescription>Select which features this agent can access</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="space-y-4">
                 {FEATURE_PERMISSIONS.map(permission => (
-                  <div key={permission.key} className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-                    <input
-                      type="checkbox"
-                      id={permission.key}
-                      checked={formData.permissions[permission.key] || false}
-                      onChange={() => togglePermission(permission.key)}
-                      className="mt-1"
-                    />
-                    <div className="flex-1">
-                      <label htmlFor={permission.key} className="font-medium cursor-pointer">
-                        {permission.label}
-                      </label>
-                      <p className="text-sm text-muted-foreground">{permission.description}</p>
+                  <div key={permission.key} className="border rounded-lg p-4">
+                    <div className="flex items-start space-x-3 hover:bg-accent/50 transition-colors">
+                      <input
+                        type="checkbox"
+                        id={permission.key}
+                        checked={formData.permissions[permission.key] || false}
+                        onChange={() => togglePermission(permission.key)}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <label htmlFor={permission.key} className="font-medium cursor-pointer">
+                          {permission.label}
+                        </label>
+                        <p className="text-sm text-muted-foreground">{permission.description}</p>
+                      </div>
                     </div>
+                    
+                    {permission.subPermissions && formData.permissions[permission.key] && (
+                      <div className="mt-4 ml-6 pl-4 border-l-2 border-accent space-y-3">
+                        <p className="text-sm font-medium text-muted-foreground">Select CRM sub-sections:</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {permission.subPermissions.map(subPermission => (
+                            <div key={subPermission.key} className="flex items-start space-x-3 p-3 border rounded hover:bg-accent/30 transition-colors">
+                              <input
+                                type="checkbox"
+                                id={subPermission.key}
+                                checked={formData.permissions[subPermission.key] || false}
+                                onChange={() => togglePermission(subPermission.key)}
+                                className="mt-1"
+                              />
+                              <div className="flex-1">
+                                <label htmlFor={subPermission.key} className="text-sm font-medium cursor-pointer">
+                                  {subPermission.label}
+                                </label>
+                                <p className="text-xs text-muted-foreground">{subPermission.description}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

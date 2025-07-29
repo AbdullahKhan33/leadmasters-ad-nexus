@@ -4,6 +4,10 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export interface AgentPermissions {
   crm: boolean;
+  crm_inbox?: boolean;
+  crm_pipeline?: boolean;
+  crm_table_view?: boolean;
+  crm_segments?: boolean;
   post_builder: boolean;
   ad_builder?: boolean;
   analytics?: boolean;
@@ -29,6 +33,10 @@ export function useAgentPermissions() {
       if (userRole === 'admin') {
         setPermissions({
           crm: true,
+          crm_inbox: true,
+          crm_pipeline: true,
+          crm_table_view: true,
+          crm_segments: true,
           post_builder: true,
           ad_builder: true,
           analytics: true,
@@ -62,6 +70,10 @@ export function useAgentPermissions() {
               // Parse the permissions object safely
               const parsedPermissions: AgentPermissions = {
                 crm: Boolean(agentPermissions.crm),
+                crm_inbox: Boolean(agentPermissions.crm_inbox),
+                crm_pipeline: Boolean(agentPermissions.crm_pipeline),
+                crm_table_view: Boolean(agentPermissions.crm_table_view),
+                crm_segments: Boolean(agentPermissions.crm_segments),
                 post_builder: Boolean(agentPermissions.post_builder),
                 ad_builder: Boolean(agentPermissions.ad_builder),
                 analytics: Boolean(agentPermissions.analytics),
