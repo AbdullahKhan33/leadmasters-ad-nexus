@@ -19,6 +19,7 @@ import {
 import { useSidebar } from "@/components/ui/sidebar";
 import { Logo } from "@/components/ui/logo";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Megaphone,
@@ -122,10 +123,7 @@ export function WorkspaceSidebar({
     }
   };
 
-  const handleLogout = () => {
-    console.log("Logging out...");
-    window.location.reload();
-  };
+  const { logout } = useAuth();
 
   const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView);
 
@@ -469,7 +467,7 @@ export function WorkspaceSidebar({
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
-                  onClick={handleLogout} 
+                  onClick={logout} 
                   className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
                 >
                   <LogOut className="w-4 h-4 mr-2" />

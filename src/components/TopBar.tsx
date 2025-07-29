@@ -202,9 +202,6 @@ export function TopBar() {
                   <User className="w-4 h-4" />
                   <span>{user?.email || 'User'}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <LogoutButton />
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
