@@ -38,13 +38,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 .from('user_roles')
                 .select('role')
                 .eq('user_id', session.user.id)
-                .single();
+                .maybeSingle(); // Use maybeSingle instead of single to handle no rows
               
               if (!error && data) {
                 setUserRole(data.role);
+              } else {
+                setUserRole('user'); // Default to user role if no role found
               }
             } catch (error) {
               console.error('Error fetching user role:', error);
+              setUserRole('user'); // Default to user role on error
             }
           }, 0);
         } else {
@@ -69,13 +72,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               .from('user_roles')
               .select('role')
               .eq('user_id', session.user.id)
-              .single();
+              .maybeSingle(); // Use maybeSingle instead of single to handle no rows
             
             if (!error && data) {
               setUserRole(data.role);
+            } else {
+              setUserRole('user'); // Default to user role if no role found
             }
           } catch (error) {
             console.error('Error fetching user role:', error);
+            setUserRole('user'); // Default to user role on error
           }
         }, 0);
       }
