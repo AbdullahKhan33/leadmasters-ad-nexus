@@ -1,13 +1,28 @@
 
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLocation, useParams } from "react-router-dom";
 import { AgentManagement } from "./agents/AgentManagement";
 import { AgentDashboard } from "./agents/AgentDashboard";
 import { AgentAnalytics } from "./agents/AgentAnalytics";
+import { CreateAgentPage } from "@/pages/CreateAgentPage";
+import { EditAgentPage } from "@/pages/EditAgentPage";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function Agents() {
   const { userRole } = useAuth();
+  const location = useLocation();
+  const { agentId } = useParams();
+
+  // Check if we're on the create agent route
+  if (location.pathname === '/app/agents/create') {
+    return <CreateAgentPage />;
+  }
+
+  // Check if we're on the edit agent route
+  if (location.pathname.startsWith('/app/agents/edit/') && agentId) {
+    return <EditAgentPage />;
+  }
 
   if (userRole === 'admin') {
     return (
