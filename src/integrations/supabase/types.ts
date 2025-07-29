@@ -14,10 +14,95 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_lead_assignments: {
+        Row: {
+          agent_id: string
+          assigned_at: string
+          assigned_by: string | null
+          id: string
+          lead_id: string
+          notes: string | null
+          status: string
+        }
+        Insert: {
+          agent_id: string
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          lead_id: string
+          notes?: string | null
+          status?: string
+        }
+        Update: {
+          agent_id?: string
+          assigned_at?: string
+          assigned_by?: string | null
+          id?: string
+          lead_id?: string
+          notes?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_assignments_agent_id"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_assignments_lead_id"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agents: {
+        Row: {
+          agent_code: string
+          assigned_leads_count: number
+          created_at: string
+          id: string
+          performance_score: number | null
+          specialization: string[] | null
+          status: string
+          total_leads_handled: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agent_code: string
+          assigned_leads_count?: number
+          created_at?: string
+          id?: string
+          performance_score?: number | null
+          specialization?: string[] | null
+          status?: string
+          total_leads_handled?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agent_code?: string
+          assigned_leads_count?: number
+          created_at?: string
+          id?: string
+          performance_score?: number | null
+          specialization?: string[] | null
+          status?: string
+          total_leads_handled?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           ai_next_action: string | null
           ai_score: number | null
+          assigned_agent_id: string | null
           category: string | null
           created_at: string
           email: string | null
@@ -38,6 +123,7 @@ export type Database = {
         Insert: {
           ai_next_action?: string | null
           ai_score?: number | null
+          assigned_agent_id?: string | null
           category?: string | null
           created_at?: string
           email?: string | null
@@ -58,6 +144,7 @@ export type Database = {
         Update: {
           ai_next_action?: string | null
           ai_score?: number | null
+          assigned_agent_id?: string | null
           category?: string | null
           created_at?: string
           email?: string | null
@@ -75,6 +162,71 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "fk_leads_assigned_agent"
+            columns: ["assigned_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id?: string
+        }
         Relationships: []
       }
     }
@@ -82,10 +234,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "agent" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -212,6 +374,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "agent", "user"],
+    },
   },
 } as const
