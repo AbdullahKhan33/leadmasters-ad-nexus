@@ -135,12 +135,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Sign out from Supabase with all scopes
       await supabase.auth.signOut({ scope: 'global' });
       
-      // Force a complete page reload to root
-      window.location.replace('/');
+      // Force a complete page reload to login
+      window.location.replace('/auth');
     } catch (error) {
       console.error('Error during logout:', error);
       // Force redirect even if signOut fails
-      window.location.replace('/');
+      window.location.replace('/auth');
     }
   };
 
