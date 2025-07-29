@@ -125,7 +125,7 @@ export function AgentManagement() {
                   <TableHead>Assigned Leads</TableHead>
                   <TableHead>Total Handled</TableHead>
                   <TableHead>Performance</TableHead>
-                  <TableHead>Specialization</TableHead>
+                  <TableHead>Permissions</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -178,18 +178,21 @@ export function AgentManagement() {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
-                          {agent.specialization && agent.specialization.length > 0 ? (
-                            agent.specialization.slice(0, 2).map((spec, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {spec}
-                              </Badge>
-                            ))
+                          {agent.permissions && Object.keys(agent.permissions).length > 0 ? (
+                            Object.entries(agent.permissions)
+                              .filter(([_, enabled]) => enabled)
+                              .slice(0, 2)
+                              .map(([permission, _], index) => (
+                                <Badge key={index} variant="outline" className="text-xs">
+                                  {permission.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                </Badge>
+                              ))
                           ) : (
-                            <span className="text-gray-400">None</span>
+                            <span className="text-gray-400">No permissions</span>
                           )}
-                          {agent.specialization && agent.specialization.length > 2 && (
+                          {agent.permissions && Object.entries(agent.permissions).filter(([_, enabled]) => enabled).length > 2 && (
                             <Badge variant="outline" className="text-xs">
-                              +{agent.specialization.length - 2}
+                              +{Object.entries(agent.permissions).filter(([_, enabled]) => enabled).length - 2} more
                             </Badge>
                           )}
                         </div>

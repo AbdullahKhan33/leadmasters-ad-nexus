@@ -85,11 +85,16 @@ export function AgentDashboard() {
             <code className="bg-gray-100 px-2 py-1 rounded">{myAgent.agent_code}</code>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">Specialization</p>
+            <p className="text-sm font-medium text-gray-500">Permissions</p>
             <div className="flex flex-wrap gap-2 mt-1">
-              {myAgent.specialization?.map(spec => (
-                <Badge key={spec} variant="outline">{spec}</Badge>
-              ))}
+              {myAgent.permissions && Object.entries(myAgent.permissions)
+                .filter(([_, enabled]) => enabled)
+                .map(([permission, _]) => (
+                  <Badge key={permission} variant="outline">
+                    {permission.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  </Badge>
+                ))
+              }
             </div>
           </div>
         </CardContent>

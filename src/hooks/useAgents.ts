@@ -10,7 +10,7 @@ export interface Agent {
   assigned_leads_count: number;
   total_leads_handled: number;
   performance_score?: number;
-  specialization: string[];
+  permissions: Record<string, boolean>;
   created_at: string;
   updated_at: string;
   // Joined data from profiles
@@ -90,7 +90,7 @@ export function useAgents() {
     user_id: string;
     agent_code: string;
     status?: string;
-    specialization?: string[];
+    permissions?: Record<string, boolean>;
   }) => {
     try {
       const { data, error } = await supabase

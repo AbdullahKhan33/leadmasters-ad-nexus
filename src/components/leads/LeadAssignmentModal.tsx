@@ -175,11 +175,15 @@ export function LeadAssignmentModal({
                         <TableCell>{getWorkloadBadge(getAgentWorkload(agent.id))}</TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
-                            {agent.specialization?.slice(0, 2).map(spec => (
-                              <Badge key={spec} variant="outline" className="text-xs">
-                                {spec}
-                              </Badge>
-                            ))}
+                            {agent.permissions && Object.entries(agent.permissions)
+                              .filter(([_, enabled]) => enabled)
+                              .slice(0, 2)
+                              .map(([permission, _]) => (
+                                <Badge key={permission} variant="outline" className="text-xs">
+                                  {permission.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                </Badge>
+                              ))
+                            }
                           </div>
                         </TableCell>
                       </TableRow>

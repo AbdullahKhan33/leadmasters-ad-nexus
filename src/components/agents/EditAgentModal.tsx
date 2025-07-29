@@ -17,17 +17,16 @@ interface EditAgentModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const SPECIALIZATION_OPTIONS = [
-  "Real Estate",
-  "Insurance", 
-  "Technology",
-  "Healthcare",
-  "Finance",
-  "Education",
-  "Retail",
-  "Automotive",
-  "B2B Sales",
-  "B2C Sales"
+const FEATURE_PERMISSIONS = [
+  { key: "ad_builder", label: "Ad Builder", description: "Create and manage ad campaigns" },
+  { key: "post_builder", label: "Post Builder", description: "Create social media posts" },
+  { key: "crm", label: "CRM", description: "Access customer relationship management" },
+  { key: "analytics", label: "Analytics", description: "View performance analytics" },
+  { key: "templates", label: "Templates", description: "Access and use templates" },
+  { key: "schedule", label: "Schedule", description: "Schedule posts and campaigns" },
+  { key: "content_hub", label: "Content Hub", description: "Access content library" },
+  { key: "insights", label: "Insights", description: "View detailed insights" },
+  { key: "automations", label: "Smart Automations", description: "Set up automated workflows" }
 ];
 
 export function EditAgentModal({ agent, open, onOpenChange }: EditAgentModalProps) {
@@ -37,10 +36,9 @@ export function EditAgentModal({ agent, open, onOpenChange }: EditAgentModalProp
     phone: agent.phone || "",
     agentCode: agent.agent_code,
     status: agent.status,
-    specialization: agent.specialization || [],
+    permissions: agent.permissions || {},
     performanceScore: agent.performance_score?.toString() || ""
   });
-  const [newSpecialization, setNewSpecialization] = useState("");
   const { updateAgent } = useAgents();
   const { toast } = useToast();
 
@@ -50,25 +48,18 @@ export function EditAgentModal({ agent, open, onOpenChange }: EditAgentModalProp
       phone: agent.phone || "",
       agentCode: agent.agent_code,
       status: agent.status,
-      specialization: agent.specialization || [],
+      permissions: agent.permissions || {},
       performanceScore: agent.performance_score?.toString() || ""
     });
   }, [agent]);
 
-  const addSpecialization = (spec: string) => {
-    if (spec && !formData.specialization.includes(spec)) {
-      setFormData(prev => ({
-        ...prev,
-        specialization: [...prev.specialization, spec]
-      }));
-    }
-    setNewSpecialization("");
-  };
-
-  const removeSpecialization = (spec: string) => {
+  const togglePermission = (key: string) => {
     setFormData(prev => ({
       ...prev,
-      specialization: prev.specialization.filter(s => s !== spec)
+      permissions: {
+        ...prev.permissions,
+        [key]: !prev.permissions[key]
+      }
     }));
   };
 
@@ -81,7 +72,7 @@ export function EditAgentModal({ agent, open, onOpenChange }: EditAgentModalProp
       await updateAgent(agent.id, {
         agent_code: formData.agentCode,
         status: formData.status,
-        specialization: formData.specialization,
+        permissions: formData.permissions,
         performance_score: formData.performanceScore ? parseFloat(formData.performanceScore) : undefined
       });
 
@@ -115,7 +106,7 @@ export function EditAgentModal({ agent, open, onOpenChange }: EditAgentModalProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Edit Agent</DialogTitle>
         </DialogHeader>
@@ -193,43 +184,28 @@ export function EditAgentModal({ agent, open, onOpenChange }: EditAgentModalProp
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>Specialization</Label>
-            <div className="flex gap-2">
-              <Select value={newSpecialization} onValueChange={setNewSpecialization}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Add specialization" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SPECIALIZATION_OPTIONS.map(option => (
-                    <SelectItem key={option} value={option}>{option}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="sm"
-                onClick={() => addSpecialization(newSpecialization)}
-                disabled={!newSpecialization}
-              >
-                <Plus className="w-4 h-4" />
-              </Button>
+          <div className="space-y-3">
+            <Label>Feature Permissions</Label>
+            <p className="text-sm text-muted-foreground">Select which features this agent can access</p>
+            <div className="grid grid-cols-1 gap-3">
+              {FEATURE_PERMISSIONS.map(permission => (
+                <div key={permission.key} className="flex items-start space-x-3 p-3 border rounded-lg">
+                  <input
+                    type="checkbox"
+                    id={permission.key}
+                    checked={formData.permissions[permission.key] || false}
+                    onChange={() => togglePermission(permission.key)}
+                    className="mt-1"
+                  />
+                  <div className="flex-1">
+                    <label htmlFor={permission.key} className="font-medium cursor-pointer">
+                      {permission.label}
+                    </label>
+                    <p className="text-sm text-muted-foreground">{permission.description}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            
-            {formData.specialization.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {formData.specialization.map(spec => (
-                  <Badge key={spec} variant="secondary" className="flex items-center gap-1">
-                    {spec}
-                    <X 
-                      className="w-3 h-3 cursor-pointer hover:text-red-600" 
-                      onClick={() => removeSpecialization(spec)}
-                    />
-                  </Badge>
-                ))}
-              </div>
-            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">

@@ -66,7 +66,7 @@ export type Database = {
           created_at: string
           id: string
           performance_score: number | null
-          specialization: string[] | null
+          permissions: Json
           status: string
           total_leads_handled: number
           updated_at: string
@@ -78,7 +78,7 @@ export type Database = {
           created_at?: string
           id?: string
           performance_score?: number | null
-          specialization?: string[] | null
+          permissions?: Json
           status?: string
           total_leads_handled?: number
           updated_at?: string
@@ -90,7 +90,7 @@ export type Database = {
           created_at?: string
           id?: string
           performance_score?: number | null
-          specialization?: string[] | null
+          permissions?: Json
           status?: string
           total_leads_handled?: number
           updated_at?: string

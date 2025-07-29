@@ -13,7 +13,7 @@ interface CreateAgentRequest {
   phone?: string;
   agentCode: string;
   status: string;
-  specialization: string[];
+  permissions: Record<string, boolean>;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -35,7 +35,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-    const { email, displayName, phone, agentCode, status, specialization }: CreateAgentRequest = await req.json();
+    const { email, displayName, phone, agentCode, status, permissions }: CreateAgentRequest = await req.json();
 
     console.log("Creating agent user:", { email, displayName, agentCode });
 
@@ -80,7 +80,7 @@ const handler = async (req: Request): Promise<Response> => {
         user_id: userData.user.id,
         agent_code: agentCode,
         status,
-        specialization,
+        permissions,
       })
       .select()
       .single();
