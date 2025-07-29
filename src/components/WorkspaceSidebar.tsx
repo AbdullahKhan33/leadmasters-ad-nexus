@@ -149,9 +149,18 @@ export function WorkspaceSidebar({
     return user?.user_metadata?.display_name || user?.email || 'Agent User';
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log('Logout clicked from WorkspaceSidebar');
-    logout();
+    try {
+      // Force immediate logout
+      await logout();
+      // Force page refresh to ensure clean state
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force redirect even if logout fails
+      window.location.href = '/';
+    }
   };
 
   return (
