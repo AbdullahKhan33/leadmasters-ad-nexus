@@ -68,17 +68,19 @@ function IndexContent() {
     }
   }, [isInWorkspace, activeWorkspace, hasWorkspaces, location.state, location.pathname]);
 
-  // Monitor workspace changes to redirect when all workspaces are deleted
+  // Monitor workspace changes to redirect when all workspaces are deleted (admin only)
   useEffect(() => {
-    if (!hasWorkspaces && currentView !== 'workspaces') {
+    const { canManageWorkspaces } = useWorkspace();
+    if (!hasWorkspaces && currentView !== 'workspaces' && canManageWorkspaces) {
       setCurrentView('workspaces');
     }
   }, [hasWorkspaces, currentView]);
 
-  // Prevent navigation if no workspaces exist
+  // Prevent navigation if no workspaces exist (admin only)
   const handleNavigationClick = (view: AllViews, callback: () => void) => {
-    if (!hasWorkspaces && view !== 'workspaces') {
-      // Don't allow navigation away from workspaces if none exist
+    const { canManageWorkspaces } = useWorkspace();
+    if (!hasWorkspaces && view !== 'workspaces' && canManageWorkspaces) {
+      // Don't allow navigation away from workspaces if none exist for admins
       return;
     }
     callback();
