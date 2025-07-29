@@ -1,18 +1,53 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PublicHeader } from '@/components/public/PublicHeader';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 export function AuthPage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
   const navigate = useNavigate();
+  const [isCheckingRole, setIsCheckingRole] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/app');
-    }
-  }, [isAuthenticated, navigate]);
+    const handleAuthenticatedUser = async () => {
+      if (isAuthenticated && user && !isCheckingRole) {
+        setIsCheckingRole(true);
+        
+        try {
+          // Check user role to determine redirect
+          const { data: roleData, error } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .single();
+
+          if (error) {
+            console.error('Error fetching user role:', error);
+            navigate('/app'); // Fallback to default route
+            return;
+          }
+
+          // Navigate to appropriate page based on role
+          if (roleData.role === 'agent') {
+            // For agents, go directly to dashboard
+            navigate('/app', { state: { view: 'dashboard' } });
+          } else {
+            // For admins, go to main app (will handle workspace logic)
+            navigate('/app');
+          }
+        } catch (error) {
+          console.error('Error handling authentication:', error);
+          navigate('/app');
+        } finally {
+          setIsCheckingRole(false);
+        }
+      }
+    };
+
+    handleAuthenticatedUser();
+  }, [isAuthenticated, user, navigate, isCheckingRole]);
 
   if (isLoading) {
     return (
