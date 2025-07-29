@@ -99,7 +99,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     }
   };
 
-  const handleCreateWorkspace = (formData: typeof createFormData) => {
+  const handleCreateWorkspace = async (formData: typeof createFormData) => {
     // Validate required fields
     const requiredFields = ['fullName', 'name', 'description', 'country', 'industry', 'timezone'];
     const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
@@ -114,7 +114,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     }
 
     const newWorkspace: Workspace = {
-      id: Date.now().toString(),
+      id: Date.now().toString(), // Temporary ID, will be replaced by database ID
       name: formData.name,
       description: formData.description,
       country: formData.country,
@@ -124,31 +124,43 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
       isActive: true
     };
 
-    addWorkspace(newWorkspace);
-    // Auto-select the newly created workspace but stay on workspaces view
-    selectWorkspace(newWorkspace);
+    try {
+      const createdWorkspace = await addWorkspace(newWorkspace);
+      
+      if (createdWorkspace) {
+        // Auto-select the newly created workspace but stay on workspaces view
+        selectWorkspace(createdWorkspace);
 
-    toast({
-      title: "Workspace Created",
-      description: `${formData.name} has been created and selected successfully.`,
-    });
+        toast({
+          title: "Workspace Created",
+          description: `${formData.name} has been created and saved successfully.`,
+        });
 
-    // Reset form and hide it
-    setCreateFormData({
-      fullName: '',
-      name: '',
-      description: '',
-      address: '',
-      country: '',
-      state: '',
-      industry: '',
-      companySize: '',
-      websiteUrl: '',
-      mobileNumber: '',
-      timezone: '',
-      businessType: ''
-    });
-    setShowCreateForm(false);
+        // Reset form and hide it
+        setCreateFormData({
+          fullName: '',
+          name: '',
+          description: '',
+          address: '',
+          country: '',
+          state: '',
+          industry: '',
+          companySize: '',
+          websiteUrl: '',
+          mobileNumber: '',
+          timezone: '',
+          businessType: ''
+        });
+        setShowCreateForm(false);
+      }
+    } catch (error) {
+      console.error('Error creating workspace:', error);
+      toast({
+        title: "Error Creating Workspace",
+        description: "Failed to create workspace. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleOnboardingWorkspaceCreate = (workspaceData: {

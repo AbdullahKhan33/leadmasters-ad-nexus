@@ -19,7 +19,7 @@ interface WorkspaceContextType {
   workspaces: Workspace[];
   setActiveWorkspace: (workspace: Workspace | null) => void;
   selectWorkspace: (workspace: Workspace) => void;
-  addWorkspace: (workspace: Workspace) => void;
+  addWorkspace: (workspace: Workspace) => Promise<Workspace | null>;
   deleteWorkspace: (workspaceId: string) => void;
   isInWorkspace: boolean;
   hasWorkspaces: boolean;
@@ -206,14 +206,50 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setActiveWorkspace(workspace);
   };
 
-  const addWorkspace = (workspace: Workspace) => {
+  const addWorkspace = async (workspace: Workspace): Promise<Workspace | null> => {
     // Only allow admins to add workspaces
     if (userRole !== 'admin') {
       console.warn('Only admins can create workspaces');
-      return;
+      return null;
     }
-    setWorkspaces(prev => [workspace, ...prev]);
-    setActiveWorkspace(workspace);
+
+    try {
+      // Save to Supabase database
+      const { data, error } = await supabase
+        .from('workspaces')
+        .insert({
+          name: workspace.name,
+          description: workspace.description,
+          created_by: user?.id
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating workspace:', error);
+        throw error;
+      }
+
+      // Update local state with the data from database (includes proper ID)
+      const newWorkspace: Workspace = {
+        id: data.id,
+        name: data.name,
+        description: data.description || '',
+        country: workspace.country,
+        industry: workspace.industry,
+        businessType: workspace.businessType,
+        memberCount: workspace.memberCount,
+        isActive: workspace.isActive
+      };
+
+      setWorkspaces(prev => [newWorkspace, ...prev]);
+      setActiveWorkspace(newWorkspace);
+      
+      return newWorkspace;
+    } catch (error) {
+      console.error('Failed to create workspace:', error);
+      return null;
+    }
   };
 
   const deleteWorkspace = (workspaceId: string) => {
