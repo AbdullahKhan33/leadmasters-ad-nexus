@@ -69,10 +69,13 @@ export function CreateAgentModal({ open, onOpenChange }: CreateAgentModalProps) 
     setIsLoading(true);
 
     try {
+      // Generate temporary password for the agent
+      const tempPassword = Math.random().toString(36).slice(-12);
+
       // First, create a user account for the agent
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
         email: formData.email,
-        password: Math.random().toString(36).slice(-12), // Temporary password
+        password: tempPassword,
         email_confirm: true,
         user_metadata: {
           display_name: formData.displayName
@@ -112,10 +115,37 @@ export function CreateAgentModal({ open, onOpenChange }: CreateAgentModalProps) 
           role: 'agent'
         });
 
-      toast({
-        title: "Success",
-        description: "Agent created successfully. They will receive login instructions via email."
-      });
+      // Send welcome email with login credentials
+      try {
+        const { error: emailError } = await supabase.functions.invoke('send-agent-welcome', {
+          body: {
+            agentName: formData.displayName,
+            agentEmail: formData.email,
+            agentCode: formData.agentCode,
+            tempPassword: tempPassword
+          }
+        });
+
+        if (emailError) {
+          console.warn('Failed to send welcome email:', emailError);
+          toast({
+            title: "Agent Created",
+            description: "Agent created successfully, but welcome email failed to send. Please share login details manually.",
+            variant: "destructive"
+          });
+        } else {
+          toast({
+            title: "Success",
+            description: "Agent created successfully. Welcome email sent with login instructions."
+          });
+        }
+      } catch (emailError) {
+        console.warn('Email service unavailable:', emailError);
+        toast({
+          title: "Agent Created",
+          description: `Agent created successfully. Please share these login details: Email: ${formData.email}, Temp Password: ${tempPassword}`,
+        });
+      }
 
       // Reset form
       setFormData({
