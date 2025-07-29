@@ -11,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useWorkspace } from '@/contexts/WorkspaceContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Plus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { OnboardingWorkspaceForm } from './OnboardingWorkspaceForm';
@@ -53,6 +54,7 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     workspace: null 
   });
   const { workspaces, selectWorkspace, activeWorkspace, addWorkspace, deleteWorkspace, hasWorkspaces } = useWorkspace();
+  const { userRole } = useAuth();
   const { toast } = useToast();
 
   const filteredWorkspaces = workspaces.filter(workspace => {
@@ -224,15 +226,18 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
             <p className="text-gray-600 text-lg">
               Organize your campaigns and posts by team, client, or project.
             </p>
-          </div>
-          <Button 
-            onClick={() => setShowCreateForm(true)}
-            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Create Workspace
-          </Button>
-        </div>
+           </div>
+           {/* Create Workspace Button - Admin only */}
+           {userRole === 'admin' && (
+             <Button 
+               onClick={() => setShowCreateForm(true)}
+               className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
+             >
+               <Plus className="w-5 h-5 mr-2" />
+               Create Workspace
+             </Button>
+           )}
+         </div>
 
         {/* Search and Filter Controls */}
         <WorkspaceFilters

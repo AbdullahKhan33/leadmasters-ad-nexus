@@ -123,7 +123,7 @@ export function WorkspaceSidebar({
     }
   };
 
-  const { logout } = useAuth();
+  const { logout, userRole } = useAuth();
 
   const isCRMViewActive = ['crm', 'domain-setup', 'crm-automations', 'templates', 'agents'].includes(currentView);
 
@@ -185,8 +185,8 @@ export function WorkspaceSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
-          {/* Ad Builder - Show only if user has permission */}
-          {(permissions === null || permissions?.ad_builder !== false) && (
+          {/* Ad Builder - Show only for admin users, not regular users */}
+          {userRole === 'admin' && (
             <SidebarMenuItem>
               <SidebarMenuButton 
                 onClick={onAdBuilderClick}
@@ -207,27 +207,25 @@ export function WorkspaceSidebar({
             </SidebarMenuItem>
           )}
 
-          {/* Post Builder - Show only if user has permission */}
-          {(permissions === null || permissions?.post_builder === true) && (
-            <SidebarMenuItem>
-              <SidebarMenuButton 
-                onClick={onPostBuilderClick}
-                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'post-builder')}`}
-              >
-                {isCollapsed ? (
-                  <div className="flex flex-col items-center space-y-1">
-                    <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
-                    <span className="text-xs font-medium">Post Builder</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-3">
-                    <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
-                    <span className="font-semibold">Post Builder</span>
-                  </div>
-                )}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )}
+          {/* Post Builder - Show for all users for now, can be restricted later */}
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onPostBuilderClick}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'post-builder')}`}
+            >
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">Post Builder</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <PenTool className={`w-5 h-5 ${getIconStyles(currentView === 'post-builder')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">Post Builder</span>
+                </div>
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
 
           <SidebarMenuItem>
             <SidebarMenuButton 
@@ -286,43 +284,44 @@ export function WorkspaceSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
-          {/* CRM Menu with Submenu - Show only if user has permission */}
-          {(permissions === null || permissions?.crm === true) && (
-            <SidebarMenuItem>
-              <div className="space-y-1">
-                <SidebarMenuButton 
-                  onClick={handleCRMMainClick}
-                  className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(isCRMViewActive)}`}
-                >
-                  {isCollapsed ? (
-                    <div className="flex flex-col items-center space-y-1">
-                      <BarChart3 className={`w-5 h-5 ${getIconStyles(isCRMViewActive)} group-hover:scale-110 transition-transform duration-200`} />
-                      <span className="text-xs font-medium">Leads</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center space-x-3">
-                        <BarChart3 className={`w-5 h-5 ${getIconStyles(isCRMViewActive)} group-hover:scale-110 transition-transform duration-200`} />
-                        <span className="font-semibold">Leads & CRM</span>
-                      </div>
-                      <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCRMSubmenuOpen ? 'rotate-180' : ''}`} />
-                    </div>
-                  )}
-                </SidebarMenuButton>
-              
-              {/* Submenu */}
-              {isCRMSubmenuOpen && !isCollapsed && (
-                <div className="ml-6 space-y-1">
-                  <SidebarMenuButton 
-                    onClick={onCRMClick}
-                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm')}`}
-                  >
+          {/* CRM Menu with Submenu - Show for all users for now */}
+          <SidebarMenuItem>
+            <div className="space-y-1">
+              <SidebarMenuButton 
+                onClick={handleCRMMainClick}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(isCRMViewActive)}`}
+              >
+                {isCollapsed ? (
+                  <div className="flex flex-col items-center space-y-1">
+                    <BarChart3 className={`w-5 h-5 ${getIconStyles(isCRMViewActive)} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">Leads</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between w-full">
                     <div className="flex items-center space-x-3">
-                      <MessageSquare className="w-4 h-4" />
-                      <span className="text-sm font-medium">Dashboard</span>
+                      <BarChart3 className={`w-5 h-5 ${getIconStyles(isCRMViewActive)} group-hover:scale-110 transition-transform duration-200`} />
+                      <span className="font-semibold">Leads & CRM</span>
                     </div>
-                  </SidebarMenuButton>
-                  
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCRMSubmenuOpen ? 'rotate-180' : ''}`} />
+                  </div>
+                )}
+              </SidebarMenuButton>
+            
+            {/* Submenu */}
+            {isCRMSubmenuOpen && !isCollapsed && (
+              <div className="ml-6 space-y-1">
+                <SidebarMenuButton 
+                  onClick={onCRMClick}
+                  className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm')}`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <MessageSquare className="w-4 h-4" />
+                    <span className="text-sm font-medium">Dashboard</span>
+                  </div>
+                </SidebarMenuButton>
+                
+                {/* Domain Setup - Admin only */}
+                {userRole === 'admin' && (
                   <SidebarMenuButton 
                     onClick={onDomainSetupClick}
                     className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'domain-setup')}`}
@@ -332,7 +331,10 @@ export function WorkspaceSidebar({
                       <span className="text-sm font-medium">Domain Setup</span>
                     </div>
                   </SidebarMenuButton>
-                  
+                )}
+                
+                {/* CRM Automations - Admin only */}
+                {userRole === 'admin' && (
                   <SidebarMenuButton 
                     onClick={onCRMAutomationsClick}
                     className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm-automations')}`}
@@ -342,7 +344,10 @@ export function WorkspaceSidebar({
                       <span className="text-sm font-medium">Automations</span>
                     </div>
                   </SidebarMenuButton>
+                )}
 
+                {/* Agents - Admin only */}
+                {userRole === 'admin' && (
                   <SidebarMenuButton 
                     onClick={onAgentsClick}
                     className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'agents')}`}
@@ -352,7 +357,10 @@ export function WorkspaceSidebar({
                       <span className="text-sm font-medium">Agents</span>
                     </div>
                   </SidebarMenuButton>
+                )}
 
+                {/* Templates - Admin only */}
+                {userRole === 'admin' && (
                   <SidebarMenuButton 
                     onClick={onTemplatesClick}
                     className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'templates')}`}
@@ -362,50 +370,57 @@ export function WorkspaceSidebar({
                       <span className="text-sm font-medium">Templates</span>
                     </div>
                   </SidebarMenuButton>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
+          </div>
+          </SidebarMenuItem>
+
+          {/* Insights - Admin only */}
+          {userRole === 'admin' && (
+            <SidebarMenuItem>
+              <SidebarMenuButton 
+                onClick={onAnalyticsClick}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'analytics')}`}
+              >
+                {isCollapsed ? (
+                  <div className="flex flex-col items-center space-y-1">
+                    <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">Insights</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-3">
+                    <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="font-semibold">Insights</span>
+                  </div>
+                )}
+              </SidebarMenuButton>
             </SidebarMenuItem>
           )}
 
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={onAnalyticsClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'analytics')}`}
-            >
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
-                  <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Insights</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-3">
-                  <BarChart3 className={`w-5 h-5 ${getIconStyles(currentView === 'analytics')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Insights</span>
-                </div>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {/* Schedule - Admin only */}
+          {userRole === 'admin' && (
+            <SidebarMenuItem>
+              <SidebarMenuButton 
+                onClick={onScheduleClick}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'schedule')}`}
+              >
+                {isCollapsed ? (
+                  <div className="flex flex-col items-center space-y-1">
+                    <Calendar className={`w-5 h-5 ${getIconStyles(currentView === 'schedule')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">Schedule</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-3">
+                    <Calendar className={`w-5 h-5 ${getIconStyles(currentView === 'schedule')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="font-semibold">Schedule</span>
+                  </div>
+                )}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
 
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={onScheduleClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'schedule')}`}
-            >
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
-                  <Calendar className={`w-5 h-5 ${getIconStyles(currentView === 'schedule')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Schedule</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-3">
-                  <Calendar className={`w-5 h-5 ${getIconStyles(currentView === 'schedule')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Schedule</span>
-                </div>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
+          {/* Workspaces - Show for all users but restrict create functionality */}
           <SidebarMenuItem>
             <SidebarMenuButton 
               onClick={onWorkspacesClick}
@@ -425,24 +440,27 @@ export function WorkspaceSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={onServicesClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'services')}`}
-            >
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
-                  <ShoppingBag className={`w-5 h-5 ${getIconStyles(currentView === 'services')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Services</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-3">
-                  <ShoppingBag className={`w-5 h-5 ${getIconStyles(currentView === 'services')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Services</span>
-                </div>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {/* Services - Admin only */}
+          {userRole === 'admin' && (
+            <SidebarMenuItem>
+              <SidebarMenuButton 
+                onClick={onServicesClick}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'services')}`}
+              >
+                {isCollapsed ? (
+                  <div className="flex flex-col items-center space-y-1">
+                    <ShoppingBag className={`w-5 h-5 ${getIconStyles(currentView === 'services')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">Services</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-3">
+                    <ShoppingBag className={`w-5 h-5 ${getIconStyles(currentView === 'services')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="font-semibold">Services</span>
+                  </div>
+                )}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
         </SidebarMenu>
       </SidebarContent>
 
