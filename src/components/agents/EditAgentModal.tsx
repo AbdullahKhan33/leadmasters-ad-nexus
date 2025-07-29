@@ -25,10 +25,11 @@ const FEATURE_PERMISSIONS = [
     label: "CRM", 
     description: "Access customer relationship management",
     subPermissions: [
-      { key: "crm_inbox", label: "Inbox", description: "Access CRM inbox view" },
-      { key: "crm_pipeline", label: "Pipeline", description: "Access CRM pipeline view" },
-      { key: "crm_table_view", label: "Table View", description: "Access CRM table view" },
-      { key: "crm_segments", label: "Segments", description: "Access CRM segments view" }
+      { key: "crm_dashboard", label: "Dashboard", description: "Access CRM dashboard with leads" },
+      { key: "crm_domain_setup", label: "Domain Setup", description: "Configure domain settings" },
+      { key: "crm_automations", label: "Automations", description: "Manage CRM automations" },
+      { key: "crm_agents", label: "Agents", description: "Manage agent assignments" },
+      { key: "crm_templates", label: "Templates", description: "Access message templates" }
     ]
   },
   { key: "analytics", label: "Analytics", description: "View performance analytics" },

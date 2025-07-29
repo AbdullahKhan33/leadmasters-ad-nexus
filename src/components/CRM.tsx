@@ -1,5 +1,5 @@
 
-import { useState, useMemo, useEffect } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,41 +18,11 @@ import { CSVImportModal } from "./crm/CSVImportModal";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { PremiumUpgradeModal } from "./premium/PremiumUpgradeModal";
 import { SegmentManager } from "./segments/SegmentManager";
-import { useAgentPermissions } from "@/hooks/useAgentPermissions";
-import { useAuth } from "@/contexts/AuthContext";
 
 export function CRM() {
-  const { userRole } = useAuth();
-  const { permissions } = useAgentPermissions();
+  const [activeTab, setActiveTab] = useState("inbox");
   const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
   const [csvImportModal, setCsvImportModal] = useState(false);
-
-  // Determine available tabs based on permissions
-  const availableTabs = useMemo(() => {
-    if (userRole === 'admin') {
-      return ['inbox', 'pipeline', 'table', 'segments'];
-    }
-    
-    if (userRole === 'agent' && permissions) {
-      const tabs = [];
-      if (permissions.crm_inbox) tabs.push('inbox');
-      if (permissions.crm_pipeline) tabs.push('pipeline');
-      if (permissions.crm_table_view) tabs.push('table');
-      if (permissions.crm_segments) tabs.push('segments');
-      return tabs;
-    }
-    
-    return ['inbox']; // default fallback
-  }, [userRole, permissions]);
-
-  const [activeTab, setActiveTab] = useState("inbox");
-
-  // Update active tab when available tabs change
-  useEffect(() => {
-    if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
-      setActiveTab(availableTabs[0]);
-    }
-  }, [availableTabs, activeTab]);
 
   const handleUpgrade = () => {
     // Here you would integrate with your payment system
@@ -91,43 +61,35 @@ export function CRM() {
         {/* Navigation Tabs */}
         <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6 shadow-sm">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className={`grid w-full bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30`} style={{ gridTemplateColumns: `repeat(${availableTabs.length}, 1fr)` }}>
-              {availableTabs.includes('inbox') && (
-                <TabsTrigger 
-                  value="inbox" 
-                  className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Inbox</span>
-                </TabsTrigger>
-              )}
-              {availableTabs.includes('pipeline') && (
-                <TabsTrigger 
-                  value="pipeline" 
-                  className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                  <span>Pipeline</span>
-                </TabsTrigger>
-              )}
-              {availableTabs.includes('table') && (
-                <TabsTrigger 
-                  value="table" 
-                  className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
-                >
-                  <TableProperties className="w-4 h-4" />
-                  <span>Table View</span>
-                </TabsTrigger>
-              )}
-              {availableTabs.includes('segments') && (
-                <TabsTrigger 
-                  value="segments" 
-                  className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
-                >
-                  <Users className="w-4 h-4" />
-                  <span>Segments</span>
-                </TabsTrigger>
-              )}
+            <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
+              <TabsTrigger 
+                value="inbox" 
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Inbox</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="pipeline" 
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
+              >
+                <LayoutGrid className="w-4 h-4" />
+                <span>Pipeline</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="table" 
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
+              >
+                <TableProperties className="w-4 h-4" />
+                <span>Table View</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="segments" 
+                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
+              >
+                <Users className="w-4 h-4" />
+                <span>Segments</span>
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -135,31 +97,23 @@ export function CRM() {
         {/* Content Area */}
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} className="h-full">
-            {availableTabs.includes('inbox') && (
-              <TabsContent value="inbox" className="h-full m-0">
-                <CRMInboxView onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} />
-              </TabsContent>
-            )}
-            {availableTabs.includes('pipeline') && (
-              <TabsContent value="pipeline" className="h-full m-0">
-                <CRMKanbanView />
-              </TabsContent>
-            )}
-            {availableTabs.includes('table') && (
-              <TabsContent value="table" className="h-full m-0">
-                <CRMTableView 
-                  onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} 
-                  onImportClick={() => setCsvImportModal(true)}
-                />
-              </TabsContent>
-            )}
-            {availableTabs.includes('segments') && (
-              <TabsContent value="segments" className="h-full m-0">
-                <div className="h-full p-6">
-                  <SegmentManager />
-                </div>
-              </TabsContent>
-            )}
+            <TabsContent value="inbox" className="h-full m-0">
+              <CRMInboxView onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} />
+            </TabsContent>
+            <TabsContent value="pipeline" className="h-full m-0">
+              <CRMKanbanView />
+            </TabsContent>
+            <TabsContent value="table" className="h-full m-0">
+              <CRMTableView 
+                onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} 
+                onImportClick={() => setCsvImportModal(true)}
+              />
+            </TabsContent>
+            <TabsContent value="segments" className="h-full m-0">
+              <div className="h-full p-6">
+                <SegmentManager />
+              </div>
+            </TabsContent>
           </Tabs>
         </div>
 

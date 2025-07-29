@@ -322,18 +322,21 @@ export function WorkspaceSidebar({
               {/* Submenu */}
               {isCRMSubmenuOpen && !isCollapsed && (
                 <div className="ml-6 space-y-1">
-                  <SidebarMenuButton 
-                    onClick={onCRMClick}
-                    className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm')}`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <MessageSquare className="w-4 h-4" />
-                      <span className="text-sm font-medium">Dashboard</span>
-                    </div>
-                  </SidebarMenuButton>
+                  {/* Dashboard - Always available when CRM is enabled */}
+                  {(userRole === 'admin' || (userRole === 'agent' && permissions?.crm_dashboard)) && (
+                    <SidebarMenuButton 
+                      onClick={onCRMClick}
+                      className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm')}`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <MessageSquare className="w-4 h-4" />
+                        <span className="text-sm font-medium">Dashboard</span>
+                      </div>
+                    </SidebarMenuButton>
+                  )}
                   
-                  {/* Domain Setup - Admin only */}
-                  {userRole === 'admin' && (
+                  {/* Domain Setup - Admin or agents with permission */}
+                  {(userRole === 'admin' || (userRole === 'agent' && permissions?.crm_domain_setup)) && (
                     <SidebarMenuButton 
                       onClick={onDomainSetupClick}
                       className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'domain-setup')}`}
@@ -345,8 +348,8 @@ export function WorkspaceSidebar({
                     </SidebarMenuButton>
                   )}
                   
-                  {/* CRM Automations - Admin only */}
-                  {userRole === 'admin' && (
+                  {/* CRM Automations - Admin or agents with permission */}
+                  {(userRole === 'admin' || (userRole === 'agent' && permissions?.crm_automations)) && (
                     <SidebarMenuButton 
                       onClick={onCRMAutomationsClick}
                       className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'crm-automations')}`}
@@ -358,8 +361,8 @@ export function WorkspaceSidebar({
                     </SidebarMenuButton>
                   )}
 
-                  {/* Agents - Admin only */}
-                  {userRole === 'admin' && (
+                  {/* Agents - Admin or agents with permission */}
+                  {(userRole === 'admin' || (userRole === 'agent' && permissions?.crm_agents)) && (
                     <SidebarMenuButton 
                       onClick={onAgentsClick}
                       className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'agents')}`}
@@ -371,8 +374,8 @@ export function WorkspaceSidebar({
                     </SidebarMenuButton>
                   )}
 
-                  {/* Templates - Admin only */}
-                  {userRole === 'admin' && (
+                  {/* Templates - Admin or agents with permission */}
+                  {(userRole === 'admin' || (userRole === 'agent' && permissions?.crm_templates)) && (
                     <SidebarMenuButton 
                       onClick={onTemplatesClick}
                       className={`w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 group ${getSubmenuItemStyles(currentView === 'templates')}`}
