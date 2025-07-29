@@ -39,7 +39,7 @@ function IndexContent() {
   const { user } = useAuth();
   const { isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces } = useWorkspace();
   const { setIsPremium } = usePremium();
-  const [currentView, setCurrentView] = useState<AllViews>('workspaces');
+  const [currentView, setCurrentView] = useState<AllViews>('dashboard');
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
   const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
   const location = useLocation();
