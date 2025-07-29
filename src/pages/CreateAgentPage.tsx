@@ -31,7 +31,6 @@ export function CreateAgentPage() {
     displayName: "",
     phone: "",
     agentCode: "",
-    defaultPassword: "",
     workspaceId: user?.id || "",
     status: "active",
     permissions: {} as Record<string, boolean>
@@ -44,8 +43,8 @@ export function CreateAgentPage() {
   };
 
   const generatePassword = () => {
-    const password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-4).toUpperCase() + "1!";
-    setFormData(prev => ({ ...prev, defaultPassword: password }));
+    // This function is no longer needed since password is generated server-side
+    // Keeping for backward compatibility but it won't do anything
   };
 
   const togglePermission = (key: string) => {
@@ -60,7 +59,7 @@ export function CreateAgentPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.email || !formData.displayName || !formData.agentCode || !formData.defaultPassword) {
+    if (!formData.email || !formData.displayName || !formData.agentCode) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -78,7 +77,6 @@ export function CreateAgentPage() {
           displayName: formData.displayName,
           phone: formData.phone,
           agentCode: formData.agentCode,
-          defaultPassword: formData.defaultPassword,
           workspaceId: formData.workspaceId,
           status: formData.status,
           permissions: formData.permissions,
@@ -203,21 +201,13 @@ export function CreateAgentPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="defaultPassword">Default Password *</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="defaultPassword"
-                      type="text"
-                      value={formData.defaultPassword}
-                      onChange={(e) => setFormData(prev => ({ ...prev, defaultPassword: e.target.value }))}
-                      placeholder="Enter default password"
-                      required
-                    />
-                    <Button type="button" variant="outline" onClick={generatePassword}>
-                      <Shuffle className="w-4 h-4" />
-                    </Button>
+                  <Label>Temporary Password</Label>
+                  <div className="p-3 bg-muted rounded border">
+                    <p className="text-sm text-muted-foreground">
+                      A secure temporary password will be automatically generated and sent to the agent via email. 
+                      The agent will be required to change this password on their first login.
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground">Agent will be prompted to change this on first login</p>
                 </div>
 
                 <div className="space-y-2">

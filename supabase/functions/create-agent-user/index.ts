@@ -81,6 +81,7 @@ const handler = async (req: Request): Promise<Response> => {
         agent_code: agentCode,
         status,
         permissions,
+        first_login_password_changed: false, // Track if password has been changed
       })
       .select()
       .single();
