@@ -82,6 +82,7 @@ function IndexContent() {
     }
     
     // Only auto-redirect to dashboard if not currently managing workspaces
+    // Don't auto-redirect if user just created a workspace and is still on workspace view
     if (isInWorkspace && activeWorkspace && currentView !== 'workspaces' && currentView !== 'workspace-settings') {
       setCurrentView('dashboard');
     } else if (!hasWorkspaces && canManageWorkspaces) {

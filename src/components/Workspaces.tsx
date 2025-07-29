@@ -125,12 +125,12 @@ export function Workspaces({ onWorkspaceSettingsClick }: { onWorkspaceSettingsCl
     };
 
     addWorkspace(newWorkspace);
-    // Auto-select the newly created workspace to navigate to dashboard
+    // Auto-select the newly created workspace but stay on workspaces view
     selectWorkspace(newWorkspace);
 
     toast({
       title: "Workspace Created",
-      description: `${formData.name} has been created successfully.`,
+      description: `${formData.name} has been created and selected successfully.`,
     });
 
     // Reset form and hide it
