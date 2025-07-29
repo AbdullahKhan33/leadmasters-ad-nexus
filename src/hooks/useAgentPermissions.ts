@@ -43,6 +43,7 @@ export function useAgentPermissions() {
 
       // If user is agent, fetch their specific permissions
       if (userRole === 'agent') {
+        console.log('Fetching agent permissions for user:', user.id);
         try {
           const { data: agentData, error } = await supabase
             .from('agents')
@@ -54,6 +55,7 @@ export function useAgentPermissions() {
             console.error('Error fetching agent permissions:', error);
             setPermissions(null);
           } else {
+            console.log('Agent permissions from DB:', agentData?.permissions);
             const agentPermissions = agentData?.permissions;
             // Type-safe permission parsing
             if (agentPermissions && typeof agentPermissions === 'object' && !Array.isArray(agentPermissions)) {
@@ -68,8 +70,10 @@ export function useAgentPermissions() {
                 social_logins: Boolean(agentPermissions.social_logins),
                 inspiration_hub: Boolean(agentPermissions.inspiration_hub),
               };
+              console.log('Parsed agent permissions:', parsedPermissions);
               setPermissions(parsedPermissions);
             } else {
+              console.log('No valid permissions found for agent');
               setPermissions(null);
             }
           }
@@ -78,6 +82,7 @@ export function useAgentPermissions() {
           setPermissions(null);
         }
       } else {
+        console.log('User is not an agent, userRole:', userRole);
         // Regular users get no permissions
         setPermissions(null);
       }

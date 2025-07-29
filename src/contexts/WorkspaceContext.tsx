@@ -46,16 +46,29 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           .from('user_roles')
           .select('role')
           .eq('user_id', user.id)
-          .single();
+          .order('role', { ascending: false }); // Order by role desc to get agent before user
 
         if (roleError) {
           console.error('Error fetching user role:', roleError);
           return;
         }
 
-        setUserRole(roleData.role);
+        // If user has multiple roles, prioritize agent > admin > user
+        let userRole = 'user'; // default
+        if (roleData && roleData.length > 0) {
+          const roles = roleData.map(r => r.role);
+          if (roles.includes('agent')) {
+            userRole = 'agent';
+          } else if (roles.includes('admin')) {
+            userRole = 'admin';
+          } else {
+            userRole = 'user';
+          }
+        }
 
-        if (roleData.role === 'agent') {
+        setUserRole(userRole);
+
+        if (userRole === 'agent') {
           // For agents, fetch assigned workspaces from database
           const { data: agentData, error: agentError } = await supabase
             .from('agents')

@@ -21,7 +21,7 @@ export function AuthPage() {
             .from('user_roles')
             .select('role')
             .eq('user_id', user.id)
-            .single();
+            .order('role', { ascending: false }); // Order by role desc to get agent before user
 
           if (error) {
             console.error('Error fetching user role:', error);
@@ -29,8 +29,21 @@ export function AuthPage() {
             return;
           }
 
+          // If user has multiple roles, prioritize agent > admin > user
+          let userRole = 'user'; // default
+          if (roleData && roleData.length > 0) {
+            const roles = roleData.map(r => r.role);
+            if (roles.includes('agent')) {
+              userRole = 'agent';
+            } else if (roles.includes('admin')) {
+              userRole = 'admin';
+            } else {
+              userRole = 'user';
+            }
+          }
+
           // Navigate to appropriate page based on role
-          if (roleData.role === 'agent') {
+          if (userRole === 'agent') {
             // For agents, go directly to dashboard
             navigate('/app', { state: { view: 'dashboard' } });
           } else {
