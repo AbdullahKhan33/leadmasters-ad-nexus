@@ -112,10 +112,13 @@ function IndexContent() {
 
   // Prevent navigation if no workspaces exist (admin only)
   const handleNavigationClick = (view: AllViews, callback: () => void) => {
+    console.log('Navigation clicked:', view, 'hasWorkspaces:', hasWorkspaces, 'canManageWorkspaces:', canManageWorkspaces);
     if (!hasWorkspaces && view !== 'workspaces' && canManageWorkspaces) {
       // Don't allow navigation away from workspaces if none exist for admins
+      console.log('Navigation blocked - no workspaces');
       return;
     }
+    console.log('Navigation allowed, executing callback');
     callback();
   };
 
