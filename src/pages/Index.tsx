@@ -25,6 +25,7 @@ import { ContentHub } from "@/components/ContentHub";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { PremiumProvider, usePremium } from "@/contexts/PremiumContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useLocation } from "react-router-dom";
 import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
 import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
@@ -35,6 +36,7 @@ type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'socia
 type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'content-hub';
 
 function IndexContent() {
+  const { user } = useAuth();
   const { isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces } = useWorkspace();
   const { setIsPremium } = usePremium();
   const [currentView, setCurrentView] = useState<AllViews>('workspaces');
@@ -52,6 +54,9 @@ function IndexContent() {
   }, [location.state]);
 
   useEffect(() => {
+    // Only apply workspace logic if user is authenticated
+    if (!user) return;
+    
     // Check if we're on the /agents route
     if (location.pathname === '/agents') {
       setCurrentView('agents');
@@ -60,20 +65,20 @@ function IndexContent() {
     
     if (isInWorkspace && activeWorkspace && !location.state?.view) {
       setCurrentView('dashboard');
-    } else if (!hasWorkspaces) {
-      // Force workspace view for users with no workspaces
+    } else if (!hasWorkspaces && canManageWorkspaces) {
+      // Force workspace view only for authenticated admins with no workspaces
       setCurrentView('workspaces');
-    } else if (!isInWorkspace && !location.state?.view) {
+    } else if (!isInWorkspace && !location.state?.view && hasWorkspaces) {
       setCurrentView('workspaces');
     }
-  }, [isInWorkspace, activeWorkspace, hasWorkspaces, location.state, location.pathname]);
+  }, [user, isInWorkspace, activeWorkspace, hasWorkspaces, canManageWorkspaces, location.state, location.pathname]);
 
-  // Monitor workspace changes to redirect when all workspaces are deleted (admin only)
+  // Monitor workspace changes to redirect when all workspaces are deleted (authenticated admin only)
   useEffect(() => {
-    if (!hasWorkspaces && currentView !== 'workspaces' && canManageWorkspaces) {
+    if (user && !hasWorkspaces && currentView !== 'workspaces' && canManageWorkspaces) {
       setCurrentView('workspaces');
     }
-  }, [hasWorkspaces, currentView, canManageWorkspaces]);
+  }, [user, hasWorkspaces, currentView, canManageWorkspaces]);
 
   // Prevent navigation if no workspaces exist (admin only)
   const handleNavigationClick = (view: AllViews, callback: () => void) => {
