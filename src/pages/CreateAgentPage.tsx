@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, ArrowLeft, Shuffle, X, UserPlus, Users, Award } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 
 const FEATURE_PERMISSIONS = [
   { key: "ad_builder", label: "Ad Builder", description: "Create and manage ad campaigns" },
@@ -36,6 +37,7 @@ const FEATURE_PERMISSIONS = [
 export function CreateAgentPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { workspaces } = useWorkspace();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -46,41 +48,7 @@ export function CreateAgentPage() {
     permissions: {} as Record<string, boolean>,
     workspaceIds: [] as string[]
   });
-  const [workspaces, setWorkspaces] = useState<Array<{id: string, name: string}>>([]);
   const { toast } = useToast();
-
-  // Fetch workspaces on component mount
-  useEffect(() => {
-    const fetchWorkspaces = async () => {
-      try {
-        if (!user) return;
-        
-        console.log('Fetching workspaces for user:', user.id);
-        const { data, error } = await supabase
-          .from('workspaces')
-          .select('id, name, created_by')
-          .eq('created_by', user.id)
-          .order('name');
-        
-        if (error) {
-          console.error('Error fetching workspaces:', error);
-          throw error;
-        }
-        
-        console.log('Fetched workspaces:', data);
-        setWorkspaces(data || []);
-      } catch (error) {
-        console.error('Error fetching workspaces:', error);
-        toast({
-          title: "Warning",
-          description: "Could not load workspaces. Please try refreshing the page.",
-          variant: "destructive"
-        });
-      }
-    };
-
-    fetchWorkspaces();
-  }, [user, toast]);
 
   const generateAgentCode = () => {
     const code = 'AG' + Math.random().toString(36).substr(2, 6).toUpperCase();
