@@ -55,21 +55,32 @@ export function CreateAgentPage() {
       try {
         if (!user) return;
         
+        console.log('Fetching workspaces for user:', user.id);
         const { data, error } = await supabase
           .from('workspaces')
-          .select('id, name')
+          .select('id, name, created_by')
           .eq('created_by', user.id)
           .order('name');
         
-        if (error) throw error;
+        if (error) {
+          console.error('Error fetching workspaces:', error);
+          throw error;
+        }
+        
+        console.log('Fetched workspaces:', data);
         setWorkspaces(data || []);
       } catch (error) {
         console.error('Error fetching workspaces:', error);
+        toast({
+          title: "Warning",
+          description: "Could not load workspaces. Please try refreshing the page.",
+          variant: "destructive"
+        });
       }
     };
 
     fetchWorkspaces();
-  }, [user]);
+  }, [user, toast]);
 
   const generateAgentCode = () => {
     const code = 'AG' + Math.random().toString(36).substr(2, 6).toUpperCase();
@@ -289,51 +300,77 @@ export function CreateAgentPage() {
               <CardDescription className="text-base">Select which features this agent can access</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-6">
-                {FEATURE_PERMISSIONS.map(permission => (
-                  <div key={permission.key} className="group border border-border/50 rounded-xl p-6 hover:border-primary/30 hover:bg-accent/20 transition-all duration-200">
-                    <div className="flex items-start space-x-4">
-                      <input
-                        type="checkbox"
-                        id={permission.key}
-                        checked={formData.permissions[permission.key] || false}
-                        onChange={() => togglePermission(permission.key)}
-                        className="mt-1.5 w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
-                      />
-                      <div className="flex-1 space-y-1">
-                        <label htmlFor={permission.key} className="text-lg font-semibold cursor-pointer group-hover:text-primary transition-colors">
-                          {permission.label}
-                        </label>
-                        <p className="text-muted-foreground leading-relaxed">{permission.description}</p>
-                      </div>
-                    </div>
-                    
-                    {permission.subPermissions && formData.permissions[permission.key] && (
-                      <div className="mt-6 ml-8 pl-6 border-l-2 border-primary/20 space-y-4">
-                        <p className="text-sm font-semibold text-primary">Select CRM sub-sections:</p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {permission.subPermissions.map(subPermission => (
-                            <div key={subPermission.key} className="flex items-start space-x-3 p-4 border border-border/30 rounded-lg hover:bg-accent/30 hover:border-primary/20 transition-all duration-200">
-                              <input
-                                type="checkbox"
-                                id={subPermission.key}
-                                checked={formData.permissions[subPermission.key] || false}
-                                onChange={() => togglePermission(subPermission.key)}
-                                className="mt-1 w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
-                              />
-                              <div className="flex-1 space-y-1">
-                                <label htmlFor={subPermission.key} className="text-sm font-medium cursor-pointer">
-                                  {subPermission.label}
-                                </label>
-                                <p className="text-xs text-muted-foreground">{subPermission.description}</p>
-                              </div>
-                            </div>
-                          ))}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Column 1 - Other features */}
+                <div className="space-y-4">
+                  {FEATURE_PERMISSIONS.filter(p => p.key !== 'crm').map(permission => (
+                    <div key={permission.key} className="group border border-border/50 rounded-lg p-4 hover:border-primary/30 hover:bg-accent/20 transition-all duration-200">
+                      <div className="flex items-start space-x-3">
+                        <input
+                          type="checkbox"
+                          id={permission.key}
+                          checked={formData.permissions[permission.key] || false}
+                          onChange={() => togglePermission(permission.key)}
+                          className="mt-1 w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
+                        />
+                        <div className="flex-1 space-y-1">
+                          <label htmlFor={permission.key} className="text-sm font-semibold cursor-pointer group-hover:text-primary transition-colors">
+                            {permission.label}
+                          </label>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{permission.description}</p>
                         </div>
                       </div>
-                    )}
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Column 2 - CRM with sub-permissions */}
+                <div className="space-y-4">
+                  {FEATURE_PERMISSIONS.filter(p => p.key === 'crm').map(permission => (
+                    <div key={permission.key} className="group border border-border/50 rounded-lg p-4 hover:border-primary/30 hover:bg-accent/20 transition-all duration-200">
+                      <div className="flex items-start space-x-3">
+                        <input
+                          type="checkbox"
+                          id={permission.key}
+                          checked={formData.permissions[permission.key] || false}
+                          onChange={() => togglePermission(permission.key)}
+                          className="mt-1 w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
+                        />
+                        <div className="flex-1 space-y-1">
+                          <label htmlFor={permission.key} className="text-sm font-semibold cursor-pointer group-hover:text-primary transition-colors">
+                            {permission.label}
+                          </label>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{permission.description}</p>
+                        </div>
+                      </div>
+                      
+                      {permission.subPermissions && formData.permissions[permission.key] && (
+                        <div className="mt-4 ml-7 pl-4 border-l-2 border-primary/20 space-y-3">
+                          <p className="text-xs font-semibold text-primary">CRM Access:</p>
+                          <div className="space-y-2">
+                            {permission.subPermissions.map(subPermission => (
+                              <div key={subPermission.key} className="flex items-start space-x-2 p-2 border border-border/30 rounded hover:bg-accent/30 hover:border-primary/20 transition-all duration-200">
+                                <input
+                                  type="checkbox"
+                                  id={subPermission.key}
+                                  checked={formData.permissions[subPermission.key] || false}
+                                  onChange={() => togglePermission(subPermission.key)}
+                                  className="mt-0.5 w-3 h-3 text-primary bg-background border-border rounded focus:ring-primary focus:ring-1"
+                                />
+                                <div className="flex-1">
+                                  <label htmlFor={subPermission.key} className="text-xs font-medium cursor-pointer">
+                                    {subPermission.label}
+                                  </label>
+                                  <p className="text-xs text-muted-foreground">{subPermission.description}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
