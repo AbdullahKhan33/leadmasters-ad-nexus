@@ -5,7 +5,9 @@ import { Check, Zap, Star, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function PricingSection() {
-  const { showLogin } = useAuth();
+  const navigateToLogin = () => {
+    window.location.href = '/login';
+  };
 
   const plans = [
     {
@@ -183,7 +185,7 @@ export function PricingSection() {
               </ul>
 
               <Button
-                onClick={showLogin}
+                onClick={navigateToLogin}
                 className={`w-full py-4 text-lg font-medium transition-all duration-200 ${plan.ctaColor} text-white shadow-lg hover:shadow-xl`}
               >
                 {plan.cta}

@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function FeaturesPage() {
-  const { showLogin } = useAuth();
+  const navigateToLogin = () => {
+    window.location.href = '/login';
+  };
 
   const mainFeatures = [
     {
@@ -86,14 +88,14 @@ export function FeaturesPage() {
                     ))}
                   </ul>
 
-                  <Button 
-                    onClick={showLogin}
-                    variant="outline" 
-                    className="w-full group-hover:bg-purple-50 group-hover:border-purple-300 group-hover:text-purple-700 transition-colors"
-                  >
-                    Try {feature.title}
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+              <Button 
+                onClick={navigateToLogin}
+                variant="outline" 
+                className="w-full group-hover:bg-purple-50 group-hover:border-purple-300 group-hover:text-purple-700 transition-colors"
+              >
+                Try {feature.title}
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
                 </div>
               ))}
             </div>
@@ -135,7 +137,7 @@ export function FeaturesPage() {
                   Setup takes less than 2 minutes.
                 </p>
                 <Button 
-                  onClick={showLogin}
+                  onClick={navigateToLogin}
                   size="lg"
                   className="bg-white text-purple-600 hover:bg-gray-100 text-lg px-8 py-4 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
                 >

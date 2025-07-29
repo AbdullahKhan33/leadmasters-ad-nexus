@@ -192,7 +192,7 @@ export function TopBar() {
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-purple-100 text-purple-600">
-                      {user?.username?.charAt(0).toUpperCase() || 'U'}
+                      {user?.email?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -200,7 +200,7 @@ export function TopBar() {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuItem className="flex items-center space-x-2 px-3 py-2">
                   <User className="w-4 h-4" />
-                  <span>{user?.username || 'User'}</span>
+                  <span>{user?.email || 'User'}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <LogoutButton />

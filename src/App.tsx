@@ -8,7 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import Index from "./pages/Index";
-import { LoginPage } from "./pages/LoginPage";
+import { AuthPage } from "./pages/AuthPage";
 import { PostBuilderPage } from "./pages/PostBuilderPage";
 import NotFound from "./pages/NotFound";
 import { PublicWebsite } from "./components/PublicWebsite";
@@ -35,7 +35,8 @@ function App() {
               <BrowserRouter>
                 <Routes>
                   <Route path="/" element={<PublicWebsite />} />
-                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/login" element={<AuthPage />} />
+                  <Route path="/auth" element={<AuthPage />} />
                   <Route path="/about-us" element={<AboutUsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/pricing" element={<PricingPage />} />
