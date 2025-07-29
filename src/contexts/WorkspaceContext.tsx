@@ -1,5 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './AuthContext';
 
 interface Workspace {
   id: string;
@@ -21,6 +23,8 @@ interface WorkspaceContextType {
   deleteWorkspace: (workspaceId: string) => void;
   isInWorkspace: boolean;
   hasWorkspaces: boolean;
+  userRole: string | null;
+  canManageWorkspaces: boolean;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined);
@@ -28,68 +32,161 @@ const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefin
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [activeWorkspace, setActiveWorkspace] = useState<Workspace | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const { user } = useAuth();
 
-  // Load from localStorage on mount
+  // Load workspaces based on user role
   useEffect(() => {
-    const savedWorkspaces = localStorage.getItem('workspaces');
-    const savedActiveWorkspace = localStorage.getItem('activeWorkspace');
-    
-    if (savedWorkspaces) {
-      const parsedWorkspaces = JSON.parse(savedWorkspaces);
-      setWorkspaces(parsedWorkspaces);
-      
-      if (savedActiveWorkspace) {
-        const parsedActiveWorkspace = JSON.parse(savedActiveWorkspace);
-        setActiveWorkspace(parsedActiveWorkspace);
-      } else if (parsedWorkspaces.length > 0) {
-        // Auto-select first workspace if none is selected
-        setActiveWorkspace(parsedWorkspaces[0]);
+    const loadWorkspaces = async () => {
+      if (!user) return;
+
+      try {
+        // Get user role
+        const { data: roleData, error: roleError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .single();
+
+        if (roleError) {
+          console.error('Error fetching user role:', roleError);
+          return;
+        }
+
+        setUserRole(roleData.role);
+
+        if (roleData.role === 'agent') {
+          // For agents, fetch assigned workspaces from database
+          const { data: agentData, error: agentError } = await supabase
+            .from('agents')
+            .select('id')
+            .eq('user_id', user.id)
+            .single();
+
+          if (agentError || !agentData) {
+            console.error('Error fetching agent data:', agentError);
+            return;
+          }
+
+          const { data: workspaceData, error: workspaceError } = await supabase
+            .from('agent_workspaces')
+            .select('workspace_id')
+            .eq('agent_id', agentData.id);
+
+          if (workspaceError) {
+            console.error('Error fetching agent workspaces:', workspaceError);
+            return;
+          }
+
+          if (workspaceData && workspaceData.length > 0) {
+            const workspaceIds = workspaceData.map(item => item.workspace_id);
+            
+            const { data: assignedWorkspaces, error: workspacesError } = await supabase
+              .from('workspaces')
+              .select('id, name, description')
+              .in('id', workspaceIds);
+
+            if (workspacesError) {
+              console.error('Error fetching workspace details:', workspacesError);
+              return;
+            }
+
+            // Convert database workspaces to match the local interface
+            const formattedWorkspaces = assignedWorkspaces?.map(ws => ({
+              id: ws.id,
+              name: ws.name,
+              description: ws.description || '',
+              country: '',
+              industry: '',
+              businessType: '',
+              memberCount: 0,
+              isActive: true
+            })) || [];
+
+            setWorkspaces(formattedWorkspaces);
+
+            // Auto-select first workspace if none is selected
+            if (formattedWorkspaces.length > 0) {
+              setActiveWorkspace(formattedWorkspaces[0]);
+            }
+          }
+        } else {
+          // For admins, use localStorage as before
+          const savedWorkspaces = localStorage.getItem('workspaces');
+          const savedActiveWorkspace = localStorage.getItem('activeWorkspace');
+          
+          if (savedWorkspaces) {
+            const parsedWorkspaces = JSON.parse(savedWorkspaces);
+            setWorkspaces(parsedWorkspaces);
+            
+            if (savedActiveWorkspace) {
+              const parsedActiveWorkspace = JSON.parse(savedActiveWorkspace);
+              setActiveWorkspace(parsedActiveWorkspace);
+            } else if (parsedWorkspaces.length > 0) {
+              setActiveWorkspace(parsedWorkspaces[0]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading workspaces:', error);
+      }
+    };
+
+    loadWorkspaces();
+  }, [user]);
+
+  // Save to localStorage whenever workspaces change (admin only)
+  useEffect(() => {
+    if (userRole === 'admin') {
+      if (workspaces.length > 0) {
+        localStorage.setItem('workspaces', JSON.stringify(workspaces));
+      } else {
+        localStorage.removeItem('workspaces');
+        localStorage.removeItem('activeWorkspace');
       }
     }
-  }, []);
+  }, [workspaces, userRole]);
 
-  // Save to localStorage whenever workspaces change
+  // Save active workspace to localStorage (admin only)
   useEffect(() => {
-    if (workspaces.length > 0) {
-      localStorage.setItem('workspaces', JSON.stringify(workspaces));
-    } else {
-      // Clear localStorage when no workspaces exist
-      localStorage.removeItem('workspaces');
-      localStorage.removeItem('activeWorkspace');
+    if (userRole === 'admin') {
+      if (activeWorkspace) {
+        localStorage.setItem('activeWorkspace', JSON.stringify(activeWorkspace));
+      } else {
+        localStorage.removeItem('activeWorkspace');
+      }
     }
-  }, [workspaces]);
-
-  // Save active workspace to localStorage
-  useEffect(() => {
-    if (activeWorkspace) {
-      localStorage.setItem('activeWorkspace', JSON.stringify(activeWorkspace));
-    } else {
-      localStorage.removeItem('activeWorkspace');
-    }
-  }, [activeWorkspace]);
+  }, [activeWorkspace, userRole]);
 
   const selectWorkspace = (workspace: Workspace) => {
     setActiveWorkspace(workspace);
   };
 
   const addWorkspace = (workspace: Workspace) => {
+    // Only allow admins to add workspaces
+    if (userRole !== 'admin') {
+      console.warn('Only admins can create workspaces');
+      return;
+    }
     setWorkspaces(prev => [workspace, ...prev]);
     setActiveWorkspace(workspace);
   };
 
   const deleteWorkspace = (workspaceId: string) => {
+    // Only allow admins to delete workspaces
+    if (userRole !== 'admin') {
+      console.warn('Only admins can delete workspaces');
+      return;
+    }
     setWorkspaces(prev => {
       const updatedWorkspaces = prev.filter(workspace => workspace.id !== workspaceId);
       
-      // If the deleted workspace was the active one, handle auto-selection
       if (activeWorkspace?.id === workspaceId) {
         if (updatedWorkspaces.length > 0) {
-          // Auto-select the first available workspace
           const newActiveWorkspace = updatedWorkspaces[0];
           setActiveWorkspace(newActiveWorkspace);
           console.log('Auto-selected new active workspace:', newActiveWorkspace.name);
         } else {
-          // No workspaces left, clear active workspace
           setActiveWorkspace(null);
           console.log('No workspaces remaining, cleared active workspace');
         }
@@ -108,6 +205,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     deleteWorkspace,
     isInWorkspace: activeWorkspace !== null,
     hasWorkspaces: workspaces.length > 0,
+    userRole,
+    canManageWorkspaces: userRole === 'admin',
   };
 
   return (

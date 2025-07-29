@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft, Shuffle } from "lucide-react";
+import { Loader2, ArrowLeft, Shuffle, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const FEATURE_PERMISSIONS = [
@@ -31,20 +31,35 @@ export function CreateAgentPage() {
     displayName: "",
     phone: "",
     agentCode: "",
-    workspaceId: user?.id || "",
     status: "active",
-    permissions: {} as Record<string, boolean>
+    permissions: {} as Record<string, boolean>,
+    workspaceIds: [] as string[]
   });
+  const [workspaces, setWorkspaces] = useState<Array<{id: string, name: string}>>([]);
   const { toast } = useToast();
+
+  // Fetch workspaces on component mount
+  useEffect(() => {
+    const fetchWorkspaces = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('workspaces')
+          .select('id, name')
+          .order('name');
+        
+        if (error) throw error;
+        setWorkspaces(data || []);
+      } catch (error) {
+        console.error('Error fetching workspaces:', error);
+      }
+    };
+
+    fetchWorkspaces();
+  }, []);
 
   const generateAgentCode = () => {
     const code = 'AG' + Math.random().toString(36).substr(2, 6).toUpperCase();
     setFormData(prev => ({ ...prev, agentCode: code }));
-  };
-
-  const generatePassword = () => {
-    // This function is no longer needed since password is generated server-side
-    // Keeping for backward compatibility but it won't do anything
   };
 
   const togglePermission = (key: string) => {
@@ -54,6 +69,15 @@ export function CreateAgentPage() {
         ...prev.permissions,
         [key]: !prev.permissions[key]
       }
+    }));
+  };
+
+  const toggleWorkspace = (workspaceId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      workspaceIds: prev.workspaceIds.includes(workspaceId)
+        ? prev.workspaceIds.filter(id => id !== workspaceId)
+        : [...prev.workspaceIds, workspaceId]
     }));
   };
 
@@ -77,7 +101,7 @@ export function CreateAgentPage() {
           displayName: formData.displayName,
           phone: formData.phone,
           agentCode: formData.agentCode,
-          workspaceId: formData.workspaceId,
+          workspaceIds: formData.workspaceIds,
           status: formData.status,
           permissions: formData.permissions,
         },
@@ -250,6 +274,52 @@ export function CreateAgentPage() {
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Workspace Assignment */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Workspace Assignment</CardTitle>
+              <CardDescription>Select which workspaces this agent can access</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {workspaces.length === 0 ? (
+                <div className="p-4 border rounded-lg bg-muted/50">
+                  <p className="text-sm text-muted-foreground">
+                    No workspaces available. Create a workspace first to assign agents.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {workspaces.map(workspace => (
+                    <div key={workspace.id} className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-accent/50 transition-colors">
+                      <input
+                        type="checkbox"
+                        id={`workspace-${workspace.id}`}
+                        checked={formData.workspaceIds.includes(workspace.id)}
+                        onChange={() => toggleWorkspace(workspace.id)}
+                      />
+                      <div className="flex-1">
+                        <label htmlFor={`workspace-${workspace.id}`} className="font-medium cursor-pointer">
+                          {workspace.name}
+                        </label>
+                      </div>
+                      {formData.workspaceIds.includes(workspace.id) && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleWorkspace(workspace.id)}
+                          className="p-1 h-auto"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 

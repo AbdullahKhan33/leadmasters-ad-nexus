@@ -12,7 +12,7 @@ interface CreateAgentRequest {
   displayName: string;
   phone?: string;
   agentCode: string;
-  workspaceId?: string;
+  workspaceIds?: string[];
   status: string;
   permissions: Record<string, boolean>;
 }
@@ -36,7 +36,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
     );
 
-    const { email, displayName, phone, agentCode, workspaceId, status, permissions }: CreateAgentRequest = await req.json();
+    const { email, displayName, phone, agentCode, workspaceIds, status, permissions }: CreateAgentRequest = await req.json();
 
     console.log("Creating agent user:", { email, displayName, agentCode });
 
@@ -82,7 +82,6 @@ const handler = async (req: Request): Promise<Response> => {
         agent_code: agentCode,
         status,
         permissions,
-        workspace_id: workspaceId || null,
         first_login_password_changed: false, // Track if password has been changed
       })
       .select()
@@ -91,6 +90,24 @@ const handler = async (req: Request): Promise<Response> => {
     if (agentError) {
       console.error("Error creating agent:", agentError);
       throw agentError;
+    }
+
+    // Assign agent to workspaces if provided
+    if (workspaceIds && workspaceIds.length > 0 && agentData) {
+      const workspaceAssignments = workspaceIds.map(workspaceId => ({
+        agent_id: agentData.id,
+        workspace_id: workspaceId,
+        assigned_by: userData.user.id, // The user who created the agent
+      }));
+
+      const { error: assignmentError } = await supabaseAdmin
+        .from("agent_workspaces")
+        .insert(workspaceAssignments);
+
+      if (assignmentError) {
+        console.error("Error assigning workspaces:", assignmentError);
+        // Don't throw here as the agent was created successfully
+      }
     }
 
     // Assign agent role

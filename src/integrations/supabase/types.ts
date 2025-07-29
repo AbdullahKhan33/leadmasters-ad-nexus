@@ -59,6 +59,33 @@ export type Database = {
           },
         ]
       }
+      agent_workspaces: {
+        Row: {
+          agent_id: string
+          assigned_at: string
+          assigned_by: string
+          created_at: string
+          id: string
+          workspace_id: string
+        }
+        Insert: {
+          agent_id: string
+          assigned_at?: string
+          assigned_by: string
+          created_at?: string
+          id?: string
+          workspace_id: string
+        }
+        Update: {
+          agent_id?: string
+          assigned_at?: string
+          assigned_by?: string
+          created_at?: string
+          id?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       agents: {
         Row: {
           agent_code: string
@@ -274,6 +301,33 @@ export type Database = {
           role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      workspaces: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
