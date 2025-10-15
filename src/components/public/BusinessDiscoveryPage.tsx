@@ -17,7 +17,7 @@ import { businessDiscoverySchema, BusinessDiscoveryFormData } from '@/schemas/bu
 import { FileText, ArrowRight, ArrowLeft, CheckCircle, Calendar, Sparkles } from 'lucide-react';
 
 const STEPS = [
-  { id: 1, title: 'Business Info', fields: ['full_name', 'phone', 'email', 'company_name', 'website_url', 'industry', 'location'] },
+  { id: 1, title: 'Business Info', fields: ['full_name', 'phone', 'email', 'company_name', 'website_url', 'industry', 'other_industry', 'location'] },
   { id: 2, title: 'Digital Presence', fields: ['has_website', 'social_platforms', 'posting_frequency'] },
   { id: 3, title: 'Product & Customers', fields: ['main_product_service', 'ideal_customer', 'avg_revenue_per_customer', 'primary_goals'] },
   { id: 4, title: 'Marketing Strategy', fields: ['current_reach_methods', 'monthly_ad_spend', 'advertising_platforms', 'has_crm', 'conversion_rate'] },
@@ -101,6 +101,7 @@ export function BusinessDiscoveryPage() {
           company_name: data.company_name,
           website_url: data.website_url || null,
           industry: data.industry,
+          other_industry: data.other_industry || null,
           location: data.location,
           has_website: data.has_website,
           social_platforms: data.social_platforms || [],
@@ -376,6 +377,21 @@ export function BusinessDiscoveryPage() {
                       <p className="text-sm text-destructive mt-1">{errors.industry.message}</p>
                     )}
                   </div>
+
+                  {watchedValues.industry === 'Other' && (
+                    <div>
+                      <Label htmlFor="other_industry">Please specify your industry *</Label>
+                      <Input
+                        id="other_industry"
+                        {...register('other_industry')}
+                        placeholder="Enter your industry"
+                        className="mt-1"
+                      />
+                      {errors.other_industry && (
+                        <p className="text-sm text-destructive mt-1">{errors.other_industry.message}</p>
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <Label htmlFor="location">Location / Target Market *</Label>

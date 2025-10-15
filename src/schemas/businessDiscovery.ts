@@ -9,6 +9,7 @@ export const businessDiscoverySchema = z.object({
   has_website: z.boolean(),
   website_url: z.string().optional().or(z.literal('')),
   industry: z.string().min(1, 'Please select an industry'),
+  other_industry: z.string().optional().or(z.literal('')),
   location: z.string().min(2, 'Location is required').max(100, 'Location too long'),
   
   // Digital Presence
