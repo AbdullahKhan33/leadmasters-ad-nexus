@@ -55,6 +55,9 @@ export function BusinessDiscoveryPage() {
   } = useForm<BusinessDiscoveryFormData>({
     resolver: zodResolver(businessDiscoverySchema),
     mode: 'onTouched', // Only validate after user touches a field
+    reValidateMode: 'onBlur', // Only revalidate on blur, not on every change
+    criteriaMode: 'firstError', // Show only first error
+    shouldFocusError: false, // Don't auto-focus on error fields
     defaultValues: {
       has_website: false,
       social_platforms: [],
