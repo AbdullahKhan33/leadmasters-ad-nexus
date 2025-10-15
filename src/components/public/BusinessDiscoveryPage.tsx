@@ -593,22 +593,18 @@ export function BusinessDiscoveryPage() {
                         <Label htmlFor="crm-no">No</Label>
                       </div>
                     </RadioGroup>
-                  </div>
-
-                  {!watchedValues.has_crm && (
-                    <div>
-                      <Label htmlFor="crm_system_name">What system do you use to track leads/customers? *</Label>
+                    {watchedValues.has_crm && (
                       <Input
                         id="crm_system_name"
                         {...register('crm_system_name')}
-                        placeholder="e.g., Excel sheets, Google Sheets, Notebook, etc."
-                        className="mt-1"
+                        placeholder="Which CRM system? (e.g., Salesforce, HubSpot, Zoho)"
+                        className="mt-3"
                       />
-                      {errors.crm_system_name && (
-                        <p className="text-sm text-destructive mt-1">{errors.crm_system_name.message}</p>
-                      )}
-                    </div>
-                  )}
+                    )}
+                    {watchedValues.has_crm && errors.crm_system_name && (
+                      <p className="text-sm text-destructive mt-1">{errors.crm_system_name.message}</p>
+                    )}
+                  </div>
 
                   <div>
                     <Label htmlFor="conversion_rate">Current conversion rate (approx. % of leads that become paying customers)</Label>
