@@ -198,6 +198,7 @@ export type Database = {
           location: string
           main_product_service: string
           monthly_ad_spend: string
+          other_industry: string | null
           phone: string
           posting_frequency: string
           primary_goals: string[]
@@ -230,6 +231,7 @@ export type Database = {
           location: string
           main_product_service: string
           monthly_ad_spend: string
+          other_industry?: string | null
           phone: string
           posting_frequency: string
           primary_goals?: string[]
@@ -262,6 +264,7 @@ export type Database = {
           location?: string
           main_product_service?: string
           monthly_ad_spend?: string
+          other_industry?: string | null
           phone?: string
           posting_frequency?: string
           primary_goals?: string[]
