@@ -20,7 +20,7 @@ const STEPS = [
   { id: 1, title: 'Business Info', fields: ['full_name', 'phone', 'email', 'company_name', 'website_url', 'industry', 'other_industry', 'location'] },
   { id: 2, title: 'Digital Presence', fields: ['has_website', 'social_platforms', 'posting_frequency'] },
   { id: 3, title: 'Product & Customers', fields: ['main_product_service', 'ideal_customer', 'avg_revenue_per_customer', 'primary_goals'] },
-  { id: 4, title: 'Marketing Strategy', fields: ['current_reach_methods', 'monthly_ad_spend', 'advertising_platforms', 'has_crm', 'conversion_rate'] },
+  { id: 4, title: 'Marketing Strategy', fields: ['current_reach_methods', 'monthly_ad_spend', 'advertising_platforms', 'has_crm', 'crm_system_name', 'conversion_rate'] },
   { id: 5, title: 'Future Plans', fields: ['is_gst_registered', 'issues_invoices', 'has_seasonal_peaks', 'top_priorities', 'desired_results', 'current_challenges'] },
 ];
 
@@ -114,6 +114,7 @@ export function BusinessDiscoveryPage() {
           monthly_ad_spend: data.monthly_ad_spend,
           advertising_platforms: data.advertising_platforms || [],
           has_crm: data.has_crm,
+          crm_system_name: data.crm_system_name || null,
           conversion_rate: data.conversion_rate || null,
           is_gst_registered: data.is_gst_registered,
           issues_invoices: data.issues_invoices,
@@ -593,6 +594,21 @@ export function BusinessDiscoveryPage() {
                       </div>
                     </RadioGroup>
                   </div>
+
+                  {!watchedValues.has_crm && (
+                    <div>
+                      <Label htmlFor="crm_system_name">What system do you use to track leads/customers? *</Label>
+                      <Input
+                        id="crm_system_name"
+                        {...register('crm_system_name')}
+                        placeholder="e.g., Excel sheets, Google Sheets, Notebook, etc."
+                        className="mt-1"
+                      />
+                      {errors.crm_system_name && (
+                        <p className="text-sm text-destructive mt-1">{errors.crm_system_name.message}</p>
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <Label htmlFor="conversion_rate">Current conversion rate (approx. % of leads that become paying customers)</Label>

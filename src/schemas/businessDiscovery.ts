@@ -27,6 +27,7 @@ export const businessDiscoverySchema = z.object({
   monthly_ad_spend: z.string().min(1, 'Please select monthly ad spend'),
   advertising_platforms: z.array(z.string()).min(0),
   has_crm: z.boolean(),
+  crm_system_name: z.string().optional().or(z.literal('')),
   conversion_rate: z.string().optional(),
   
   // Business Compliance & Future Plans
