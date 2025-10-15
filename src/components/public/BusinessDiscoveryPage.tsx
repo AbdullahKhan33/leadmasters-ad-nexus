@@ -51,8 +51,10 @@ export function BusinessDiscoveryPage() {
     watch,
     setValue,
     trigger,
+    clearErrors,
   } = useForm<BusinessDiscoveryFormData>({
     resolver: zodResolver(businessDiscoverySchema),
+    mode: 'onTouched', // Only validate after user touches a field
     defaultValues: {
       has_website: false,
       social_platforms: [],
@@ -75,6 +77,10 @@ export function BusinessDiscoveryPage() {
     
     if (isValid) {
       if (currentStep < STEPS.length) {
+        // Clear errors for the next step's fields to prevent auto-validation
+        const nextStepFields = STEPS[currentStep].fields;
+        clearErrors(nextStepFields as any);
+        
         setCurrentStep(currentStep + 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
