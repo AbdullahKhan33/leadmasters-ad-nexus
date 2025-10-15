@@ -1,13 +1,15 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { MessageCircle, Phone, Mail, MapPin, Clock, CheckCircle, ArrowRight } from 'lucide-react';
+import { MessageCircle, Phone, Mail, MapPin, Clock, CheckCircle, ArrowRight, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export function ContactSection() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -302,6 +304,35 @@ export function ContactSection() {
                   <span className="text-purple-600 font-semibold">No</span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Business Discovery CTA */}
+        <div className="mt-16">
+          <div className="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 rounded-3xl p-8 md:p-12 text-center shadow-2xl">
+            <div className="max-w-3xl mx-auto">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm mb-6">
+                <FileText className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Are You a Business Owner?
+              </h3>
+              <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+                Take our 2-minute Business Discovery Questionnaire and get a tailored lead generation, automation, and marketing strategy crafted specifically for your business.
+              </p>
+              <Button
+                onClick={() => navigate('/business-discovery')}
+                size="lg"
+                className="bg-white text-purple-600 hover:bg-gray-100 text-lg px-8 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+              >
+                <FileText className="mr-2 w-5 h-5" />
+                Start Business Discovery Questionnaire
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+              <p className="text-white/80 text-sm mt-4">
+                ✨ Personalized insights • 📊 Strategic recommendations • 🚀 Fast ROI path
+              </p>
             </div>
           </div>
         </div>

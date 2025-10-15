@@ -19,6 +19,7 @@ import { FeaturesPage } from "./components/public/FeaturesPage";
 import { BlogPage } from "./components/public/BlogPage";
 import { BlogPostPage } from "./components/public/BlogPostPage";
 import { LegalPage } from "./components/public/LegalPage";
+import { BusinessDiscoveryPage } from "./components/public/BusinessDiscoveryPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ function App() {
                   <Route path="/app/agents/edit/:agentId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/about-us" element={<AboutUsPage />} />
                   <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/business-discovery" element={<BusinessDiscoveryPage />} />
                   <Route path="/pricing" element={<PricingPage />} />
                   <Route path="/features" element={<FeaturesPage />} />
                   <Route path="/blog" element={<BlogPage />} />

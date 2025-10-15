@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -170,6 +170,99 @@ export type Database = {
           id?: string
           name?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      business_discovery_submissions: {
+        Row: {
+          advertising_platforms: string[]
+          avg_revenue_per_customer: string
+          company_name: string
+          conversion_rate: string | null
+          created_at: string
+          current_challenges: string
+          current_reach_methods: string[]
+          desired_results: string
+          full_name: string
+          has_crm: boolean
+          has_seasonal_peaks: string | null
+          has_website: boolean
+          id: string
+          ideal_customer: string
+          industry: string
+          is_gst_registered: boolean
+          issues_invoices: boolean
+          lead_score: number | null
+          lead_tier: string | null
+          location: string
+          main_product_service: string
+          monthly_ad_spend: string
+          posting_frequency: string
+          primary_goals: string[]
+          social_platforms: string[]
+          status: string
+          top_priorities: string
+          website_url: string | null
+        }
+        Insert: {
+          advertising_platforms?: string[]
+          avg_revenue_per_customer: string
+          company_name: string
+          conversion_rate?: string | null
+          created_at?: string
+          current_challenges: string
+          current_reach_methods?: string[]
+          desired_results: string
+          full_name: string
+          has_crm: boolean
+          has_seasonal_peaks?: string | null
+          has_website: boolean
+          id?: string
+          ideal_customer: string
+          industry: string
+          is_gst_registered: boolean
+          issues_invoices: boolean
+          lead_score?: number | null
+          lead_tier?: string | null
+          location: string
+          main_product_service: string
+          monthly_ad_spend: string
+          posting_frequency: string
+          primary_goals?: string[]
+          social_platforms?: string[]
+          status?: string
+          top_priorities: string
+          website_url?: string | null
+        }
+        Update: {
+          advertising_platforms?: string[]
+          avg_revenue_per_customer?: string
+          company_name?: string
+          conversion_rate?: string | null
+          created_at?: string
+          current_challenges?: string
+          current_reach_methods?: string[]
+          desired_results?: string
+          full_name?: string
+          has_crm?: boolean
+          has_seasonal_peaks?: string | null
+          has_website?: boolean
+          id?: string
+          ideal_customer?: string
+          industry?: string
+          is_gst_registered?: boolean
+          issues_invoices?: boolean
+          lead_score?: number | null
+          lead_tier?: string | null
+          location?: string
+          main_product_service?: string
+          monthly_ad_spend?: string
+          posting_frequency?: string
+          primary_goals?: string[]
+          social_platforms?: string[]
+          status?: string
+          top_priorities?: string
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -342,8 +435,8 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
