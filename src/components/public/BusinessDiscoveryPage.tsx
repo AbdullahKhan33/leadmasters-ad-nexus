@@ -164,64 +164,101 @@ export function BusinessDiscoveryPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50 relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-300/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        </div>
+
         <PublicHeader />
-        <main className="py-20">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-12 shadow-xl border border-green-100">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6">
-                <CheckCircle className="w-12 h-12 text-green-600" />
-              </div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                Thank You for Your Submission! 🎉
-              </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Our team will review your answers and prepare a customized growth strategy tailored to your business. We'll be in touch within 24 hours with next steps.
-              </p>
-              
-              <div className="bg-white rounded-2xl p-6 mb-8 text-left shadow-md">
-                <h3 className="font-bold text-gray-900 mb-4 flex items-center">
-                  <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
-                  What Happens Next?
-                </h3>
-                <ul className="space-y-3 text-gray-600">
-                  <li className="flex items-start">
-                    <CheckCircle className="w-5 h-5 mr-2 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span>Our team analyzes your responses</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-5 h-5 mr-2 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span>We prepare a personalized strategy document</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-5 h-5 mr-2 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span>You receive detailed recommendations within 24 hours</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-5 h-5 mr-2 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span>Optional strategy call to discuss implementation</span>
-                  </li>
-                </ul>
+        <main className="relative py-16 sm:py-24">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 animate-fade-in">
+              {/* Animated success icon */}
+              <div className="relative inline-block mb-8">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full blur-2xl opacity-30 animate-pulse" />
+                <div className="relative inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-600 via-pink-500 to-purple-600 shadow-2xl animate-scale-in">
+                  <CheckCircle className="w-14 h-14 text-white drop-shadow-lg" strokeWidth={2.5} />
+                </div>
               </div>
 
-              <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-900 via-purple-700 to-pink-600 bg-clip-text text-transparent mb-6 leading-tight">
+                Submission Successful!
+              </h1>
+              
+              <p className="text-xl sm:text-2xl text-gray-700 font-medium mb-4 max-w-2xl mx-auto">
+                Thank you for sharing your business details
+              </p>
+              
+              <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Our team will review your responses and prepare a customized growth strategy tailored to your business. We'll be in touch within <span className="font-semibold text-purple-700">24 hours</span> with your personalized recommendations.
+              </p>
+            </div>
+
+            {/* What Happens Next Card */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-purple-100/50 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="flex items-center justify-center mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-lg">
+                    <Sparkles className="w-6 h-6 text-white" />
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                    What Happens Next?
+                  </h2>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-6 mb-8">
+                {[
+                  { text: 'Our team analyzes your responses', delay: '0.3s' },
+                  { text: 'We prepare a personalized strategy document', delay: '0.4s' },
+                  { text: 'You receive detailed recommendations within 24 hours', delay: '0.5s' },
+                  { text: 'Optional strategy call to discuss implementation', delay: '0.6s' },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100/50 animate-fade-in hover:shadow-md transition-all duration-300"
+                    style={{ animationDelay: item.delay }}
+                  >
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-md mt-0.5">
+                      <CheckCircle className="w-4 h-4 text-white" strokeWidth={3} />
+                    </div>
+                    <span className="text-gray-700 font-medium leading-relaxed">
+                      {item.text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white px-8"
+                  className="w-full sm:w-auto bg-gradient-to-r from-purple-600 via-purple-700 to-pink-600 hover:from-purple-700 hover:via-purple-800 hover:to-pink-700 text-white px-8 py-6 text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
                   onClick={() => window.open('https://calendly.com/leadmasters', '_blank')}
                 >
                   <Calendar className="mr-2 w-5 h-5" />
-                  Want to Speed Things Up? Book a Free Strategy Call
+                  Book a Free Strategy Call
                 </Button>
                 
                 <Button
                   variant="outline"
                   size="lg"
+                  className="w-full sm:w-auto border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 px-8 py-6 text-base font-semibold transition-all duration-300"
                   onClick={() => navigate('/')}
                 >
                   Return to Homepage
                 </Button>
               </div>
+            </div>
+
+            {/* Additional reassurance message */}
+            <div className="text-center animate-fade-in" style={{ animationDelay: '0.7s' }}>
+              <p className="text-sm text-gray-500 flex items-center justify-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-500" />
+                Your information is secure and will only be used to provide your customized strategy
+              </p>
             </div>
           </div>
         </main>
