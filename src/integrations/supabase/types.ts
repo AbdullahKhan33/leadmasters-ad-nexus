@@ -180,6 +180,7 @@ export type Database = {
           company_name: string
           conversion_rate: string | null
           created_at: string
+          crm_system_name: string | null
           current_challenges: string
           current_reach_methods: string[]
           desired_results: string
@@ -213,6 +214,7 @@ export type Database = {
           company_name: string
           conversion_rate?: string | null
           created_at?: string
+          crm_system_name?: string | null
           current_challenges: string
           current_reach_methods?: string[]
           desired_results: string
@@ -246,6 +248,7 @@ export type Database = {
           company_name?: string
           conversion_rate?: string | null
           created_at?: string
+          crm_system_name?: string | null
           current_challenges?: string
           current_reach_methods?: string[]
           desired_results?: string
