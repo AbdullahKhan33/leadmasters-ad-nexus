@@ -286,25 +286,6 @@ export function ContactSection() {
                 </div>
               </div>
             </div>
-
-            {/* FAQ Quick Links */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100">
-              <h4 className="font-bold text-gray-900 mb-4">Quick Questions?</h4>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                  <span className="text-gray-700">How quickly can I start generating leads?</span>
-                  <span className="text-purple-600 font-semibold">Same day</span>
-                </div>
-                <div className="flex items-center justify-between py-2 border-b border-gray-200">
-                  <span className="text-gray-700">What platforms do you support?</span>
-                  <span className="text-purple-600 font-semibold">All major</span>
-                </div>
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-gray-700">Is there a setup fee?</span>
-                  <span className="text-purple-600 font-semibold">No</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
