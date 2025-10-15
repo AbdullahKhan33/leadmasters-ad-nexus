@@ -3,6 +3,8 @@ import { z } from 'zod';
 export const businessDiscoverySchema = z.object({
   // Business Information
   full_name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name too long'),
+  phone: z.string().min(10, 'Please enter a valid phone number').max(15, 'Phone number too long'),
+  email: z.string().email('Please enter a valid email address').max(100, 'Email too long'),
   company_name: z.string().min(2, 'Company name is required').max(100, 'Company name too long'),
   website_url: z.string().url('Invalid URL').optional().or(z.literal('')),
   industry: z.string().min(1, 'Please select an industry'),

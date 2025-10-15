@@ -17,7 +17,7 @@ import { businessDiscoverySchema, BusinessDiscoveryFormData } from '@/schemas/bu
 import { FileText, ArrowRight, ArrowLeft, CheckCircle, Calendar, Sparkles } from 'lucide-react';
 
 const STEPS = [
-  { id: 1, title: 'Business Info', fields: ['full_name', 'company_name', 'website_url', 'industry', 'location'] },
+  { id: 1, title: 'Business Info', fields: ['full_name', 'phone', 'email', 'company_name', 'website_url', 'industry', 'location'] },
   { id: 2, title: 'Digital Presence', fields: ['has_website', 'social_platforms', 'posting_frequency'] },
   { id: 3, title: 'Product & Customers', fields: ['main_product_service', 'ideal_customer', 'avg_revenue_per_customer', 'primary_goals'] },
   { id: 4, title: 'Marketing Strategy', fields: ['current_reach_methods', 'monthly_ad_spend', 'advertising_platforms', 'has_crm', 'conversion_rate'] },
@@ -96,6 +96,8 @@ export function BusinessDiscoveryPage() {
         .from('business_discovery_submissions')
         .insert({
           full_name: data.full_name,
+          phone: data.phone,
+          email: data.email,
           company_name: data.company_name,
           website_url: data.website_url || null,
           industry: data.industry,
@@ -281,6 +283,34 @@ export function BusinessDiscoveryPage() {
                     />
                     {errors.full_name && (
                       <p className="text-sm text-destructive mt-1">{errors.full_name.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone">Phone Number *</Label>
+                    <Input
+                      id="phone"
+                      {...register('phone')}
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      className="mt-1"
+                    />
+                    {errors.phone && (
+                      <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email">Email Address *</Label>
+                    <Input
+                      id="email"
+                      {...register('email')}
+                      type="email"
+                      placeholder="your.email@example.com"
+                      className="mt-1"
+                    />
+                    {errors.email && (
+                      <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
                     )}
                   </div>
 
