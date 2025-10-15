@@ -328,18 +328,37 @@ export function BusinessDiscoveryPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="website_url">Website URL (Optional)</Label>
-                    <Input
-                      id="website_url"
-                      {...register('website_url')}
-                      type="url"
-                      placeholder="https://yourwebsite.com"
-                      className="mt-1"
-                    />
-                    {errors.website_url && (
-                      <p className="text-sm text-destructive mt-1">{errors.website_url.message}</p>
-                    )}
+                    <Label className="mb-3 block">Do you have a website? *</Label>
+                    <RadioGroup
+                      value={watchedValues.has_website ? 'yes' : 'no'}
+                      onValueChange={(value) => setValue('has_website', value === 'yes')}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="has-website-yes" />
+                        <Label htmlFor="has-website-yes">Yes, I have a website</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="has-website-no" />
+                        <Label htmlFor="has-website-no">No, I don't have a website</Label>
+                      </div>
+                    </RadioGroup>
                   </div>
+
+                  {watchedValues.has_website && (
+                    <div>
+                      <Label htmlFor="website_url">Website URL *</Label>
+                      <Input
+                        id="website_url"
+                        {...register('website_url')}
+                        type="url"
+                        placeholder="https://yourwebsite.com"
+                        className="mt-1"
+                      />
+                      {errors.website_url && (
+                        <p className="text-sm text-destructive mt-1">{errors.website_url.message}</p>
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <Label htmlFor="industry">Industry / Sector *</Label>
@@ -376,23 +395,6 @@ export function BusinessDiscoveryPage() {
               {/* Step 2: Digital Presence */}
               {currentStep === 2 && (
                 <div className="space-y-6">
-                  <div>
-                    <Label className="mb-3 block">Do you currently have a website? *</Label>
-                    <RadioGroup
-                      value={watchedValues.has_website ? 'yes' : 'no'}
-                      onValueChange={(value) => setValue('has_website', value === 'yes')}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="yes" id="website-yes" />
-                        <Label htmlFor="website-yes">Yes</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="no" id="website-no" />
-                        <Label htmlFor="website-no">No</Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
                   <div>
                     <Label className="mb-3 block">Which social media platforms are you active on?</Label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
