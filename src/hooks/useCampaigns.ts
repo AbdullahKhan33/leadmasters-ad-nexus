@@ -11,6 +11,8 @@ export function useCampaigns(type?: CampaignType) {
   const fetchCampaigns = async () => {
     try {
       setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+
       let query = supabase
         .from('campaigns')
         .select('*')
@@ -18,6 +20,10 @@ export function useCampaigns(type?: CampaignType) {
 
       if (type) {
         query = query.eq('type', type);
+      }
+      if (user) {
+        // Redundant with RLS, but ensures proper index usage and avoids cross-user data
+        query = query.eq('user_id', user.id);
       }
 
       const { data, error } = await query;
@@ -69,6 +75,18 @@ export function useCampaigns(type?: CampaignType) {
 
   useEffect(() => {
     fetchCampaigns();
+
+    // Subscribe to realtime changes to auto-refresh list
+    const channel = supabase
+      .channel('campaigns-updates')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'campaigns' }, () => {
+        fetchCampaigns();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [type]);
 
   const createCampaign = async (campaignData: Partial<Campaign>) => {
