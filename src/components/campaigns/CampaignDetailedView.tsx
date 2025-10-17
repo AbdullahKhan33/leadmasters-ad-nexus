@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Check, X, Eye, MousePointerClick, Mail } from "lucide-react";
+import { Check, X, Eye, MousePointerClick, Mail, CheckCheck } from "lucide-react";
 
 interface CampaignDetailedViewProps {
   campaign: Campaign;
@@ -40,6 +40,8 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  
+  const isWhatsApp = campaign.type === 'whatsapp';
 
   useEffect(() => {
     fetchRecipients();
@@ -109,6 +111,10 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
   const openRate = delivered > 0 ? ((opened / delivered) * 100).toFixed(2) : '0.00';
   const clickRate = totalSent > 0 ? ((clicked / totalSent) * 100).toFixed(2) : '0.00';
   const clickToOpenRate = opened > 0 ? ((clicked / opened) * 100).toFixed(2) : '0.00';
+  
+  // WhatsApp uses "reads" instead of "opens"
+  const readRate = openRate;
+  const clickToReadRate = clickToOpenRate;
 
   const MetricCard = ({ label, value, sublabel, subvalue }: { label: string; value: string | number; sublabel?: string; subvalue?: string }) => (
     <div className="space-y-1 p-4 rounded-lg bg-muted/30">
@@ -139,12 +145,16 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
       
       <div className="flex-1 overflow-auto p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-white">
+          <TabsList className="grid w-full bg-white" style={{ gridTemplateColumns: isWhatsApp ? 'repeat(4, 1fr)' : 'repeat(5, 1fr)' }}>
             <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="overview" onClick={() => setActiveTab("overview")}>Overview</TabsTrigger>
             <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="deliverability" onClick={() => setActiveTab("deliverability")}>Deliverability</TabsTrigger>
-            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="opens" onClick={() => setActiveTab("opens")}>Opens</TabsTrigger>
+            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value={isWhatsApp ? "reads" : "opens"} onClick={() => setActiveTab(isWhatsApp ? "reads" : "opens")}>
+              {isWhatsApp ? "Reads" : "Opens"}
+            </TabsTrigger>
             <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="clicks" onClick={() => setActiveTab("clicks")}>Clicks</TabsTrigger>
-            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="unsubscribes" onClick={() => setActiveTab("unsubscribes")}>Unsubscribes</TabsTrigger>
+            {!isWhatsApp && (
+              <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="unsubscribes" onClick={() => setActiveTab("unsubscribes")}>Unsubscribes</TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -153,11 +163,13 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
                 <CardTitle>Campaign performance</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className={`grid grid-cols-1 gap-4 ${isWhatsApp ? 'md:grid-cols-3' : 'md:grid-cols-4'}`}>
                   <MetricCard label="Delivered" value={delivered} sublabel="Delivery rate" subvalue={`${deliveryRate}%`} />
-                  <MetricCard label="Opens" value={opened} sublabel="Open rate" subvalue={`${openRate}%`} />
+                  <MetricCard label={isWhatsApp ? "Reads" : "Opens"} value={opened} sublabel={isWhatsApp ? "Read rate" : "Open rate"} subvalue={`${isWhatsApp ? readRate : openRate}%`} />
                   <MetricCard label="Clicks" value={clicked} sublabel="Click-through rate" subvalue={`${clickRate}%`} />
-                  <MetricCard label="Unsubscribes" value={0} sublabel="Unsubscribe rate" subvalue="0%" />
+                  {!isWhatsApp && (
+                    <MetricCard label="Unsubscribes" value={0} sublabel="Unsubscribe rate" subvalue="0%" />
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -169,12 +181,12 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
                 <CardTitle>Deliverability details</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className={`grid grid-cols-1 gap-4 ${isWhatsApp ? 'md:grid-cols-4' : 'md:grid-cols-5'}`}>
                   <MetricCard label="Sent to" value={totalSent} />
                   <MetricCard label="Delivered" value={delivered} />
                   <MetricCard label="Delivery rate" value={`${deliveryRate}%`} />
-                  <MetricCard label="Soft bounces" value={0} />
-                  <MetricCard label="Hard bounces" value={failed} />
+                  {!isWhatsApp && <MetricCard label="Soft bounces" value={0} />}
+                  <MetricCard label={isWhatsApp ? "Failed" : "Hard bounces"} value={failed} />
                 </div>
               </CardContent>
             </Card>
@@ -223,17 +235,17 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
             )}
           </TabsContent>
 
-          <TabsContent value="opens" className="space-y-6">
+          <TabsContent value={isWhatsApp ? "reads" : "opens"} className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Opens Details</CardTitle>
+                <CardTitle>{isWhatsApp ? "Reads Details" : "Opens Details"}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <MetricCard label="Opens" value={opened} />
-                  <MetricCard label="Open rate" value={`${openRate}%`} />
-                  <MetricCard label="Total opens" value={opened} />
-                  <MetricCard label="Unique opens" value={opened} />
+                  <MetricCard label={isWhatsApp ? "Reads" : "Opens"} value={opened} />
+                  <MetricCard label={isWhatsApp ? "Read rate" : "Open rate"} value={`${isWhatsApp ? readRate : openRate}%`} />
+                  <MetricCard label={isWhatsApp ? "Total reads" : "Total opens"} value={opened} />
+                  <MetricCard label={isWhatsApp ? "Unique reads" : "Unique opens"} value={opened} />
                 </div>
               </CardContent>
             </Card>
@@ -243,7 +255,7 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
             ) : opened > 0 ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>Recipients who opened</CardTitle>
+                  <CardTitle>{isWhatsApp ? "Recipients who read" : "Recipients who opened"}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Table>
@@ -251,7 +263,7 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
                       <TableRow>
                         <TableHead>Name</TableHead>
                         <TableHead>Email</TableHead>
-                        <TableHead>Opened At</TableHead>
+                        <TableHead>{isWhatsApp ? "Read At" : "Opened At"}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -266,7 +278,7 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
                               <TableCell>
                                 {recipient.opened_at && (
                                   <div className="flex items-center gap-1 text-blue-600">
-                                    <Eye className="w-3 h-3" />
+                                    {isWhatsApp ? <CheckCheck className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                                     {format(new Date(recipient.opened_at), 'MMM dd, HH:mm')}
                                   </div>
                                 )}
@@ -281,7 +293,7 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
             ) : (
               <Card>
                 <CardContent className="text-center py-8 text-muted-foreground">
-                  No opens yet
+                  {isWhatsApp ? "No reads yet" : "No opens yet"}
                 </CardContent>
               </Card>
             )}
@@ -297,7 +309,7 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
                   <MetricCard label="Click-through rate" value={`${clickRate}%`} />
                   <MetricCard label="Total clicks" value={clicked} />
                   <MetricCard label="Clicks" value={clicked} />
-                  <MetricCard label="Click-to-open rate" value={`${clickToOpenRate}%`} />
+                  <MetricCard label={isWhatsApp ? "Click-to-read rate" : "Click-to-open rate"} value={`${isWhatsApp ? clickToReadRate : clickToOpenRate}%`} />
                 </div>
               </CardContent>
             </Card>
