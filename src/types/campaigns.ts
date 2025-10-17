@@ -75,6 +75,7 @@ export interface CampaignFolder {
   user_id: string;
   name: string;
   color: string;
+  type: string;
   created_at: string;
   updated_at: string;
 }

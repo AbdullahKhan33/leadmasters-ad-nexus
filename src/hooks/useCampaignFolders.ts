@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CampaignFolder } from "@/types/campaigns";
 import { useToast } from "@/hooks/use-toast";
 
-export function useCampaignFolders() {
+export function useCampaignFolders(type?: 'email' | 'whatsapp') {
   const [folders, setFolders] = useState<CampaignFolder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -14,11 +14,18 @@ export function useCampaignFolders() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      let query = supabase
         .from('campaign_folders')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
+
+      // Filter by type if provided
+      if (type) {
+        query = query.eq('type', type);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       setFolders((data || []) as CampaignFolder[]);
@@ -34,14 +41,14 @@ export function useCampaignFolders() {
     }
   };
 
-  const createFolder = async (name: string, color: string = '#8B5CF6') => {
+  const createFolder = async (name: string, color: string = '#8B5CF6', folderType?: 'email' | 'whatsapp') => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
         .from('campaign_folders')
-        .insert([{ user_id: user.id, name, color }])
+        .insert([{ user_id: user.id, name, color, type: folderType || type || 'email' }])
         .select()
         .single();
 
@@ -131,7 +138,7 @@ export function useCampaignFolders() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [type]);
 
   return {
     folders,

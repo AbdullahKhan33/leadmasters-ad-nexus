@@ -32,7 +32,7 @@ export function CampaignDashboard() {
   const [editingFolder, setEditingFolder] = useState<CampaignFolder | null>(null);
   
   const { campaigns, isLoading, duplicateCampaign, deleteCampaign, updateCampaign } = useCampaigns(campaignType);
-  const { folders, createFolder, updateFolder, deleteFolder } = useCampaignFolders();
+  const { folders, createFolder, updateFolder, deleteFolder } = useCampaignFolders(campaignType);
 
   const filteredCampaigns = campaigns.filter((campaign) => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -49,7 +49,7 @@ export function CampaignDashboard() {
   };
 
   const handleCreateFolder = async (name: string, color: string) => {
-    await createFolder(name, color);
+    await createFolder(name, color, campaignType);
   };
 
   const handleMoveCampaign = async (campaignId: string, folderId: string | null) => {

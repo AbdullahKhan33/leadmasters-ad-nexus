@@ -44,7 +44,7 @@ function CreateCampaignPageContent() {
   
   const [currentStep, setCurrentStep] = useState(0);
   const { createCampaign } = useCampaigns();
-  const { folders } = useCampaignFolders();
+  const { folders } = useCampaignFolders(initialType);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -130,7 +130,8 @@ function CreateCampaignPageContent() {
         });
       }
       
-      navigate(-1);
+      // Navigate back to campaigns dashboard
+      navigate('/app/crm');
     } catch (error) {
       console.error('Error creating campaign:', error);
     } finally {
@@ -461,7 +462,7 @@ export function CreateCampaignInline() {
       } else {
         toast({ title: "Success", description: formData.scheduled_at ? "Campaign scheduled successfully" : "Campaign created as draft" });
       }
-      navigate(-1);
+      navigate('/app/crm');
     } catch (error) {
       console.error('Error creating campaign:', error);
     } finally {
