@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageSquare, Plus, Search } from "lucide-react";
@@ -14,16 +15,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CampaignStatus } from "@/types/campaigns";
-import { CampaignWizard } from "./CampaignWizard";
 
 export function CampaignDashboard() {
+  const navigate = useNavigate();
   const [campaignType, setCampaignType] = useState<"email" | "whatsapp">("email");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | "all">("all");
-  const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
   
-  const { campaigns, isLoading, duplicateCampaign, deleteCampaign, refetch } = useCampaigns(campaignType);
+  const { campaigns, isLoading, duplicateCampaign, deleteCampaign } = useCampaigns(campaignType);
 
   const filteredCampaigns = campaigns.filter((campaign) => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -36,13 +36,7 @@ export function CampaignDashboard() {
   };
 
   const handleCreateCampaign = () => {
-    setIsWizardOpen(true);
-  };
-
-  const handleWizardClose = () => {
-    setIsWizardOpen(false);
-    // Refetch campaigns when wizard closes to show newly created campaigns
-    refetch();
+    navigate(`/app/campaigns/create?type=${campaignType}`);
   };
 
   // If a campaign is selected, show detailed analytics view
@@ -168,12 +162,6 @@ campaignType === 'email' ? (
 )
         )}
       </div>
-
-      <CampaignWizard
-        isOpen={isWizardOpen}
-        onClose={handleWizardClose}
-        initialType={campaignType}
-      />
     </div>
   );
 }

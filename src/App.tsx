@@ -10,6 +10,7 @@ import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import Index from "./pages/Index";
 import { AuthPage } from "./pages/AuthPage";
 import { PostBuilderPage } from "./pages/PostBuilderPage";
+import CreateCampaignPage from "./pages/CreateCampaignPage";
 import NotFound from "./pages/NotFound";
 import { PublicWebsite } from "./components/PublicWebsite";
 import { AboutUsPage } from "./components/public/AboutUsPage";
@@ -58,6 +59,11 @@ function App() {
                   <Route path="/app/post-builder" element={
                     <ProtectedRoute>
                       <PostBuilderPage />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/app/campaigns/create" element={
+                    <ProtectedRoute>
+                      <CreateCampaignPage />
                     </ProtectedRoute>
                   } />
                   <Route path="*" element={<NotFound />} />
