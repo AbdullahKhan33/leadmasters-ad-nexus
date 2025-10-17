@@ -57,10 +57,13 @@ export function CampaignCard({ campaign, onDuplicate, onDelete, onViewAnalytics 
   };
 
   return (
-    <Card 
-      className="p-5 bg-white/80 backdrop-blur-sm border-gray-200/60 hover:shadow-lg hover:border-purple-300/60 transition-all duration-200 animate-fade-in cursor-pointer"
+    <div
+      className="cursor-pointer"
       onClick={handleCardClick}
     >
+      <Card 
+        className="p-5 bg-white/80 backdrop-blur-sm border-gray-200/60 hover:shadow-lg hover:border-purple-300/60 transition-all duration-200 animate-fade-in"
+      >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-start gap-3 flex-1">
           <div className="p-2 rounded-lg bg-gradient-to-br from-blue-50 to-purple-50 border border-purple-200/40">
@@ -174,5 +177,6 @@ export function CampaignCard({ campaign, onDuplicate, onDelete, onViewAnalytics 
         </div>
       )}
     </Card>
+    </div>
   );
 }
