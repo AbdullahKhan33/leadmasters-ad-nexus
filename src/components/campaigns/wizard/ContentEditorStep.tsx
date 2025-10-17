@@ -1,9 +1,8 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { RichTextToolbar } from "./RichTextToolbar";
-import { insertFormatting, parseFormattedText } from "@/utils/textFormatting";
-import { useRef } from "react";
+import { EmailRichTextEditor } from "./EmailRichTextEditor";
+import { WhatsAppTextEditor } from "./WhatsAppTextEditor";
+import { parseFormattedText } from "@/utils/textFormatting";
 
 interface ContentEditorStepProps {
   formData: any;
@@ -11,32 +10,6 @@ interface ContentEditorStepProps {
 }
 
 export function ContentEditorStep({ formData, setFormData }: ContentEditorStepProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const handleFormat = (formatType: string) => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-
-    const selectionStart = textarea.selectionStart;
-    const selectionEnd = textarea.selectionEnd;
-    const currentText = formData.message_content || "";
-
-    const { newText, newCursorPos } = insertFormatting(
-      currentText,
-      selectionStart,
-      selectionEnd,
-      formatType
-    );
-
-    setFormData({ ...formData, message_content: newText });
-
-    // Set cursor position after state update
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
-    }, 0);
-  };
-
   return (
     <div className="space-y-6">
       {formData.type === "email" && (
@@ -60,20 +33,18 @@ export function ContentEditorStep({ formData, setFormData }: ContentEditorStepPr
           {formData.type === "email" ? "Email Content" : "Message Content"}
         </Label>
         
-        <RichTextToolbar onFormat={handleFormat} type={formData.type} />
+        {formData.type === "email" ? (
+          <EmailRichTextEditor
+            value={formData.message_content || ""}
+            onChange={(value) => setFormData({ ...formData, message_content: value })}
+          />
+        ) : (
+          <WhatsAppTextEditor
+            value={formData.message_content || ""}
+            onChange={(value) => setFormData({ ...formData, message_content: value })}
+          />
+        )}
         
-        <Textarea
-          ref={textareaRef}
-          id="content"
-          placeholder={
-            formData.type === "email"
-              ? "Write your email content here... Use the toolbar above to format text."
-              : "Write your WhatsApp message here... Use *bold*, _italic_, ~strikethrough~"
-          }
-          value={formData.message_content}
-          onChange={(e) => setFormData({ ...formData, message_content: e.target.value })}
-          className="bg-white/80 min-h-[300px] font-mono text-sm"
-        />
         <p className="text-xs text-muted-foreground">
           You can use variables like {"{{name}}"}, {"{{email}}"}, {"{{phone}}"} for personalization
         </p>
@@ -88,12 +59,21 @@ export function ContentEditorStep({ formData, setFormData }: ContentEditorStepPr
               {formData.subject}
             </div>
           )}
-          <div 
-            className="text-sm preview-content"
-            dangerouslySetInnerHTML={{ 
-              __html: parseFormattedText(formData.message_content) || "Your message will appear here..." 
-            }}
-          />
+          {formData.type === "email" ? (
+            <div 
+              className="text-sm preview-content"
+              dangerouslySetInnerHTML={{ 
+                __html: formData.message_content || "Your message will appear here..." 
+              }}
+            />
+          ) : (
+            <div 
+              className="text-sm preview-content"
+              dangerouslySetInnerHTML={{ 
+                __html: parseFormattedText(formData.message_content) || "Your message will appear here..." 
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

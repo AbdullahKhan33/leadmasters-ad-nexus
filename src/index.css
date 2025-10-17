@@ -109,4 +109,21 @@
   .preview-content li {
     @apply ml-4;
   }
+
+  /* Quill Editor Styling */
+  .email-editor .ql-toolbar {
+    @apply border border-input rounded-t-md bg-background;
+  }
+
+  .email-editor .ql-container {
+    @apply border border-input rounded-b-md bg-background;
+  }
+
+  .email-editor .ql-editor {
+    @apply min-h-[300px] text-sm;
+  }
+
+  .email-editor .ql-editor.ql-blank::before {
+    @apply text-muted-foreground italic;
+  }
 }
