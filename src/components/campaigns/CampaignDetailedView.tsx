@@ -43,6 +43,7 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
 
   useEffect(() => {
     fetchRecipients();
+    setActiveTab("overview");
   }, [campaign.id]);
 
   const fetchRecipients = async () => {
@@ -139,11 +140,11 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
       <div className="flex-1 overflow-auto p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5 bg-white">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="deliverability">Deliverability</TabsTrigger>
-            <TabsTrigger value="opens">Opens</TabsTrigger>
-            <TabsTrigger value="clicks">Clicks</TabsTrigger>
-            <TabsTrigger value="unsubscribes">Unsubscribes</TabsTrigger>
+            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="overview" onClick={() => setActiveTab("overview")}>Overview</TabsTrigger>
+            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="deliverability" onClick={() => setActiveTab("deliverability")}>Deliverability</TabsTrigger>
+            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="opens" onClick={() => setActiveTab("opens")}>Opens</TabsTrigger>
+            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="clicks" onClick={() => setActiveTab("clicks")}>Clicks</TabsTrigger>
+            <TabsTrigger className="transition-none border border-border data-[state=active]:border-primary" value="unsubscribes" onClick={() => setActiveTab("unsubscribes")}>Unsubscribes</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
