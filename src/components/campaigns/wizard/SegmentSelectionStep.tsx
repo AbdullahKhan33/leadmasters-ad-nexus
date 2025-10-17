@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useSegmentsData } from "@/hooks/useSegmentsData";
+import { useSegments } from "@/hooks/useSegments";
 import { Users, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -10,7 +10,7 @@ interface SegmentSelectionStepProps {
 }
 
 export function SegmentSelectionStep({ formData, setFormData }: SegmentSelectionStepProps) {
-  const { segments, isLoading } = useSegmentsData();
+  const { segments, isLoading } = useSegments();
 
   if (isLoading) {
     return (
@@ -63,7 +63,7 @@ export function SegmentSelectionStep({ formData, setFormData }: SegmentSelection
               </div>
               <Badge variant="secondary" className="ml-auto">
                 <Users className="w-3 h-3 mr-1" />
-                {segment.lead_count} leads
+                {segment.leadCount || 0} leads
               </Badge>
             </Label>
           </div>
