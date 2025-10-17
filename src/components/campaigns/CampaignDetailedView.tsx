@@ -39,6 +39,7 @@ interface Recipient {
 export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewProps) {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     fetchRecipients();
@@ -136,7 +137,7 @@ export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewP
       </div>
       
       <div className="flex-1 overflow-auto p-6">
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5 bg-white">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="deliverability">Deliverability</TabsTrigger>
