@@ -144,7 +144,7 @@ export function CampaignDashboard() {
                   <p className="text-muted-foreground mb-6">
                     Create your first email campaign to reach your segments with personalized messages and track engagement.
                   </p>
-                  <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
+                  <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
                     <Plus className="w-4 h-4 mr-2" />
                     Create Email Campaign
                   </Button>
@@ -162,7 +162,7 @@ export function CampaignDashboard() {
                   <p className="text-muted-foreground mb-6">
                     Create your first WhatsApp campaign to send instant messages to your segments and drive engagement.
                   </p>
-                  <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
+                  <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
                     <Plus className="w-4 h-4 mr-2" />
                     Create WhatsApp Campaign
                   </Button>
