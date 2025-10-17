@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { CampaignType } from "@/types/campaigns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -34,7 +35,8 @@ interface CampaignFormData {
 }
 
 export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardProps) {
-  const [currentStep, setCurrentStep] = useState(0);
+  // Skip type selection step if initialType is provided
+  const [currentStep, setCurrentStep] = useState(initialType ? 0 : 0);
   const { createCampaign } = useCampaigns();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,12 +50,20 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
     scheduled_at: null,
   });
 
-  const steps = [
-    { title: "Campaign Type", description: "Choose your campaign type" },
-    { title: "Select Segment", description: "Choose your target audience" },
-    { title: "Create Content", description: "Design your message" },
-    ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
-  ];
+  // Skip campaign type step if initialType is provided
+  const steps = initialType
+    ? [
+        { title: "Campaign Details", description: "Enter campaign name" },
+        { title: "Select Segment", description: "Choose your target audience" },
+        { title: "Create Content", description: "Design your message" },
+        ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
+      ]
+    : [
+        { title: "Campaign Type", description: "Choose your campaign type" },
+        { title: "Select Segment", description: "Choose your target audience" },
+        { title: "Create Content", description: "Design your message" },
+        ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
+      ];
 
   const progress = ((currentStep + 1) / steps.length) * 100;
 
@@ -159,17 +169,22 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
   };
 
   const canProceed = () => {
-    switch (currentStep) {
+    // Adjust step index if we skipped the type selection
+    const stepIndex = initialType ? currentStep + 1 : currentStep;
+    
+    switch (stepIndex) {
       case 0:
         return formData.name.trim() !== "" && formData.type !== null;
       case 1:
-        return formData.segment_id !== null;
+        return formData.name.trim() !== "";
       case 2:
+        return formData.segment_id !== null;
+      case 3:
         if (formData.type === "email") {
           return formData.subject.trim() !== "" && formData.message_content.trim() !== "";
         }
         return formData.message_content.trim() !== "";
-      case 3:
+      case 4:
         return true; // Schedule step is optional
       default:
         return false;
@@ -197,16 +212,28 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
 
         {/* Step Content */}
         <div className="py-6">
-          {currentStep === 0 && (
+          {!initialType && currentStep === 0 && (
             <CampaignTypeStep formData={formData} setFormData={setFormData} />
           )}
-          {currentStep === 1 && (
+          {initialType && currentStep === 0 && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Campaign Name</label>
+                <Input
+                  placeholder="e.g., Summer Sale Announcement"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
+            </div>
+          )}
+          {((initialType && currentStep === 1) || (!initialType && currentStep === 1)) && (
             <SegmentSelectionStep formData={formData} setFormData={setFormData} />
           )}
-          {currentStep === 2 && (
+          {((initialType && currentStep === 2) || (!initialType && currentStep === 2)) && (
             <ContentEditorStep formData={formData} setFormData={setFormData} />
           )}
-          {currentStep === 3 && formData.type === "email" && (
+          {((initialType && currentStep === 3) || (!initialType && currentStep === 3)) && formData.type === "email" && (
             <ScheduleStep formData={formData} setFormData={setFormData} />
           )}
         </div>
