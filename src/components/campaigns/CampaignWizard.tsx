@@ -16,6 +16,7 @@ import { ContentEditorStep } from "./wizard/ContentEditorStep";
 import { ScheduleStep } from "./wizard/ScheduleStep";
 import { useCampaigns } from "@/hooks/useCampaigns";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface CampaignWizardProps {
   isOpen: boolean;
@@ -71,15 +72,25 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      await createCampaign({
+      const newCampaign = await createCampaign({
         ...formData,
         status: formData.scheduled_at ? 'scheduled' : 'draft',
       });
       
-      toast({
-        title: "Success",
-        description: formData.scheduled_at ? "Campaign scheduled successfully" : "Campaign created as draft",
-      });
+      // If email campaign without scheduling, trigger send immediately
+      if (formData.type === "email" && !formData.scheduled_at && newCampaign) {
+        toast({
+          title: "Sending Campaign",
+          description: "Your campaign is being sent...",
+        });
+        
+        await sendCampaignNow(newCampaign.id);
+      } else {
+        toast({
+          title: "Success",
+          description: formData.scheduled_at ? "Campaign scheduled successfully" : "Campaign created as draft",
+        });
+      }
       
       onClose();
       resetForm();
@@ -87,6 +98,28 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
       console.error('Error creating campaign:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const sendCampaignNow = async (campaignId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("send-campaign-emails", {
+        body: { campaignId },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Campaign Sent",
+        description: `Successfully sent ${data.sent} emails${data.failed > 0 ? `, ${data.failed} failed` : ''}`,
+      });
+    } catch (error: any) {
+      console.error("Error sending campaign:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send campaign emails",
+        variant: "destructive",
+      });
     }
   };
 

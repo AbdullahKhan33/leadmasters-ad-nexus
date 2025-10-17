@@ -1,1 +1,10 @@
 project_id = "zfgtzkgptmerbrrnlppx"
+
+[functions.create-agent-user]
+verify_jwt = false
+
+[functions.send-agent-welcome]
+verify_jwt = false
+
+[functions.send-campaign-emails]
+verify_jwt = true

@@ -76,7 +76,7 @@ export function useCampaigns(type?: CampaignType) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const { data, error } = await supabase
+      const { data: newCampaign, error } = await supabase
         .from('campaigns')
         .insert([{
           name: campaignData.name || 'Untitled Campaign',
@@ -96,13 +96,41 @@ export function useCampaigns(type?: CampaignType) {
 
       if (error) throw error;
 
+      // If segment_id is provided, create campaign recipients
+      if (campaignData.segment_id && newCampaign) {
+        // Fetch leads in the segment
+        const { data: leads, error: leadsError } = await supabase
+          .from("leads")
+          .select("id")
+          .eq("user_id", user.id);
+
+        if (leadsError) {
+          console.error("Error fetching leads:", leadsError);
+        } else if (leads && leads.length > 0) {
+          // Create recipient records
+          const recipients = leads.map(lead => ({
+            campaign_id: newCampaign.id,
+            lead_id: lead.id,
+            status: "pending",
+          }));
+
+          const { error: recipientsError } = await supabase
+            .from("campaign_recipients")
+            .insert(recipients);
+
+          if (recipientsError) {
+            console.error("Error creating recipients:", recipientsError);
+          }
+        }
+      }
+
       toast({
         title: "Success",
         description: "Campaign created successfully",
       });
 
       await fetchCampaigns();
-      return data;
+      return newCampaign;
     } catch (error: any) {
       console.error('Error creating campaign:', error);
       toast({
