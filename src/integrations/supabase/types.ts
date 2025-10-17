@@ -278,6 +278,33 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_folders: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       campaign_recipients: {
         Row: {
           campaign_id: string
@@ -378,6 +405,7 @@ export type Database = {
         Row: {
           created_at: string | null
           created_by: string | null
+          folder_id: string | null
           id: string
           message_content: string
           metadata: Json | null
@@ -395,6 +423,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           created_by?: string | null
+          folder_id?: string | null
           id?: string
           message_content: string
           metadata?: Json | null
@@ -412,6 +441,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           created_by?: string | null
+          folder_id?: string | null
           id?: string
           message_content?: string
           metadata?: Json | null
@@ -427,6 +457,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "campaigns_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_folders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "campaigns_segment_id_fkey"
             columns: ["segment_id"]

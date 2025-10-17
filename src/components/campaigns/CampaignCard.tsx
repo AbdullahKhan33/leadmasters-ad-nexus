@@ -1,4 +1,4 @@
-import { Campaign } from "@/types/campaigns";
+import { Campaign, CampaignFolder } from "@/types/campaigns";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,9 +6,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Mail, MessageSquare, Calendar, Users, Eye, MousePointerClick, AlertCircle, Copy, Trash2, BarChart3 } from "lucide-react";
+import { MoreHorizontal, Mail, MessageSquare, Calendar, Users, Eye, MousePointerClick, AlertCircle, Copy, Trash2, BarChart3, FolderInput } from "lucide-react";
 import { format } from "date-fns";
 
 interface CampaignCardProps {
@@ -16,9 +20,20 @@ interface CampaignCardProps {
   onDuplicate: (id: string) => void;
   onDelete: (id: string) => void;
   onViewAnalytics: (id: string) => void;
+  onMoveToFolder?: (folderId: string | null) => void;
+  availableFolders?: CampaignFolder[];
+  currentFolderId?: string | null;
 }
 
-export function CampaignCard({ campaign, onDuplicate, onDelete, onViewAnalytics }: CampaignCardProps) {
+export function CampaignCard({ 
+  campaign, 
+  onDuplicate, 
+  onDelete, 
+  onViewAnalytics,
+  onMoveToFolder,
+  availableFolders = [],
+  currentFolderId,
+}: CampaignCardProps) {
   const getStatusBadge = (status: string) => {
     const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; label: string; color: string }> = {
       draft: { variant: "outline", label: "Draft", color: "text-gray-600" },
@@ -111,6 +126,39 @@ export function CampaignCard({ campaign, onDuplicate, onDelete, onViewAnalytics 
                 <Copy className="w-4 h-4 mr-2" />
                 Duplicate
               </DropdownMenuItem>
+              {onMoveToFolder && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <FolderInput className="w-4 h-4 mr-2" />
+                      Move to Folder
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      {currentFolderId && (
+                        <DropdownMenuItem onClick={() => onMoveToFolder(null)}>
+                          Uncategorized
+                        </DropdownMenuItem>
+                      )}
+                      {availableFolders
+                        .filter(f => f.id !== currentFolderId)
+                        .map((folder) => (
+                          <DropdownMenuItem
+                            key={folder.id}
+                            onClick={() => onMoveToFolder(folder.id)}
+                          >
+                            <div
+                              className="w-3 h-3 rounded-full mr-2"
+                              style={{ backgroundColor: folder.color }}
+                            />
+                            {folder.name}
+                          </DropdownMenuItem>
+                        ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  <DropdownMenuSeparator />
+                </>
+              )}
               <DropdownMenuItem onClick={() => onDelete(campaign.id)} className="text-destructive">
                 <Trash2 className="w-4 h-4 mr-2" />
                 Delete

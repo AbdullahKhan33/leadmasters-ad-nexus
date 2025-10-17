@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Mail, MessageSquare, Plus, Search } from "lucide-react";
+import { Mail, MessageSquare, Plus, Search, FolderPlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useCampaigns } from "@/hooks/useCampaigns";
+import { useCampaignFolders } from "@/hooks/useCampaignFolders";
 import { CampaignList } from "./CampaignList";
 import { CampaignDetailedView } from "./CampaignDetailedView";
+import { FolderSection } from "./FolderSection";
+import { CreateFolderDialog } from "./CreateFolderDialog";
 import {
   Select,
   SelectContent,
@@ -14,16 +17,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CampaignStatus } from "@/types/campaigns";
+import { CampaignStatus, CampaignFolder } from "@/types/campaigns";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export function CampaignDashboard() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [campaignType, setCampaignType] = useState<"email" | "whatsapp">("email");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | "all">("all");
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
+  const [createFolderOpen, setCreateFolderOpen] = useState(false);
+  const [editingFolder, setEditingFolder] = useState<CampaignFolder | null>(null);
   
-  const { campaigns, isLoading, duplicateCampaign, deleteCampaign } = useCampaigns(campaignType);
+  const { campaigns, isLoading, duplicateCampaign, deleteCampaign, updateCampaign } = useCampaigns(campaignType);
+  const { folders, createFolder, updateFolder, deleteFolder } = useCampaignFolders();
 
   const filteredCampaigns = campaigns.filter((campaign) => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -38,6 +47,30 @@ export function CampaignDashboard() {
   const handleCreateCampaign = () => {
     navigate(`/app/campaigns/create?type=${campaignType}`);
   };
+
+  const handleCreateFolder = async (name: string, color: string) => {
+    await createFolder(name, color);
+  };
+
+  const handleMoveCampaign = async (campaignId: string, folderId: string | null) => {
+    await updateCampaign(campaignId, { folder_id: folderId });
+    toast({
+      title: "Success",
+      description: "Campaign moved successfully",
+    });
+  };
+
+  const handleDeleteFolder = async (folderId: string) => {
+    await deleteFolder(folderId);
+  };
+
+  // Group campaigns by folder
+  const campaignsByFolder = filteredCampaigns.reduce((acc, campaign) => {
+    const key = campaign.folder_id || 'uncategorized';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(campaign);
+    return acc;
+  }, {} as Record<string, typeof filteredCampaigns>);
 
   // If a campaign is selected, show detailed analytics view
   if (selectedCampaignId) {
@@ -58,10 +91,23 @@ export function CampaignDashboard() {
             </h2>
             <p className="text-sm text-muted-foreground">Create and manage your email and WhatsApp campaigns</p>
           </div>
-          <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg" onClick={handleCreateCampaign}>
-            <Plus className="w-4 h-4 mr-2" />
-            Create Campaign
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setCreateFolderOpen(true)}
+              className="border-purple-200 text-purple-700 hover:bg-purple-50"
+            >
+              <FolderPlus className="w-4 h-4 mr-2" />
+              New Folder
+            </Button>
+            <Button 
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg" 
+              onClick={handleCreateCampaign}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Campaign
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -119,13 +165,41 @@ export function CampaignDashboard() {
       {/* Content Area */}
       <div className="flex-1 overflow-auto p-6">
         {filteredCampaigns.length > 0 ? (
-          <CampaignList
-            campaigns={filteredCampaigns}
-            isLoading={isLoading}
-            onDuplicate={duplicateCampaign}
-            onDelete={deleteCampaign}
-            onViewAnalytics={handleViewAnalytics}
-          />
+          <div className="space-y-1">
+            {/* Render folders with their campaigns */}
+            {folders.map((folder) => {
+              const folderCampaigns = campaignsByFolder[folder.id] || [];
+              if (folderCampaigns.length === 0) return null;
+              
+              return (
+                <FolderSection
+                  key={folder.id}
+                  folder={folder}
+                  campaigns={folderCampaigns}
+                  onDuplicate={duplicateCampaign}
+                  onDelete={deleteCampaign}
+                  onViewAnalytics={handleViewAnalytics}
+                  onEditFolder={setEditingFolder}
+                  onDeleteFolder={handleDeleteFolder}
+                  onMoveCampaign={handleMoveCampaign}
+                  availableFolders={folders}
+                />
+              );
+            })}
+
+            {/* Render uncategorized campaigns */}
+            {campaignsByFolder['uncategorized']?.length > 0 && (
+              <FolderSection
+                folder={null}
+                campaigns={campaignsByFolder['uncategorized']}
+                onDuplicate={duplicateCampaign}
+                onDelete={deleteCampaign}
+                onViewAnalytics={handleViewAnalytics}
+                onMoveCampaign={handleMoveCampaign}
+                availableFolders={folders}
+              />
+            )}
+          </div>
         ) : (
 campaignType === 'email' ? (
   <div className="flex flex-col items-center justify-center h-full text-center py-12">
@@ -162,6 +236,13 @@ campaignType === 'email' ? (
 )
         )}
       </div>
+
+      {/* Create Folder Dialog */}
+      <CreateFolderDialog
+        open={createFolderOpen}
+        onOpenChange={setCreateFolderOpen}
+        onCreateFolder={handleCreateFolder}
+      />
     </div>
   );
 }

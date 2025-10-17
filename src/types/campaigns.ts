@@ -20,6 +20,7 @@ export interface Campaign {
   updated_at: string;
   created_by: string | null;
   metadata: Record<string, any>;
+  folder_id: string | null;
   
   // Computed fields
   recipient_count?: number;
@@ -65,6 +66,15 @@ export interface Segment {
   color: string;
   is_active: boolean;
   lead_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CampaignFolder {
+  id: string;
+  user_id: string;
+  name: string;
+  color: string;
   created_at: string;
   updated_at: string;
 }
