@@ -131,7 +131,7 @@ function CreateCampaignPageContent() {
       }
       
       // Navigate back to campaigns dashboard
-      navigate('/app/crm');
+      navigate('/app', { state: { view: 'crm' } });
     } catch (error) {
       console.error('Error creating campaign:', error);
     } finally {
@@ -352,7 +352,7 @@ function CreateCampaignPageContent() {
                       className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
                       size="lg"
                     >
-                      {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Launch Immediately"}
+              {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule now" : "Launch Immediately"}
                     </Button>
                   ) : (
                     <Button
@@ -462,7 +462,7 @@ export function CreateCampaignInline() {
       } else {
         toast({ title: "Success", description: formData.scheduled_at ? "Campaign scheduled successfully" : "Campaign created as draft" });
       }
-      navigate('/app/crm');
+      navigate('/app', { state: { view: 'crm' } });
     } catch (error) {
       console.error('Error creating campaign:', error);
     } finally {
@@ -603,7 +603,7 @@ export function CreateCampaignInline() {
 
             {currentStep === steps.length - 1 ? (
               <Button onClick={handleSubmit} disabled={!canProceed() || isSubmitting} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white" size="lg">
-                {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Launch Immediately"}
+                {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule now" : "Launch Immediately"}
               </Button>
             ) : (
               <Button onClick={handleNext} disabled={!canProceed()} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white" size="lg">
