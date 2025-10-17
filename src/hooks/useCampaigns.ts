@@ -76,57 +76,68 @@ export function useCampaigns(type?: CampaignType) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // Validate segment id (local segments may use non-UUID ids like "segment-1")
+      const isUuid = (val: any) =>
+        typeof val === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(val);
+      const validSegmentId = isUuid(campaignData.segment_id) ? (campaignData.segment_id as string) : null;
+
+      const metadata = {
+        ...(campaignData.metadata || {}),
+        ...(validSegmentId ? {} : (campaignData.segment_id ? { segment_local_id: campaignData.segment_id } : {})),
+      };
+
       const { data: newCampaign, error } = await supabase
         .from('campaigns')
-        .insert([{
-          name: campaignData.name || 'Untitled Campaign',
-          type: campaignData.type || 'email',
-          message_content: campaignData.message_content || '',
-          status: campaignData.status || 'draft',
-          segment_id: campaignData.segment_id,
-          template_id: campaignData.template_id,
-          subject: campaignData.subject,
-          scheduled_at: campaignData.scheduled_at,
-          metadata: campaignData.metadata || {},
-          user_id: user.id,
-          created_by: user.id,
-        }])
+        .insert([
+          {
+            name: campaignData.name || 'Untitled Campaign',
+            type: campaignData.type || 'email',
+            message_content: campaignData.message_content || '',
+            status: campaignData.status || 'draft',
+            segment_id: validSegmentId, // only set when valid uuid
+            template_id: campaignData.template_id,
+            subject: campaignData.subject,
+            scheduled_at: campaignData.scheduled_at,
+            metadata,
+            user_id: user.id,
+            created_by: user.id,
+          },
+        ])
         .select()
         .single();
 
       if (error) throw error;
 
-      // If segment_id is provided, create campaign recipients
-      if (campaignData.segment_id && newCampaign) {
-        // Fetch leads in the segment
+      // If a valid segment_id is provided, create campaign recipients
+      if (validSegmentId && newCampaign) {
+        // NOTE: Real segment filtering is not implemented yet; select all user leads for now
         const { data: leads, error: leadsError } = await supabase
-          .from("leads")
-          .select("id")
-          .eq("user_id", user.id);
+          .from('leads')
+          .select('id')
+          .eq('user_id', user.id);
 
         if (leadsError) {
-          console.error("Error fetching leads:", leadsError);
+          console.error('Error fetching leads:', leadsError);
         } else if (leads && leads.length > 0) {
-          // Create recipient records
-          const recipients = leads.map(lead => ({
+          const recipients = leads.map((lead) => ({
             campaign_id: newCampaign.id,
             lead_id: lead.id,
-            status: "pending",
+            status: 'pending',
           }));
 
           const { error: recipientsError } = await supabase
-            .from("campaign_recipients")
+            .from('campaign_recipients')
             .insert(recipients);
 
           if (recipientsError) {
-            console.error("Error creating recipients:", recipientsError);
+            console.error('Error creating recipients:', recipientsError);
           }
         }
       }
 
       toast({
-        title: "Success",
-        description: "Campaign created successfully",
+        title: 'Success',
+        description: 'Campaign created successfully',
       });
 
       await fetchCampaigns();
@@ -134,9 +145,9 @@ export function useCampaigns(type?: CampaignType) {
     } catch (error: any) {
       console.error('Error creating campaign:', error);
       toast({
-        title: "Error",
-        description: error.message || "Failed to create campaign",
-        variant: "destructive",
+        title: 'Error',
+        description: error.message || 'Failed to create campaign',
+        variant: 'destructive',
       });
       return null;
     }

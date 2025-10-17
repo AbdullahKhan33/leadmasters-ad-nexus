@@ -77,13 +77,21 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
         status: formData.scheduled_at ? 'scheduled' : 'draft',
       });
       
+      if (!newCampaign) {
+        toast({
+          title: "Error",
+          description: "Failed to create campaign. Please check your inputs and try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       // If email campaign without scheduling, trigger send immediately
-      if (formData.type === "email" && !formData.scheduled_at && newCampaign) {
+      if (formData.type === "email" && !formData.scheduled_at) {
         toast({
           title: "Sending Campaign",
           description: "Your campaign is being sent...",
         });
-        
         await sendCampaignNow(newCampaign.id);
       } else {
         toast({
