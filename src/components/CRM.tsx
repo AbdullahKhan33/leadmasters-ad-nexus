@@ -5,14 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  MessageSquare, 
   Users, 
-  TableProperties, 
-  Settings,
-  LayoutGrid
+  TableProperties
 } from "lucide-react";
-import { CRMInboxView } from "./crm/CRMInboxView";
-import { CRMKanbanView } from "./crm/CRMKanbanView";
 import { CRMTableView } from "./crm/CRMTableView";
 import { CSVImportModal } from "./crm/CSVImportModal";
 import { PremiumProvider } from "@/contexts/PremiumContext";
@@ -20,7 +15,7 @@ import { PremiumUpgradeModal } from "./premium/PremiumUpgradeModal";
 import { SegmentManager } from "./segments/SegmentManager";
 
 export function CRM() {
-  const [activeTab, setActiveTab] = useState("inbox");
+  const [activeTab, setActiveTab] = useState("table");
   const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
   const [csvImportModal, setCsvImportModal] = useState(false);
 
@@ -78,21 +73,7 @@ export function CRM() {
         {/* Navigation Tabs */}
         <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6 shadow-sm">
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
-              <TabsTrigger 
-                value="inbox" 
-                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>Inbox</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="pipeline" 
-                className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
-              >
-                <LayoutGrid className="w-4 h-4" />
-                <span>Pipeline</span>
-              </TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
               <TabsTrigger 
                 value="table" 
                 className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
@@ -114,12 +95,6 @@ export function CRM() {
         {/* Content Area */}
         <div className="flex-1 overflow-hidden">
           <Tabs value={activeTab} className="h-full">
-            <TabsContent value="inbox" className="h-full m-0">
-              <CRMInboxView onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} />
-            </TabsContent>
-            <TabsContent value="pipeline" className="h-full m-0">
-              <CRMKanbanView />
-            </TabsContent>
             <TabsContent value="table" className="h-full m-0">
               <CRMTableView 
                 onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} 
