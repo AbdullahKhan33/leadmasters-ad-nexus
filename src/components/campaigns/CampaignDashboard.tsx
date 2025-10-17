@@ -133,43 +133,39 @@ export function CampaignDashboard() {
             onViewAnalytics={handleViewAnalytics}
           />
         ) : (
-          <Tabs value={campaignType} className="h-full">
-            <TabsContent value="email" className="mt-0">
-              <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg max-w-md">
-                  <Mail className="w-16 h-16 mx-auto mb-4 text-purple-600" />
-                  <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-                    No Email Campaigns Yet
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    Create your first email campaign to reach your segments with personalized messages and track engagement.
-                  </p>
-                  <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create Email Campaign
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="whatsapp" className="mt-0">
-              <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg max-w-md">
-                  <MessageSquare className="w-16 h-16 mx-auto mb-4 text-purple-600" />
-                  <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-                    No WhatsApp Campaigns Yet
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    Create your first WhatsApp campaign to send instant messages to your segments and drive engagement.
-                  </p>
-                  <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create WhatsApp Campaign
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+campaignType === 'email' ? (
+  <div className="flex flex-col items-center justify-center h-full text-center py-12">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg max-w-md">
+      <Mail className="w-16 h-16 mx-auto mb-4 text-purple-600" />
+      <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+        No Email Campaigns Yet
+      </h3>
+      <p className="text-muted-foreground mb-6">
+        Create your first email campaign to reach your segments with personalized messages and track engagement.
+      </p>
+      <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
+        <Plus className="w-4 h-4 mr-2" />
+        Create Email Campaign
+      </Button>
+    </div>
+  </div>
+) : (
+  <div className="flex flex-col items-center justify-center h-full text-center py-12">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg max-w-md">
+      <MessageSquare className="w-16 h-16 mx-auto mb-4 text-purple-600" />
+      <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+        No WhatsApp Campaigns Yet
+      </h3>
+      <p className="text-muted-foreground mb-6">
+        Create your first WhatsApp campaign to send instant messages to your segments and drive engagement.
+      </p>
+      <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
+        <Plus className="w-4 h-4 mr-2" />
+        Create WhatsApp Campaign
+      </Button>
+    </div>
+  </div>
+)
         )}
       </div>
 
