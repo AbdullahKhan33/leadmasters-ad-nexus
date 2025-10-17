@@ -1,4 +1,30 @@
 // Core segment types and interfaces
+export interface SegmentCriteriaNew {
+  status?: string[];
+  source?: string[];
+  category?: string[];
+  list?: string[];
+  ai_score_min?: number;
+  ai_score_max?: number;
+  created_after?: string;
+  created_before?: string;
+  has_email?: boolean;
+  has_phone?: boolean;
+}
+
+export interface Segment {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  criteria: SegmentCriteriaNew;
+  color?: string;
+  is_active: boolean;
+  lead_count?: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface SegmentCriteria {
   id: string;
   field: string; // e.g., 'age', 'location', 'source', 'status', 'lastActivity'
