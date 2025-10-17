@@ -11,6 +11,11 @@ import { ScheduleStep } from "@/components/campaigns/wizard/ScheduleStep";
 import { useCampaigns } from "@/hooks/useCampaigns";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
+import { TopBar } from "@/components/TopBar";
+import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
+import { PremiumProvider } from "@/contexts/PremiumContext";
 
 interface CampaignFormData {
   name: string;
@@ -21,7 +26,7 @@ interface CampaignFormData {
   scheduled_at: string | null;
 }
 
-export default function CreateCampaignPage() {
+function CreateCampaignPageContent() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialType = (searchParams.get("type") as CampaignType) || "email";
@@ -151,94 +156,133 @@ export default function CreateCampaignPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate(-1)}
-                className="hover:bg-gray-100"
-              >
-                <X className="w-5 h-5" />
-              </Button>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-                  {steps[currentStep].title}
-                </h1>
-                <p className="text-sm text-muted-foreground">{steps[currentStep].description}</p>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <WorkspaceSidebar 
+          onDashboardClick={() => {}}
+          onPostBuilderClick={() => {}}
+          onAdBuilderClick={() => {}}
+          onSocialLoginsClick={() => {}}
+          onInspirationHubClick={() => {}}
+          onAnalyticsClick={() => {}}
+          onScheduleClick={() => {}}
+          onWorkspacesClick={() => {}}
+          onUserSettingsClick={() => {}}
+          onCRMClick={() => {}}
+          onDomainSetupClick={() => {}}
+          onCRMAutomationsClick={() => {}}
+          onTemplatesClick={() => {}}
+          onAgentsClick={() => {}}
+          onSmartAutomationsClick={() => {}}
+          onServicesClick={() => {}}
+          onContentHubClick={() => {}}
+          currentView="crm"
+        />
+        
+        <div className="flex-1 flex flex-col min-w-0">
+          <TopBar />
+          
+          <div className="flex-1 bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 overflow-auto">
+            {/* Header */}
+            <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 sticky top-0 z-10">
+              <div className="max-w-7xl mx-auto px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => navigate(-1)}
+                      className="hover:bg-gray-100"
+                    >
+                      <X className="w-5 h-5" />
+                    </Button>
+                    <div>
+                      <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        {steps[currentStep].title}
+                      </h1>
+                      <p className="text-sm text-muted-foreground">{steps[currentStep].description}</p>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Step {currentStep + 1} of {steps.length}
+                  </div>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="mt-4">
+                  <Progress value={progress} className="h-2" />
+                </div>
               </div>
             </div>
-            <div className="text-sm text-muted-foreground">
-              Step {currentStep + 1} of {steps.length}
+
+            {/* Content */}
+            <div className="max-w-7xl mx-auto px-6 py-8">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg p-8">
+                {currentStep === 0 && (
+                  <CampaignTypeStep formData={formData} setFormData={setFormData} />
+                )}
+                {currentStep === 1 && (
+                  <SegmentSelectionStep formData={formData} setFormData={setFormData} />
+                )}
+                {currentStep === 2 && (
+                  <ContentEditorStep formData={formData} setFormData={setFormData} />
+                )}
+                {currentStep === 3 && formData.type === "email" && (
+                  <ScheduleStep formData={formData} setFormData={setFormData} />
+                )}
+              </div>
+            </div>
+
+            {/* Footer Navigation */}
+            <div className="bg-white/80 backdrop-blur-sm border-t border-gray-200/60 sticky bottom-0">
+              <div className="max-w-7xl mx-auto px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    onClick={handleBack}
+                    disabled={currentStep === 0}
+                    size="lg"
+                  >
+                    <ChevronLeft className="w-4 h-4 mr-2" />
+                    Back
+                  </Button>
+
+                  {currentStep === steps.length - 1 ? (
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={!canProceed() || isSubmitting}
+                      className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                      size="lg"
+                    >
+                      {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Create Campaign"}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleNext}
+                      disabled={!canProceed()}
+                      className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                      size="lg"
+                    >
+                      Next
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-          
-          {/* Progress Bar */}
-          <div className="mt-4">
-            <Progress value={progress} className="h-2" />
-          </div>
         </div>
       </div>
+    </SidebarProvider>
+  );
+}
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg p-8">
-          {currentStep === 0 && (
-            <CampaignTypeStep formData={formData} setFormData={setFormData} />
-          )}
-          {currentStep === 1 && (
-            <SegmentSelectionStep formData={formData} setFormData={setFormData} />
-          )}
-          {currentStep === 2 && (
-            <ContentEditorStep formData={formData} setFormData={setFormData} />
-          )}
-          {currentStep === 3 && formData.type === "email" && (
-            <ScheduleStep formData={formData} setFormData={setFormData} />
-          )}
-        </div>
-      </div>
-
-      {/* Footer Navigation */}
-      <div className="bg-white/80 backdrop-blur-sm border-t border-gray-200/60 sticky bottom-0">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={currentStep === 0}
-              size="lg"
-            >
-              <ChevronLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-
-            {currentStep === steps.length - 1 ? (
-              <Button
-                onClick={handleSubmit}
-                disabled={!canProceed() || isSubmitting}
-                className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
-                size="lg"
-              >
-                {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Create Campaign"}
-              </Button>
-            ) : (
-              <Button
-                onClick={handleNext}
-                disabled={!canProceed()}
-                className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
-                size="lg"
-              >
-                Next
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+export default function CreateCampaignPage() {
+  return (
+    <WorkspaceProvider>
+      <PremiumProvider>
+        <CreateCampaignPageContent />
+      </PremiumProvider>
+    </WorkspaceProvider>
   );
 }
