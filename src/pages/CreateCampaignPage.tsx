@@ -342,12 +342,22 @@ export function CreateCampaignInline() {
     scheduled_at: null,
   });
 
-  const steps = [
-    { title: "Campaign Type", description: "Choose your campaign type" },
-    { title: "Select Segment", description: "Choose your target audience" },
-    { title: "Create Content", description: "Design your message" },
-    ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
-  ];
+  // Determine if we should skip campaign type selection based on URL parameter
+  const hasInitialType = searchParams.has("type");
+
+  const steps = hasInitialType
+    ? [
+        { title: "Campaign Details", description: "Enter campaign name" },
+        { title: "Select Segment", description: "Choose your target audience" },
+        { title: "Create Content", description: "Design your message" },
+        ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
+      ]
+    : [
+        { title: "Campaign Type", description: "Choose your campaign type" },
+        { title: "Select Segment", description: "Choose your target audience" },
+        { title: "Create Content", description: "Design your message" },
+        ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
+      ];
 
   const progress = ((currentStep + 1) / steps.length) * 100;
 
@@ -397,15 +407,20 @@ export function CreateCampaignInline() {
   };
 
   const canProceed = () => {
-    switch (currentStep) {
+    // Adjust step index if we skipped the type selection
+    const stepIndex = hasInitialType ? currentStep + 1 : currentStep;
+    
+    switch (stepIndex) {
       case 0:
         return formData.name.trim() !== "" && formData.type !== null;
       case 1:
-        return formData.segment_id !== null;
+        return formData.name.trim() !== "";
       case 2:
+        return formData.segment_id !== null;
+      case 3:
         if (formData.type === "email") return formData.subject.trim() !== "" && formData.message_content.trim() !== "";
         return formData.message_content.trim() !== "";
-      case 3:
+      case 4:
         return true;
       default:
         return false;
@@ -423,9 +438,17 @@ export function CreateCampaignInline() {
               </Button>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-                  {steps[currentStep].title}
+                  {hasInitialType && currentStep === 0
+                    ? `Create ${initialType === 'email' ? 'an Email' : 'a WhatsApp'} Campaign`
+                    : steps[currentStep].title
+                  }
                 </h1>
-                <p className="text-sm text-muted-foreground">{steps[currentStep].description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {hasInitialType && currentStep === 0
+                    ? "Enter your campaign details"
+                    : steps[currentStep].description
+                  }
+                </p>
               </div>
             </div>
             <div className="text-sm text-muted-foreground">Step {currentStep + 1} of {steps.length}</div>
@@ -438,10 +461,22 @@ export function CreateCampaignInline() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg p-8">
-          {currentStep === 0 && (<CampaignTypeStep formData={formData} setFormData={setFormData} />)}
-          {currentStep === 1 && (<SegmentSelectionStep formData={formData} setFormData={setFormData} />)}
-          {currentStep === 2 && (<ContentEditorStep formData={formData} setFormData={setFormData} />)}
-          {currentStep === 3 && formData.type === "email" && (<ScheduleStep formData={formData} setFormData={setFormData} />)}
+          {!hasInitialType && currentStep === 0 && (<CampaignTypeStep formData={formData} setFormData={setFormData} />)}
+          {hasInitialType && currentStep === 0 && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Campaign Name</label>
+                <Input
+                  placeholder="e.g., Summer Sale Announcement"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
+            </div>
+          )}
+          {((hasInitialType && currentStep === 1) || (!hasInitialType && currentStep === 1)) && (<SegmentSelectionStep formData={formData} setFormData={setFormData} />)}
+          {((hasInitialType && currentStep === 2) || (!hasInitialType && currentStep === 2)) && (<ContentEditorStep formData={formData} setFormData={setFormData} />)}
+          {((hasInitialType && currentStep === 3) || (!hasInitialType && currentStep === 3)) && formData.type === "email" && (<ScheduleStep formData={formData} setFormData={setFormData} />)}
         </div>
       </div>
 
