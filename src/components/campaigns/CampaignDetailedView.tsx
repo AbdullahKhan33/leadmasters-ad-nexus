@@ -17,6 +17,7 @@ import { Check, X, Eye, MousePointerClick, Mail } from "lucide-react";
 
 interface CampaignDetailedViewProps {
   campaign: Campaign;
+  onBack: () => void;
 }
 
 interface Recipient {
@@ -34,7 +35,7 @@ interface Recipient {
   };
 }
 
-export function CampaignDetailedView({ campaign }: CampaignDetailedViewProps) {
+export function CampaignDetailedView({ campaign, onBack }: CampaignDetailedViewProps) {
   const [recipients, setRecipients] = useState<Recipient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -96,14 +97,21 @@ export function CampaignDetailedView({ campaign }: CampaignDetailedViewProps) {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Campaign Recipients</CardTitle>
-        <CardDescription>
-          Detailed delivery and engagement data for {campaign.name}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <div className="h-full flex flex-col bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 px-6 py-4">
+        <Button variant="ghost" onClick={onBack} className="mb-2">
+          ← Back to Campaigns
+        </Button>
+        <div>
+          <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            {campaign.name}
+          </h2>
+          <p className="text-sm text-muted-foreground">Detailed delivery and engagement data</p>
+        </div>
+      </div>
+      
+      <div className="flex-1 overflow-auto p-6">
+        <Card>
         {isLoading ? (
           <div className="text-center py-8 text-muted-foreground">
             Loading recipients...
@@ -198,7 +206,8 @@ export function CampaignDetailedView({ campaign }: CampaignDetailedViewProps) {
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+        </Card>
+      </div>
+    </div>
   );
 }

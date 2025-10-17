@@ -86,13 +86,23 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
         return;
       }
       
-      // If email campaign without scheduling, trigger send immediately
+      // If email campaign without scheduling, trigger send immediately and update status
       if (formData.type === "email" && !formData.scheduled_at) {
         toast({
           title: "Sending Campaign",
           description: "Your campaign is being sent...",
         });
         await sendCampaignNow(newCampaign.id);
+        
+        // Update campaign status to 'sent'
+        const { error: updateError } = await supabase
+          .from('campaigns')
+          .update({ status: 'sent', sent_at: new Date().toISOString() })
+          .eq('id', newCampaign.id);
+          
+        if (updateError) {
+          console.error('Error updating campaign status:', updateError);
+        }
       } else {
         toast({
           title: "Success",

@@ -247,6 +247,7 @@ export function CampaignAnalytics() {
               ) : (
                 <CampaignDetailedView
                   campaign={sentCampaigns.find((c) => c.id === selectedCampaignId)!}
+                  onBack={() => setSelectedCampaignId("all")}
                 />
               )}
             </TabsContent>

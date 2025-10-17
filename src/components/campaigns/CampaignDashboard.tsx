@@ -5,6 +5,7 @@ import { Mail, MessageSquare, Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useCampaigns } from "@/hooks/useCampaigns";
 import { CampaignList } from "./CampaignList";
+import { CampaignDetailedView } from "./CampaignDetailedView";
 import {
   Select,
   SelectContent,
@@ -20,6 +21,7 @@ export function CampaignDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | "all">("all");
   const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
   
   const { campaigns, isLoading, duplicateCampaign, deleteCampaign, refetch } = useCampaigns(campaignType);
 
@@ -30,8 +32,7 @@ export function CampaignDashboard() {
   });
 
   const handleViewAnalytics = (id: string) => {
-    console.log("View analytics for campaign:", id);
-    // TODO: Navigate to analytics view
+    setSelectedCampaignId(id);
   };
 
   const handleCreateCampaign = () => {
@@ -43,6 +44,14 @@ export function CampaignDashboard() {
     // Refetch campaigns when wizard closes to show newly created campaigns
     refetch();
   };
+
+  // If a campaign is selected, show detailed analytics view
+  if (selectedCampaignId) {
+    const campaign = campaigns.find(c => c.id === selectedCampaignId);
+    if (campaign) {
+      return <CampaignDetailedView campaign={campaign} onBack={() => setSelectedCampaignId(null)} />;
+    }
+  }
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
