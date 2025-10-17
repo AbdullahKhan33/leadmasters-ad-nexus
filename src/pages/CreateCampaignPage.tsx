@@ -254,7 +254,7 @@ function CreateCampaignPageContent() {
                       className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
                       size="lg"
                     >
-                      {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Send Now"}
+                      {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Launch Immediately"}
                     </Button>
                   ) : (
                     <Button
@@ -419,7 +419,7 @@ export function CreateCampaignInline() {
 
             {currentStep === steps.length - 1 ? (
               <Button onClick={handleSubmit} disabled={!canProceed() || isSubmitting} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white" size="lg">
-                {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Send Now"}
+                {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Launch Immediately"}
               </Button>
             ) : (
               <Button onClick={handleNext} disabled={!canProceed()} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white" size="lg">
