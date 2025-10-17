@@ -196,9 +196,17 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            {steps[currentStep].title}
+            {initialType 
+              ? `Create ${initialType === 'email' ? 'an Email' : 'a WhatsApp'} Campaign`
+              : steps[currentStep].title
+            }
           </DialogTitle>
-          <DialogDescription>{steps[currentStep].description}</DialogDescription>
+          <DialogDescription>
+            {initialType && currentStep === 0 
+              ? "Enter your campaign details"
+              : steps[currentStep].description
+            }
+          </DialogDescription>
         </DialogHeader>
 
         {/* Progress Bar */}
