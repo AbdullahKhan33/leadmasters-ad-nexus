@@ -286,3 +286,151 @@ export default function CreateCampaignPage() {
     </WorkspaceProvider>
   );
 }
+
+export function CreateCampaignInline() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialType = (searchParams.get("type") as CampaignType) || "email";
+  
+  const [currentStep, setCurrentStep] = useState(0);
+  const { createCampaign } = useCampaigns();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [formData, setFormData] = useState<CampaignFormData>({
+    name: "",
+    type: initialType,
+    segment_id: null,
+    subject: "",
+    message_content: "",
+    scheduled_at: null,
+  });
+
+  const steps = [
+    { title: "Campaign Type", description: "Choose your campaign type" },
+    { title: "Select Segment", description: "Choose your target audience" },
+    { title: "Create Content", description: "Design your message" },
+    ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
+  ];
+
+  const progress = ((currentStep + 1) / steps.length) * 100;
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
+  };
+  const handleBack = () => {
+    if (currentStep > 0) setCurrentStep(currentStep - 1);
+  };
+
+  const sendCampaignNow = async (campaignId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("send-campaign-emails", { body: { campaignId } });
+      if (error) throw error;
+      toast({ title: "Campaign Sent", description: `Successfully sent ${data.sent} emails${data.failed > 0 ? `, ${data.failed} failed` : ''}` });
+    } catch (error: any) {
+      console.error("Error sending campaign:", error);
+      toast({ title: "Error", description: "Failed to send campaign emails", variant: "destructive" });
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const newCampaign = await createCampaign({ ...formData, status: formData.scheduled_at ? 'scheduled' : 'draft' });
+      if (!newCampaign) {
+        toast({ title: "Error", description: "Failed to create campaign. Please check your inputs and try again.", variant: "destructive" });
+        return;
+      }
+      if (formData.type === "email" && !formData.scheduled_at) {
+        toast({ title: "Sending Campaign", description: "Your campaign is being sent..." });
+        await sendCampaignNow(newCampaign.id);
+        const { error: updateError } = await supabase
+          .from('campaigns')
+          .update({ status: 'sent', sent_at: new Date().toISOString() })
+          .eq('id', newCampaign.id);
+        if (updateError) console.error('Error updating campaign status:', updateError);
+      } else {
+        toast({ title: "Success", description: formData.scheduled_at ? "Campaign scheduled successfully" : "Campaign created as draft" });
+      }
+      navigate(-1);
+    } catch (error) {
+      console.error('Error creating campaign:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const canProceed = () => {
+    switch (currentStep) {
+      case 0:
+        return formData.name.trim() !== "" && formData.type !== null;
+      case 1:
+        return formData.segment_id !== null;
+      case 2:
+        if (formData.type === "email") return formData.subject.trim() !== "" && formData.message_content.trim() !== "";
+        return formData.message_content.trim() !== "";
+      case 3:
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  return (
+    <div className="flex-1 bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 overflow-auto">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="hover:bg-gray-100">
+                <X className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                  {steps[currentStep].title}
+                </h1>
+                <p className="text-sm text-muted-foreground">{steps[currentStep].description}</p>
+              </div>
+            </div>
+            <div className="text-sm text-muted-foreground">Step {currentStep + 1} of {steps.length}</div>
+          </div>
+          <div className="mt-4">
+            <Progress value={progress} className="h-2" />
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg p-8">
+          {currentStep === 0 && (<CampaignTypeStep formData={formData} setFormData={setFormData} />)}
+          {currentStep === 1 && (<SegmentSelectionStep formData={formData} setFormData={setFormData} />)}
+          {currentStep === 2 && (<ContentEditorStep formData={formData} setFormData={setFormData} />)}
+          {currentStep === 3 && formData.type === "email" && (<ScheduleStep formData={formData} setFormData={setFormData} />)}
+        </div>
+      </div>
+
+      <div className="bg-white/80 backdrop-blur-sm border-t border-gray-200/60 sticky bottom-0">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Button variant="outline" onClick={handleBack} disabled={currentStep === 0} size="lg">
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+
+            {currentStep === steps.length - 1 ? (
+              <Button onClick={handleSubmit} disabled={!canProceed() || isSubmitting} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white" size="lg">
+                {isSubmitting ? "Creating..." : formData.scheduled_at ? "Schedule Campaign" : "Create Campaign"}
+              </Button>
+            ) : (
+              <Button onClick={handleNext} disabled={!canProceed()} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white" size="lg">
+                Next
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

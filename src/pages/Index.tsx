@@ -30,10 +30,11 @@ import { useLocation } from "react-router-dom";
 import { FloatingChatbot } from "@/components/chatbot/FloatingChatbot";
 import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
+import { CreateCampaignInline } from "@/pages/CreateCampaignPage";
 
 type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'content-hub';
 type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'content-hub';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'content-hub';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'content-hub' | 'campaign-create';
 
 function IndexContent() {
   const { user } = useAuth();
@@ -66,6 +67,12 @@ function IndexContent() {
     // Check if we're on the agent edit route
     if (location.pathname.startsWith('/app/agents/edit/')) {
       setCurrentView('agents');
+      return;
+    }
+    
+    // Campaign create route
+    if (location.pathname === '/app/campaigns/create') {
+      setCurrentView('campaign-create');
       return;
     }
     
@@ -359,6 +366,8 @@ function IndexContent() {
               <Templates />
             ) : currentView === 'services' ? (
               <Services />
+            ) : currentView === 'campaign-create' ? (
+              <CreateCampaignInline />
             ) : (
               <AdBuilder />
             )}
