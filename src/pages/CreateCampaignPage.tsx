@@ -2,14 +2,16 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { CampaignType } from "@/types/campaigns";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Folder } from "lucide-react";
 import { CampaignTypeStep } from "@/components/campaigns/wizard/CampaignTypeStep";
 import { SegmentSelectionStep } from "@/components/campaigns/wizard/SegmentSelectionStep";
 import { ContentEditorStep } from "@/components/campaigns/wizard/ContentEditorStep";
 import { ScheduleStep } from "@/components/campaigns/wizard/ScheduleStep";
 import { useCampaigns } from "@/hooks/useCampaigns";
+import { useCampaignFolders } from "@/hooks/useCampaignFolders";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -17,6 +19,13 @@ import { WorkspaceSidebar } from "@/components/WorkspaceSidebar";
 import { TopBar } from "@/components/TopBar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { PremiumProvider } from "@/contexts/PremiumContext";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface CampaignFormData {
   name: string;
@@ -25,6 +34,7 @@ interface CampaignFormData {
   subject: string;
   message_content: string;
   scheduled_at: string | null;
+  folder_id: string | null;
 }
 
 function CreateCampaignPageContent() {
@@ -34,6 +44,7 @@ function CreateCampaignPageContent() {
   
   const [currentStep, setCurrentStep] = useState(0);
   const { createCampaign } = useCampaigns();
+  const { folders } = useCampaignFolders();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -44,6 +55,7 @@ function CreateCampaignPageContent() {
     subject: "",
     message_content: "",
     scheduled_at: null,
+    folder_id: null,
   });
 
   // Determine if we should skip campaign type selection based on URL parameter
@@ -246,14 +258,63 @@ function CreateCampaignPageContent() {
                   <CampaignTypeStep formData={formData} setFormData={setFormData} />
                 )}
                 {hasInitialType && currentStep === 0 && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Campaign Name</label>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="campaign-name">Campaign Name</Label>
                       <Input
+                        id="campaign-name"
                         placeholder="e.g., Summer Sale Announcement"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="folder-select">Folder (Optional)</Label>
+                      <Select
+                        value={formData.folder_id || "none"}
+                        onValueChange={(value) => 
+                          setFormData({ ...formData, folder_id: value === "none" ? null : value })
+                        }
+                      >
+                        <SelectTrigger id="folder-select">
+                          <SelectValue placeholder="Select a folder">
+                            {formData.folder_id ? (
+                              <div className="flex items-center gap-2">
+                                <Folder 
+                                  className="w-4 h-4" 
+                                  style={{ color: folders.find(f => f.id === formData.folder_id)?.color }}
+                                />
+                                {folders.find(f => f.id === formData.folder_id)?.name}
+                              </div>
+                            ) : (
+                              "Uncategorized"
+                            )}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">
+                            <div className="flex items-center gap-2">
+                              <Folder className="w-4 h-4 text-gray-400" />
+                              Uncategorized
+                            </div>
+                          </SelectItem>
+                          {folders.map((folder) => (
+                            <SelectItem key={folder.id} value={folder.id}>
+                              <div className="flex items-center gap-2">
+                                <Folder 
+                                  className="w-4 h-4" 
+                                  style={{ color: folder.color }}
+                                />
+                                {folder.name}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Organize your campaign by selecting a folder
+                      </p>
                     </div>
                   </div>
                 )}
@@ -330,6 +391,7 @@ export function CreateCampaignInline() {
   
   const [currentStep, setCurrentStep] = useState(0);
   const { createCampaign } = useCampaigns();
+  const { folders } = useCampaignFolders();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -340,6 +402,7 @@ export function CreateCampaignInline() {
     subject: "",
     message_content: "",
     scheduled_at: null,
+    folder_id: null,
   });
 
   // Determine if we should skip campaign type selection based on URL parameter
@@ -462,18 +525,67 @@ export function CreateCampaignInline() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/60 shadow-lg p-8">
           {!hasInitialType && currentStep === 0 && (<CampaignTypeStep formData={formData} setFormData={setFormData} />)}
-          {hasInitialType && currentStep === 0 && (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Campaign Name</label>
-                <Input
-                  placeholder="e.g., Summer Sale Announcement"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
-              </div>
-            </div>
-          )}
+                {hasInitialType && currentStep === 0 && (
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="campaign-name-inline">Campaign Name</Label>
+                      <Input
+                        id="campaign-name-inline"
+                        placeholder="e.g., Summer Sale Announcement"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="folder-select-inline">Folder (Optional)</Label>
+                      <Select
+                        value={formData.folder_id || "none"}
+                        onValueChange={(value) => 
+                          setFormData({ ...formData, folder_id: value === "none" ? null : value })
+                        }
+                      >
+                        <SelectTrigger id="folder-select-inline">
+                          <SelectValue placeholder="Select a folder">
+                            {formData.folder_id ? (
+                              <div className="flex items-center gap-2">
+                                <Folder 
+                                  className="w-4 h-4" 
+                                  style={{ color: folders.find(f => f.id === formData.folder_id)?.color }}
+                                />
+                                {folders.find(f => f.id === formData.folder_id)?.name}
+                              </div>
+                            ) : (
+                              "Uncategorized"
+                            )}
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">
+                            <div className="flex items-center gap-2">
+                              <Folder className="w-4 h-4 text-gray-400" />
+                              Uncategorized
+                            </div>
+                          </SelectItem>
+                          {folders.map((folder) => (
+                            <SelectItem key={folder.id} value={folder.id}>
+                              <div className="flex items-center gap-2">
+                                <Folder 
+                                  className="w-4 h-4" 
+                                  style={{ color: folder.color }}
+                                />
+                                {folder.name}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-xs text-muted-foreground">
+                        Organize your campaign by selecting a folder
+                      </p>
+                    </div>
+                  </div>
+                )}
           {((hasInitialType && currentStep === 1) || (!hasInitialType && currentStep === 1)) && (<SegmentSelectionStep formData={formData} setFormData={setFormData} />)}
           {((hasInitialType && currentStep === 2) || (!hasInitialType && currentStep === 2)) && (<ContentEditorStep formData={formData} setFormData={setFormData} />)}
           {((hasInitialType && currentStep === 3) || (!hasInitialType && currentStep === 3)) && formData.type === "email" && (<ScheduleStep formData={formData} setFormData={setFormData} />)}
