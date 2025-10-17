@@ -13,11 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CampaignStatus } from "@/types/campaigns";
+import { CampaignWizard } from "./CampaignWizard";
 
 export function CampaignDashboard() {
   const [campaignType, setCampaignType] = useState<"email" | "whatsapp">("email");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | "all">("all");
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
   
   const { campaigns, isLoading, duplicateCampaign, deleteCampaign } = useCampaigns(campaignType);
 
@@ -32,6 +34,10 @@ export function CampaignDashboard() {
     // TODO: Navigate to analytics view
   };
 
+  const handleCreateCampaign = () => {
+    setIsWizardOpen(true);
+  };
+
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
       {/* Header */}
@@ -43,7 +49,7 @@ export function CampaignDashboard() {
             </h2>
             <p className="text-sm text-muted-foreground">Create and manage your email and WhatsApp campaigns</p>
           </div>
-          <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg">
+          <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg" onClick={handleCreateCampaign}>
             <Plus className="w-4 h-4 mr-2" />
             Create Campaign
           </Button>
@@ -151,6 +157,12 @@ export function CampaignDashboard() {
           </Tabs>
         )}
       </div>
+
+      <CampaignWizard
+        isOpen={isWizardOpen}
+        onClose={() => setIsWizardOpen(false)}
+        initialType={campaignType}
+      />
     </div>
   );
 }
