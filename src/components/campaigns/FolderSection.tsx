@@ -95,22 +95,28 @@ export function FolderSection({
 
       {isExpanded && (
         <div className="space-y-3 pl-7">
-          {campaigns.map((campaign) => (
-            <CampaignCard
-              key={campaign.id}
-              campaign={campaign}
-              onDuplicate={onDuplicate}
-              onDelete={onDelete}
-              onViewAnalytics={onViewAnalytics}
-              onMoveToFolder={
-                onMoveCampaign
-                  ? (targetFolderId) => handleMoveCampaign(campaign.id, targetFolderId)
-                  : undefined
-              }
-              availableFolders={availableFolders}
-              currentFolderId={folder?.id || null}
-            />
-          ))}
+          {campaigns.length === 0 ? (
+            <div className="text-sm text-muted-foreground italic py-2">
+              No campaigns in this folder yet
+            </div>
+          ) : (
+            campaigns.map((campaign) => (
+              <CampaignCard
+                key={campaign.id}
+                campaign={campaign}
+                onDuplicate={onDuplicate}
+                onDelete={onDelete}
+                onViewAnalytics={onViewAnalytics}
+                onMoveToFolder={
+                  onMoveCampaign
+                    ? (targetFolderId) => handleMoveCampaign(campaign.id, targetFolderId)
+                    : undefined
+                }
+                availableFolders={availableFolders}
+                currentFolderId={folder?.id || null}
+              />
+            ))
+          )}
         </div>
       )}
     </div>

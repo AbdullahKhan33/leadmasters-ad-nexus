@@ -164,12 +164,11 @@ export function CampaignDashboard() {
 
       {/* Content Area */}
       <div className="flex-1 overflow-auto p-6">
-        {filteredCampaigns.length > 0 ? (
+        {filteredCampaigns.length > 0 || folders.length > 0 ? (
           <div className="space-y-1">
             {/* Render folders with their campaigns */}
             {folders.map((folder) => {
               const folderCampaigns = campaignsByFolder[folder.id] || [];
-              if (folderCampaigns.length === 0) return null;
               
               return (
                 <FolderSection
