@@ -21,7 +21,7 @@ export function CampaignDashboard() {
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | "all">("all");
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   
-  const { campaigns, isLoading, duplicateCampaign, deleteCampaign } = useCampaigns(campaignType);
+  const { campaigns, isLoading, duplicateCampaign, deleteCampaign, refetch } = useCampaigns(campaignType);
 
   const filteredCampaigns = campaigns.filter((campaign) => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -36,6 +36,12 @@ export function CampaignDashboard() {
 
   const handleCreateCampaign = () => {
     setIsWizardOpen(true);
+  };
+
+  const handleWizardClose = () => {
+    setIsWizardOpen(false);
+    // Refetch campaigns when wizard closes to show newly created campaigns
+    refetch();
   };
 
   return (
@@ -160,7 +166,7 @@ export function CampaignDashboard() {
 
       <CampaignWizard
         isOpen={isWizardOpen}
-        onClose={() => setIsWizardOpen(false)}
+        onClose={handleWizardClose}
         initialType={campaignType}
       />
     </div>
