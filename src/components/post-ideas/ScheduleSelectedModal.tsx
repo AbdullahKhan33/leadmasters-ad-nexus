@@ -147,7 +147,7 @@ export const ScheduleSelectedModal = ({
                 return (
                   <div
                     key={platform.id}
-                    onClick={() => togglePlatform(platform.id)}
+                    
                     className={`flex items-center space-x-3 p-4 border-2 rounded-lg transition-all ${
                       isLocked
                         ? "border-primary bg-primary/10 cursor-default"
