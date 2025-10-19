@@ -71,7 +71,7 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
   };
 
   return (
-    <Card className="border-2 hover:border-primary/30 hover:shadow-2xl transition-all transform hover:scale-[1.02] bg-gradient-to-br from-white to-blue-50/30">
+    <Card className="border-2 border-primary/20 hover:border-primary/40 hover:shadow-2xl transition-all transform hover:scale-[1.02] bg-white/95 backdrop-blur-sm">
       <CardContent className="p-5 space-y-4">
         {/* Platform Badge */}
         <div className="flex items-center justify-between">

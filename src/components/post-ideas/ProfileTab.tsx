@@ -95,10 +95,10 @@ export const ProfileTab = () => {
     return (
       <div className="space-y-6">
         {/* Profile Display Card */}
-        <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
-            <CardTitle className="flex items-center gap-2 text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              <User className="w-6 h-6" />
+        <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
+            <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              <User className="w-6 h-6 text-purple-600" />
               Business Profile
             </CardTitle>
             <div className="space-x-2">
@@ -142,9 +142,9 @@ export const ProfileTab = () => {
         </Card>
 
         {/* Benefits Section */}
-        <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
-            <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 shadow-xl">
+          <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
+            <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
               💡 Why save a profile?
             </CardTitle>
           </CardHeader>
@@ -170,9 +170,9 @@ export const ProfileTab = () => {
   return (
     <div className="space-y-6">
       {/* Profile Form */}
-      <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
-          <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+      <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
+          <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
             {profile ? "✏️ Edit Business Profile" : "🎯 Create Business Profile"}
           </CardTitle>
         </CardHeader>
@@ -278,10 +278,10 @@ export const ProfileTab = () => {
       </Card>
 
       {/* Info Section */}
-      <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-md">
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 shadow-xl">
         <CardContent className="pt-6">
-          <p className="text-sm font-medium text-muted-foreground">
-            💡 <span className="text-primary">Pro Tip:</span> Save your business info for quick generation. You can load this
+          <p className="text-base font-medium text-gray-700">
+            💡 <span className="font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">Pro Tip:</span> Save your business info for quick generation. You can load this
             profile in the Generate tab to skip filling out the form each time.
           </p>
         </CardContent>

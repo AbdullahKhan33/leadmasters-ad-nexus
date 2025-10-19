@@ -108,9 +108,9 @@ export const GenerateTab = () => {
   return (
     <div className="space-y-6">
       {/* Business Context Section */}
-      <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
-          <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+      <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
+          <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
             ✨ Business Context
           </CardTitle>
         </CardHeader>
@@ -185,9 +185,9 @@ export const GenerateTab = () => {
       </Card>
 
       {/* Platform Selection */}
-      <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
-          <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+      <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
+          <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
             📱 Platform Selection
           </CardTitle>
         </CardHeader>
@@ -212,14 +212,14 @@ export const GenerateTab = () => {
 
       {/* Advanced Options */}
       <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-        <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
+        <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
             <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between hover:bg-transparent">
-                <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              <Button variant="ghost" className="w-full justify-between hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50">
+                <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
                   ⚙️ Advanced Options
                 </CardTitle>
-                <span className="text-primary">{showAdvanced ? "▲" : "▼"}</span>
+                <span className="text-primary font-bold">{showAdvanced ? "▲" : "▼"}</span>
               </Button>
             </CollapsibleTrigger>
           </CardHeader>
