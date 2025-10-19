@@ -36,7 +36,13 @@ export const ScheduleSelectedModal = ({
   onScheduleComplete,
 }: ScheduleSelectedModalProps) => {
   const { toast } = useToast();
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
+  
+  // Extract locked platforms from selected ideas
+  const lockedPlatforms = Array.from(
+    new Set(selectedIdeas.map((idea) => idea.platform.toLowerCase()))
+  );
+  
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(lockedPlatforms);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTime, setSelectedTime] = useState("12:00");
   const [isScheduling, setIsScheduling] = useState(false);
@@ -49,6 +55,11 @@ export const ScheduleSelectedModal = ({
   ];
 
   const togglePlatform = (platformId: string) => {
+    // Prevent deselecting locked platforms
+    if (lockedPlatforms.includes(platformId)) {
+      return;
+    }
+    
     setSelectedPlatforms((prev) =>
       prev.includes(platformId)
         ? prev.filter((p) => p !== platformId)
@@ -125,22 +136,29 @@ export const ScheduleSelectedModal = ({
               {platforms.map((platform) => {
                 const Icon = platform.icon;
                 const isSelected = selectedPlatforms.includes(platform.id);
+                const isLocked = lockedPlatforms.includes(platform.id);
                 return (
                   <div
                     key={platform.id}
                     onClick={() => togglePlatform(platform.id)}
-                    className={`flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                      isSelected
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
+                    className={`flex items-center space-x-3 p-4 border-2 rounded-lg transition-all ${
+                      isLocked
+                        ? "border-primary bg-primary/10 cursor-default"
+                        : isSelected
+                        ? "border-primary bg-primary/5 cursor-pointer"
+                        : "border-border hover:border-primary/50 cursor-pointer"
                     }`}
                   >
                     <Checkbox
                       checked={isSelected}
+                      disabled={isLocked}
                       onCheckedChange={() => togglePlatform(platform.id)}
                     />
                     <Icon className={`w-5 h-5 ${platform.color}`} />
                     <span className="font-medium">{platform.name}</span>
+                    {isLocked && (
+                      <span className="ml-auto text-xs text-muted-foreground">(Required)</span>
+                    )}
                   </div>
                 );
               })}
