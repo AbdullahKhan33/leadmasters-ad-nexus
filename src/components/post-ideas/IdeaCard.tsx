@@ -47,26 +47,21 @@ export const IdeaCard = ({ idea, isSelected, onToggleSelect, onDelete }: IdeaCar
         : 'border-gray-200 shadow-sm hover:border-purple-300 bg-white'
     }`}>
       <CardContent className="p-6 space-y-6">
-        {/* Header with Platform and Checkbox */}
-        <div className="flex items-start justify-between gap-4">
-          <Badge variant="secondary" className="text-sm font-medium px-3 py-1">
-            {platformIcons[idea.platform.toLowerCase()]} {idea.platform}
-          </Badge>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onDelete(idea.id)}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-            <Checkbox
-              checked={isSelected}
-              onCheckedChange={onToggleSelect}
-              className="w-5 h-5"
-            />
-          </div>
+        {/* Header with Actions */}
+        <div className="flex items-center justify-end gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onDelete(idea.id)}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={onToggleSelect}
+            className="w-5 h-5"
+          />
         </div>
 
         {/* Post Caption */}

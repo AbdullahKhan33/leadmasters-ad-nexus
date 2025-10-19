@@ -46,9 +46,10 @@ export const GenerateTab = () => {
   const canGenerate = campaignDescription.trim().length > 20;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Campaign Description Input */}
-      <Card className="border-2 border-purple-100 shadow-lg">
+    <div className="w-full flex justify-center px-4">
+      <div className="w-full max-w-3xl space-y-6">
+        {/* Campaign Description Input */}
+        <Card className="border-2 border-purple-100 shadow-lg">
         <CardContent className="pt-6 space-y-4">
           <div className="space-y-2">
             <label className="text-lg font-semibold text-gray-900">
@@ -154,6 +155,7 @@ export const GenerateTab = () => {
         selectedIdeas={selectedIdeasForAction}
         onScheduleComplete={handleScheduleComplete}
       />
+      </div>
     </div>
   );
 };
