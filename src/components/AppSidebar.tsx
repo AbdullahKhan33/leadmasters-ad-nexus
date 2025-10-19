@@ -67,7 +67,7 @@ export function AppSidebar({
   onAgentsClick: () => void;
   onServicesClick: () => void;
   onPublishedPostsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts';
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'post-ideas' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
