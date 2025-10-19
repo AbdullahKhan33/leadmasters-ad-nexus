@@ -9,14 +9,14 @@ export const PostIdeaGenerator = () => {
   const [currentTab, setCurrentTab] = useState("generate");
 
   return (
-    <div className="min-h-screen bg-gray-50/30">
-      <div className="container mx-auto py-8 px-4 space-y-8">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold flex items-center justify-center gap-2 text-gray-900">
-            <Sparkles className="w-8 h-8 text-purple-600" />
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto py-6 px-4 space-y-6">
+        <div className="space-y-1 text-center">
+          <h1 className="text-2xl font-bold flex items-center justify-center gap-2 text-gray-900">
+            <Sparkles className="w-7 h-7 text-purple-600" />
             AI Post Idea Generator
           </h1>
-          <p className="text-base text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
             Generate engaging post ideas tailored to your business and audience
           </p>
         </div>
