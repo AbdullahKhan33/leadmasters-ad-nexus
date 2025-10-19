@@ -152,35 +152,33 @@ export const GenerateTab = () => {
           )}
 
           {/* Bottom padding to prevent overlap */}
-          {selectedIds.length > 0 && <div className="h-24" />}
+          {selectedIds.length > 0 && <div className="h-20" />}
         </div>
       )}
 
-      {/* Action Buttons - Fixed at bottom when posts are selected */}
+      {/* Action Buttons - Sticky at bottom within content area */}
       {selectedIds.length > 0 && (
-        <div className="fixed bottom-4 left-0 right-0 flex justify-center pointer-events-none z-40">
-          <div className="w-full max-w-3xl mx-4">
-            <div className="bg-background border border-border p-4 rounded-xl shadow-lg flex items-center justify-between gap-4 pointer-events-auto">
-              <p className="text-sm font-medium">
-                {selectedIds.length} post{selectedIds.length > 1 ? "s" : ""} selected
-              </p>
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => setShowPublishModal(true)}
-                  className="gap-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
-                  size="lg"
-                >
-                  Publish Selected Posts
-                </Button>
-                <Button
-                  onClick={() => setShowScheduleModal(true)}
-                  variant="outline"
-                  className="gap-2"
-                  size="lg"
-                >
-                  Schedule Selected Posts
-                </Button>
-              </div>
+        <div className="sticky bottom-4 mt-4">
+          <div className="bg-background border border-border p-4 rounded-xl shadow-lg flex items-center justify-between gap-4">
+            <p className="text-sm font-medium">
+              {selectedIds.length} post{selectedIds.length > 1 ? "s" : ""} selected
+            </p>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowPublishModal(true)}
+                className="gap-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                size="lg"
+              >
+                Publish Selected Posts
+              </Button>
+              <Button
+                onClick={() => setShowScheduleModal(true)}
+                variant="outline"
+                className="gap-2"
+                size="lg"
+              >
+                Schedule Selected Posts
+              </Button>
             </div>
           </div>
         </div>
