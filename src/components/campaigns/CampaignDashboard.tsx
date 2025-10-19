@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageSquare, Plus, Search, FolderPlus } from "lucide-react";
@@ -23,8 +23,17 @@ import { useToast } from "@/hooks/use-toast";
 
 export function CampaignDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [campaignType, setCampaignType] = useState<"email" | "whatsapp">("email");
+
+  // Set initial campaign type from navigation state
+  useEffect(() => {
+    const state = location.state as { campaignType?: "email" | "whatsapp" };
+    if (state?.campaignType) {
+      setCampaignType(state.campaignType);
+    }
+  }, [location.state]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | "all">("all");
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);

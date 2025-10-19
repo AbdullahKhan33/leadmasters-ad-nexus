@@ -116,6 +116,7 @@ export function useCampaigns(type?: CampaignType) {
             template_id: campaignData.template_id,
             subject: campaignData.subject,
             scheduled_at: campaignData.scheduled_at,
+            folder_id: campaignData.folder_id,
             metadata,
             user_id: user.id,
             created_by: user.id,
