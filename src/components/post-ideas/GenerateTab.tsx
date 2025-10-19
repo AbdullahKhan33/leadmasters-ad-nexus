@@ -106,7 +106,7 @@ export const GenerateTab = () => {
     businessType && targetAudience && goals.length > 0 && platform;
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-4xl mx-auto space-y-4">
       {/* Business Context Section */}
       <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
         <CardHeader className="border-b border-gray-100 pb-3 pt-4">

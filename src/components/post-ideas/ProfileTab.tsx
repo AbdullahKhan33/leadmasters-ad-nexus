@@ -93,7 +93,7 @@ export const ProfileTab = () => {
 
   if (profile && !isEditing) {
     return (
-      <div className="space-y-4">
+      <div className="max-w-4xl mx-auto space-y-4">
         {/* Profile Display Card */}
         <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-gray-100 pb-3 pt-4">
@@ -169,7 +169,7 @@ export const ProfileTab = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="max-w-4xl mx-auto space-y-4">
       {/* Profile Form */}
       <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
         <CardHeader className="border-b border-gray-100 pb-3 pt-4">
