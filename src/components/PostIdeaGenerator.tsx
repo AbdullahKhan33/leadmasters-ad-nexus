@@ -10,7 +10,7 @@ export const PostIdeaGenerator = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-6 px-4 space-y-6">
+      <div className="container mx-auto max-w-3xl py-6 px-4 space-y-6">
         <div className="space-y-1 text-center">
           <h1 className="text-2xl font-bold flex items-center justify-center gap-2 text-gray-900">
             <Sparkles className="w-7 h-7 text-purple-600" />
