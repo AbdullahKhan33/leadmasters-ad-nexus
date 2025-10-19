@@ -131,7 +131,7 @@ function CreateCampaignPageContent() {
       }
       
       // Navigate back to campaigns dashboard
-      navigate('/app', { state: { view: 'crm', campaignType: formData.type } });
+      navigate('/app', { state: { view: 'crm', campaignType: formData.type, refetch: true } });
     } catch (error) {
       console.error('Error creating campaign:', error);
     } finally {
@@ -462,7 +462,7 @@ export function CreateCampaignInline() {
       } else {
         toast({ title: "Success", description: formData.scheduled_at ? "Campaign scheduled successfully" : "Campaign created as draft" });
       }
-      navigate('/app', { state: { view: 'crm', campaignType: formData.type } });
+      navigate('/app', { state: { view: 'crm', campaignType: formData.type, refetch: true } });
     } catch (error) {
       console.error('Error creating campaign:', error);
     } finally {

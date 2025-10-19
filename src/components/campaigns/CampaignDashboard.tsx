@@ -26,22 +26,27 @@ export function CampaignDashboard() {
   const location = useLocation();
   const { toast } = useToast();
   const [campaignType, setCampaignType] = useState<"email" | "whatsapp">("email");
+  
+  const { campaigns, isLoading, duplicateCampaign, deleteCampaign, updateCampaign, refetch } = useCampaigns(campaignType);
+  const { folders, createFolder, updateFolder, deleteFolder } = useCampaignFolders(campaignType);
 
-  // Set initial campaign type from navigation state
+  // Set initial campaign type from navigation state and refetch if needed
   useEffect(() => {
-    const state = location.state as { campaignType?: "email" | "whatsapp" };
+    const state = location.state as { campaignType?: "email" | "whatsapp"; refetch?: boolean };
     if (state?.campaignType) {
       setCampaignType(state.campaignType);
     }
-  }, [location.state]);
+    if (state?.refetch) {
+      refetch();
+      // Clear the refetch flag from state to avoid refetching on every render
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, refetch]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<CampaignStatus | "all">("all");
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
   const [createFolderOpen, setCreateFolderOpen] = useState(false);
   const [editingFolder, setEditingFolder] = useState<CampaignFolder | null>(null);
-  
-  const { campaigns, isLoading, duplicateCampaign, deleteCampaign, updateCampaign } = useCampaigns(campaignType);
-  const { folders, createFolder, updateFolder, deleteFolder } = useCampaignFolders(campaignType);
 
   const filteredCampaigns = campaigns.filter((campaign) => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
