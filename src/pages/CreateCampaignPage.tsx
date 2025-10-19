@@ -204,7 +204,7 @@ function CreateCampaignPageContent() {
           onAgentsClick={() => {}}
           onSmartAutomationsClick={() => {}}
           onServicesClick={() => {}}
-          onContentHubClick={() => {}}
+          onPublishedPostsClick={() => {}}
           currentView="crm"
         />
         

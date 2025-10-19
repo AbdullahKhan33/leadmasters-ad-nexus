@@ -44,7 +44,7 @@ interface Post {
   platformColor: string;
 }
 
-export function ContentHub() {
+export function PublishedPosts() {
   const { toast } = useToast();
   const [publishedPlatformFilter, setPublishedPlatformFilter] = useState('all');
   const [draftPlatformFilter, setDraftPlatformFilter] = useState('all');

@@ -21,7 +21,7 @@ import { DomainSetup } from "@/components/DomainSetup";
 import { CRMAutomations } from "@/components/crm/CRMAutomations";
 import { Templates } from "@/components/Templates";
 import { Services } from "@/components/Services";
-import { ContentHub } from "@/components/ContentHub";
+import { PublishedPosts } from "@/components/PublishedPosts";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { PremiumProvider, usePremium } from "@/contexts/PremiumContext";
@@ -32,9 +32,9 @@ import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 import { CreateCampaignInline } from "@/pages/CreateCampaignPage";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'content-hub';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'content-hub';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'content-hub' | 'campaign-create';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'published-posts' | 'campaign-create';
 
 function IndexContent() {
   const { user } = useAuth();
@@ -231,10 +231,10 @@ function IndexContent() {
     });
   };
 
-  const handleContentHubClick = () => {
-    handleNavigationClick('content-hub', () => {
-      console.log('Content Hub clicked');
-      setCurrentView('content-hub');
+  const handlePublishedPostsClick = () => {
+    handleNavigationClick('published-posts', () => {
+      console.log('Published Posts clicked');
+      setCurrentView('published-posts');
     });
   };
 
@@ -301,7 +301,7 @@ function IndexContent() {
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onServicesClick={handleServicesClick}
-            onContentHubClick={handleContentHubClick}
+            onPublishedPostsClick={handlePublishedPostsClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -321,7 +321,7 @@ function IndexContent() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onServicesClick={handleServicesClick}
-            onContentHubClick={handleContentHubClick}
+            onPublishedPostsClick={handlePublishedPostsClick}
             currentView={currentView as AppSidebarView}
           />
         )}
@@ -342,8 +342,8 @@ function IndexContent() {
               <SocialLogins />
             ) : currentView === 'post-builder' ? (
               <PostBuilder />
-            ) : currentView === 'content-hub' ? (
-              <ContentHub />
+            ) : currentView === 'published-posts' ? (
+              <PublishedPosts />
             ) : currentView === 'inspiration-hub' ? (
               <InspirationHub />
             ) : currentView === 'analytics' ? (

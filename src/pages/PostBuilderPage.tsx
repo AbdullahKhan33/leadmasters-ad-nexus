@@ -79,8 +79,8 @@ function PostBuilderPage() {
     navigate('/', { state: { view: 'services' } });
   };
 
-  const handleContentHubClick = () => {
-    navigate('/', { state: { view: 'content-hub' } });
+  const handlePublishedPostsClick = () => {
+    navigate('/', { state: { view: 'published-posts' } });
   };
 
   return (
@@ -104,7 +104,7 @@ function PostBuilderPage() {
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onServicesClick={handleServicesClick}
-            onContentHubClick={handleContentHubClick}
+            onPublishedPostsClick={handlePublishedPostsClick}
             currentView="post-builder"
           />
         ) : (
@@ -124,7 +124,7 @@ function PostBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onServicesClick={handleServicesClick}
-            onContentHubClick={handleContentHubClick}
+            onPublishedPostsClick={handlePublishedPostsClick}
             currentView="post-builder"
           />
         )}
@@ -208,8 +208,8 @@ function AdBuilderPage() {
     navigate('/', { state: { view: 'services' } });
   };
 
-  const handleContentHubClick = () => {
-    navigate('/', { state: { view: 'content-hub' } });
+  const handlePublishedPostsClick = () => {
+    navigate('/', { state: { view: 'published-posts' } });
   };
 
   return (
@@ -233,7 +233,7 @@ function AdBuilderPage() {
             onAgentsClick={handleAgentsClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
             onServicesClick={handleServicesClick}
-            onContentHubClick={handleContentHubClick}
+            onPublishedPostsClick={handlePublishedPostsClick}
             currentView="ad-builder"
           />
         ) : (
@@ -253,7 +253,7 @@ function AdBuilderPage() {
             onTemplatesClick={handleTemplatesClick}
             onAgentsClick={handleAgentsClick}
             onServicesClick={handleServicesClick}
-            onContentHubClick={handleContentHubClick}
+            onPublishedPostsClick={handlePublishedPostsClick}
             currentView="ad-builder"
           />
         )}

@@ -60,7 +60,7 @@ export function WorkspaceSidebar({
   onTemplatesClick,
   onAgentsClick,
   onServicesClick,
-  onContentHubClick,
+  onPublishedPostsClick,
   currentView 
 }: { 
   onPostBuilderClick: () => void;
@@ -79,8 +79,8 @@ export function WorkspaceSidebar({
   onTemplatesClick: () => void;
   onAgentsClick: () => void;
   onServicesClick: () => void;
-  onContentHubClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'content-hub';
+  onPublishedPostsClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
@@ -233,22 +233,22 @@ export function WorkspaceSidebar({
             </SidebarMenuItem>
           ) : null}
 
-          {/* Content Hub - Show based on agent permissions */}
+          {/* Published Posts - Show based on agent permissions */}
           {userRole === 'admin' || (userRole === 'agent' && permissions?.content_hub === true) ? (
             <SidebarMenuItem>
               <SidebarMenuButton 
-                onClick={onContentHubClick}
-                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'content-hub')}`}
+                onClick={onPublishedPostsClick}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'published-posts')}`}
               >
                 {isCollapsed ? (
                   <div className="flex flex-col items-center space-y-1">
-                    <Archive className={`w-5 h-5 ${getIconStyles(currentView === 'content-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                    <span className="text-xs font-medium">Content Hub</span>
+                    <Archive className={`w-5 h-5 ${getIconStyles(currentView === 'published-posts')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">Published Posts</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-3">
-                    <Archive className={`w-5 h-5 ${getIconStyles(currentView === 'content-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                    <span className="font-semibold">Content Hub</span>
+                    <Archive className={`w-5 h-5 ${getIconStyles(currentView === 'published-posts')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="font-semibold">Published Posts</span>
                   </div>
                 )}
               </SidebarMenuButton>
