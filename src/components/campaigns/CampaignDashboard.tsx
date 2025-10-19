@@ -38,7 +38,9 @@ export function CampaignDashboard() {
     }
     if (state?.refetch) {
       refetch();
-      // Clear the refetch flag from state to avoid refetching on every render
+    }
+    // Clear the navigation state after reading it to prevent interference with manual tab switching
+    if (state?.campaignType || state?.refetch) {
       window.history.replaceState({}, document.title);
     }
   }, [location.state, refetch]);
