@@ -9,7 +9,7 @@ export const PostIdeaGenerator = () => {
   const [currentTab, setCurrentTab] = useState("generate");
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50/30">
       <div className="container mx-auto py-8 px-4 space-y-8">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold flex items-center justify-center gap-2 text-gray-900">
@@ -22,10 +22,10 @@ export const PostIdeaGenerator = () => {
         </div>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 h-14 bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
+          <TabsList className="grid w-full grid-cols-3 h-auto bg-white border border-gray-200 rounded-xl p-1.5 shadow-sm">
             <TabsTrigger 
               value="generate" 
-              className="flex items-center justify-center gap-2 rounded-md data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900"
+              className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
             >
               <Sparkles className="w-4 h-4" />
               <span className="hidden sm:inline">Generate Ideas</span>
@@ -33,7 +33,7 @@ export const PostIdeaGenerator = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="my-ideas" 
-              className="flex items-center justify-center gap-2 rounded-md data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900"
+              className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
             >
               <History className="w-4 h-4" />
               <span className="hidden sm:inline">My Generated Ideas</span>
@@ -41,7 +41,7 @@ export const PostIdeaGenerator = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="profile" 
-              className="flex items-center justify-center gap-2 rounded-md data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900"
+              className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
             >
               <User className="w-4 h-4" />
               <span className="hidden sm:inline">Business Profile</span>

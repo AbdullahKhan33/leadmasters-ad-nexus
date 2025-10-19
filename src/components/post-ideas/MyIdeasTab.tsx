@@ -135,15 +135,15 @@ export const MyIdeasTab = () => {
 
       {/* Ideas Display */}
       {filteredIdeas.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <div className="p-4 bg-purple-50 rounded-full">
-            <Lightbulb className="w-12 h-12 text-purple-600" />
+        <div className="flex flex-col items-center justify-center py-16 space-y-4">
+          <div className="p-6 bg-purple-50 rounded-full">
+            <Lightbulb className="w-16 h-16 text-purple-600" />
           </div>
           <div className="text-center space-y-2">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-2xl font-semibold text-gray-900">
               No ideas found
             </h3>
-            <p className="text-sm text-gray-600 max-w-md">
+            <p className="text-base text-gray-600 max-w-md">
               {searchQuery || statusFilter !== "all" || platformFilter !== "all"
                 ? "Try adjusting your filters to see more ideas"
                 : "Generate your first post ideas to get started"}

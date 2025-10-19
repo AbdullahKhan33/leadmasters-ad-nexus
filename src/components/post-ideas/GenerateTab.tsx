@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Sparkles, Loader2, Lightbulb, Target, Sliders, ChevronDown } from "lucide-react";
 import { usePostIdeas, GenerateIdeasParams } from "@/hooks/usePostIdeas";
 import { IdeaCard } from "./IdeaCard";
 import {
@@ -108,10 +108,10 @@ export const GenerateTab = () => {
   return (
     <div className="space-y-5">
       {/* Business Context Section */}
-      <Card className="border border-gray-200 shadow-sm bg-white">
-        <CardHeader className="border-b border-gray-100 pb-4">
-          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <span className="text-purple-600">✨</span>
+      <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+        <CardHeader className="pb-6">
+          <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+            <Lightbulb className="w-5 h-5 text-purple-600" />
             Business Context
           </CardTitle>
         </CardHeader>
@@ -186,10 +186,10 @@ export const GenerateTab = () => {
       </Card>
 
       {/* Platform Selection */}
-      <Card className="border border-gray-200 shadow-sm bg-white">
-        <CardHeader className="border-b border-gray-100 pb-4">
-          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <span className="text-purple-600">📱</span>
+      <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+        <CardHeader className="pb-6">
+          <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+            <Target className="w-5 h-5 text-purple-600" />
             Platform Selection
           </CardTitle>
         </CardHeader>
@@ -214,15 +214,22 @@ export const GenerateTab = () => {
 
       {/* Advanced Options */}
       <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardHeader className="border-b border-gray-100 pb-4">
+        <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+          <CardHeader className="pb-6">
             <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between hover:bg-gray-50 p-0">
-                <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                  <span className="text-purple-600">⚙️</span>
+              <Button
+                variant="ghost"
+                className="w-full flex items-center justify-between p-0 hover:bg-transparent"
+              >
+                <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+                  <Sliders className="w-5 h-5 text-purple-600" />
                   Advanced Options
                 </CardTitle>
-                <span className="text-gray-400">{showAdvanced ? "▲" : "▼"}</span>
+                <ChevronDown
+                  className={`w-5 h-5 text-gray-500 transition-transform ${
+                    showAdvanced ? "transform rotate-180" : ""
+                  }`}
+                />
               </Button>
             </CollapsibleTrigger>
           </CardHeader>
@@ -268,10 +275,9 @@ export const GenerateTab = () => {
 
       {/* Generate Button */}
       <Button
-        size="lg"
-        className="w-full h-12 font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md hover:shadow-lg transition-all"
         onClick={handleGenerate}
         disabled={!canGenerate || generateIdeas.isPending}
+        className="w-full h-14 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
       >
         {generateIdeas.isPending ? (
           <>

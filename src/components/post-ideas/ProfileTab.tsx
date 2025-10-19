@@ -95,9 +95,9 @@ export const ProfileTab = () => {
     return (
       <div className="space-y-5">
         {/* Profile Display Card */}
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-gray-100 pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+        <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
+            <CardTitle className="flex items-center gap-2 text-xl font-semibold">
               <User className="w-5 h-5 text-purple-600" />
               Business Profile
             </CardTitle>
@@ -142,10 +142,10 @@ export const ProfileTab = () => {
         </Card>
 
         {/* Benefits Section */}
-        <Card className="border border-purple-200 bg-purple-50/50 shadow-sm">
-          <CardHeader className="border-b border-purple-100 pb-4">
-            <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <span className="text-purple-600">💡</span>
+        <Card className="border border-purple-200 bg-purple-50/50 shadow-sm rounded-xl">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-purple-600" />
               Why save a profile?
             </CardTitle>
           </CardHeader>
@@ -171,10 +171,10 @@ export const ProfileTab = () => {
   return (
     <div className="space-y-5">
       {/* Profile Form */}
-      <Card className="border border-gray-200 shadow-sm bg-white">
-        <CardHeader className="border-b border-gray-100 pb-4">
-          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <span className="text-purple-600">{profile ? "✏️" : "🎯"}</span>
+      <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+        <CardHeader className="pb-6">
+          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+            <User className="w-5 h-5 text-purple-600" />
             {profile ? "Edit Business Profile" : "Create Business Profile"}
           </CardTitle>
         </CardHeader>
@@ -262,7 +262,7 @@ export const ProfileTab = () => {
                 primaryGoals.length === 0 ||
                 saveProfile.isPending
               }
-              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md font-semibold"
+              className="flex-1 h-12 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-lg hover:shadow-xl font-semibold rounded-xl transition-all"
             >
               {saveProfile.isPending ? "Saving..." : "Save Profile"}
             </Button>
@@ -280,12 +280,15 @@ export const ProfileTab = () => {
       </Card>
 
       {/* Info Section */}
-      <Card className="border border-purple-200 bg-purple-50/50 shadow-sm">
+      <Card className="border border-purple-200 bg-purple-50/50 shadow-sm rounded-xl">
         <CardContent className="pt-6">
-          <p className="text-sm text-gray-600">
-            💡 <span className="font-medium text-purple-600">Pro Tip:</span> Save your business info for quick generation. You can load this
-            profile in the Generate tab to skip filling out the form each time.
-          </p>
+          <div className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-gray-700">
+              <span className="font-semibold text-purple-600">Pro Tip:</span> Save your business info for quick generation. You can load this
+              profile in the Generate tab to skip filling out the form each time.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

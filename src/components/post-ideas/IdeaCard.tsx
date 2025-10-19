@@ -71,8 +71,8 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
   };
 
   return (
-    <Card className="border border-gray-200 hover:border-purple-200 hover:shadow-lg transition-all bg-white">
-      <CardContent className="p-4 space-y-3">
+    <Card className="border border-gray-200 hover:border-purple-300 hover:shadow-xl transition-all duration-300 bg-white rounded-xl overflow-hidden">
+      <CardContent className="p-5 space-y-4">
         {/* Platform Badge */}
         <div className="flex items-center justify-between">
           <Badge variant="secondary" className="text-xs font-medium">
@@ -127,13 +127,13 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="w-full hover:bg-gray-50 text-gray-600 font-medium relative z-10"
+              className="w-full hover:bg-purple-50 text-purple-600 font-medium hover:text-purple-700 transition-all"
             >
               {isOpen ? "▲ Hide" : "▼ Show"} AI Recommendations
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2 pt-2">
-            <div className="text-xs space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+            <div className="text-xs space-y-2 bg-purple-50/50 p-3 rounded-lg border border-purple-100">
               <div>
                 <span className="font-medium">🕐 Best Time:</span>{" "}
                 {idea.ai_recommendations.best_posting_time}
@@ -172,22 +172,22 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
         </Collapsible>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100">
+        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-gray-200">
           <Button
             size="sm"
             onClick={handleCreatePost}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 font-medium shadow-sm relative z-10"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 font-medium shadow-md hover:shadow-lg transition-all"
           >
-            <Edit2 className="w-3 h-3 mr-1" />
+            <Edit2 className="w-3.5 h-3.5 mr-1.5" />
             Create Post
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={handleSchedule}
-            className="w-full border-gray-300 hover:bg-gray-50 font-medium relative z-10"
+            className="w-full border-gray-300 hover:bg-purple-50 hover:border-purple-400 font-medium transition-all"
           >
-            <Calendar className="w-3 h-3 mr-1" />
+            <Calendar className="w-3.5 h-3.5 mr-1.5" />
             Schedule
           </Button>
           <Button
@@ -195,18 +195,18 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
             size="sm"
             onClick={() => onStatusChange(idea.id, "saved")}
             disabled={idea.status === "saved"}
-            className="w-full border-gray-300 hover:bg-gray-50 font-medium relative z-10"
+            className="w-full border-gray-300 hover:bg-purple-50 hover:border-purple-400 font-medium transition-all disabled:opacity-50"
           >
-            <FileText className="w-3 h-3 mr-1" />
+            <FileText className="w-3.5 h-3.5 mr-1.5" />
             Save Draft
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => onDelete(idea.id)}
-            className="w-full border-gray-300 text-red-600 hover:bg-red-50 font-medium relative z-10"
+            className="w-full border-gray-300 text-red-600 hover:bg-red-50 hover:border-red-400 font-medium transition-all"
           >
-            <Trash2 className="w-3 h-3 mr-1" />
+            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
             Delete
           </Button>
         </div>
