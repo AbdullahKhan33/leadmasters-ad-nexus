@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GenerateTab } from "./post-ideas/GenerateTab";
 import { MyIdeasTab } from "./post-ideas/MyIdeasTab";
-import { ProfileTab } from "./post-ideas/ProfileTab";
-import { Sparkles, History, User } from "lucide-react";
+import { Sparkles, History } from "lucide-react";
 
 export const PostIdeaGenerator = () => {
   const [currentTab, setCurrentTab] = useState("generate");
@@ -23,7 +22,7 @@ export const PostIdeaGenerator = () => {
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <div className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-3 h-auto bg-white border border-gray-200 rounded-xl p-1 shadow-lg">
+            <TabsList className="grid w-full grid-cols-2 h-auto bg-white border border-gray-200 rounded-xl p-1 shadow-lg">
             <TabsTrigger 
               value="generate" 
               className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50 text-sm"
@@ -40,14 +39,6 @@ export const PostIdeaGenerator = () => {
               <span className="hidden sm:inline">My Generated Ideas</span>
               <span className="sm:hidden">My Ideas</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="profile" 
-              className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50 text-sm"
-            >
-              <User className="w-4 h-4" />
-              <span className="hidden sm:inline">Business Profile</span>
-              <span className="sm:hidden">Profile</span>
-            </TabsTrigger>
           </TabsList>
           </div>
 
@@ -57,10 +48,6 @@ export const PostIdeaGenerator = () => {
 
           <TabsContent value="my-ideas" className="mt-4">
             <MyIdeasTab />
-          </TabsContent>
-
-          <TabsContent value="profile" className="mt-4">
-            <ProfileTab />
           </TabsContent>
         </Tabs>
       </div>

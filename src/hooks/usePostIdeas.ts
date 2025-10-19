@@ -23,17 +23,6 @@ export interface GeneratedIdea {
   updated_at: string;
 }
 
-export interface PostIdeaProfile {
-  id: string;
-  user_id: string;
-  business_type: string;
-  target_audience: string;
-  primary_goals: string[];
-  brand_voice: "casual" | "professional" | "friendly" | "authoritative" | "inspirational";
-  created_at: string;
-  updated_at: string;
-}
-
 export interface GenerateIdeasParams {
   campaignDescription: string;
 }
@@ -53,20 +42,6 @@ export const usePostIdeas = () => {
 
       if (error) throw error;
       return data as GeneratedIdea[];
-    },
-  });
-
-  // Fetch user profile
-  const { data: profile, isLoading: profileLoading } = useQuery({
-    queryKey: ["post-idea-profile"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("post_idea_profiles")
-        .select("*")
-        .maybeSingle();
-
-      if (error) throw error;
-      return data as PostIdeaProfile | null;
     },
   });
 
@@ -161,45 +136,11 @@ export const usePostIdeas = () => {
     },
   });
 
-  // Save or update profile
-  const saveProfile = useMutation({
-    mutationFn: async (profileData: Omit<PostIdeaProfile, "id" | "user_id" | "created_at" | "updated_at">) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
-
-      const { data, error } = await supabase
-        .from("post_idea_profiles")
-        .upsert({ ...profileData, user_id: user.id })
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data as PostIdeaProfile;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["post-idea-profile"] });
-      toast({
-        title: "✅ Profile Saved",
-        description: "Your business profile has been saved successfully!",
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Save Failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
   return {
     ideas,
     ideasLoading,
-    profile,
-    profileLoading,
     generateIdeas,
     updateIdeaStatus,
     deleteIdea,
-    saveProfile,
   };
 };

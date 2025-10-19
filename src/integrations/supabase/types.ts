@@ -602,39 +602,6 @@ export type Database = {
           },
         ]
       }
-      post_idea_profiles: {
-        Row: {
-          brand_voice: string
-          business_type: string
-          created_at: string
-          id: string
-          primary_goals: string[]
-          target_audience: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          brand_voice?: string
-          business_type: string
-          created_at?: string
-          id?: string
-          primary_goals?: string[]
-          target_audience: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          brand_voice?: string
-          business_type?: string
-          created_at?: string
-          id?: string
-          primary_goals?: string[]
-          target_audience?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           avatar_url: string | null
