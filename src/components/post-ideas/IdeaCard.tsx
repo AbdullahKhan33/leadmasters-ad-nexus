@@ -71,7 +71,7 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
   };
 
   return (
-    <Card className="border border-gray-200 hover:border-purple-300 hover:shadow-xl transition-all duration-300 bg-white rounded-xl overflow-hidden">
+    <Card className="border border-gray-200 shadow-md hover:border-purple-300 hover:shadow-xl transition-all duration-300 bg-white rounded-xl overflow-hidden">
       <CardContent className="p-5 space-y-4">
         {/* Platform Badge */}
         <div className="flex items-center justify-between">

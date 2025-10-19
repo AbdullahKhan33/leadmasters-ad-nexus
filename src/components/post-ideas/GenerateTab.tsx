@@ -108,7 +108,7 @@ export const GenerateTab = () => {
   return (
     <div className="space-y-4">
       {/* Business Context Section */}
-      <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+      <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
         <CardHeader className="border-b border-gray-100 pb-3 pt-4">
           <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <Lightbulb className="w-5 h-5 text-purple-600" />
@@ -187,7 +187,7 @@ export const GenerateTab = () => {
       </Card>
 
       {/* Platform Selection */}
-      <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+      <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
         <CardHeader className="border-b border-gray-100 pb-3 pt-4">
           <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <Target className="w-5 h-5 text-purple-600" />
@@ -215,7 +215,7 @@ export const GenerateTab = () => {
 
       {/* Advanced Options */}
       <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-        <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+        <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
           <CardHeader className="border-b border-gray-100 pb-3 pt-4">
             <CollapsibleTrigger asChild>
               <Button

@@ -95,7 +95,7 @@ export const ProfileTab = () => {
     return (
       <div className="space-y-4">
         {/* Profile Display Card */}
-        <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+        <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-gray-100 pb-3 pt-4">
             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
               <User className="w-5 h-5 text-purple-600" />
@@ -142,7 +142,7 @@ export const ProfileTab = () => {
         </Card>
 
         {/* Benefits Section */}
-        <Card className="border border-purple-200 bg-purple-50/50 shadow-sm rounded-xl">
+        <Card className="border border-purple-200 bg-purple-50/50 shadow-md rounded-xl">
           <CardHeader className="pb-3 pt-4">
             <CardTitle className="text-base font-semibold flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-purple-600" />
@@ -171,7 +171,7 @@ export const ProfileTab = () => {
   return (
     <div className="space-y-4">
       {/* Profile Form */}
-      <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
+      <Card className="border border-gray-200 shadow-md bg-white rounded-xl">
         <CardHeader className="border-b border-gray-100 pb-3 pt-4">
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
             <User className="w-5 h-5 text-purple-600" />
@@ -281,7 +281,7 @@ export const ProfileTab = () => {
       </Card>
 
       {/* Info Section */}
-      <Card className="border border-purple-200 bg-purple-50/50 shadow-sm rounded-xl">
+      <Card className="border border-purple-200 bg-purple-50/50 shadow-md rounded-xl">
         <CardContent className="pt-4 pb-4">
           <div className="flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
