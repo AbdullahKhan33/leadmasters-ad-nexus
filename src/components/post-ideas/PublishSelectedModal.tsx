@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +36,13 @@ export const PublishSelectedModal = ({
   
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(lockedPlatforms);
   const [isPublishing, setIsPublishing] = useState(false);
+
+  // Reset selected platforms when modal opens or locked platforms change
+  useEffect(() => {
+    if (open) {
+      setSelectedPlatforms(lockedPlatforms);
+    }
+  }, [open, lockedPlatforms]);
 
   const platforms = [
     { id: "facebook", name: "Facebook", icon: Facebook, color: "text-blue-600" },
@@ -85,7 +92,6 @@ export const PublishSelectedModal = ({
 
       onPublishComplete();
       onOpenChange(false);
-      setSelectedPlatforms([]);
     } catch (error) {
       toast({
         title: "Publishing Failed",

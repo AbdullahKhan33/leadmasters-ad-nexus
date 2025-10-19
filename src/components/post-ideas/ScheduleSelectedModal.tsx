@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +46,13 @@ export const ScheduleSelectedModal = ({
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTime, setSelectedTime] = useState("12:00");
   const [isScheduling, setIsScheduling] = useState(false);
+
+  // Reset selected platforms when modal opens or locked platforms change
+  useEffect(() => {
+    if (open) {
+      setSelectedPlatforms(lockedPlatforms);
+    }
+  }, [open, lockedPlatforms]);
 
   const platforms = [
     { id: "facebook", name: "Facebook", icon: Facebook, color: "text-blue-600" },
@@ -104,7 +111,6 @@ export const ScheduleSelectedModal = ({
 
       onScheduleComplete();
       onOpenChange(false);
-      setSelectedPlatforms([]);
       setSelectedDate(undefined);
       setSelectedTime("12:00");
     } catch (error) {
