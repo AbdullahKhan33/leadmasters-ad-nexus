@@ -16,6 +16,7 @@ export interface GeneratedIdea {
     engagement_tips: string;
     expected_engagement: "low" | "medium" | "high";
     content_type: string;
+    image_prompt?: string;
   };
   status: "generated" | "saved" | "drafted" | "scheduled";
   created_at: string;
@@ -34,12 +35,7 @@ export interface PostIdeaProfile {
 }
 
 export interface GenerateIdeasParams {
-  businessType: string;
-  targetAudience: string;
-  goals: string[];
-  platform: string;
-  brandVoice?: string;
-  numberOfIdeas?: number;
+  campaignDescription: string;
 }
 
 export const usePostIdeas = () => {
@@ -91,10 +87,10 @@ export const usePostIdeas = () => {
 
       const ideasToInsert = functionData.ideas.map((idea: any) => ({
         user_id: user.id,
-        business_type: functionData.metadata.businessType,
-        target_audience: functionData.metadata.targetAudience,
-        goals: functionData.metadata.goals,
-        platform: functionData.metadata.platform,
+        business_type: functionData.metadata.businessType || "Unknown",
+        target_audience: functionData.metadata.targetAudience || "General audience",
+        goals: functionData.metadata.goals || [],
+        platform: functionData.metadata.platform || idea.platform || "Instagram",
         post_caption: idea.caption,
         hashtags: idea.hashtags,
         ai_recommendations: {
@@ -102,6 +98,7 @@ export const usePostIdeas = () => {
           engagement_tips: idea.engagement_tips,
           expected_engagement: idea.expected_engagement,
           content_type: idea.content_type,
+          image_prompt: idea.image_prompt,
         },
         status: "generated",
       }));

@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { businessType, targetAudience, goals, platform, brandVoice = "professional", numberOfIdeas = 5 } = await req.json();
+    const { campaignDescription } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -19,26 +19,21 @@ serve(async (req) => {
     }
 
     // Construct the AI prompt
-    const systemPrompt = `You are a professional social media content strategist specializing in creating engaging, platform-optimized post ideas.
+    const systemPrompt = `You are a professional social media content strategist. Based on the user's campaign description, generate 5 unique, highly targeted post ideas.
 
-Based on the user's business context, generate ${numberOfIdeas} unique post ideas.
+For each post idea, provide:
+1. Platform (infer from description, default to Instagram if unclear)
+2. Post caption (engaging, platform-optimized, 150-280 characters)
+3. 5-8 relevant, trending hashtags (without # symbol)
+4. Best posting time (specific time recommendation based on platform and audience)
+5. Engagement optimization tips (actionable advice)
+6. Expected engagement level (low/medium/high)
+7. Content type (image, video, carousel, story, reel)
+8. Image prompt (detailed description of the ideal image/visual that should accompany this post - be creative and specific)
 
-For each idea, provide:
-1. Compelling caption (150-280 characters, platform-optimized)
-2. 5-8 relevant, trending hashtags
-3. Best posting time (based on platform and audience)
-4. Engagement optimization tips
-5. Expected engagement level (low/medium/high)
-6. Content type suggestion (image, video, carousel, story)
+Make content authentic, actionable, and perfectly aligned with the user's goals.`;
 
-Make content authentic, platform-appropriate, and aligned with the brand voice (${brandVoice}).`;
-
-    const userPrompt = `Generate ${numberOfIdeas} post ideas for:
-Business Type: ${businessType}
-Target Audience: ${targetAudience}
-Goals: ${goals.join(", ")}
-Platform: ${platform}
-Brand Voice: ${brandVoice}`;
+    const userPrompt = `Campaign description:\n${campaignDescription}`;
 
     // Call Lovable AI API with tool calling for structured output
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
@@ -61,31 +56,33 @@ Brand Voice: ${brandVoice}`;
               description: "Return the generated post ideas with structured data",
               parameters: {
                 type: "object",
-                properties: {
-                  ideas: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        caption: { type: "string", description: "The post caption" },
-                        hashtags: { 
-                          type: "array", 
-                          items: { type: "string" },
-                          description: "Array of hashtags without # symbol"
+                  properties: {
+                    ideas: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          platform: { type: "string", description: "Social media platform (facebook, instagram, linkedin, twitter, tiktok)" },
+                          caption: { type: "string", description: "The post caption" },
+                          hashtags: { 
+                            type: "array", 
+                            items: { type: "string" },
+                            description: "Array of hashtags without # symbol"
+                          },
+                          best_posting_time: { type: "string", description: "Suggested posting time" },
+                          engagement_tips: { type: "string", description: "Tips to maximize engagement" },
+                          expected_engagement: { 
+                            type: "string", 
+                            enum: ["low", "medium", "high"],
+                            description: "Expected engagement level"
+                          },
+                          content_type: { type: "string", description: "Suggested content format" },
+                          image_prompt: { type: "string", description: "Detailed description of the ideal image/visual for this post" }
                         },
-                        best_posting_time: { type: "string", description: "Suggested posting time" },
-                        engagement_tips: { type: "string", description: "Tips to maximize engagement" },
-                        expected_engagement: { 
-                          type: "string", 
-                          enum: ["low", "medium", "high"],
-                          description: "Expected engagement level"
-                        },
-                        content_type: { type: "string", description: "Suggested content format" }
-                      },
-                      required: ["caption", "hashtags", "best_posting_time", "engagement_tips", "expected_engagement", "content_type"]
+                        required: ["platform", "caption", "hashtags", "best_posting_time", "engagement_tips", "expected_engagement", "content_type", "image_prompt"]
+                      }
                     }
-                  }
-                },
+                  },
                 required: ["ideas"]
               }
             }
@@ -131,11 +128,7 @@ Brand Voice: ${brandVoice}`;
         success: true, 
         ideas: generatedIdeas.ideas,
         metadata: {
-          businessType,
-          targetAudience,
-          goals,
-          platform,
-          brandVoice
+          campaignDescription
         }
       }),
       { 

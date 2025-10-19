@@ -1,21 +1,22 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Edit2, Trash2, Calendar, FileText } from "lucide-react";
+import { Copy, Trash2, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GeneratedIdea } from "@/hooks/usePostIdeas";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface IdeaCardProps {
   idea: GeneratedIdea;
+  isSelected: boolean;
+  onToggleSelect: () => void;
   onDelete: (id: string) => void;
-  onStatusChange: (id: string, status: GeneratedIdea["status"]) => void;
 }
 
 const platformIcons: Record<string, string> = {
@@ -26,190 +27,128 @@ const platformIcons: Record<string, string> = {
   tiktok: "🎵",
 };
 
-const engagementColors = {
-  low: "bg-yellow-500",
-  medium: "bg-blue-500",
-  high: "bg-green-500",
-};
-
-export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
+export const IdeaCard = ({ idea, isSelected, onToggleSelect, onDelete }: IdeaCardProps) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const copyHashtags = () => {
     const hashtagsText = idea.hashtags.map(tag => `#${tag}`).join(" ");
     navigator.clipboard.writeText(hashtagsText);
     toast({
-      title: "📋 Hashtags Copied",
-      description: "Hashtags have been copied to clipboard",
-    });
-  };
-
-  const handleCreatePost = () => {
-    navigate("/", {
-      state: {
-        view: "post-builder",
-        prefilledContent: idea.post_caption,
-        hashtags: idea.hashtags,
-        platform: idea.platform,
-        aiRecommendations: idea.ai_recommendations,
-      },
-    });
-  };
-
-  const handleSchedule = () => {
-    navigate("/", {
-      state: {
-        view: "schedule",
-        prefilledContent: idea.post_caption,
-        hashtags: idea.hashtags,
-        platform: idea.platform,
-        suggestedTime: idea.ai_recommendations.best_posting_time,
-      },
+      title: "Hashtags Copied",
+      description: "Hashtags copied to clipboard",
     });
   };
 
   return (
-    <Card className="border border-gray-200 shadow-md hover:border-purple-300 hover:shadow-xl transition-all duration-300 bg-white rounded-xl overflow-hidden">
-      <CardContent className="p-5 space-y-4">
-        {/* Platform Badge */}
-        <div className="flex items-center justify-between">
-          <Badge variant="secondary" className="text-xs font-medium">
+    <Card className={`border-2 transition-all duration-300 ${
+      isSelected 
+        ? 'border-purple-500 shadow-lg bg-purple-50/30' 
+        : 'border-gray-200 shadow-sm hover:border-purple-300 bg-white'
+    }`}>
+      <CardContent className="p-6 space-y-6">
+        {/* Header with Platform and Checkbox */}
+        <div className="flex items-start justify-between gap-4">
+          <Badge variant="secondary" className="text-sm font-medium px-3 py-1">
             {platformIcons[idea.platform.toLowerCase()]} {idea.platform}
           </Badge>
-          <Badge
-            className="text-xs"
-            variant={
-              idea.status === "saved"
-                ? "default"
-                : idea.status === "drafted"
-                ? "outline"
-                : "secondary"
-            }
-          >
-            {idea.status}
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onDelete(idea.id)}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            <Checkbox
+              checked={isSelected}
+              onCheckedChange={onToggleSelect}
+              className="w-5 h-5"
+            />
+          </div>
         </div>
 
-        {/* Caption */}
-        <div className="space-y-1">
-          <p className="text-xs font-medium text-gray-500">Caption:</p>
-          <p className="text-sm text-gray-900 leading-relaxed">{idea.post_caption}</p>
+        {/* Post Caption */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            Post Content
+          </h4>
+          <p className="text-lg leading-relaxed text-gray-900 font-normal">
+            {idea.post_caption}
+          </p>
         </div>
 
         {/* Hashtags */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground font-medium">Hashtags:</p>
+            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              Hashtags
+            </h4>
             <Button
               variant="ghost"
               size="sm"
               onClick={copyHashtags}
-              className="h-6 px-2"
+              className="h-8 text-xs"
             >
               <Copy className="w-3 h-3 mr-1" />
               Copy
             </Button>
           </div>
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-2">
             {idea.hashtags.map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
+              <span key={index} className="text-sm text-purple-600 font-medium">
                 #{tag}
-              </Badge>
+              </span>
             ))}
           </div>
         </div>
 
-        {/* AI Recommendations */}
+        {/* Image Prompt */}
+        {idea.ai_recommendations.image_prompt && (
+          <div className="space-y-2 bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-purple-100">
+            <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              🎨 Suggested Image
+            </h4>
+            <p className="text-sm leading-relaxed text-gray-700 italic">
+              "{idea.ai_recommendations.image_prompt}"
+            </p>
+          </div>
+        )}
+
+        {/* AI Recommendations (Collapsible) */}
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="w-full hover:bg-purple-50 text-purple-600 font-medium hover:text-purple-700 transition-all"
+              className="w-full justify-between hover:bg-purple-50 text-purple-600 font-medium"
             >
-              {isOpen ? "▲ Hide" : "▼ Show"} AI Recommendations
+              <span className="text-sm">AI Recommendations</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 pt-2">
-            <div className="text-xs space-y-2 bg-purple-50/50 p-3 rounded-lg border border-purple-100">
+          <CollapsibleContent className="pt-2">
+            <div className="text-sm space-y-2 bg-purple-50/50 p-4 rounded-lg border border-purple-100">
               <div>
-                <span className="font-medium">🕐 Best Time:</span>{" "}
-                {idea.ai_recommendations.best_posting_time}
+                <span className="font-semibold text-gray-700">Best posting time:</span>{" "}
+                <span className="text-gray-600">{idea.ai_recommendations.best_posting_time}</span>
               </div>
               <div>
-                <span className="font-medium">💡 Tips:</span>{" "}
-                {idea.ai_recommendations.engagement_tips}
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium">📊 Expected Engagement:</span>
-                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${
-                      engagementColors[idea.ai_recommendations.expected_engagement]
-                    }`}
-                    style={{
-                      width:
-                        idea.ai_recommendations.expected_engagement === "high"
-                          ? "100%"
-                          : idea.ai_recommendations.expected_engagement === "medium"
-                          ? "66%"
-                          : "33%",
-                    }}
-                  />
-                </div>
-                <span className="text-xs capitalize">
-                  {idea.ai_recommendations.expected_engagement}
-                </span>
+                <span className="font-semibold text-gray-700">Engagement tips:</span>{" "}
+                <span className="text-gray-600">{idea.ai_recommendations.engagement_tips}</span>
               </div>
               <div>
-                <span className="font-medium">🎨 Content Type:</span>{" "}
-                {idea.ai_recommendations.content_type}
+                <span className="font-semibold text-gray-700">Expected engagement:</span>{" "}
+                <span className="text-gray-600 capitalize">{idea.ai_recommendations.expected_engagement}</span>
+              </div>
+              <div>
+                <span className="font-semibold text-gray-700">Content type:</span>{" "}
+                <span className="text-gray-600">{idea.ai_recommendations.content_type}</span>
               </div>
             </div>
           </CollapsibleContent>
         </Collapsible>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2 pt-3 border-t border-gray-200">
-          <Button
-            size="sm"
-            onClick={handleCreatePost}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 font-medium shadow-md hover:shadow-lg transition-all"
-          >
-            <Edit2 className="w-3.5 h-3.5 mr-1.5" />
-            Create Post
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSchedule}
-            className="w-full border-gray-300 hover:bg-purple-50 hover:border-purple-400 font-medium transition-all"
-          >
-            <Calendar className="w-3.5 h-3.5 mr-1.5" />
-            Schedule
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onStatusChange(idea.id, "saved")}
-            disabled={idea.status === "saved"}
-            className="w-full border-gray-300 hover:bg-purple-50 hover:border-purple-400 font-medium transition-all disabled:opacity-50"
-          >
-            <FileText className="w-3.5 h-3.5 mr-1.5" />
-            Save Draft
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onDelete(idea.id)}
-            className="w-full border-gray-300 text-red-600 hover:bg-red-50 hover:border-red-400 font-medium transition-all"
-          >
-            <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-            Delete
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );

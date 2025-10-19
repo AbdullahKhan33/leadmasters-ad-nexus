@@ -151,15 +151,14 @@ export const MyIdeasTab = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-4">
           {filteredIdeas.map((idea) => (
             <IdeaCard
               key={idea.id}
               idea={idea}
+              isSelected={false}
+              onToggleSelect={() => {}}
               onDelete={(id) => deleteIdea.mutate(id)}
-              onStatusChange={(id, status) =>
-                updateIdeaStatus.mutate({ id, status })
-              }
             />
           ))}
         </div>
