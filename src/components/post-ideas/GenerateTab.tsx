@@ -5,11 +5,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Sparkles, Calendar, Send } from "lucide-react";
 import { usePostIdeas } from "@/hooks/usePostIdeas";
 import { IdeaCard } from "./IdeaCard";
+import { PublishSelectedModal } from "./PublishSelectedModal";
+import { ScheduleSelectedModal } from "./ScheduleSelectedModal";
 
 export const GenerateTab = () => {
   const [campaignDescription, setCampaignDescription] = useState("");
   const [generatedIdeas, setGeneratedIdeas] = useState<any[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showPublishModal, setShowPublishModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   const { generateIdeas, deleteIdea } = usePostIdeas();
 
@@ -27,10 +31,17 @@ export const GenerateTab = () => {
     );
   };
 
-  const handlePublishSelected = () => {
-    // TODO: Implement publish/schedule logic
-    console.log("Publishing selected posts:", selectedIds);
+  const handlePublishComplete = () => {
+    setSelectedIds([]);
   };
+
+  const handleScheduleComplete = () => {
+    setSelectedIds([]);
+  };
+
+  const selectedIdeasForAction = generatedIdeas.filter((idea) =>
+    selectedIds.includes(idea.id)
+  );
 
   const canGenerate = campaignDescription.trim().length > 20;
 
@@ -111,14 +122,14 @@ export const GenerateTab = () => {
           {selectedIds.length > 0 && (
             <div className="flex gap-3 sticky bottom-4">
               <Button
-                onClick={handlePublishSelected}
+                onClick={() => setShowPublishModal(true)}
                 className="flex-1 h-14 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold text-base shadow-xl hover:shadow-2xl transition-all"
               >
                 <Send className="w-5 h-5 mr-2" />
                 Publish {selectedIds.length} Selected Post{selectedIds.length > 1 ? 's' : ''}
               </Button>
               <Button
-                onClick={handlePublishSelected}
+                onClick={() => setShowScheduleModal(true)}
                 variant="outline"
                 className="flex-1 h-14 border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-semibold text-base shadow-lg hover:shadow-xl transition-all"
               >
@@ -129,6 +140,20 @@ export const GenerateTab = () => {
           )}
         </div>
       )}
+
+      {/* Modals */}
+      <PublishSelectedModal
+        open={showPublishModal}
+        onOpenChange={setShowPublishModal}
+        selectedIdeas={selectedIdeasForAction}
+        onPublishComplete={handlePublishComplete}
+      />
+      <ScheduleSelectedModal
+        open={showScheduleModal}
+        onOpenChange={setShowScheduleModal}
+        selectedIdeas={selectedIdeasForAction}
+        onScheduleComplete={handleScheduleComplete}
+      />
     </div>
   );
 };
