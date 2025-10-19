@@ -24,6 +24,7 @@ serve(async (req) => {
 Platform options: Instagram, Facebook, LinkedIn, Twitter, TikTok, WhatsApp
 - For WhatsApp: Keep it conversational, personal, and emoji-friendly. Use shorter captions (100-200 characters). Hashtags are optional but can be included for cross-posting reference.
 - For other platforms: Follow standard best practices for that platform.
+- Ensure at least one of the 5 ideas is tailored for WhatsApp unless the description explicitly makes WhatsApp inappropriate.
 
 For each post idea, provide:
 1. Platform (choose the most appropriate platform based on the campaign description and content type)

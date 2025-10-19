@@ -158,11 +158,10 @@ export const GenerateTab = () => {
 
       {/* Action Buttons - Fixed at bottom when posts are selected */}
       {selectedIds.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-40">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[min(92vw,72rem)] pointer-events-none z-40">
+          <div className="bg-background border border-border p-4 rounded-xl shadow-lg flex items-center justify-between gap-4 pointer-events-auto">
             <p className="text-sm font-medium">
-              {selectedIds.length} post{selectedIds.length > 1 ? "s" : ""}{" "}
-              selected
+              {selectedIds.length} post{selectedIds.length > 1 ? "s" : ""} selected
             </p>
             <div className="flex gap-3">
               <Button
