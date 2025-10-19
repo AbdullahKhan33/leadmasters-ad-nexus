@@ -144,9 +144,10 @@ export const MyIdeasTab = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Summary & Bulk Actions */}
-      {filteredIdeas.length > 0 && (
+    <div className="w-full flex justify-center px-4">
+      <div className="w-full max-w-6xl space-y-6">
+        {/* Summary & Bulk Actions */}
+        {filteredIdeas.length > 0 && (
         <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
           <div className="flex items-center gap-4">
             <p className="text-sm text-muted-foreground">
@@ -341,6 +342,7 @@ export const MyIdeasTab = () => {
         selectedIdeas={selectedIdeasForAction}
         onScheduleComplete={handleScheduleComplete}
       />
+      </div>
     </div>
   );
 };
