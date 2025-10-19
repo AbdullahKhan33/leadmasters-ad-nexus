@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { Facebook, Instagram, Linkedin, Twitter, Calendar as CalendarIcon } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter, MessageCircle, Calendar as CalendarIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GeneratedIdea } from "@/hooks/usePostIdeas";
 import { format } from "date-fns";
@@ -52,6 +52,7 @@ export const ScheduleSelectedModal = ({
     { id: "instagram", name: "Instagram", icon: Instagram, color: "text-pink-600" },
     { id: "linkedin", name: "LinkedIn", icon: Linkedin, color: "text-blue-700" },
     { id: "twitter", name: "Twitter", icon: Twitter, color: "text-sky-500" },
+    { id: "whatsapp", name: "WhatsApp", icon: MessageCircle, color: "text-green-600" },
   ];
 
   const togglePlatform = (platformId: string) => {
