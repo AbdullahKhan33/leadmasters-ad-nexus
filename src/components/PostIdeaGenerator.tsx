@@ -9,42 +9,43 @@ export const PostIdeaGenerator = () => {
   const [currentTab, setCurrentTab] = useState("generate");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      <div className="container mx-auto py-8 space-y-8">
-        <div className="space-y-3 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold flex items-center justify-center gap-3">
-            <Sparkles className="w-10 h-10 text-purple-600" />
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              AI Post Idea Generator
-            </span>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto py-8 px-4 space-y-8">
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold flex items-center justify-center gap-2 text-gray-900">
+            <Sparkles className="w-8 h-8 text-purple-600" />
+            AI Post Idea Generator
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Generate engaging post ideas tailored to your business and audience with the power of AI ✨
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">
+            Generate engaging post ideas tailored to your business and audience
           </p>
         </div>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 h-16 bg-white/80 backdrop-blur-sm border-2 border-primary/20 shadow-xl rounded-xl p-2">
+          <TabsList className="grid w-full grid-cols-3 h-14 bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
             <TabsTrigger 
               value="generate" 
-              className="flex items-center justify-center gap-2 rounded-lg text-base data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg font-semibold transition-all hover:bg-gray-100 data-[state=inactive]:text-gray-700"
+              className="flex items-center justify-center gap-2 rounded-md data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900"
             >
-              <Sparkles className="w-5 h-5" />
-              Generate Ideas
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Generate Ideas</span>
+              <span className="sm:hidden">Generate</span>
             </TabsTrigger>
             <TabsTrigger 
               value="my-ideas" 
-              className="flex items-center justify-center gap-2 rounded-lg text-base data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg font-semibold transition-all hover:bg-gray-100 data-[state=inactive]:text-gray-700"
+              className="flex items-center justify-center gap-2 rounded-md data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900"
             >
-              <History className="w-5 h-5" />
-              My Generated Ideas
+              <History className="w-4 h-4" />
+              <span className="hidden sm:inline">My Generated Ideas</span>
+              <span className="sm:hidden">My Ideas</span>
             </TabsTrigger>
             <TabsTrigger 
               value="profile" 
-              className="flex items-center justify-center gap-2 rounded-lg text-base data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg font-semibold transition-all hover:bg-gray-100 data-[state=inactive]:text-gray-700"
+              className="flex items-center justify-center gap-2 rounded-md data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-sm font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:text-gray-900"
             >
-              <User className="w-5 h-5" />
-              Business Profile
+              <User className="w-4 h-4" />
+              <span className="hidden sm:inline">Business Profile</span>
+              <span className="sm:hidden">Profile</span>
             </TabsTrigger>
           </TabsList>
 

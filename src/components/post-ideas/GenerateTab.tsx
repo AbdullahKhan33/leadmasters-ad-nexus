@@ -106,12 +106,13 @@ export const GenerateTab = () => {
     businessType && targetAudience && goals.length > 0 && platform;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Business Context Section */}
-      <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
-        <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
-          <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            ✨ Business Context
+      <Card className="border border-gray-200 shadow-sm bg-white">
+        <CardHeader className="border-b border-gray-100 pb-4">
+          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <span className="text-purple-600">✨</span>
+            Business Context
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -185,10 +186,11 @@ export const GenerateTab = () => {
       </Card>
 
       {/* Platform Selection */}
-      <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
-        <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
-          <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            📱 Platform Selection
+      <Card className="border border-gray-200 shadow-sm bg-white">
+        <CardHeader className="border-b border-gray-100 pb-4">
+          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <span className="text-purple-600">📱</span>
+            Platform Selection
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -212,14 +214,15 @@ export const GenerateTab = () => {
 
       {/* Advanced Options */}
       <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-        <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
+        <Card className="border border-gray-200 shadow-sm bg-white">
+          <CardHeader className="border-b border-gray-100 pb-4">
             <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between hover:bg-gradient-to-r hover:from-blue-50 hover:via-purple-50 hover:to-pink-50">
-                <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-                  ⚙️ Advanced Options
+              <Button variant="ghost" className="w-full justify-between hover:bg-gray-50 p-0">
+                <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <span className="text-purple-600">⚙️</span>
+                  Advanced Options
                 </CardTitle>
-                <span className="text-primary font-bold">{showAdvanced ? "▲" : "▼"}</span>
+                <span className="text-gray-400">{showAdvanced ? "▲" : "▼"}</span>
               </Button>
             </CollapsibleTrigger>
           </CardHeader>
@@ -266,30 +269,30 @@ export const GenerateTab = () => {
       {/* Generate Button */}
       <Button
         size="lg"
-        className="w-full h-14 text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all"
+        className="w-full h-12 font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md hover:shadow-lg transition-all"
         onClick={handleGenerate}
         disabled={!canGenerate || generateIdeas.isPending}
       >
         {generateIdeas.isPending ? (
           <>
-            <Loader2 className="mr-2 animate-spin" />
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             Generating Ideas...
           </>
         ) : (
           <>
-            <Sparkles className="mr-2" />
-            ✨ Generate Post Ideas with AI
+            <Sparkles className="mr-2 h-5 w-5" />
+            Generate Post Ideas with AI
           </>
         )}
       </Button>
 
       {/* Results Display */}
       {generatedIdeas.length > 0 && (
-        <div className="space-y-4 mt-8">
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            🎉 Generated Ideas
+        <div className="space-y-4 mt-6">
+          <h3 className="text-xl font-semibold text-gray-900">
+            Generated Ideas
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {generatedIdeas.map((idea) => (
               <IdeaCard
                 key={idea.id}

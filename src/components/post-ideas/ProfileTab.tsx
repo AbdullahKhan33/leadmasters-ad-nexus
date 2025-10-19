@@ -93,12 +93,12 @@ export const ProfileTab = () => {
 
   if (profile && !isEditing) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Profile Display Card */}
-        <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
-            <CardTitle className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              <User className="w-6 h-6 text-purple-600" />
+        <Card className="border border-gray-200 shadow-sm bg-white">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b border-gray-100 pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+              <User className="w-5 h-5 text-purple-600" />
               Business Profile
             </CardTitle>
             <div className="space-x-2">
@@ -142,10 +142,11 @@ export const ProfileTab = () => {
         </Card>
 
         {/* Benefits Section */}
-        <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 shadow-xl">
-          <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
-            <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              💡 Why save a profile?
+        <Card className="border border-purple-200 bg-purple-50/50 shadow-sm">
+          <CardHeader className="border-b border-purple-100 pb-4">
+            <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <span className="text-purple-600">💡</span>
+              Why save a profile?
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -168,12 +169,13 @@ export const ProfileTab = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Profile Form */}
-      <Card className="border-2 border-primary/20 hover:border-primary/30 transition-all shadow-xl bg-white/90 backdrop-blur-sm">
-        <CardHeader className="bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 border-b-2 border-primary/20">
-          <CardTitle className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            {profile ? "✏️ Edit Business Profile" : "🎯 Create Business Profile"}
+      <Card className="border border-gray-200 shadow-sm bg-white">
+        <CardHeader className="border-b border-gray-100 pb-4">
+          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+            <span className="text-purple-600">{profile ? "✏️" : "🎯"}</span>
+            {profile ? "Edit Business Profile" : "Create Business Profile"}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -260,9 +262,9 @@ export const ProfileTab = () => {
                 primaryGoals.length === 0 ||
                 saveProfile.isPending
               }
-              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all font-bold"
+              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-md font-semibold"
             >
-              {saveProfile.isPending ? "Saving..." : "💾 Save Profile"}
+              {saveProfile.isPending ? "Saving..." : "Save Profile"}
             </Button>
             {profile && (
               <Button
@@ -278,10 +280,10 @@ export const ProfileTab = () => {
       </Card>
 
       {/* Info Section */}
-      <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 shadow-xl">
+      <Card className="border border-purple-200 bg-purple-50/50 shadow-sm">
         <CardContent className="pt-6">
-          <p className="text-base font-medium text-gray-700">
-            💡 <span className="font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">Pro Tip:</span> Save your business info for quick generation. You can load this
+          <p className="text-sm text-gray-600">
+            💡 <span className="font-medium text-purple-600">Pro Tip:</span> Save your business info for quick generation. You can load this
             profile in the Generate tab to skip filling out the form each time.
           </p>
         </CardContent>
