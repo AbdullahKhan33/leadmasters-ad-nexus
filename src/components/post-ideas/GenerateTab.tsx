@@ -106,18 +106,18 @@ export const GenerateTab = () => {
     businessType && targetAudience && goals.length > 0 && platform;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* Business Context Section */}
       <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
-        <CardHeader className="pb-6">
-          <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+        <CardHeader className="border-b border-gray-100 pb-3 pt-4">
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <Lightbulb className="w-5 h-5 text-purple-600" />
             Business Context
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="business-type">Business Type</Label>
+        <CardContent className="space-y-3 pt-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="business-type" className="text-sm font-medium">Business Type</Label>
             <Select value={businessType} onValueChange={setBusinessType}>
               <SelectTrigger id="business-type" className="border-2 hover:border-primary/50 transition-colors">
                 <SelectValue placeholder="Select your business type" />
@@ -141,23 +141,24 @@ export const GenerateTab = () => {
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="target-audience">Target Audience</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="target-audience" className="text-sm font-medium">Target Audience</Label>
             <Textarea
               id="target-audience"
               placeholder="Describe your ideal customer (age, interests, pain points)..."
               value={targetAudience}
               onChange={(e) => setTargetAudience(e.target.value)}
               maxLength={200}
-              rows={3}
+              rows={2}
+              className="text-sm"
             />
             <p className="text-xs text-muted-foreground">
               {targetAudience.length}/200 characters
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label>Goals</Label>
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium">Goals</Label>
             <div className="grid grid-cols-2 gap-2">
               {goalOptions.map((goal) => (
                 <div key={goal} className="flex items-center space-x-2">
@@ -178,7 +179,7 @@ export const GenerateTab = () => {
           </div>
 
           {profile && (
-            <Button variant="outline" onClick={loadProfile} className="w-full">
+            <Button variant="outline" onClick={loadProfile} className="w-full mt-1">
               Load Saved Profile
             </Button>
           )}
@@ -187,15 +188,15 @@ export const GenerateTab = () => {
 
       {/* Platform Selection */}
       <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
-        <CardHeader className="pb-6">
-          <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+        <CardHeader className="border-b border-gray-100 pb-3 pt-4">
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold">
             <Target className="w-5 h-5 text-purple-600" />
             Platform Selection
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <RadioGroup value={platform} onValueChange={setPlatform}>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {platforms.map((p) => (
                 <div key={p.id} className="flex items-center space-x-2">
                   <RadioGroupItem value={p.id} id={p.id} />
@@ -215,13 +216,13 @@ export const GenerateTab = () => {
       {/* Advanced Options */}
       <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
         <Card className="border border-gray-200 shadow-sm bg-white rounded-xl">
-          <CardHeader className="pb-6">
+          <CardHeader className="border-b border-gray-100 pb-3 pt-4">
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
                 className="w-full flex items-center justify-between p-0 hover:bg-transparent"
               >
-                <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+                <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                   <Sliders className="w-5 h-5 text-purple-600" />
                   Advanced Options
                 </CardTitle>
@@ -234,9 +235,9 @@ export const GenerateTab = () => {
             </CollapsibleTrigger>
           </CardHeader>
           <CollapsibleContent>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Brand Voice</Label>
+            <CardContent className="space-y-3 pt-4">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">Brand Voice</Label>
                 <RadioGroup value={brandVoice} onValueChange={setBrandVoice}>
                   <div className="space-y-2">
                     {brandVoices.map((voice) => (
@@ -254,8 +255,8 @@ export const GenerateTab = () => {
                 </RadioGroup>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="num-ideas">
+              <div className="space-y-1.5">
+                <Label htmlFor="num-ideas" className="text-sm font-medium">
                   Number of Ideas: {numberOfIdeas}
                 </Label>
                 <input
@@ -277,7 +278,7 @@ export const GenerateTab = () => {
       <Button
         onClick={handleGenerate}
         disabled={!canGenerate || generateIdeas.isPending}
-        className="w-full h-14 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all"
+        className="w-full h-12 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl transition-all"
       >
         {generateIdeas.isPending ? (
           <>
@@ -294,11 +295,11 @@ export const GenerateTab = () => {
 
       {/* Results Display */}
       {generatedIdeas.length > 0 && (
-        <div className="space-y-4 mt-6">
-          <h3 className="text-xl font-semibold text-gray-900">
+        <div className="space-y-3 mt-4">
+          <h3 className="text-lg font-semibold text-gray-900">
             Generated Ideas
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {generatedIdeas.map((idea) => (
               <IdeaCard
                 key={idea.id}

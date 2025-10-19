@@ -22,10 +22,10 @@ export const PostIdeaGenerator = () => {
         </div>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 h-auto bg-white border border-gray-200 rounded-xl p-1.5 shadow-sm">
+          <TabsList className="grid w-full grid-cols-3 h-auto bg-white border border-gray-200 rounded-xl p-1 shadow-sm">
             <TabsTrigger 
               value="generate" 
-              className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+              className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50 text-sm"
             >
               <Sparkles className="w-4 h-4" />
               <span className="hidden sm:inline">Generate Ideas</span>
@@ -33,7 +33,7 @@ export const PostIdeaGenerator = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="my-ideas" 
-              className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+              className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50 text-sm"
             >
               <History className="w-4 h-4" />
               <span className="hidden sm:inline">My Generated Ideas</span>
@@ -41,7 +41,7 @@ export const PostIdeaGenerator = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="profile" 
-              className="flex items-center justify-center gap-2 rounded-lg px-4 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50"
+              className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50 text-sm"
             >
               <User className="w-4 h-4" />
               <span className="hidden sm:inline">Business Profile</span>
@@ -49,15 +49,15 @@ export const PostIdeaGenerator = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="generate" className="mt-6">
+          <TabsContent value="generate" className="mt-4">
             <GenerateTab />
           </TabsContent>
 
-          <TabsContent value="my-ideas" className="mt-6">
+          <TabsContent value="my-ideas" className="mt-4">
             <MyIdeasTab />
           </TabsContent>
 
-          <TabsContent value="profile" className="mt-6">
+          <TabsContent value="profile" className="mt-4">
             <ProfileTab />
           </TabsContent>
         </Tabs>
