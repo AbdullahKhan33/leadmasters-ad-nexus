@@ -12,6 +12,8 @@ import { usePostIdeas } from "@/hooks/usePostIdeas";
 import { IdeaCard } from "./IdeaCard";
 import { Lightbulb, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PublishSelectedModal } from "./PublishSelectedModal";
+import { ScheduleSelectedModal } from "./ScheduleSelectedModal";
 
 export const MyIdeasTab = () => {
   const { ideas, ideasLoading, deleteIdea, updateIdeaStatus } = usePostIdeas();
@@ -20,6 +22,8 @@ export const MyIdeasTab = () => {
   const [platformFilter, setPlatformFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showPublishModal, setShowPublishModal] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   const filteredIdeas = useMemo(() => {
     if (!ideas) return [];
@@ -115,14 +119,20 @@ export const MyIdeasTab = () => {
     setSelectedIds([]);
   };
 
-  const handlePublishSelected = () => {
-    console.log("Publishing posts:", selectedIds);
-    // TODO: Implement publish logic
+  const selectedIdeasForAction = useMemo(() => {
+    return filteredIdeas.filter((idea) => selectedIds.includes(idea.id));
+  }, [filteredIdeas, selectedIds]);
+
+  const handlePublishComplete = () => {
+    setSelectedIds([]);
+    // Optionally update the status of published posts in the database
+    // updateIdeaStatus.mutate({ id, status: "published" });
   };
 
-  const handleScheduleSelected = () => {
-    console.log("Scheduling posts:", selectedIds);
-    // TODO: Implement schedule logic
+  const handleScheduleComplete = () => {
+    setSelectedIds([]);
+    // Optionally update the status of scheduled posts in the database
+    // updateIdeaStatus.mutate({ id, status: "scheduled" });
   };
 
   if (ideasLoading) {
@@ -299,14 +309,14 @@ export const MyIdeasTab = () => {
             </p>
             <div className="flex gap-3">
               <Button
-                onClick={handlePublishSelected}
+                onClick={() => setShowPublishModal(true)}
                 className="gap-2"
                 size="lg"
               >
                 Publish Selected Posts
               </Button>
               <Button
-                onClick={handleScheduleSelected}
+                onClick={() => setShowScheduleModal(true)}
                 variant="outline"
                 className="gap-2"
                 size="lg"
@@ -317,6 +327,20 @@ export const MyIdeasTab = () => {
           </div>
         </div>
       )}
+
+      {/* Modals */}
+      <PublishSelectedModal
+        open={showPublishModal}
+        onOpenChange={setShowPublishModal}
+        selectedIdeas={selectedIdeasForAction}
+        onPublishComplete={handlePublishComplete}
+      />
+      <ScheduleSelectedModal
+        open={showScheduleModal}
+        onOpenChange={setShowScheduleModal}
+        selectedIdeas={selectedIdeasForAction}
+        onScheduleComplete={handleScheduleComplete}
+      />
     </div>
   );
 };
