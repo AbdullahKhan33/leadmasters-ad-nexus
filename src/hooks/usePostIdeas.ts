@@ -65,7 +65,7 @@ export const usePostIdeas = () => {
         business_type: functionData.metadata.businessType || "Unknown",
         target_audience: functionData.metadata.targetAudience || "General audience",
         goals: functionData.metadata.goals || [],
-        platform: functionData.metadata.platform || idea.platform || "Instagram",
+        platform: idea.platform || "Instagram",
         post_caption: idea.caption,
         hashtags: idea.hashtags,
         ai_recommendations: {

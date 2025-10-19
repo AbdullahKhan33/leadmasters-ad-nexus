@@ -21,14 +21,18 @@ serve(async (req) => {
     // Construct the AI prompt
     const systemPrompt = `You are a professional social media content strategist. Based on the user's campaign description, generate 5 unique, highly targeted post ideas.
 
+Platform options: Instagram, Facebook, LinkedIn, Twitter, TikTok, WhatsApp
+- For WhatsApp: Keep it conversational, personal, and emoji-friendly. Use shorter captions (100-200 characters). Hashtags are optional but can be included for cross-posting reference.
+- For other platforms: Follow standard best practices for that platform.
+
 For each post idea, provide:
-1. Platform (infer from description, default to Instagram if unclear)
-2. Post caption (engaging, platform-optimized, 150-280 characters)
+1. Platform (choose the most appropriate platform based on the campaign description and content type)
+2. Post caption (engaging, platform-optimized, 150-280 characters for social media, 100-200 for WhatsApp)
 3. 5-8 relevant, trending hashtags (without # symbol)
 4. Best posting time (specific time recommendation based on platform and audience)
 5. Engagement optimization tips (actionable advice)
 6. Expected engagement level (low/medium/high)
-7. Content type (image, video, carousel, story, reel)
+7. Content type (image, video, carousel, story, reel, message)
 8. Image prompt (detailed description of the ideal image/visual that should accompany this post - be creative and specific)
 
 Make content authentic, actionable, and perfectly aligned with the user's goals.`;
@@ -62,7 +66,7 @@ Make content authentic, actionable, and perfectly aligned with the user's goals.
                       items: {
                         type: "object",
                         properties: {
-                          platform: { type: "string", description: "Social media platform (facebook, instagram, linkedin, twitter, tiktok)" },
+                          platform: { type: "string", description: "Social media platform (facebook, instagram, linkedin, twitter, tiktok, whatsapp)" },
                           caption: { type: "string", description: "The post caption" },
                           hashtags: { 
                             type: "array", 
