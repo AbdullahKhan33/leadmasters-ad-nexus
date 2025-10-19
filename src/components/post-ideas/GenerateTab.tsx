@@ -104,13 +104,13 @@ export const GenerateTab = () => {
           </div>
 
           {/* WhatsApp Posts Section */}
-          {generatedIdeas.some(idea => idea.ai_recommendations?.platform?.toLowerCase() === 'whatsapp') && (
+          {generatedIdeas.some(idea => idea.platform?.toLowerCase() === 'whatsapp') && (
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
                 💬 WhatsApp Posts
               </h4>
               {generatedIdeas
-                .filter(idea => idea.ai_recommendations?.platform?.toLowerCase() === 'whatsapp')
+                .filter(idea => idea.platform?.toLowerCase() === 'whatsapp')
                 .map((idea) => (
                   <IdeaCard
                     key={idea.id}
@@ -128,13 +128,13 @@ export const GenerateTab = () => {
           )}
 
           {/* Other Platform Posts Section */}
-          {generatedIdeas.some(idea => idea.ai_recommendations?.platform?.toLowerCase() !== 'whatsapp') && (
+          {generatedIdeas.some(idea => idea.platform?.toLowerCase() !== 'whatsapp') && (
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
                 📱 Social Media Posts
               </h4>
               {generatedIdeas
-                .filter(idea => idea.ai_recommendations?.platform?.toLowerCase() !== 'whatsapp')
+                .filter(idea => idea.platform?.toLowerCase() !== 'whatsapp')
                 .map((idea) => (
                   <IdeaCard
                     key={idea.id}
@@ -151,26 +151,37 @@ export const GenerateTab = () => {
             </div>
           )}
 
-          {/* Action Buttons */}
-          {selectedIds.length > 0 && (
-            <div className="flex gap-3 sticky bottom-4">
+          {/* Bottom padding to prevent overlap */}
+          {selectedIds.length > 0 && <div className="h-24" />}
+        </div>
+      )}
+
+      {/* Action Buttons - Fixed at bottom when posts are selected */}
+      {selectedIds.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-40">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <p className="text-sm font-medium">
+              {selectedIds.length} post{selectedIds.length > 1 ? "s" : ""}{" "}
+              selected
+            </p>
+            <div className="flex gap-3">
               <Button
                 onClick={() => setShowPublishModal(true)}
-                className="flex-1 h-14 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold text-base shadow-xl hover:shadow-2xl transition-all"
+                className="gap-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                size="lg"
               >
-                <Send className="w-5 h-5 mr-2" />
-                Publish {selectedIds.length} Selected Post{selectedIds.length > 1 ? 's' : ''}
+                Publish Selected Posts
               </Button>
               <Button
                 onClick={() => setShowScheduleModal(true)}
                 variant="outline"
-                className="flex-1 h-14 border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-semibold text-base shadow-lg hover:shadow-xl transition-all"
+                className="gap-2"
+                size="lg"
               >
-                <Calendar className="w-5 h-5 mr-2" />
-                Schedule {selectedIds.length} Selected Post{selectedIds.length > 1 ? 's' : ''}
+                Schedule Selected Posts
               </Button>
             </div>
-          )}
+          </div>
         </div>
       )}
 

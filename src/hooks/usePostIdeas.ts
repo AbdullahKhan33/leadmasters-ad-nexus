@@ -12,6 +12,7 @@ export interface GeneratedIdea {
   post_caption: string;
   hashtags: string[];
   ai_recommendations: {
+    platform?: string;
     best_posting_time: string;
     engagement_tips: string;
     expected_engagement: "low" | "medium" | "high";
@@ -69,6 +70,7 @@ export const usePostIdeas = () => {
         post_caption: idea.caption,
         hashtags: idea.hashtags,
         ai_recommendations: {
+          platform: idea.platform,
           best_posting_time: idea.best_posting_time,
           engagement_tips: idea.engagement_tips,
           expected_engagement: idea.expected_engagement,

@@ -237,6 +237,7 @@ export const MyIdeasTab = () => {
               <SelectItem value="linkedin">LinkedIn</SelectItem>
               <SelectItem value="twitter">Twitter</SelectItem>
               <SelectItem value="tiktok">TikTok</SelectItem>
+              <SelectItem value="whatsapp">WhatsApp</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -300,10 +301,13 @@ export const MyIdeasTab = () => {
         </div>
       )}
 
+      {/* Bottom padding to prevent overlap when action bar is shown */}
+      {selectedIds.length > 0 && <div className="h-24" />}
+
       {/* Action Buttons - Fixed at bottom when posts are selected */}
       {selectedIds.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-50">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-lg z-40">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <p className="text-sm font-medium">
               {selectedIds.length} post{selectedIds.length > 1 ? "s" : ""}{" "}
               selected
@@ -311,7 +315,7 @@ export const MyIdeasTab = () => {
             <div className="flex gap-3">
               <Button
                 onClick={() => setShowPublishModal(true)}
-                className="gap-2"
+                className="gap-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
                 size="lg"
               >
                 Publish Selected Posts
