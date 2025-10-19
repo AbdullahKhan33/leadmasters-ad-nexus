@@ -22,7 +22,8 @@ export const PostIdeaGenerator = () => {
         </div>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 h-auto bg-white border border-gray-200 rounded-xl p-1 shadow-lg">
+          <div className="max-w-4xl mx-auto">
+            <TabsList className="grid w-full grid-cols-3 h-auto bg-white border border-gray-200 rounded-xl p-1 shadow-lg">
             <TabsTrigger 
               value="generate" 
               className="flex items-center justify-center gap-2 rounded-lg px-3 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-md font-medium transition-all data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-50 text-sm"
@@ -48,6 +49,7 @@ export const PostIdeaGenerator = () => {
               <span className="sm:hidden">Profile</span>
             </TabsTrigger>
           </TabsList>
+          </div>
 
           <TabsContent value="generate" className="mt-4">
             <GenerateTab />
