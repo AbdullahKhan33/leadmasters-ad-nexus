@@ -31,12 +31,13 @@ export const IdeaCard = ({ idea, isSelected, onToggleSelect, onDelete }: IdeaCar
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
-  const copyHashtags = () => {
+  const copyEntirePost = () => {
     const hashtagsText = idea.hashtags.map(tag => `#${tag}`).join(" ");
-    navigator.clipboard.writeText(hashtagsText);
+    const fullPost = `${idea.post_caption}\n\n${hashtagsText}`;
+    navigator.clipboard.writeText(fullPost);
     toast({
-      title: "Hashtags Copied",
-      description: "Hashtags copied to clipboard",
+      title: "Post Copied",
+      description: "Entire post copied to clipboard",
     });
   };
 
@@ -83,11 +84,11 @@ export const IdeaCard = ({ idea, isSelected, onToggleSelect, onDelete }: IdeaCar
             <Button
               variant="ghost"
               size="sm"
-              onClick={copyHashtags}
+              onClick={copyEntirePost}
               className="h-8 text-xs"
             >
               <Copy className="w-3 h-3 mr-1" />
-              Copy
+              Copy Post
             </Button>
           </div>
           <div className="flex flex-wrap gap-2">

@@ -103,23 +103,55 @@ export const GenerateTab = () => {
             </span>
           </div>
 
-          <div className="space-y-4">
-            {generatedIdeas.map((idea) => (
-              <IdeaCard
-                key={idea.id}
-                idea={idea}
-                isSelected={selectedIds.includes(idea.id)}
-                onToggleSelect={() => toggleSelection(idea.id)}
-                onDelete={(id) => {
-                  deleteIdea.mutate(id);
-                  setGeneratedIdeas((prev) => prev.filter((i) => i.id !== id));
-                  setSelectedIds((prev) => prev.filter((i) => i !== id));
-                }}
-              />
-            ))}
-          </div>
+          {/* WhatsApp Posts Section */}
+          {generatedIdeas.some(idea => idea.ai_recommendations?.platform?.toLowerCase() === 'whatsapp') && (
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+                💬 WhatsApp Posts
+              </h4>
+              {generatedIdeas
+                .filter(idea => idea.ai_recommendations?.platform?.toLowerCase() === 'whatsapp')
+                .map((idea) => (
+                  <IdeaCard
+                    key={idea.id}
+                    idea={idea}
+                    isSelected={selectedIds.includes(idea.id)}
+                    onToggleSelect={() => toggleSelection(idea.id)}
+                    onDelete={(id) => {
+                      deleteIdea.mutate(id);
+                      setGeneratedIdeas((prev) => prev.filter((i) => i.id !== id));
+                      setSelectedIds((prev) => prev.filter((i) => i !== id));
+                    }}
+                  />
+                ))}
+            </div>
+          )}
 
-          {/* Action Button */}
+          {/* Other Platform Posts Section */}
+          {generatedIdeas.some(idea => idea.ai_recommendations?.platform?.toLowerCase() !== 'whatsapp') && (
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+                📱 Social Media Posts
+              </h4>
+              {generatedIdeas
+                .filter(idea => idea.ai_recommendations?.platform?.toLowerCase() !== 'whatsapp')
+                .map((idea) => (
+                  <IdeaCard
+                    key={idea.id}
+                    idea={idea}
+                    isSelected={selectedIds.includes(idea.id)}
+                    onToggleSelect={() => toggleSelection(idea.id)}
+                    onDelete={(id) => {
+                      deleteIdea.mutate(id);
+                      setGeneratedIdeas((prev) => prev.filter((i) => i.id !== id));
+                      setSelectedIds((prev) => prev.filter((i) => i !== id));
+                    }}
+                  />
+                ))}
+            </div>
+          )}
+
+          {/* Action Buttons */}
           {selectedIds.length > 0 && (
             <div className="flex gap-3 sticky bottom-4">
               <Button
