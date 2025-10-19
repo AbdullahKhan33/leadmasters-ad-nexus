@@ -135,19 +135,23 @@ export const MyIdeasTab = () => {
 
       {/* Ideas Display */}
       {filteredIdeas.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <Lightbulb className="w-16 h-16 text-muted-foreground" />
-          <div className="text-center space-y-2">
-            <h3 className="text-lg font-semibold">No ideas found</h3>
-            <p className="text-sm text-muted-foreground">
+        <div className="flex flex-col items-center justify-center py-16 space-y-6">
+          <div className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-full">
+            <Lightbulb className="w-20 h-20 text-primary" />
+          </div>
+          <div className="text-center space-y-3">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              No ideas found
+            </h3>
+            <p className="text-base text-muted-foreground max-w-md">
               {searchQuery || statusFilter !== "all" || platformFilter !== "all"
-                ? "Try adjusting your filters"
-                : "Generate your first post ideas to get started"}
+                ? "Try adjusting your filters to see more ideas"
+                : "Generate your first post ideas to get started! 🚀"}
             </p>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredIdeas.map((idea) => (
             <IdeaCard
               key={idea.id}

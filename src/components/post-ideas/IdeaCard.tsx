@@ -71,14 +71,15 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardContent className="p-4 space-y-3">
+    <Card className="border-2 hover:border-primary/30 hover:shadow-2xl transition-all transform hover:scale-[1.02] bg-gradient-to-br from-white to-blue-50/30">
+      <CardContent className="p-5 space-y-4">
         {/* Platform Badge */}
         <div className="flex items-center justify-between">
-          <Badge variant="secondary" className="text-sm">
+          <Badge variant="secondary" className="text-sm font-bold bg-gradient-to-r from-blue-100 to-purple-100 border-primary/20">
             {platformIcons[idea.platform.toLowerCase()]} {idea.platform}
           </Badge>
           <Badge
+            className="font-semibold"
             variant={
               idea.status === "saved"
                 ? "default"
@@ -92,9 +93,9 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
         </div>
 
         {/* Caption */}
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground font-medium">Caption:</p>
-          <p className="text-sm">{idea.post_caption}</p>
+        <div className="space-y-2 p-3 bg-gradient-to-r from-blue-50/50 to-purple-50/50 rounded-lg border border-primary/10">
+          <p className="text-sm font-bold text-primary">📝 Caption:</p>
+          <p className="text-sm leading-relaxed">{idea.post_caption}</p>
         </div>
 
         {/* Hashtags */}
@@ -123,12 +124,16 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
         {/* AI Recommendations */}
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-full">
-              {isOpen ? "Hide" : "Show"} AI Recommendations
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full hover:bg-primary/5 font-semibold text-primary relative z-10"
+            >
+              {isOpen ? "▲ Hide" : "▼ Show"} AI Recommendations ✨
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2 pt-2">
-            <div className="text-xs space-y-2 bg-muted/50 p-3 rounded-md">
+            <div className="text-xs space-y-2 bg-gradient-to-br from-blue-50/80 to-purple-50/80 p-4 rounded-lg border-2 border-primary/20 shadow-inner">
               <div>
                 <span className="font-medium">🕐 Best Time:</span>{" "}
                 {idea.ai_recommendations.best_posting_time}
@@ -167,12 +172,11 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
         </Collapsible>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-2 pt-2">
+        <div className="grid grid-cols-2 gap-3 pt-3 border-t border-primary/10">
           <Button
-            variant="default"
             size="sm"
             onClick={handleCreatePost}
-            className="w-full"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 font-semibold shadow-md hover:shadow-lg transition-all relative z-10"
           >
             <Edit2 className="w-3 h-3 mr-1" />
             Create Post
@@ -181,7 +185,7 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
             variant="outline"
             size="sm"
             onClick={handleSchedule}
-            className="w-full"
+            className="w-full border-2 border-primary/30 hover:bg-primary/5 font-semibold relative z-10"
           >
             <Calendar className="w-3 h-3 mr-1" />
             Schedule
@@ -191,7 +195,7 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
             size="sm"
             onClick={() => onStatusChange(idea.id, "saved")}
             disabled={idea.status === "saved"}
-            className="w-full"
+            className="w-full border-2 border-primary/30 hover:bg-primary/5 font-semibold relative z-10"
           >
             <FileText className="w-3 h-3 mr-1" />
             Save Draft
@@ -200,7 +204,7 @@ export const IdeaCard = ({ idea, onDelete, onStatusChange }: IdeaCardProps) => {
             variant="outline"
             size="sm"
             onClick={() => onDelete(idea.id)}
-            className="w-full"
+            className="w-full border-2 border-red-300 text-red-600 hover:bg-red-50 font-semibold relative z-10"
           >
             <Trash2 className="w-3 h-3 mr-1" />
             Delete

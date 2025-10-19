@@ -95,10 +95,10 @@ export const ProfileTab = () => {
     return (
       <div className="space-y-6">
         {/* Profile Display Card */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="flex items-center gap-2">
-              <User className="w-5 h-5" />
+        <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
+            <CardTitle className="flex items-center gap-2 text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              <User className="w-6 h-6" />
               Business Profile
             </CardTitle>
             <div className="space-x-2">
@@ -142,9 +142,11 @@ export const ProfileTab = () => {
         </Card>
 
         {/* Benefits Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Why save a profile?</CardTitle>
+        <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
+            <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              💡 Why save a profile?
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="flex items-start gap-2">
@@ -168,10 +170,10 @@ export const ProfileTab = () => {
   return (
     <div className="space-y-6">
       {/* Profile Form */}
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            {profile ? "Edit Business Profile" : "Create Business Profile"}
+      <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
+        <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
+          <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            {profile ? "✏️ Edit Business Profile" : "🎯 Create Business Profile"}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -258,9 +260,9 @@ export const ProfileTab = () => {
                 primaryGoals.length === 0 ||
                 saveProfile.isPending
               }
-              className="flex-1"
+              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-lg hover:shadow-xl transition-all font-bold"
             >
-              {saveProfile.isPending ? "Saving..." : "Save Profile"}
+              {saveProfile.isPending ? "Saving..." : "💾 Save Profile"}
             </Button>
             {profile && (
               <Button
@@ -276,10 +278,10 @@ export const ProfileTab = () => {
       </Card>
 
       {/* Info Section */}
-      <Card className="bg-muted/50">
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-blue-50/30 to-purple-50/30 shadow-md">
         <CardContent className="pt-6">
-          <p className="text-sm text-muted-foreground">
-            💡 Save your business info for quick generation. You can load this
+          <p className="text-sm font-medium text-muted-foreground">
+            💡 <span className="text-primary">Pro Tip:</span> Save your business info for quick generation. You can load this
             profile in the Generate tab to skip filling out the form each time.
           </p>
         </CardContent>

@@ -108,15 +108,17 @@ export const GenerateTab = () => {
   return (
     <div className="space-y-6">
       {/* Business Context Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Business Context</CardTitle>
+      <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
+        <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
+          <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            ✨ Business Context
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="business-type">Business Type</Label>
             <Select value={businessType} onValueChange={setBusinessType}>
-              <SelectTrigger id="business-type">
+              <SelectTrigger id="business-type" className="border-2 hover:border-primary/50 transition-colors">
                 <SelectValue placeholder="Select your business type" />
               </SelectTrigger>
               <SelectContent>
@@ -127,6 +129,15 @@ export const GenerateTab = () => {
                 ))}
               </SelectContent>
             </Select>
+            {businessType === "Other" && (
+              <Textarea
+                placeholder="Please specify your business type..."
+                value={businessType === "Other" ? "" : businessType}
+                onChange={(e) => setBusinessType(e.target.value)}
+                className="mt-2 border-2 focus:border-primary"
+                rows={2}
+              />
+            )}
           </div>
 
           <div className="space-y-2">
@@ -174,9 +185,11 @@ export const GenerateTab = () => {
       </Card>
 
       {/* Platform Selection */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Platform Selection</CardTitle>
+      <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
+        <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
+          <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            📱 Platform Selection
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <RadioGroup value={platform} onValueChange={setPlatform}>
@@ -199,12 +212,14 @@ export const GenerateTab = () => {
 
       {/* Advanced Options */}
       <Collapsible open={showAdvanced} onOpenChange={setShowAdvanced}>
-        <Card>
-          <CardHeader>
+        <Card className="border-2 hover:border-primary/20 transition-all shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-blue-50/80 via-purple-50/80 to-pink-50/80 border-b">
             <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-between">
-                <CardTitle>Advanced Options</CardTitle>
-                <span>{showAdvanced ? "▲" : "▼"}</span>
+              <Button variant="ghost" className="w-full justify-between hover:bg-transparent">
+                <CardTitle className="text-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                  ⚙️ Advanced Options
+                </CardTitle>
+                <span className="text-primary">{showAdvanced ? "▲" : "▼"}</span>
               </Button>
             </CollapsibleTrigger>
           </CardHeader>
@@ -251,7 +266,7 @@ export const GenerateTab = () => {
       {/* Generate Button */}
       <Button
         size="lg"
-        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+        className="w-full h-14 text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all"
         onClick={handleGenerate}
         disabled={!canGenerate || generateIdeas.isPending}
       >
@@ -270,9 +285,11 @@ export const GenerateTab = () => {
 
       {/* Results Display */}
       {generatedIdeas.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Generated Ideas</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4 mt-8">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            🎉 Generated Ideas
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {generatedIdeas.map((idea) => (
               <IdeaCard
                 key={idea.id}
