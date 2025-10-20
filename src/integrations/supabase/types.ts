@@ -483,6 +483,83 @@ export type Database = {
           },
         ]
       }
+      email_domains: {
+        Row: {
+          created_at: string | null
+          dkim_verified: boolean | null
+          domain_name: string
+          id: string
+          spf_verified: boolean | null
+          updated_at: string | null
+          user_id: string
+          verification_status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dkim_verified?: boolean | null
+          domain_name: string
+          id?: string
+          spf_verified?: boolean | null
+          updated_at?: string | null
+          user_id: string
+          verification_status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dkim_verified?: boolean | null
+          domain_name?: string
+          id?: string
+          spf_verified?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
+      email_senders: {
+        Row: {
+          created_at: string | null
+          domain_id: string | null
+          from_email: string
+          from_name: string
+          id: string
+          is_default: boolean | null
+          is_verified: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          domain_id?: string | null
+          from_email: string
+          from_name: string
+          id?: string
+          is_default?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          domain_id?: string | null
+          from_email?: string
+          from_name?: string
+          id?: string
+          is_default?: boolean | null
+          is_verified?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_senders_domain_id_fkey"
+            columns: ["domain_id"]
+            isOneToOne: false
+            referencedRelation: "email_domains"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       generated_post_ideas: {
         Row: {
           ai_recommendations: Json
