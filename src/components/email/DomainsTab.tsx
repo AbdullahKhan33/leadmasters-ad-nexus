@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { Plus, Globe } from "lucide-react";
+import { Plus, Globe, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DomainTile } from "./DomainTile";
-import { DomainConfigModal } from "./DomainConfigModal";
+import { DomainConfigWizard } from "./DomainConfigWizard";
 import { useDomains } from "@/hooks/useDomains";
 
 export function DomainsTab() {
   const { domains, isLoading } = useDomains();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
   const [selectedDomainId, setSelectedDomainId] = useState<string | undefined>();
 
   const handleAddDomain = () => {
     setSelectedDomainId(undefined);
-    setIsModalOpen(true);
+    setShowWizard(true);
   };
 
   const handleConfigure = (domainId: string, isDummy?: boolean) => {
@@ -22,11 +22,11 @@ export function DomainsTab() {
       return;
     }
     setSelectedDomainId(domainId);
-    setIsModalOpen(true);
+    setShowWizard(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseWizard = () => {
+    setShowWizard(false);
     setSelectedDomainId(undefined);
   };
 
@@ -41,6 +41,27 @@ export function DomainsTab() {
   const realDomains = domains.filter(d => !d.isDummy);
   const showEmptyState = realDomains.length === 0;
 
+  // Show wizard inline if active
+  if (showWizard) {
+    return (
+      <div className="space-y-6">
+        <Button 
+          variant="ghost" 
+          onClick={handleCloseWizard}
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Domains
+        </Button>
+        
+        <DomainConfigWizard
+          domainId={selectedDomainId}
+          onComplete={handleCloseWizard}
+        />
+      </div>
+    );
+  }
+
+  // Show domains list
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -86,12 +107,6 @@ export function DomainsTab() {
         </div>
       )}
 
-      {/* Domain Configuration Modal */}
-      <DomainConfigModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        domainId={selectedDomainId}
-      />
     </div>
   );
 }
