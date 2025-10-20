@@ -25,43 +25,21 @@ export function CampaignTypeStep({ formData, setFormData }: CampaignTypeStepProp
 
       <div className="space-y-3">
         <Label>Campaign Type</Label>
-        <RadioGroup
-          value={formData.type}
-          onValueChange={(value: CampaignType) => setFormData({ ...formData, type: value })}
-          className="grid grid-cols-2 gap-4"
-        >
-          <div>
-            <RadioGroupItem value="email" id="email" className="peer sr-only" />
-            <Label
-              htmlFor="email"
-              className="flex flex-col items-center justify-between rounded-lg border-2 border-muted bg-white/60 p-6 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
-            >
-              <Mail className="mb-3 h-8 w-8 text-purple-600" />
-              <div className="text-center">
-                <div className="font-semibold">Email Campaign</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  Track opens, clicks & schedule delivery
-                </div>
+        <div className="rounded-lg border-2 border-primary bg-primary/5 p-6">
+          <div className="flex items-center gap-3">
+            <Mail className="h-8 w-8 text-purple-600" />
+            <div>
+              <div className="font-semibold">Email Campaign</div>
+              <div className="text-xs text-muted-foreground mt-1">
+                Track opens, clicks & schedule delivery
               </div>
-            </Label>
+            </div>
           </div>
-
-          <div>
-            <RadioGroupItem value="whatsapp" id="whatsapp" className="peer sr-only" />
-            <Label
-              htmlFor="whatsapp"
-              className="flex flex-col items-center justify-between rounded-lg border-2 border-muted bg-white/60 p-6 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 cursor-pointer transition-all"
-            >
-              <MessageSquare className="mb-3 h-8 w-8 text-purple-600" />
-              <div className="text-center">
-                <div className="font-semibold">WhatsApp Campaign</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  Instant delivery to your contacts
-                </div>
-              </div>
-            </Label>
-          </div>
-        </RadioGroup>
+          <p className="text-xs text-muted-foreground mt-3 p-2 bg-blue-50 rounded border border-blue-200">
+            <MessageSquare className="inline w-3 h-3 mr-1" />
+            Looking for WhatsApp campaigns? Visit <span className="font-semibold">Campaign Hub</span> for WhatsApp messaging.
+          </p>
+        </div>
       </div>
     </div>
   );

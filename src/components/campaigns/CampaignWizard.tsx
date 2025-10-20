@@ -35,35 +35,28 @@ interface CampaignFormData {
 }
 
 export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardProps) {
-  // Skip type selection step if initialType is provided
-  const [currentStep, setCurrentStep] = useState(initialType ? 0 : 0);
+  const [currentStep, setCurrentStep] = useState(0);
   const { createCampaign } = useCampaigns();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  // CRM wizard only handles email campaigns
   const [formData, setFormData] = useState<CampaignFormData>({
     name: "",
-    type: initialType || "email",
+    type: "email",
     segment_id: null,
     subject: "",
     message_content: "",
     scheduled_at: null,
   });
 
-  // Skip campaign type step if initialType is provided
-  const steps = initialType
-    ? [
-        { title: "Campaign Details", description: "Enter campaign name" },
-        { title: "Select Segment", description: "Choose your target audience" },
-        { title: "Create Content", description: "Design your message" },
-        ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
-      ]
-    : [
-        { title: "Campaign Type", description: "Choose your campaign type" },
-        { title: "Select Segment", description: "Choose your target audience" },
-        { title: "Create Content", description: "Design your message" },
-        ...(formData.type === "email" ? [{ title: "Schedule", description: "Choose when to send" }] : []),
-      ];
+  // Email campaign steps only
+  const steps = [
+    { title: "Campaign Details", description: "Enter campaign name" },
+    { title: "Select Segment", description: "Choose your target audience" },
+    { title: "Create Content", description: "Design your email" },
+    { title: "Schedule", description: "Choose when to send" },
+  ];
 
   const progress = ((currentStep + 1) / steps.length) * 100;
 
@@ -155,7 +148,7 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
     setCurrentStep(0);
     setFormData({
       name: "",
-      type: initialType || "email",
+      type: "email",
       segment_id: null,
       subject: "",
       message_content: "",
@@ -169,22 +162,14 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
   };
 
   const canProceed = () => {
-    // Adjust step index if we skipped the type selection
-    const stepIndex = initialType ? currentStep + 1 : currentStep;
-    
-    switch (stepIndex) {
+    switch (currentStep) {
       case 0:
-        return formData.name.trim() !== "" && formData.type !== null;
-      case 1:
         return formData.name.trim() !== "";
-      case 2:
+      case 1:
         return formData.segment_id !== null;
+      case 2:
+        return formData.subject.trim() !== "" && formData.message_content.trim() !== "";
       case 3:
-        if (formData.type === "email") {
-          return formData.subject.trim() !== "" && formData.message_content.trim() !== "";
-        }
-        return formData.message_content.trim() !== "";
-      case 4:
         return true; // Schedule step is optional
       default:
         return false;
@@ -196,16 +181,10 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            {initialType 
-              ? `Create ${initialType === 'email' ? 'an Email' : 'a WhatsApp'} Campaign`
-              : steps[currentStep].title
-            }
+            {steps[currentStep].title}
           </DialogTitle>
           <DialogDescription>
-            {initialType && currentStep === 0 
-              ? "Enter your campaign details"
-              : steps[currentStep].description
-            }
+            {steps[currentStep].description}
           </DialogDescription>
         </DialogHeader>
 
@@ -220,10 +199,7 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
 
         {/* Step Content */}
         <div className="py-6">
-          {!initialType && currentStep === 0 && (
-            <CampaignTypeStep formData={formData} setFormData={setFormData} />
-          )}
-          {initialType && currentStep === 0 && (
+          {currentStep === 0 && (
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Campaign Name</label>
@@ -235,13 +211,13 @@ export function CampaignWizard({ isOpen, onClose, initialType }: CampaignWizardP
               </div>
             </div>
           )}
-          {((initialType && currentStep === 1) || (!initialType && currentStep === 1)) && (
+          {currentStep === 1 && (
             <SegmentSelectionStep formData={formData} setFormData={setFormData} />
           )}
-          {((initialType && currentStep === 2) || (!initialType && currentStep === 2)) && (
+          {currentStep === 2 && (
             <ContentEditorStep formData={formData} setFormData={setFormData} />
           )}
-          {((initialType && currentStep === 3) || (!initialType && currentStep === 3)) && formData.type === "email" && (
+          {currentStep === 3 && (
             <ScheduleStep formData={formData} setFormData={setFormData} />
           )}
         </div>

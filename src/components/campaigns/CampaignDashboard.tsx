@@ -25,22 +25,16 @@ export function CampaignDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const [campaignType, setCampaignType] = useState<"email" | "whatsapp">("email");
+  const campaignType = "email"; // CRM only handles email campaigns
   
   const { campaigns, isLoading, duplicateCampaign, deleteCampaign, updateCampaign, refetch } = useCampaigns(campaignType);
   const { folders, createFolder, updateFolder, deleteFolder } = useCampaignFolders(campaignType);
 
-  // Set initial campaign type from navigation state and refetch if needed
+  // Refetch campaigns if needed
   useEffect(() => {
-    const state = location.state as { campaignType?: "email" | "whatsapp"; refetch?: boolean };
-    if (state?.campaignType) {
-      setCampaignType(state.campaignType);
-    }
+    const state = location.state as { refetch?: boolean };
     if (state?.refetch) {
       refetch();
-    }
-    // Clear the navigation state after reading it to prevent interference with manual tab switching
-    if (state?.campaignType || state?.refetch) {
       window.history.replaceState({}, document.title);
     }
   }, [location.state, refetch]);
@@ -105,7 +99,7 @@ export function CampaignDashboard() {
             <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
               Campaign Management
             </h2>
-            <p className="text-sm text-muted-foreground">Create and manage your email and WhatsApp campaigns</p>
+            <p className="text-sm text-muted-foreground">Create and manage your email campaigns</p>
           </div>
           <div className="flex gap-2">
             <Button 
@@ -127,26 +121,25 @@ export function CampaignDashboard() {
         </div>
       </div>
 
-      {/* Campaign Type Tabs */}
-      <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6">
-        <Tabs value={campaignType} onValueChange={(v) => setCampaignType(v as "email" | "whatsapp")} className="w-full">
-          <TabsList className="bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
-            <TabsTrigger 
-              value="email"
-              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200 rounded-lg font-semibold"
-            >
-              <Mail className="w-4 h-4" />
-              <span>Email Campaigns</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="whatsapp"
-              className="flex items-center space-x-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200 rounded-lg font-semibold"
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span>WhatsApp Campaigns</span>
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+      {/* WhatsApp Campaigns Banner */}
+      <div className="bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-b border-green-200/50 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <MessageSquare className="w-5 h-5 text-green-600" />
+            <div>
+              <p className="text-sm font-semibold text-green-900">Looking for WhatsApp campaigns?</p>
+              <p className="text-xs text-green-700">WhatsApp campaigns are now managed in Campaign Hub</p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate('/app')}
+            className="border-green-300 text-green-700 hover:bg-green-100"
+          >
+            Go to Campaign Hub
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -216,39 +209,21 @@ export function CampaignDashboard() {
             )}
           </div>
         ) : (
-campaignType === 'email' ? (
-  <div className="flex flex-col items-center justify-center h-full text-center py-12">
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg max-w-md">
-      <Mail className="w-16 h-16 mx-auto mb-4 text-purple-600" />
-      <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-        No Email Campaigns Yet
-      </h3>
-      <p className="text-muted-foreground mb-6">
-        Create your first email campaign to reach your segments with personalized messages and track engagement.
-      </p>
-      <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
-        <Plus className="w-4 h-4 mr-2" />
-        Create Email Campaign
-      </Button>
-    </div>
-  </div>
-) : (
-  <div className="flex flex-col items-center justify-center h-full text-center py-12">
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg max-w-md">
-      <MessageSquare className="w-16 h-16 mx-auto mb-4 text-purple-600" />
-      <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-        No WhatsApp Campaigns Yet
-      </h3>
-      <p className="text-muted-foreground mb-6">
-        Create your first WhatsApp campaign to send instant messages to your segments and drive engagement.
-      </p>
-      <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
-        <Plus className="w-4 h-4 mr-2" />
-        Create WhatsApp Campaign
-      </Button>
-    </div>
-  </div>
-)
+          <div className="flex flex-col items-center justify-center h-full text-center py-12">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/60 shadow-lg max-w-md">
+              <Mail className="w-16 h-16 mx-auto mb-4 text-purple-600" />
+              <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                No Email Campaigns Yet
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Create your first email campaign to reach your segments with personalized messages and track engagement.
+              </p>
+              <Button onClick={handleCreateCampaign} className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Email Campaign
+              </Button>
+            </div>
+          </div>
         )}
       </div>
 
