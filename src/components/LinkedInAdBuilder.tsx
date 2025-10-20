@@ -46,7 +46,7 @@ export function LinkedInAdBuilder() {
     <div className="flex-1 p-6 bg-gray-50">
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">LinkedIn Ad Builder</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">LinkedIn Campaign Hub</h1>
           <p className="text-gray-600">Create and manage your LinkedIn advertising campaigns with AI-powered tools for B2B growth</p>
         </div>
 

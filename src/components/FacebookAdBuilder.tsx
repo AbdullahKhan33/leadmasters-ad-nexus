@@ -45,7 +45,7 @@ export function FacebookAdBuilder() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-1">Facebook Ad Builder</h1>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-1">Facebook Campaign Hub</h1>
         <p className="text-sm text-gray-600">Create and manage your Facebook advertising campaigns with AI-powered tools</p>
       </div>
 

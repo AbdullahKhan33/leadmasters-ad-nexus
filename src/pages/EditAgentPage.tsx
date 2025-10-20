@@ -12,7 +12,7 @@ import { ArrowLeft, Loader2, Edit, Settings, Award } from "lucide-react";
 import type { Agent } from "@/hooks/useAgents";
 
 const FEATURE_PERMISSIONS = [
-  { key: "ad_builder", label: "Ad Builder", description: "Create and manage ad campaigns" },
+  { key: "ad_builder", label: "Campaign Hub", description: "Create and manage ad campaigns" },
   { key: "post_builder", label: "Post Builder", description: "Create social media posts" },
   { 
     key: "crm", 

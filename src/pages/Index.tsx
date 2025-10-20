@@ -140,7 +140,7 @@ function IndexContent() {
 
   const handleAdBuilderClick = () => {
     handleNavigationClick('ad-builder', () => {
-      console.log('Ad Builder clicked');
+      console.log('Campaign Hub clicked');
       setCurrentView('ad-builder');
     });
   };

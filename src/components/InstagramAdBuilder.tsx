@@ -46,7 +46,7 @@ export function InstagramAdBuilder() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-1">Instagram Ad Builder</h1>
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-1">Instagram Campaign Hub</h1>
         <p className="text-sm text-gray-600">Create and manage your Instagram advertising campaigns with AI-powered tools</p>
       </div>
 

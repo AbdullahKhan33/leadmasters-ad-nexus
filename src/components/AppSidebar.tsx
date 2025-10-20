@@ -167,12 +167,12 @@ export function AppSidebar({
               {isCollapsed ? (
                 <div className="flex flex-col items-center space-y-1">
                   <Megaphone className={`w-5 h-5 ${getIconStyles(currentView === 'ad-builder')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Ad Builder</span>
+                  <span className="text-xs font-medium">Campaign Hub</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
                   <Megaphone className={`w-5 h-5 ${getIconStyles(currentView === 'ad-builder')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Ad Builder</span>
+                  <span className="font-semibold">Campaign Hub</span>
                 </div>
               )}
             </SidebarMenuButton>

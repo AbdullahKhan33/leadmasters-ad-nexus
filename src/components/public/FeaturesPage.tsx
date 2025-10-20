@@ -14,7 +14,7 @@ export function FeaturesPage() {
   const mainFeatures = [
     {
       icon: Zap,
-      title: "AI Ad Builder",
+      title: "AI Campaign Hub",
       description: "Create high-converting Facebook, Google & Instagram ads in under 2 minutes",
       benefits: ["Write compelling ad copy", "Generate eye-catching visuals", "Optimize for your audience"],
       color: "from-yellow-400 to-orange-500"
