@@ -8,9 +8,10 @@ interface DomainTileProps {
   domainId: string;
   isDummy?: boolean;
   onConfigure: () => void;
+  onDelete?: () => void;
 }
 
-export function DomainTile({ domainName, isDummy, onConfigure }: DomainTileProps) {
+export function DomainTile({ domainName, isDummy, onConfigure, onDelete }: DomainTileProps) {
   return (
     <Card className="p-4 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
@@ -25,11 +26,21 @@ export function DomainTile({ domainName, isDummy, onConfigure }: DomainTileProps
             )}
           </div>
         </div>
-        
-        <Button variant="outline" size="sm" onClick={onConfigure}>
-          <Settings className="w-4 h-4 mr-2" />
-          Configure
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button 
+            size="sm" 
+            onClick={onConfigure}
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-sm"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Configure
+          </Button>
+          {onDelete && (
+            <Button variant="outline" size="sm" onClick={onDelete}>
+              Delete
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );

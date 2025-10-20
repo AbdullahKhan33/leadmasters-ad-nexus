@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Plus, Globe, ArrowLeft } from "lucide-react";
+import { Plus, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DomainTile } from "./DomainTile";
 import { DomainConfigWizard } from "./DomainConfigWizard";
 import { useDomains } from "@/hooks/useDomains";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 export function DomainsTab() {
-  const { domains, isLoading } = useDomains();
+  const { domains, isLoading, deleteDomain } = useDomains();
   const [showWizard, setShowWizard] = useState(false);
   const [selectedDomainId, setSelectedDomainId] = useState<string | undefined>();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleAddDomain = () => {
     setSelectedDomainId(undefined);
@@ -90,17 +92,38 @@ export function DomainsTab() {
           </Button>
         </Card>
       ) : (
-        <div className="space-y-3">
-          {domains.map((domain) => (
-            <DomainTile
-              key={domain.id}
-              domainId={domain.id}
-              domainName={domain.domain_name}
-              isDummy={domain.isDummy}
-              onConfigure={() => handleConfigure(domain.id, domain.isDummy)}
-            />
-          ))}
-        </div>
+        <>
+          <div className="space-y-3">
+            {domains.map((domain) => (
+              <DomainTile
+                key={domain.id}
+                domainId={domain.id}
+                domainName={domain.domain_name}
+                isDummy={domain.isDummy}
+                onConfigure={() => handleConfigure(domain.id, domain.isDummy)}
+                onDelete={() => setDeletingId(domain.id)}
+              />
+            ))}
+          </div>
+
+          <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete domain?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently remove the domain and related sender associations.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => {
+                  if (deletingId) deleteDomain(deletingId);
+                  setDeletingId(null);
+                }}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
       )}
 
     </div>
