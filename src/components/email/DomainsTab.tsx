@@ -35,12 +35,17 @@ export function DomainsTab() {
       return;
     }
     
-    // Show details modal for real domains
+    // Show details modal for verified domains
     setSelectedDomainForDetails({
       name: domainName,
       isVerified: verificationStatus === 'verified',
     });
     setDetailsModalOpen(true);
+  };
+
+  const handleResumeDomain = (domainId: string) => {
+    setSelectedDomainId(domainId);
+    setShowWizard(true);
   };
 
   const handleCloseWizard = () => {
@@ -110,17 +115,23 @@ export function DomainsTab() {
       ) : (
         <>
           <div className="space-y-3">
-            {domains.map((domain) => (
-              <DomainTile
-                key={domain.id}
-                domainId={domain.id}
-                domainName={domain.domain_name}
-                isDummy={domain.isDummy}
-                verificationStatus={domain.verification_status}
-                onConfigure={() => handleConfigure(domain.id, domain.domain_name, domain.verification_status, domain.isDummy)}
-                onDelete={domain.isDummy ? undefined : () => setDeletingId(domain.id)}
-              />
-            ))}
+            {domains.map((domain) => {
+              const isVerified = domain.verification_status === 'verified';
+              const isPending = domain.verification_status === 'pending';
+              
+              return (
+                <DomainTile
+                  key={domain.id}
+                  domainId={domain.id}
+                  domainName={domain.domain_name}
+                  isDummy={domain.isDummy}
+                  verificationStatus={domain.verification_status}
+                  onConfigure={isVerified ? () => handleConfigure(domain.id, domain.domain_name, domain.verification_status, domain.isDummy) : undefined}
+                  onDelete={domain.isDummy ? undefined : () => setDeletingId(domain.id)}
+                  onResume={isPending ? () => handleResumeDomain(domain.id) : undefined}
+                />
+              );
+            })}
           </div>
 
           {/* Domain Details Modal */}
