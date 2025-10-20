@@ -112,6 +112,8 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
   const progress = (currentStep / 4) * 100;
 
   const handleCreateDomain = async () => {
+    console.log("handleCreateDomain called, domainName:", domainName);
+    
     if (!domainName.trim()) {
       toast({
         title: "Error",
@@ -122,20 +124,31 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
     }
 
     try {
-      const newDomain: any = await createDomain(domainName);
+      console.log("Calling createDomain...");
+      const newDomain = await createDomain(domainName);
+      console.log("Domain created:", newDomain);
+      
       if (newDomain && newDomain.id) {
+        console.log("Setting activeDomainId to:", newDomain.id);
         setActiveDomainId(newDomain.id);
         setCurrentStep(2);
         toast({
           title: "Success",
           description: "Domain added successfully",
         });
+      } else {
+        console.error("No domain ID returned:", newDomain);
+        toast({
+          title: "Warning",
+          description: "Domain created but no ID returned",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error creating domain:", error);
       toast({
         title: "Error",
-        description: "Failed to create domain",
+        description: error instanceof Error ? error.message : "Failed to create domain",
         variant: "destructive",
       });
     }
