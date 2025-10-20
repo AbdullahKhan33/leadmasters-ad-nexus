@@ -44,6 +44,7 @@ function IndexContent() {
   const [currentView, setCurrentView] = useState<AllViews>('dashboard');
   const [selectedWorkspaceForSettings, setSelectedWorkspaceForSettings] = useState<any>(null);
   const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
+  const [adBuilderPlatform, setAdBuilderPlatform] = useState<'facebook' | 'instagram' | 'google' | 'linkedin' | 'whatsapp'>('whatsapp');
   const location = useLocation();
   const shouldShowChatbot = useChatbotVisibility();
 
@@ -52,6 +53,10 @@ function IndexContent() {
     if (location.state?.view) {
       console.log('Setting view to:', location.state.view);
       setCurrentView(location.state.view);
+    }
+    if (location.state?.platform) {
+      console.log('Setting platform to:', location.state.platform);
+      setAdBuilderPlatform(location.state.platform);
     }
   }, [location.state]);
 
@@ -372,7 +377,7 @@ function IndexContent() {
             ) : currentView === 'campaign-create' ? (
               <CreateCampaignInline />
             ) : (
-              <AdBuilder />
+              <AdBuilder initialPlatform={adBuilderPlatform} />
             )}
           </div>
         </div>

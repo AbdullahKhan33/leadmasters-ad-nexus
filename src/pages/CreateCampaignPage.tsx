@@ -220,7 +220,7 @@ function CreateCampaignPageContent() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => navigate(-1)}
+                      onClick={() => navigate('/app', { state: { view: 'crm' } })}
                       className="hover:bg-gray-100"
                     >
                       <X className="w-5 h-5" />

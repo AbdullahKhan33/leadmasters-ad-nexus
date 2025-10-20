@@ -134,7 +134,7 @@ export function CampaignDashboard() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/app')}
+            onClick={() => navigate('/app', { state: { view: 'ad-builder', platform: 'whatsapp' } })}
             className="border-green-300 text-green-700 hover:bg-green-100"
           >
             Go to Campaign Hub

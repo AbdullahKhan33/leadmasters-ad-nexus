@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdPlatformMenu } from "./AdPlatformMenu";
 import { FacebookAdBuilder } from "./FacebookAdBuilder";
 import { InstagramAdBuilder } from "./InstagramAdBuilder";
@@ -9,8 +8,17 @@ import { WhatsAppAdBuilder } from "./WhatsAppAdBuilder";
 
 type Platform = 'facebook' | 'instagram' | 'google' | 'linkedin' | 'whatsapp';
 
-export function AdBuilder() {
-  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('whatsapp');
+interface AdBuilderProps {
+  initialPlatform?: Platform;
+}
+
+export function AdBuilder({ initialPlatform = 'whatsapp' }: AdBuilderProps) {
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>(initialPlatform);
+
+  // Update selected platform when initialPlatform prop changes
+  useEffect(() => {
+    setSelectedPlatform(initialPlatform);
+  }, [initialPlatform]);
 
   console.log("AdBuilder rendering, selectedPlatform:", selectedPlatform);
 
