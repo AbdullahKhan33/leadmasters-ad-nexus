@@ -122,15 +122,35 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
     }
 
     try {
-      const newDomain = await createDomain(domainName);
-      setActiveDomainId(newDomain.id);
-      setCurrentStep(2);
+      const newDomain: any = await createDomain(domainName);
+      if (newDomain && newDomain.id) {
+        setActiveDomainId(newDomain.id);
+        setCurrentStep(2);
+        toast({
+          title: "Success",
+          description: "Domain added successfully",
+        });
+      }
     } catch (error) {
       console.error("Error creating domain:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create domain",
+        variant: "destructive",
+      });
     }
   };
 
   const handleCheckDNS = async () => {
+    if (!activeDomainId) {
+      toast({
+        title: "Error",
+        description: "No domain selected",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Simulate DNS check
     toast({
       title: "Checking DNS records...",
@@ -138,13 +158,11 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
     });
 
     setTimeout(async () => {
-      if (domainId) {
-        await updateDomainVerification({
-          domainId,
-          spfVerified: true,
-          dkimVerified: true,
-        });
-      }
+      await updateDomainVerification({
+        domainId: activeDomainId,
+        spfVerified: true,
+        dkimVerified: true,
+      });
       toast({
         title: "DNS Verified!",
         description: "Your domain has been successfully verified",
@@ -205,7 +223,7 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
 
       <Card className="p-8 max-w-3xl mx-auto bg-background border-border">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">
             {domainId ? "Configure Domain" : "Add New Domain"}
           </h2>
           <p className="text-muted-foreground">
@@ -218,7 +236,14 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
 
         {/* Progress Bar */}
         <div className="mb-8">
-          <Progress value={progress} className="mb-4 h-2" />
+          <div className="mb-4">
+            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 transition-all duration-500 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
           <div className="flex justify-between">
             {steps.map((step) => {
               const Icon = step.icon;
@@ -235,9 +260,9 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
                   <div
                     className={`flex items-center justify-center w-12 h-12 rounded-full mb-2 transition-all ${
                       isCompleted
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-lg"
                         : isActive
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white shadow-lg"
                         : "bg-muted text-muted-foreground"
                     } ${isClickable ? "cursor-pointer hover:scale-110" : "cursor-not-allowed opacity-60"}`}
                   >
@@ -249,7 +274,7 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
                   </div>
                   <span
                     className={`text-xs text-center ${
-                      isActive ? "font-semibold text-foreground" : "text-muted-foreground"
+                      isActive || isCompleted ? "font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent" : "text-muted-foreground"
                     }`}
                   >
                     {step.title}
@@ -265,13 +290,13 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
           {currentStep === 1 && (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="domain">Domain Name</Label>
+                <Label htmlFor="domain" className="text-base font-semibold">Domain Name</Label>
                 <Input
                   id="domain"
                   placeholder="example.com"
                   value={domainName}
                   onChange={(e) => setDomainName(e.target.value)}
-                  className="bg-background"
+                  className="bg-background mt-2"
                 />
                 <p className="text-sm text-muted-foreground mt-2">
                   Enter the domain you want to use for sending emails
@@ -291,7 +316,9 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
           {currentStep === 2 && (
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold mb-2">DNS Records to Add</h3>
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">
+                  DNS Records to Add
+                </h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Add these DNS records to your domain registrar to verify ownership
                 </p>
@@ -348,7 +375,9 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
           {currentStep === 3 && (
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold mb-2">Sender Identity</h3>
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">
+                  Sender Identity
+                </h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Create your email sender identity
                 </p>
@@ -395,7 +424,9 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
           {currentStep === 4 && (
             <div className="space-y-4">
               <div>
-                <h3 className="font-semibold mb-2">Profile Setup</h3>
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">
+                  Profile Setup
+                </h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Complete your sender profile
                 </p>
