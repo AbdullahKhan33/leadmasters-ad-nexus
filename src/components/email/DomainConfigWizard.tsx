@@ -88,19 +88,24 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
   }, [currentStep, domainName, senderEmail, senderName, displayName, replyTo, activeDomainId, user?.id]);
 
   useEffect(() => {
-    if (domainId && currentDomain) {
-      setDomainName(currentDomain.domain_name);
-      // Start at step 2 if domain exists but not verified
-      if (currentDomain.verification_status === 'pending') {
-        setCurrentStep(2);
-      } else if (currentDomain.verification_status === 'verified') {
-        setCurrentStep(3);
+    // Determine starting step based on activeDomainId or provided domainId
+    const effectiveDomainId = activeDomainId || domainId;
+    if (effectiveDomainId) {
+      const found = domains.find((d) => d.id === effectiveDomainId);
+      if (found) {
+        setDomainName(found.domain_name);
+        if (found.verification_status === "pending") {
+          setCurrentStep(2);
+        } else if (found.verification_status === "verified") {
+          setCurrentStep(3);
+        }
       }
     } else {
+      // Only reset to step 1 when there is absolutely no active domain context
       setCurrentStep(1);
       setDomainName("");
     }
-  }, [domainId, currentDomain]);
+  }, [activeDomainId, domainId, domains]);
 
   const steps = [
     { number: 1, title: "Add Domain", icon: Globe },
@@ -249,13 +254,14 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
 
         {/* Progress Bar */}
         <div className="mb-8">
-          <div className="mb-4">
-            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="h-2 w-full bg-muted rounded-full overflow-hidden mr-3">
               <div 
                 className="h-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
             </div>
+            <span className="text-sm font-medium text-muted-foreground w-12 text-right">{Math.round(progress)}%</span>
           </div>
           <div className="flex justify-between">
             {steps.map((step) => {
