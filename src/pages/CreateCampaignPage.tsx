@@ -376,13 +376,7 @@ function CreateCampaignPageContent() {
 }
 
 export default function CreateCampaignPage() {
-  return (
-    <WorkspaceProvider>
-      <PremiumProvider>
-        <CreateCampaignPageContent />
-      </PremiumProvider>
-    </WorkspaceProvider>
-  );
+  return <CreateCampaignPageContent />;
 }
 
 export function CreateCampaignInline() {

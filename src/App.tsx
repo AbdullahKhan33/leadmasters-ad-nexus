@@ -10,6 +10,7 @@ import { WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import Index from "./pages/Index";
 import { AuthPage } from "./pages/AuthPage";
 import { PostBuilderPage } from "./pages/PostBuilderPage";
+import CreateCampaignPage from "./pages/CreateCampaignPage";
 
 import NotFound from "./pages/NotFound";
 import { PublicWebsite } from "./components/PublicWebsite";
@@ -63,7 +64,7 @@ function App() {
                   } />
                   <Route path="/app/campaigns/create" element={
                     <ProtectedRoute>
-                      <Index />
+                      <CreateCampaignPage />
                     </ProtectedRoute>
                   } />
                   <Route path="*" element={<NotFound />} />
