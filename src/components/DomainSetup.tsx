@@ -25,9 +25,19 @@ export function DomainSetup() {
         </div>
 
         <Tabs defaultValue="senders" className="space-y-6">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-            <TabsTrigger value="senders">Senders</TabsTrigger>
-            <TabsTrigger value="domains">Domains</TabsTrigger>
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-white/80 backdrop-blur-sm border border-gray-200 shadow-sm">
+            <TabsTrigger 
+              value="senders"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg"
+            >
+              Senders
+            </TabsTrigger>
+            <TabsTrigger 
+              value="domains"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg"
+            >
+              Domains
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="senders">

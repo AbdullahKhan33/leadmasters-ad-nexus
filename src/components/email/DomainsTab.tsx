@@ -44,20 +44,10 @@ export function DomainsTab() {
   // Show wizard inline if active
   if (showWizard) {
     return (
-      <div className="space-y-6">
-        <Button 
-          variant="ghost" 
-          onClick={handleCloseWizard}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Domains
-        </Button>
-        
-        <DomainConfigWizard
-          domainId={selectedDomainId}
-          onComplete={handleCloseWizard}
-        />
-      </div>
+      <DomainConfigWizard
+        domainId={selectedDomainId}
+        onComplete={handleCloseWizard}
+      />
     );
   }
 
@@ -72,7 +62,10 @@ export function DomainsTab() {
             Manage your verified sending domains
           </p>
         </div>
-        <Button onClick={handleAddDomain}>
+        <Button 
+          onClick={handleAddDomain}
+          className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+        >
           <Plus className="w-4 h-4 mr-2" />
           Add Domain
         </Button>
@@ -88,7 +81,10 @@ export function DomainsTab() {
           <p className="text-muted-foreground mb-6 max-w-md mx-auto">
             Add your first sending domain to start sending emails from LeadMasters.
           </p>
-          <Button onClick={handleAddDomain}>
+          <Button 
+            onClick={handleAddDomain}
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Add Your First Domain
           </Button>

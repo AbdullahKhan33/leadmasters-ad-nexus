@@ -278,7 +278,10 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
                 </p>
               </div>
               <div className="flex gap-3">
-                <Button onClick={handleCreateDomain} className="flex-1">
+                <Button 
+                  onClick={handleCreateDomain} 
+                  className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+                >
                   Add Domain
                 </Button>
               </div>
@@ -332,7 +335,10 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
                   <ChevronLeft className="w-4 h-4" />
                   Back
                 </Button>
-                <Button onClick={handleCheckDNS} className="flex-1">
+                <Button 
+                  onClick={handleCheckDNS} 
+                  className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+                >
                   Check DNS Status
                 </Button>
               </div>
@@ -376,7 +382,10 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
                   <ChevronLeft className="w-4 h-4" />
                   Back
                 </Button>
-                <Button onClick={handleCreateSenderIdentity} className="flex-1">
+                <Button 
+                  onClick={handleCreateSenderIdentity} 
+                  className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+                >
                   Continue
                 </Button>
               </div>
@@ -420,7 +429,10 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
                   <ChevronLeft className="w-4 h-4" />
                   Back
                 </Button>
-                <Button onClick={handleSaveProfile} className="flex-1">
+                <Button 
+                  onClick={handleSaveProfile} 
+                  className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+                >
                   Complete Setup
                 </Button>
               </div>
