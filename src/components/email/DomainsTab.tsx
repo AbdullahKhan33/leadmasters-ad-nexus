@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DomainTile } from "./DomainTile";
 import { DomainConfigWizard } from "./DomainConfigWizard";
+import { DomainDetailsModal } from "./DomainDetailsModal";
 import { useDomains } from "@/hooks/useDomains";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
@@ -12,19 +13,34 @@ export function DomainsTab() {
   const [showWizard, setShowWizard] = useState(false);
   const [selectedDomainId, setSelectedDomainId] = useState<string | undefined>();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedDomainForDetails, setSelectedDomainForDetails] = useState<{
+    name: string;
+    isVerified: boolean;
+  } | null>(null);
 
   const handleAddDomain = () => {
     setSelectedDomainId(undefined);
     setShowWizard(true);
   };
 
-  const handleConfigure = (domainId: string, isDummy?: boolean) => {
+  const handleConfigure = (domainId: string, domainName: string, verificationStatus: string, isDummy?: boolean) => {
     if (isDummy) {
-      // Show info for dummy domain
+      // Show details modal for demo domain
+      setSelectedDomainForDetails({
+        name: domainName,
+        isVerified: true,
+      });
+      setDetailsModalOpen(true);
       return;
     }
-    setSelectedDomainId(domainId);
-    setShowWizard(true);
+    
+    // Show details modal for real domains
+    setSelectedDomainForDetails({
+      name: domainName,
+      isVerified: verificationStatus === 'verified',
+    });
+    setDetailsModalOpen(true);
   };
 
   const handleCloseWizard = () => {
@@ -100,12 +116,24 @@ export function DomainsTab() {
                 domainId={domain.id}
                 domainName={domain.domain_name}
                 isDummy={domain.isDummy}
-                onConfigure={() => handleConfigure(domain.id, domain.isDummy)}
-                onDelete={() => setDeletingId(domain.id)}
+                verificationStatus={domain.verification_status}
+                onConfigure={() => handleConfigure(domain.id, domain.domain_name, domain.verification_status, domain.isDummy)}
+                onDelete={domain.isDummy ? undefined : () => setDeletingId(domain.id)}
               />
             ))}
           </div>
 
+          {/* Domain Details Modal */}
+          {selectedDomainForDetails && (
+            <DomainDetailsModal
+              open={detailsModalOpen}
+              onOpenChange={setDetailsModalOpen}
+              domainName={selectedDomainForDetails.name}
+              isVerified={selectedDomainForDetails.isVerified}
+            />
+          )}
+
+          {/* Delete Confirmation Dialog */}
           <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
             <AlertDialogContent>
               <AlertDialogHeader>
