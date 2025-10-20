@@ -130,13 +130,15 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
 
     try {
       console.log("Calling createDomain...");
+      // Optimistically advance to Step 2 so the user continues the journey
+      setCurrentStep(2);
+
       const newDomain = await createDomain(domainName);
       console.log("Domain created:", newDomain);
       
       if (newDomain && newDomain.id) {
         console.log("Setting activeDomainId to:", newDomain.id);
         setActiveDomainId(newDomain.id);
-        setCurrentStep(2);
         toast({
           title: "Success",
           description: "Domain added successfully",
@@ -151,6 +153,8 @@ export function DomainConfigWizard({ domainId, onComplete }: DomainConfigWizardP
       }
     } catch (error) {
       console.error("Error creating domain:", error);
+      // Revert to Step 1 on failure
+      setCurrentStep(1);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create domain",
