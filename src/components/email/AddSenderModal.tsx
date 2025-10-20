@@ -86,7 +86,9 @@ export const AddSenderModal = ({ open, onOpenChange, sender }: AddSenderModalPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit Sender" : "Add Sender"}</DialogTitle>
+          <DialogTitle className="text-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            {isEdit ? "Edit Sender" : "Add Sender"}
+          </DialogTitle>
           <DialogDescription>
             Specify what your recipients will see when they receive emails from this sender.
           </DialogDescription>
@@ -133,7 +135,11 @@ export const AddSenderModal = ({ open, onOpenChange, sender }: AddSenderModalPro
                 <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isCreating || isUpdating}>
+                <Button 
+                  type="submit" 
+                  disabled={isCreating || isUpdating}
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+                >
                   {isEdit ? "Save changes" : "Add sender"}
                 </Button>
               </DialogFooter>

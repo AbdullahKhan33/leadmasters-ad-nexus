@@ -63,7 +63,11 @@ export const SendersTab = () => {
           <p className="text-muted-foreground mb-6 max-w-md">
             Add your first sender identity to start sending emails from LeadMasters.
           </p>
-          <Button onClick={() => setIsAddModalOpen(true)} size="lg">
+          <Button 
+            onClick={() => setIsAddModalOpen(true)} 
+            size="lg"
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Sender
           </Button>
@@ -91,7 +95,10 @@ export const SendersTab = () => {
               className="pl-10"
             />
           </div>
-          <Button onClick={() => setIsAddModalOpen(true)}>
+          <Button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white shadow-lg"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Sender
           </Button>
@@ -107,7 +114,9 @@ export const SendersTab = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <h4 className="font-semibold text-lg">{sender.from_name}</h4>
+                      <h4 className="font-semibold text-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        {sender.from_name}
+                      </h4>
                       {sender.is_verified && (
                         <Badge variant="default" className="bg-green-500">
                           Verified
