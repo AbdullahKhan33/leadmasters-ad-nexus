@@ -109,8 +109,8 @@ export const SendersTab = () => {
             <Card key={sender.id} className="p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-4 flex-1">
-                  <div className="rounded-full bg-primary/10 p-3">
-                    <Mail className="h-5 w-5 text-primary" />
+                  <div className="rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 p-3">
+                    <Mail className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">

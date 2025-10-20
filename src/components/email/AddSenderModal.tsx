@@ -155,21 +155,17 @@ export const AddSenderModal = ({ open, onOpenChange, sender }: AddSenderModalPro
               <div className="bg-background rounded-md p-4 shadow-sm">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-sm font-semibold text-primary">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center">
+                      <span className="text-sm font-semibold text-white">
                         {fromName.charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm truncate">{fromName}</p>
+                      <p className="font-semibold text-sm truncate bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                        {fromName}
+                      </p>
                       <p className="text-xs text-muted-foreground truncate">{fromEmail}</p>
                     </div>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    <p className="font-medium">Email Subject</p>
-                    <p className="text-xs mt-1 line-clamp-2">
-                      This is how your sender will appear in the recipient's inbox...
-                    </p>
                   </div>
                 </div>
               </div>
