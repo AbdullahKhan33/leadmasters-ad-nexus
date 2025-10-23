@@ -41,6 +41,7 @@ import {
   ShoppingBag,
   Archive,
   Briefcase,
+  Bot,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -61,7 +62,8 @@ export function WorkspaceSidebar({
   onAgentsClick,
   onServicesClick,
   onPublishedPostsClick,
-  currentView 
+  onAISalesAutomationClick,
+  currentView
 }: { 
   onPostBuilderClick: () => void;
   onAdBuilderClick: () => void;
@@ -80,7 +82,8 @@ export function WorkspaceSidebar({
   onAgentsClick: () => void;
   onServicesClick: () => void;
   onPublishedPostsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts';
+  onAISalesAutomationClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
@@ -293,6 +296,28 @@ export function WorkspaceSidebar({
                   <div className="flex items-center space-x-3">
                     <Users className={`w-5 h-5 ${getIconStyles(currentView === 'social-logins')} group-hover:scale-110 transition-transform duration-200`} />
                     <span className="font-semibold">Social Logins</span>
+                  </div>
+                )}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ) : null}
+
+          {/* AI Sales Automation - Admin only for now */}
+          {userRole === 'admin' ? (
+            <SidebarMenuItem>
+              <SidebarMenuButton 
+                onClick={onAISalesAutomationClick}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'ai-sales-automation')}`}
+              >
+                {isCollapsed ? (
+                  <div className="flex flex-col items-center space-y-1">
+                    <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'ai-sales-automation')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">AI Sales</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-3">
+                    <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'ai-sales-automation')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="font-semibold">AI Sales Automation</span>
                   </div>
                 )}
               </SidebarMenuButton>

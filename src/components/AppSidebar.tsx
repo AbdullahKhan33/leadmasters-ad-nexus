@@ -49,7 +49,8 @@ export function AppSidebar({
   onAgentsClick,
   onServicesClick,
   onPublishedPostsClick,
-  currentView 
+  onAISalesAutomationClick,
+  currentView
 }: { 
   onPostBuilderClick: () => void;
   onAdBuilderClick: () => void;
@@ -67,7 +68,8 @@ export function AppSidebar({
   onAgentsClick: () => void;
   onServicesClick: () => void;
   onPublishedPostsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts';
+  onAISalesAutomationClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
