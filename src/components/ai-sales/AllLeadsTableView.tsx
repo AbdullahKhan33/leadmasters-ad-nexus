@@ -115,35 +115,43 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
 
       if (error) throw error;
       
-      // Convert database leads to Lead interface
-      const convertedLeads: Lead[] = (data || []).map((dbLead: any) => ({
-        id: dbLead.id,
-        name: dbLead.name,
-        phone: dbLead.phone,
-        email: dbLead.email || '',
-        source: dbLead.source as Lead['source'],
-        stage: (dbLead.workflow_stage || 'new') as Lead['stage'],
-        status: dbLead.status,
-        aiScore: dbLead.ai_score ? dbLead.ai_score / 100 : undefined,
-        lastContact: new Date(dbLead.last_interaction_at || dbLead.created_at),
-        priority: 'medium' as Lead['priority'],
-        engagement: {
-          messagesSent: 0,
-          messagesOpened: 0
-        },
-        assignedTo: dbLead.assigned_agent_id ? 'Agent' : undefined,
-        tags: [],
-        createdAt: new Date(dbLead.created_at),
-        notes: dbLead.notes,
-        user_id: dbLead.user_id,
-        lead_source_type: dbLead.lead_source_type,
-        workflow_stage: dbLead.workflow_stage,
-        current_workflow_id: dbLead.current_workflow_id,
-        assigned_agent_id: dbLead.assigned_agent_id,
-        last_interaction_at: dbLead.last_interaction_at,
-        created_at: dbLead.created_at,
-        source_metadata: dbLead.source_metadata
-      }));
+      const convertedLeads: Lead[] = (data || []).map((dbLead: any) => {
+        const stage = (dbLead.workflow_stage || 'new') as Lead['stage'];
+        const aiScoreNum = dbLead.ai_score ? dbLead.ai_score / 100 : undefined;
+        let priority: Lead['priority'] = 'medium';
+        if (stage === 'no-reply' || (aiScoreNum && aiScoreNum >= 0.85) || (typeof dbLead.status === 'string' && /urgent/i.test(dbLead.status))) {
+          priority = 'urgent';
+        } else if ((aiScoreNum && aiScoreNum >= 0.75) || stage === 'qualified') {
+          priority = 'high';
+        } else if (stage === 'long-term') {
+          priority = 'low';
+        }
+        return {
+          id: dbLead.id,
+          name: dbLead.name,
+          phone: dbLead.phone,
+          email: dbLead.email || '',
+          source: (dbLead.source || 'Custom API') as Lead['source'],
+          stage,
+          status: dbLead.status,
+          aiScore: aiScoreNum,
+          lastContact: new Date(dbLead.last_interaction_at || dbLead.created_at),
+          priority,
+          engagement: { messagesSent: 0, messagesOpened: 0 },
+          assignedTo: dbLead.assigned_agent_id ? 'Agent' : undefined,
+          tags: [],
+          createdAt: new Date(dbLead.created_at),
+          notes: dbLead.notes,
+          user_id: dbLead.user_id,
+          lead_source_type: dbLead.lead_source_type,
+          workflow_stage: dbLead.workflow_stage,
+          current_workflow_id: dbLead.current_workflow_id,
+          assigned_agent_id: dbLead.assigned_agent_id,
+          last_interaction_at: dbLead.last_interaction_at,
+          created_at: dbLead.created_at,
+          source_metadata: dbLead.source_metadata
+        };
+      });
       
       setLeads(convertedLeads);
     } catch (error: any) {
@@ -243,7 +251,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
       stages: [],
       priorities: [],
       sources: [],
-      sortBy: 'createdAt',
+      sortBy: 'created_at',
       sortOrder: 'desc'
     });
     setCurrentPage(1);
