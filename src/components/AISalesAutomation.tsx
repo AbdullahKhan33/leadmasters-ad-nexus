@@ -1,12 +1,26 @@
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Bot, Workflow, Plug, TrendingUp, BarChart3, Plus, MessageCircle, UserCheck, Calendar, RefreshCw, Globe, Mail, MessageSquare, Phone } from "lucide-react";
+import { Bot, Workflow, Plug, TrendingUp, BarChart3, Plus, MessageCircle, UserCheck, Calendar, RefreshCw, Globe, Mail, MessageSquare, Phone, Table } from "lucide-react";
 import { AutomationPipeline } from "./ai-sales/AutomationPipeline";
 import { WorkflowTemplateCard } from "./ai-sales/WorkflowTemplateCard";
 import { IntegrationCard } from "./ai-sales/IntegrationCard";
 import { AutomationAnalytics } from "./ai-sales/AutomationAnalytics";
+import { AllLeadsTableView, TableFilters } from "./ai-sales/AllLeadsTableView";
+import { Lead } from "@/data/dummyLeads";
 
 export function AISalesAutomation() {
+  const [activeTab, setActiveTab] = useState<string>('pipeline');
+  const [tableFilters, setTableFilters] = useState<Partial<TableFilters> | null>(null);
+
+  const handleNavigateToTable = (filters: Partial<TableFilters>) => {
+    setTableFilters(filters);
+    setActiveTab('table');
+  };
+
+  const handleLeadClick = (leadId: string) => {
+    // Lead detail modal is handled in AutomationPipeline
+  };
   return (
     <div className="h-full w-full overflow-auto bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/20">
       <div className="container mx-auto p-6 space-y-6">
@@ -24,14 +38,21 @@ export function AISalesAutomation() {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="pipeline" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-purple-50/80 via-pink-50/40 to-blue-50/40 rounded-xl p-1.5 shadow-inner border border-purple-200/30">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-5 bg-gradient-to-r from-purple-50/80 via-pink-50/40 to-blue-50/40 rounded-xl p-1.5 shadow-inner border border-purple-200/30">
             <TabsTrigger 
               value="pipeline" 
               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:via-pink-600 data-[state=active]:to-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50/60 transition-all duration-200 rounded-lg font-semibold flex items-center gap-2"
             >
               <TrendingUp className="w-4 h-4" />
               Pipeline
+            </TabsTrigger>
+            <TabsTrigger 
+              value="table" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:via-pink-600 data-[state=active]:to-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50/60 transition-all duration-200 rounded-lg font-semibold flex items-center gap-2"
+            >
+              <Table className="w-4 h-4" />
+              Table View
             </TabsTrigger>
             <TabsTrigger 
               value="workflows" 
@@ -58,7 +79,18 @@ export function AISalesAutomation() {
 
           {/* Pipeline Tab */}
           <TabsContent value="pipeline" className="space-y-4 mt-6">
-            <AutomationPipeline />
+            <AutomationPipeline 
+              onNavigateToTable={handleNavigateToTable}
+              onLeadClick={handleLeadClick}
+            />
+          </TabsContent>
+
+          {/* Table View Tab */}
+          <TabsContent value="table" className="space-y-4 mt-6">
+            <AllLeadsTableView 
+              initialFilters={tableFilters || undefined}
+              onLeadClick={handleLeadClick}
+            />
           </TabsContent>
 
           {/* Workflows Tab */}

@@ -2,13 +2,15 @@ import { useState } from "react";
 import { dummyLeads, getLeadsByStage, getPriorityLeads, getStageMetrics, Lead } from "@/data/dummyLeads";
 import { PriorityQueueCard } from "./PriorityQueueCard";
 import { StageSummaryCard } from "./StageSummaryCard";
-import { StageDetailView } from "./StageDetailView";
-import { PriorityItemsView } from "./PriorityItemsView";
 import { LeadDetailModal } from "./LeadDetailModal";
+import { TableFilters } from "./AllLeadsTableView";
 
-export function AutomationPipeline() {
-  const [selectedStage, setSelectedStage] = useState<Lead['stage'] | null>(null);
-  const [showPriorityDetail, setShowPriorityDetail] = useState(false);
+interface AutomationPipelineProps {
+  onNavigateToTable: (filters: Partial<TableFilters>) => void;
+  onLeadClick: (leadId: string) => void;
+}
+
+export function AutomationPipeline({ onNavigateToTable, onLeadClick }: AutomationPipelineProps) {
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
 
   const priorityLeads = getPriorityLeads();
@@ -16,10 +18,23 @@ export function AutomationPipeline() {
 
   const handleLeadClick = (leadId: string) => {
     setSelectedLeadId(leadId);
+    onLeadClick(leadId);
   };
 
   const handleViewStage = (stage: Lead['stage']) => {
-    setSelectedStage(stage);
+    onNavigateToTable({
+      stages: [stage],
+      sortBy: 'createdAt',
+      sortOrder: 'desc'
+    });
+  };
+
+  const handleViewPriority = () => {
+    onNavigateToTable({
+      priorities: ['urgent', 'high'],
+      sortBy: 'priority',
+      sortOrder: 'desc'
+    });
   };
 
   const selectedLead = selectedLeadId 
@@ -33,7 +48,7 @@ export function AutomationPipeline() {
         urgent={priorityLeads.urgent}
         highValue={priorityLeads.highValue}
         expiring={priorityLeads.expiring}
-        onViewAll={() => setShowPriorityDetail(true)}
+        onViewAll={handleViewPriority}
         onLeadClick={handleLeadClick}
       />
 
@@ -54,25 +69,6 @@ export function AutomationPipeline() {
           );
         })}
       </div>
-
-      {/* Stage Detail View */}
-      <StageDetailView
-        open={selectedStage !== null}
-        onOpenChange={(open) => !open && setSelectedStage(null)}
-        stage={selectedStage}
-        leads={selectedStage ? getLeadsByStage(selectedStage) : []}
-        onLeadClick={handleLeadClick}
-      />
-
-      {/* Priority Items View */}
-      <PriorityItemsView
-        open={showPriorityDetail}
-        onOpenChange={setShowPriorityDetail}
-        urgent={priorityLeads.urgent}
-        highValue={priorityLeads.highValue}
-        expiring={priorityLeads.expiring}
-        onLeadClick={handleLeadClick}
-      />
 
       {/* Lead Detail Modal */}
       <LeadDetailModal
