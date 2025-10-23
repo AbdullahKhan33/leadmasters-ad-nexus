@@ -28,8 +28,18 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
         .order('created_at', { ascending: false });
       if (error) throw error;
 
+      const mapDbStageToUiStage = (dbStage?: string | null): Lead['stage'] => {
+        switch (dbStage) {
+          case 'no_reply': return 'no-reply';
+          case 'nurturing_7day': return 'nurturing';
+          case 'long_term': return 'long-term';
+          case 'qualified': return 'qualified';
+          case 'won': return 'won';
+          default: return 'new';
+        }
+      };
       const converted: Lead[] = (data || []).map((dbLead: any) => {
-        const stage = (dbLead.workflow_stage || 'new') as Lead['stage'];
+        const stage = mapDbStageToUiStage(dbLead.workflow_stage);
         const aiScoreNum = dbLead.ai_score ? dbLead.ai_score / 100 : undefined;
         let priority: Lead['priority'] = 'medium';
         if (stage === 'no-reply' || (aiScoreNum && aiScoreNum >= 0.85) || (typeof dbLead.status === 'string' && /urgent/i.test(dbLead.status))) {

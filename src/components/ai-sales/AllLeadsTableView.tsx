@@ -115,8 +115,18 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
 
       if (error) throw error;
       
+      const mapDbStageToUiStage = (dbStage?: string | null): Lead['stage'] => {
+        switch (dbStage) {
+          case 'no_reply': return 'no-reply';
+          case 'nurturing_7day': return 'nurturing';
+          case 'long_term': return 'long-term';
+          case 'qualified': return 'qualified';
+          case 'won': return 'won';
+          default: return 'new';
+        }
+      };
       const convertedLeads: Lead[] = (data || []).map((dbLead: any) => {
-        const stage = (dbLead.workflow_stage || 'new') as Lead['stage'];
+        const stage = mapDbStageToUiStage(dbLead.workflow_stage);
         const aiScoreNum = dbLead.ai_score ? dbLead.ai_score / 100 : undefined;
         let priority: Lead['priority'] = 'medium';
         if (stage === 'no-reply' || (aiScoreNum && aiScoreNum >= 0.85) || (typeof dbLead.status === 'string' && /urgent/i.test(dbLead.status))) {
@@ -316,9 +326,20 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
     if (selectedLeads.length === 0) return;
 
     try {
+      const mapUiStageToDbStage = (ui: Lead['stage']) => {
+        switch (ui) {
+          case 'no-reply': return 'no_reply';
+          case 'nurturing': return 'nurturing_7day';
+          case 'long-term': return 'long_term';
+          case 'qualified': return 'qualified';
+          case 'won': return 'won';
+          default: return null;
+        }
+      };
+      const dbStage = mapUiStageToDbStage(stage);
       const { error } = await supabase
         .from('leads')
-        .update({ workflow_stage: stage })
+        .update({ workflow_stage: dbStage })
         .in('id', selectedLeads);
 
       if (error) throw error;
