@@ -614,6 +614,7 @@ export type Database = {
           id: string
           last_interaction_at: string | null
           last_message: string | null
+          lead_source_type: string | null
           lead_type: string | null
           list: string | null
           name: string
@@ -623,6 +624,7 @@ export type Database = {
           reminder_date: string | null
           reminder_note: string | null
           source: string
+          source_metadata: Json | null
           status: string
           timestamp: string
           updated_at: string
@@ -643,6 +645,7 @@ export type Database = {
           id?: string
           last_interaction_at?: string | null
           last_message?: string | null
+          lead_source_type?: string | null
           lead_type?: string | null
           list?: string | null
           name: string
@@ -652,6 +655,7 @@ export type Database = {
           reminder_date?: string | null
           reminder_note?: string | null
           source?: string
+          source_metadata?: Json | null
           status?: string
           timestamp?: string
           updated_at?: string
@@ -672,6 +676,7 @@ export type Database = {
           id?: string
           last_interaction_at?: string | null
           last_message?: string | null
+          lead_source_type?: string | null
           lead_type?: string | null
           list?: string | null
           name?: string
@@ -681,6 +686,7 @@ export type Database = {
           reminder_date?: string | null
           reminder_note?: string | null
           source?: string
+          source_metadata?: Json | null
           status?: string
           timestamp?: string
           updated_at?: string

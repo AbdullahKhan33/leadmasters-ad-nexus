@@ -22,6 +22,15 @@ export interface Lead {
   tags: string[];
   createdAt: Date;
   notes?: string;
+  // Database fields
+  user_id?: string;
+  lead_source_type?: 'ai_automation' | 'crm_contact' | 'manual' | 'csv_import';
+  workflow_stage?: string;
+  current_workflow_id?: string;
+  assigned_agent_id?: string;
+  last_interaction_at?: string;
+  created_at?: string;
+  source_metadata?: any;
 }
 
 const indianNames = [

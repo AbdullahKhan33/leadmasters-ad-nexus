@@ -30,6 +30,7 @@ interface Lead {
 }
 
 interface CRMTableViewProps {
+  highlightLeadId?: string;
   onUpgradeClick: (feature: string) => void;
   onImportClick: () => void;
 }

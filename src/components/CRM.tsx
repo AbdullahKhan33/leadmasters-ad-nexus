@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,9 +18,17 @@ import { SegmentManager } from "./segments/SegmentManager";
 import { CampaignDashboard } from "./campaigns/CampaignDashboard";
 
 export function CRM() {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("campaigns");
   const [upgradeModal, setUpgradeModal] = useState({ isOpen: false, feature: "" });
   const [csvImportModal, setCsvImportModal] = useState(false);
+
+  // Handle navigation from other views
+  useEffect(() => {
+    if (location.state?.tab) {
+      setActiveTab(location.state.tab);
+    }
+  }, [location.state]);
 
   const handleTabChange = (value: string) => {
     console.log("CRM tab change:", value);
@@ -109,6 +118,7 @@ export function CRM() {
             </TabsContent>
             <TabsContent value="table" className="h-full m-0">
               <CRMTableView 
+                highlightLeadId={location.state?.highlightLeadId}
                 onUpgradeClick={(feature) => setUpgradeModal({ isOpen: true, feature })} 
                 onImportClick={handleImportClick}
               />

@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { dummyLeads, Lead } from "@/data/dummyLeads";
+import { useState, useMemo, useEffect } from "react";
+import { Lead } from "@/data/dummyLeads";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,7 +35,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Search, Download, X, ArrowUpDown, ChevronDown, Filter } from "lucide-react";
+import { Search, Download, X, ArrowUpDown, ChevronDown, Filter, ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Collapsible,
@@ -53,7 +53,6 @@ import {
 import { useAgents } from "@/hooks/useAgents";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
 import { LeadDetailModal } from "./LeadDetailModal";
 
 export interface TableFilters {
@@ -88,25 +87,86 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
     stages: initialFilters?.stages || [],
     priorities: initialFilters?.priorities || [],
     sources: initialFilters?.sources || [],
-    sortBy: initialFilters?.sortBy || 'createdAt',
+    sortBy: initialFilters?.sortBy || 'created_at',
     sortOrder: initialFilters?.sortOrder || 'desc'
   });
 
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [leadsPerPage, setLeadsPerPage] = useState(25);
   const [filtersExpanded, setFiltersExpanded] = useState(true);
   const [showBulkAssignDialog, setShowBulkAssignDialog] = useState(false);
+  const [showBulkMoveToCRM, setShowBulkMoveToCRM] = useState(false);
   const [selectedAgentId, setSelectedAgentId] = useState<string>('');
   const [isAssigning, setIsAssigning] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
 
-  // Get unique sources from leads
-  const uniqueSources = Array.from(new Set(dummyLeads.map(lead => lead.source)));
+  // Fetch leads from Supabase
+  const fetchLeads = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .eq('lead_source_type', 'ai_automation')
+        .order(filters.sortBy, { ascending: filters.sortOrder === 'asc' });
 
-  // Filter and sort leads
+      if (error) throw error;
+      
+      // Convert database leads to Lead interface
+      const convertedLeads: Lead[] = (data || []).map((dbLead: any) => ({
+        id: dbLead.id,
+        name: dbLead.name,
+        phone: dbLead.phone,
+        email: dbLead.email || '',
+        source: dbLead.source as Lead['source'],
+        stage: (dbLead.workflow_stage || 'new') as Lead['stage'],
+        status: dbLead.status,
+        aiScore: dbLead.ai_score ? dbLead.ai_score / 100 : undefined,
+        lastContact: new Date(dbLead.last_interaction_at || dbLead.created_at),
+        priority: 'medium' as Lead['priority'],
+        engagement: {
+          messagesSent: 0,
+          messagesOpened: 0
+        },
+        assignedTo: dbLead.assigned_agent_id ? 'Agent' : undefined,
+        tags: [],
+        createdAt: new Date(dbLead.created_at),
+        notes: dbLead.notes,
+        user_id: dbLead.user_id,
+        lead_source_type: dbLead.lead_source_type,
+        workflow_stage: dbLead.workflow_stage,
+        current_workflow_id: dbLead.current_workflow_id,
+        assigned_agent_id: dbLead.assigned_agent_id,
+        last_interaction_at: dbLead.last_interaction_at,
+        created_at: dbLead.created_at,
+        source_metadata: dbLead.source_metadata
+      }));
+      
+      setLeads(convertedLeads);
+    } catch (error: any) {
+      console.error('Error fetching leads:', error);
+      toast({
+        title: "Error loading leads",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLeads();
+  }, [filters.sortBy, filters.sortOrder]);
+
+  // Get unique sources from leads
+  const uniqueSources = Array.from(new Set(leads.map(lead => lead.source)));
+
+  // Filter leads client-side
   const filteredAndSortedLeads = useMemo(() => {
-    let result = [...dummyLeads];
+    let result = [...leads];
 
     // Apply search filter
     if (filters.search) {
@@ -133,38 +193,8 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
       result = result.filter(lead => filters.sources.includes(lead.source));
     }
 
-    // Apply sorting
-    result.sort((a, b) => {
-      let aValue: any;
-      let bValue: any;
-
-      switch (filters.sortBy) {
-        case 'createdAt':
-          aValue = a.createdAt.getTime();
-          bValue = b.createdAt.getTime();
-          break;
-        case 'aiScore':
-          aValue = a.aiScore || 0;
-          bValue = b.aiScore || 0;
-          break;
-        case 'priority':
-          const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
-          aValue = priorityOrder[a.priority];
-          bValue = priorityOrder[b.priority];
-          break;
-        case 'lastContact':
-          aValue = a.lastContact.getTime();
-          bValue = b.lastContact.getTime();
-          break;
-        default:
-          return 0;
-      }
-
-      return filters.sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-    });
-
     return result;
-  }, [filters]);
+  }, [leads, filters]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedLeads.length / leadsPerPage);
@@ -240,23 +270,16 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
 
   // Export to CSV
   const exportToCSV = () => {
-    const headers = ['Name', 'Phone', 'Email', 'Source', 'Stage', 'Status', 'Priority', 'Last Contact', 'Next Action', 'Assigned To', 'AI Score', 'Budget', 'Location', 'Timeline'];
+    const headers = ['Name', 'Phone', 'Email', 'Source', 'Stage', 'Status', 'Last Contact'];
     
     const rows = filteredAndSortedLeads.map(lead => [
       lead.name,
       lead.phone,
-      lead.email,
+      lead.email || '',
       lead.source,
-      stageConfig[lead.stage].title,
+      lead.workflow_stage || '',
       lead.status,
-      lead.priority,
-      lead.lastContact.toLocaleDateString(),
-      lead.nextAction ? lead.nextAction.toLocaleDateString() : '',
-      lead.assignedTo || 'Unassigned',
-      lead.aiScore ? `${Math.round(lead.aiScore * 100)}%` : '',
-      lead.budget || '',
-      lead.location || '',
-      lead.timeline || ''
+      new Date(lead.last_interaction_at || lead.created_at).toLocaleDateString()
     ]);
 
     const csvContent = [
@@ -268,7 +291,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `leads_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `ai_automation_leads_${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -394,14 +417,68 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
     }
   };
 
+  // Handle bulk move to CRM
+  const handleBulkMoveToCRM = async () => {
+    if (selectedLeads.length === 0) return;
+    
+    setIsAssigning(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      // Update all selected leads
+      const { error: updateError } = await supabase
+        .from('leads')
+        .update({
+          lead_source_type: 'crm_contact',
+          current_workflow_id: null,
+          source_metadata: {
+            moved_to_crm_at: new Date().toISOString(),
+            moved_by: user?.id,
+            previous_source_type: 'ai_automation'
+          }
+        })
+        .in('id', selectedLeads);
+
+      if (updateError) throw updateError;
+
+      // Pause active workflow executions
+      const { error: workflowError } = await supabase
+        .from('workflow_executions')
+        .update({ status: 'paused' })
+        .in('lead_id', selectedLeads)
+        .eq('status', 'pending');
+
+      if (workflowError) console.warn('Workflow pause warning:', workflowError);
+
+      toast({
+        title: "Leads moved to CRM",
+        description: `${selectedLeads.length} lead${selectedLeads.length > 1 ? 's' : ''} moved to CRM Contacts successfully`,
+      });
+
+      setSelectedLeads([]);
+      fetchLeads();
+    } catch (error) {
+      console.error('Error moving leads:', error);
+      toast({
+        title: "Error moving leads",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAssigning(false);
+      setShowBulkMoveToCRM(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">All Leads</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            AI Sales Automation
+          </h2>
           <p className="text-sm text-muted-foreground">
-            Showing {filteredAndSortedLeads.length} of {dummyLeads.length} leads
+            {filteredAndSortedLeads.length} leads in automation pipeline
           </p>
         </div>
         <div className="flex gap-2">
@@ -599,6 +676,14 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
               <Button variant="outline" size="sm" onClick={() => setShowBulkAssignDialog(true)}>
                 Assign To
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowBulkMoveToCRM(true)}
+              >
+                <ArrowRight className="h-4 w-4 mr-2" />
+                Move to CRM
+              </Button>
               <Button variant="outline" size="sm" onClick={() => setSelectedLeads([])}>
                 Clear Selection
               </Button>
@@ -619,29 +704,29 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
                     onCheckedChange={toggleSelectAll}
                   />
                 </TableHead>
-                <TableHead className="cursor-pointer" onClick={() => setFilters(prev => ({ ...prev, sortOrder: prev.sortOrder === 'asc' ? 'desc' : 'asc' }))}>
-                  Name
-                  <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                </TableHead>
+                <TableHead>Name</TableHead>
                 <TableHead>Contact</TableHead>
                 <TableHead>Source</TableHead>
                 <TableHead>Stage</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Priority</TableHead>
-                <TableHead className="cursor-pointer" onClick={() => setFilters(prev => ({ ...prev, sortBy: 'lastContact', sortOrder: prev.sortOrder === 'asc' ? 'desc' : 'asc' }))}>
-                  Last Contact
-                  <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                </TableHead>
-                <TableHead>Next Action</TableHead>
+                <TableHead>Last Contact</TableHead>
                 <TableHead>Assigned To</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedLeads.length === 0 ? (
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={9} className="text-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                  </TableCell>
+                </TableRow>
+              ) : paginatedLeads.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={9} className="text-center py-8">
                     <div className="text-muted-foreground">
-                      <p className="font-medium">No leads found</p>
-                      <p className="text-sm mt-1">Try adjusting your filters</p>
+                      <p className="font-medium">No leads in AI automation pipeline</p>
+                      <p className="text-sm mt-1">Leads will appear here when added to automation</p>
                       {activeFiltersCount > 0 && (
                         <Button
                           variant="link"
@@ -673,20 +758,13 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
                       />
                     </TableCell>
                     <TableCell>
-                      <div>
-                        <div className="font-medium">{lead.name}</div>
-                        {lead.aiScore && lead.aiScore > 0.8 && (
-                          <Badge variant="secondary" className="text-xs mt-1">
-                            AI {Math.round(lead.aiScore * 100)}%
-                          </Badge>
-                        )}
-                      </div>
+                      <div className="font-medium">{lead.name}</div>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
                         <div>{lead.phone}</div>
                         <div className="text-muted-foreground text-xs truncate max-w-[150px]">
-                          {lead.email}
+                          {lead.email || '-'}
                         </div>
                       </div>
                     </TableCell>
@@ -696,30 +774,27 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline">
-                        {stageConfig[lead.stage].title}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={lead.priority === 'urgent' ? 'destructive' : 'outline'}
-                        className={cn(
-                          lead.priority === 'high' && 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-                          lead.priority === 'medium' && 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-                          lead.priority === 'low' && 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-                        )}
-                      >
-                        {lead.priority}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {formatTimeAgo(lead.lastContact)}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {lead.nextAction ? formatTimeUntil(lead.nextAction) : '-'}
+                      {lead.workflow_stage && (
+                        <Badge variant="outline">
+                          {lead.workflow_stage}
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell className="text-sm">
-                      {lead.assignedTo || (
+                      {lead.status}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">Medium</Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {lead.last_interaction_at 
+                        ? formatTimeAgo(new Date(lead.last_interaction_at))
+                        : formatTimeAgo(new Date(lead.created_at))}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {lead.assigned_agent_id ? (
+                        <span>Agent</span>
+                      ) : (
                         <span className="text-muted-foreground italic">Unassigned</span>
                       )}
                     </TableCell>
@@ -857,13 +932,40 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
         </DialogContent>
       </Dialog>
 
+      {/* Bulk Move to CRM Dialog */}
+      <Dialog open={showBulkMoveToCRM} onOpenChange={setShowBulkMoveToCRM}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Move {selectedLeads.length} Lead{selectedLeads.length > 1 ? 's' : ''} to CRM?</DialogTitle>
+            <DialogDescription>
+              This will remove these leads from the AI Sales Automation pipeline:
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Active workflows will be paused</li>
+                <li>Leads will no longer receive automated messages</li>
+                <li>Stage history will be preserved</li>
+                <li>Leads will appear in CRM Contacts tab</li>
+              </ul>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowBulkMoveToCRM(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleBulkMoveToCRM} disabled={isAssigning}>
+              {isAssigning && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Confirm Move
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Lead Detail Modal */}
       <LeadDetailModal
         open={selectedLeadId !== null}
         onOpenChange={(open) => !open && setSelectedLeadId(null)}
-        lead={selectedLeadId ? dummyLeads.find(l => l.id === selectedLeadId) || null : null}
+        lead={selectedLeadId ? leads.find(l => l.id === selectedLeadId) || null : null}
         onLeadUpdated={() => {
-          // Could trigger a refresh here if using real data
+          fetchLeads();
           setSelectedLeadId(null);
         }}
       />

@@ -6,6 +6,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
+  DialogFooter
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,15 +31,20 @@ import {
   Clock,
   Sparkles,
   User,
-  ExternalLink,
   Edit2,
   Save,
-  X as XIcon
+  X as XIcon,
+  ArrowRight,
+  FileText,
+  RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAgents } from "@/hooks/useAgents";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Loader2 } from "lucide-react";
 
 interface LeadDetailModalProps {
   open: boolean;
@@ -62,6 +69,12 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
   const [isSaving, setIsSaving] = useState(false);
   const [editedLead, setEditedLead] = useState<Lead | null>(null);
   const [selectedAgentId, setSelectedAgentId] = useState<string>('');
+  const [showMoveConfirm, setShowMoveConfirm] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
+  const [showNoteDialog, setShowNoteDialog] = useState(false);
+  const [noteText, setNoteText] = useState('');
+  const [showStagePopover, setShowStagePopover] = useState(false);
+  const [newStage, setNewStage] = useState('new');
 
   useEffect(() => {
     if (lead) {
@@ -82,9 +95,109 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
 
   if (!lead || !editedLead) return null;
 
-  const engagementRate = lead.engagement.messagesSent > 0
-    ? Math.round((lead.engagement.messagesOpened / lead.engagement.messagesSent) * 100)
-    : 0;
+  const engagementRate = 0; // Placeholder for now
+
+  // Move to CRM handler
+  const handleMoveToCRM = async () => {
+    if (!lead) return;
+    
+    setIsMoving(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      const previousWorkflowId = lead.current_workflow_id;
+
+      const { error: leadError } = await supabase
+        .from('leads')
+        .update({
+          lead_source_type: 'crm_contact',
+          current_workflow_id: null,
+          source_metadata: {
+            moved_to_crm_at: new Date().toISOString(),
+            moved_by: user?.id,
+            previous_workflow_id: previousWorkflowId,
+            previous_source_type: 'ai_automation'
+          }
+        })
+        .eq('id', lead.id);
+
+      if (leadError) throw leadError;
+
+      const { error: workflowError } = await supabase
+        .from('workflow_executions')
+        .update({ status: 'paused' })
+        .eq('lead_id', lead.id)
+        .eq('status', 'pending');
+
+      if (workflowError) console.warn('Workflow pause warning:', workflowError);
+
+      toast({
+        title: "Lead moved to CRM",
+        description: `${lead.name} has been moved to CRM Contacts and removed from automation pipeline.`,
+      });
+
+      onLeadUpdated?.();
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error moving lead:', error);
+      toast({
+        title: "Error moving lead",
+        variant: "destructive",
+      });
+    } finally {
+      setIsMoving(false);
+      setShowMoveConfirm(false);
+    }
+  };
+
+  // Send message handler (WhatsApp)
+  const handleSendMessage = () => {
+    const phoneNumber = lead.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${phoneNumber}`, '_blank');
+    toast({ title: "Opening WhatsApp Web..." });
+  };
+
+  // Add note handler
+  const handleAddNote = async () => {
+    if (!noteText.trim()) return;
+
+    const timestamp = new Date().toLocaleString();
+    const newNote = `[${timestamp}] ${noteText}`;
+    const updatedNotes = lead.notes 
+      ? `${lead.notes}\n\n${newNote}` 
+      : newNote;
+
+    const { error } = await supabase
+      .from('leads')
+      .update({ notes: updatedNotes })
+      .eq('id', lead.id);
+
+    if (error) {
+      toast({ title: "Error adding note", variant: "destructive" });
+    } else {
+      toast({ title: "Note added successfully" });
+      setEditedLead({ ...editedLead, notes: updatedNotes });
+      setNoteText('');
+      setShowNoteDialog(false);
+      onLeadUpdated?.();
+    }
+  };
+
+  // Change stage handler
+  const handleStageChange = async () => {
+    const { error } = await supabase
+      .from('leads')
+      .update({ workflow_stage: newStage })
+      .eq('id', lead.id);
+
+    if (error) {
+      toast({ title: "Error changing stage", variant: "destructive" });
+    } else {
+      toast({ title: "Stage updated" });
+      onLeadUpdated?.();
+      setShowStagePopover(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!editedLead) return;
@@ -467,58 +580,106 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
             </div>
           ) : (
             <div className="flex flex-wrap gap-2 pt-4">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  toast({
-                    title: "Coming Soon",
-                    description: "Stage management feature will be available soon"
-                  });
-                }}
-              >
-                Change Stage
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  toast({
-                    title: "Coming Soon",
-                    description: "Notes feature will be available soon"
-                  });
-                }}
-              >
-                Add Note
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  toast({
-                    title: "Coming Soon",
-                    description: "Messaging feature will be available soon"
-                  });
-                }}
-              >
+              <Popover open={showStagePopover} onOpenChange={setShowStagePopover}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Change Stage
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-56">
+                  <div className="space-y-3">
+                    <Select value={newStage} onValueChange={setNewStage}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new">New Leads</SelectItem>
+                        <SelectItem value="no-reply">No Reply</SelectItem>
+                        <SelectItem value="qualified">Qualified</SelectItem>
+                        <SelectItem value="nurturing">Nurturing</SelectItem>
+                        <SelectItem value="long-term">Long-Term</SelectItem>
+                        <SelectItem value="won">Won</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button onClick={handleStageChange} className="w-full" size="sm">
+                      Update Stage
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              <Dialog open={showNoteDialog} onOpenChange={setShowNoteDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Add Note
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add Note</DialogTitle>
+                    <DialogDescription>
+                      Add a timestamped note to {lead.name}'s record
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Textarea
+                    placeholder="Enter your note here..."
+                    value={noteText}
+                    onChange={(e) => setNoteText(e.target.value)}
+                    rows={5}
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setShowNoteDialog(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddNote}>
+                      Add Note
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <Button variant="outline" size="sm" onClick={handleSendMessage}>
+                <MessageSquare className="h-4 w-4 mr-2" />
                 Send Message
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="gap-2"
-                onClick={() => {
-                  toast({
-                    title: "Coming Soon",
-                    description: "CRM integration will be available soon"
-                  });
-                }}
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowMoveConfirm(true)}
               >
-                View in CRM
-                <ExternalLink className="h-3 w-3" />
+                <ArrowRight className="h-4 w-4 mr-2" />
+                Move to CRM
               </Button>
             </div>
           )}
+
+          {/* Move to CRM Confirmation Dialog */}
+          <Dialog open={showMoveConfirm} onOpenChange={setShowMoveConfirm}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Move {lead.name} to CRM?</DialogTitle>
+                <DialogDescription>
+                  This will remove this lead from the AI Sales Automation pipeline:
+                  <ul className="list-disc list-inside mt-2 space-y-1">
+                    <li>Active workflows will be paused</li>
+                    <li>Lead will no longer receive automated messages</li>
+                    <li>Stage history will be preserved</li>
+                    <li>Lead will appear in CRM Contacts tab</li>
+                  </ul>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowMoveConfirm(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleMoveToCRM} disabled={isMoving}>
+                  {isMoving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                  Confirm Move
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </DialogContent>
     </Dialog>
