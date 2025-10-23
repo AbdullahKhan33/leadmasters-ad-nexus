@@ -3,6 +3,7 @@ import { dummyLeads, Lead } from "@/data/dummyLeads";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -41,6 +42,19 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useAgents } from "@/hooks/useAgents";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import { LeadDetailModal } from "./LeadDetailModal";
 
 export interface TableFilters {
   search: string;
@@ -66,6 +80,9 @@ const stageConfig = {
 };
 
 export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTableViewProps) {
+  const { agents } = useAgents();
+  const { toast } = useToast();
+
   const [filters, setFilters] = useState<TableFilters>({
     search: '',
     stages: initialFilters?.stages || [],
@@ -79,6 +96,10 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
   const [currentPage, setCurrentPage] = useState(1);
   const [leadsPerPage, setLeadsPerPage] = useState(25);
   const [filtersExpanded, setFiltersExpanded] = useState(true);
+  const [showBulkAssignDialog, setShowBulkAssignDialog] = useState(false);
+  const [selectedAgentId, setSelectedAgentId] = useState<string>('');
+  const [isAssigning, setIsAssigning] = useState(false);
+  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
 
   // Get unique sources from leads
   const uniqueSources = Array.from(new Set(dummyLeads.map(lead => lead.source)));
@@ -215,6 +236,69 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
     setSelectedLeads(prev =>
       prev.includes(leadId) ? prev.filter(id => id !== leadId) : [...prev, leadId]
     );
+  };
+
+  // Handle bulk assignment
+  const handleBulkAssign = async () => {
+    if (!selectedAgentId || selectedLeads.length === 0) return;
+
+    try {
+      setIsAssigning(true);
+
+      // Update all selected leads
+      const { error: leadsError } = await supabase
+        .from('leads')
+        .update({ assigned_agent_id: selectedAgentId })
+        .in('id', selectedLeads);
+
+      if (leadsError) throw leadsError;
+
+      // Create assignment records for each lead
+      const assignments = selectedLeads.map(leadId => ({
+        agent_id: selectedAgentId,
+        lead_id: leadId,
+        status: 'assigned',
+        notes: 'Bulk assigned via AI Sales Automation'
+      }));
+
+      const { error: assignError } = await supabase
+        .from('agent_lead_assignments')
+        .insert(assignments);
+
+      if (assignError && !assignError.message.includes('duplicate')) {
+        console.warn('Some assignment records failed:', assignError);
+      }
+
+      // Update agent's assigned leads count
+      const agent = agents.find(a => a.id === selectedAgentId);
+      if (agent) {
+        await supabase
+          .from('agents')
+          .update({ 
+            assigned_leads_count: (agent.assigned_leads_count || 0) + selectedLeads.length
+          })
+          .eq('id', selectedAgentId);
+      }
+
+      toast({
+        title: "Leads assigned",
+        description: `Successfully assigned ${selectedLeads.length} lead${selectedLeads.length > 1 ? 's' : ''} to ${agent?.display_name || agent?.email}`
+      });
+
+      setShowBulkAssignDialog(false);
+      setSelectedLeads([]);
+      setSelectedAgentId('');
+
+    } catch (error) {
+      console.error('Error assigning leads:', error);
+      toast({
+        title: "Error",
+        description: "Failed to assign leads",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAssigning(false);
+    }
   };
 
   return (
@@ -419,7 +503,9 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
                   <SelectItem value="low">Low</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="sm">Assign To</Button>
+              <Button variant="outline" size="sm" onClick={() => setShowBulkAssignDialog(true)}>
+                Assign To
+              </Button>
               <Button variant="outline" size="sm" onClick={() => setSelectedLeads([])}>
                 Clear Selection
               </Button>
@@ -477,14 +563,15 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
                 </TableRow>
               ) : (
                 paginatedLeads.map(lead => (
-                  <TableRow
-                    key={lead.id}
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      if ((e.target as HTMLElement).closest('.checkbox-cell')) return;
-                      onLeadClick(lead.id);
-                    }}
-                  >
+                   <TableRow
+                     key={lead.id}
+                     className="cursor-pointer hover:bg-muted/50"
+                     onClick={(e) => {
+                       if ((e.target as HTMLElement).closest('.checkbox-cell')) return;
+                       setSelectedLeadId(lead.id);
+                       onLeadClick(lead.id);
+                     }}
+                   >
                     <TableCell className="checkbox-cell">
                       <Checkbox
                         checked={selectedLeads.includes(lead.id)}
@@ -609,6 +696,84 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
           </Pagination>
         </div>
       )}
+
+      {/* Bulk Assign Dialog */}
+      <Dialog open={showBulkAssignDialog} onOpenChange={setShowBulkAssignDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Assign Leads to Agent</DialogTitle>
+            <DialogDescription>
+              Assign {selectedLeads.length} selected lead{selectedLeads.length > 1 ? 's' : ''} to an agent
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="agent-select">Select Agent</Label>
+              <Select value={selectedAgentId} onValueChange={setSelectedAgentId}>
+                <SelectTrigger id="agent-select">
+                  <SelectValue placeholder="Choose an agent..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {agents.length === 0 ? (
+                    <div className="p-2 text-sm text-muted-foreground text-center">
+                      No agents available
+                    </div>
+                  ) : (
+                    agents.map(agent => (
+                      <SelectItem key={agent.id} value={agent.id}>
+                        <div className="flex items-center justify-between w-full">
+                          <span>{agent.display_name || agent.email || agent.agent_code}</span>
+                          {agent.assigned_leads_count > 0 && (
+                            <span className="text-xs text-muted-foreground ml-2">
+                              ({agent.assigned_leads_count} leads)
+                            </span>
+                          )}
+                        </div>
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowBulkAssignDialog(false);
+                setSelectedAgentId('');
+              }}
+              disabled={isAssigning}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleBulkAssign}
+              disabled={!selectedAgentId || isAssigning}
+            >
+              {isAssigning ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Assigning...
+                </>
+              ) : (
+                'Assign Leads'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Lead Detail Modal */}
+      <LeadDetailModal
+        open={selectedLeadId !== null}
+        onOpenChange={(open) => !open && setSelectedLeadId(null)}
+        lead={selectedLeadId ? dummyLeads.find(l => l.id === selectedLeadId) || null : null}
+        onLeadUpdated={() => {
+          // Could trigger a refresh here if using real data
+          setSelectedLeadId(null);
+        }}
+      />
     </div>
   );
 }

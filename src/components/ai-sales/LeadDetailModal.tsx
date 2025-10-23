@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Lead } from "@/data/dummyLeads";
 import {
   Dialog,
@@ -9,6 +10,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Phone,
   Mail,
@@ -19,14 +29,21 @@ import {
   Clock,
   Sparkles,
   User,
-  ExternalLink
+  ExternalLink,
+  Edit2,
+  Save,
+  X as XIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAgents } from "@/hooks/useAgents";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface LeadDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   lead: Lead | null;
+  onLeadUpdated?: () => void;
 }
 
 const stageColors = {
@@ -38,20 +55,116 @@ const stageColors = {
   won: "bg-emerald-500"
 };
 
-export function LeadDetailModal({ open, onOpenChange, lead }: LeadDetailModalProps) {
-  if (!lead) return null;
+export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: LeadDetailModalProps) {
+  const { agents } = useAgents();
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editedLead, setEditedLead] = useState<Lead | null>(null);
+
+  useEffect(() => {
+    if (lead) {
+      setEditedLead(lead);
+    }
+  }, [lead]);
+
+  if (!lead || !editedLead) return null;
 
   const engagementRate = lead.engagement.messagesSent > 0
     ? Math.round((lead.engagement.messagesOpened / lead.engagement.messagesSent) * 100)
     : 0;
+
+  const handleSave = async () => {
+    if (!editedLead) return;
+
+    try {
+      setIsSaving(true);
+
+      // Update lead in database
+      const { error: leadError } = await supabase
+        .from('leads')
+        .update({
+          phone: editedLead.phone,
+          email: editedLead.email,
+          assigned_agent_id: editedLead.assignedTo ? 
+            agents.find(a => a.display_name === editedLead.assignedTo || a.email === editedLead.assignedTo)?.id 
+            : null
+        })
+        .eq('id', editedLead.id);
+
+      if (leadError) throw leadError;
+
+      // If agent was assigned, create assignment record
+      if (editedLead.assignedTo && editedLead.assignedTo !== lead.assignedTo) {
+        const agent = agents.find(a => a.display_name === editedLead.assignedTo || a.email === editedLead.assignedTo);
+        if (agent) {
+          const { error: assignError } = await supabase
+            .from('agent_lead_assignments')
+            .insert({
+              agent_id: agent.id,
+              lead_id: editedLead.id,
+              status: 'assigned',
+              notes: 'Assigned via AI Sales Automation'
+            });
+
+          if (assignError && !assignError.message.includes('duplicate')) {
+            console.warn('Assignment record creation failed:', assignError);
+          }
+
+          // Update agent's assigned leads count
+          await supabase
+            .from('agents')
+            .update({ 
+              assigned_leads_count: (agent.assigned_leads_count || 0) + 1 
+            })
+            .eq('id', agent.id);
+        }
+      }
+
+      toast({
+        title: "Lead updated",
+        description: "Changes saved successfully"
+      });
+
+      setIsEditing(false);
+      onLeadUpdated?.();
+
+    } catch (error) {
+      console.error('Error updating lead:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save changes",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditedLead(lead);
+    setIsEditing(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-start justify-between">
-            <div>
-              <DialogTitle className="text-2xl">{lead.name}</DialogTitle>
+            <div className="flex-1">
+              <div className="flex items-center gap-3">
+                <DialogTitle className="text-2xl">{lead.name}</DialogTitle>
+                {!isEditing && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsEditing(true)}
+                    className="h-8"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
               <DialogDescription className="flex items-center gap-2 mt-2">
                 <Badge variant="outline">{lead.source}</Badge>
                 <Badge 
@@ -84,20 +197,50 @@ export function LeadDetailModal({ open, onOpenChange, lead }: LeadDetailModalPro
               <User className="h-4 w-4" />
               Contact Information
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <a href={`tel:${lead.phone}`} className="text-sm hover:underline">
-                  {lead.phone}
-                </a>
+            {isEditing ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-xs flex items-center gap-1">
+                    <Phone className="h-3 w-3" />
+                    Phone Number
+                  </Label>
+                  <Input
+                    id="phone"
+                    value={editedLead.phone}
+                    onChange={(e) => setEditedLead({ ...editedLead, phone: e.target.value })}
+                    placeholder="+91 1234567890"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-xs flex items-center gap-1">
+                    <Mail className="h-3 w-3" />
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={editedLead.email}
+                    onChange={(e) => setEditedLead({ ...editedLead, email: e.target.value })}
+                    placeholder="email@example.com"
+                  />
+                </div>
               </div>
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <a href={`mailto:${lead.email}`} className="text-sm hover:underline truncate">
-                  {lead.email}
-                </a>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <a href={`tel:${lead.phone}`} className="text-sm hover:underline">
+                    {lead.phone}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <a href={`mailto:${lead.email}`} className="text-sm hover:underline truncate">
+                    {lead.email}
+                  </a>
+                </div>
               </div>
-            </div>
+            )}
             {lead.location && (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -194,17 +337,56 @@ export function LeadDetailModal({ open, onOpenChange, lead }: LeadDetailModalPro
               <TrendingUp className="h-4 w-4" />
               Assignment & Status
             </h3>
-            <div className="p-3 rounded-lg bg-muted/50">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Assigned to:</span>
-                <span className="text-sm font-medium">
-                  {lead.assignedTo || <span className="italic text-muted-foreground">Unassigned</span>}
-                </span>
+            {isEditing ? (
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label htmlFor="assignedTo" className="text-xs">
+                    Assign to Agent
+                  </Label>
+                  <Select
+                    value={editedLead.assignedTo || 'unassigned'}
+                    onValueChange={(value) => 
+                      setEditedLead({ 
+                        ...editedLead, 
+                        assignedTo: value === 'unassigned' ? undefined : value 
+                      })
+                    }
+                  >
+                    <SelectTrigger id="assignedTo">
+                      <SelectValue placeholder="Select agent" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unassigned">Unassigned</SelectItem>
+                      {agents.map(agent => (
+                        <SelectItem key={agent.id} value={agent.display_name || agent.email || agent.agent_code}>
+                          {agent.display_name || agent.email || agent.agent_code}
+                          {agent.assigned_leads_count > 0 && (
+                            <span className="text-xs text-muted-foreground ml-2">
+                              ({agent.assigned_leads_count} leads)
+                            </span>
+                          )}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="p-3 rounded-lg bg-muted/50">
+                  <div className="text-sm">{lead.status}</div>
+                </div>
               </div>
-              <div className="mt-2 pt-2 border-t">
-                <div className="text-sm">{lead.status}</div>
+            ) : (
+              <div className="p-3 rounded-lg bg-muted/50">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Assigned to:</span>
+                  <span className="text-sm font-medium">
+                    {lead.assignedTo || <span className="italic text-muted-foreground">Unassigned</span>}
+                  </span>
+                </div>
+                <div className="mt-2 pt-2 border-t">
+                  <div className="text-sm">{lead.status}</div>
+                </div>
               </div>
-            </div>
+            )}
             {lead.tags && lead.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {lead.tags.map(tag => (
@@ -216,25 +398,52 @@ export function LeadDetailModal({ open, onOpenChange, lead }: LeadDetailModalPro
             )}
           </div>
 
-          {/* Quick Actions */}
-          <div className="flex flex-wrap gap-2 pt-4">
-            <Button variant="outline" size="sm">
-              Change Stage
-            </Button>
-            <Button variant="outline" size="sm">
-              Reassign
-            </Button>
-            <Button variant="outline" size="sm">
-              Add Note
-            </Button>
-            <Button variant="outline" size="sm">
-              Send Message
-            </Button>
-            <Button variant="outline" size="sm" className="gap-2">
-              View in CRM
-              <ExternalLink className="h-3 w-3" />
-            </Button>
-          </div>
+          {/* Action Buttons */}
+          {isEditing ? (
+            <div className="flex gap-2 pt-4 border-t">
+              <Button 
+                onClick={handleSave} 
+                disabled={isSaving}
+                className="flex-1"
+              >
+                {isSaving ? (
+                  <>
+                    <Clock className="h-4 w-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleCancel}
+                disabled={isSaving}
+              >
+                <XIcon className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2 pt-4">
+              <Button variant="outline" size="sm">
+                Change Stage
+              </Button>
+              <Button variant="outline" size="sm">
+                Add Note
+              </Button>
+              <Button variant="outline" size="sm">
+                Send Message
+              </Button>
+              <Button variant="outline" size="sm" className="gap-2">
+                View in CRM
+                <ExternalLink className="h-3 w-3" />
+              </Button>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

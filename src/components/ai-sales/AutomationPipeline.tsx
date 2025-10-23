@@ -75,6 +75,10 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
         open={selectedLeadId !== null}
         onOpenChange={(open) => !open && setSelectedLeadId(null)}
         lead={selectedLead}
+        onLeadUpdated={() => {
+          // Could trigger a refresh here if using real data
+          setSelectedLeadId(null);
+        }}
       />
     </div>
   );
