@@ -22,7 +22,6 @@ import { CRMAutomations } from "@/components/crm/CRMAutomations";
 import { Templates } from "@/components/Templates";
 import { Services } from "@/components/Services";
 import { PublishedPosts } from "@/components/PublishedPosts";
-import { PostIdeaGenerator } from "@/components/PostIdeaGenerator";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { PremiumProvider, usePremium } from "@/contexts/PremiumContext";
@@ -33,9 +32,9 @@ import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 import { CreateCampaignInline } from "@/pages/CreateCampaignPage";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'post-ideas' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'post-ideas' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'published-posts' | 'campaign-create' | 'post-ideas';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'published-posts' | 'campaign-create';
 
 function IndexContent() {
   const { user } = useAuth();
@@ -158,9 +157,9 @@ function IndexContent() {
   };
 
   const handleInspirationHubClick = () => {
-    handleNavigationClick('post-ideas', () => {
-      console.log('Post Ideas clicked');
-      setCurrentView('post-ideas');
+    handleNavigationClick('inspiration-hub', () => {
+      console.log('Inspiration Hub clicked');
+      setCurrentView('inspiration-hub');
     });
   };
 
@@ -352,8 +351,6 @@ function IndexContent() {
               <PublishedPosts />
             ) : currentView === 'inspiration-hub' ? (
               <InspirationHub />
-            ) : currentView === 'post-ideas' ? (
-              <PostIdeaGenerator />
             ) : currentView === 'analytics' ? (
               <InsightsOverview />
             ) : currentView === 'schedule' ? (

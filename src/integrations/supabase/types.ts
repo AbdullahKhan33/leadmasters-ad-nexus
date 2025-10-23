@@ -560,51 +560,6 @@ export type Database = {
           },
         ]
       }
-      generated_post_ideas: {
-        Row: {
-          ai_recommendations: Json
-          business_type: string
-          created_at: string
-          goals: string[]
-          hashtags: string[]
-          id: string
-          platform: string
-          post_caption: string
-          status: string
-          target_audience: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          ai_recommendations?: Json
-          business_type: string
-          created_at?: string
-          goals?: string[]
-          hashtags?: string[]
-          id?: string
-          platform: string
-          post_caption: string
-          status?: string
-          target_audience: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          ai_recommendations?: Json
-          business_type?: string
-          created_at?: string
-          goals?: string[]
-          hashtags?: string[]
-          id?: string
-          platform?: string
-          post_caption?: string
-          status?: string
-          target_audience?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       leads: {
         Row: {
           ai_next_action: string | null
@@ -807,10 +762,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      get_current_user_role: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -80,7 +80,7 @@ export function WorkspaceSidebar({
   onAgentsClick: () => void;
   onServicesClick: () => void;
   onPublishedPostsClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'post-ideas' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts';
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
@@ -255,7 +255,7 @@ export function WorkspaceSidebar({
             </SidebarMenuItem>
           ) : null}
 
-          {/* Post Ideas - Show based on agent permissions */}
+          {/* Inspiration Hub - Show based on agent permissions */}
           {userRole === 'admin' || (userRole === 'agent' && permissions?.inspiration_hub === true) ? (
             <SidebarMenuItem>
               <SidebarMenuButton 
@@ -265,12 +265,12 @@ export function WorkspaceSidebar({
                 {isCollapsed ? (
                   <div className="flex flex-col items-center space-y-1">
                     <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                    <span className="text-xs font-medium">Post Ideas</span>
+                    <span className="text-xs font-medium">Inspiration</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-3">
                     <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                    <span className="font-semibold">Post Ideas</span>
+                    <span className="font-semibold">Inspiration Hub</span>
                   </div>
                 )}
               </SidebarMenuButton>
