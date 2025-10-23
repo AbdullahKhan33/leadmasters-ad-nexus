@@ -173,6 +173,45 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_workflows: {
+        Row: {
+          actions: Json
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          trigger_config: Json
+          type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          actions?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          trigger_config?: Json
+          type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          actions?: Json
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          trigger_config?: Json
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_discovery_submissions: {
         Row: {
           advertising_platforms: string[]
@@ -562,18 +601,25 @@ export type Database = {
       }
       leads: {
         Row: {
+          ai_confidence_score: number | null
+          ai_interest_level: string | null
           ai_next_action: string | null
+          ai_qualification_status: string | null
           ai_score: number | null
           assigned_agent_id: string | null
           category: string | null
           created_at: string
+          current_workflow_id: string | null
           email: string | null
           id: string
+          last_interaction_at: string | null
           last_message: string | null
+          lead_type: string | null
           list: string | null
           name: string
           notes: string | null
           phone: string
+          reminder_count: number | null
           reminder_date: string | null
           reminder_note: string | null
           source: string
@@ -581,20 +627,28 @@ export type Database = {
           timestamp: string
           updated_at: string
           user_id: string
+          workflow_stage: string | null
         }
         Insert: {
+          ai_confidence_score?: number | null
+          ai_interest_level?: string | null
           ai_next_action?: string | null
+          ai_qualification_status?: string | null
           ai_score?: number | null
           assigned_agent_id?: string | null
           category?: string | null
           created_at?: string
+          current_workflow_id?: string | null
           email?: string | null
           id?: string
+          last_interaction_at?: string | null
           last_message?: string | null
+          lead_type?: string | null
           list?: string | null
           name: string
           notes?: string | null
           phone: string
+          reminder_count?: number | null
           reminder_date?: string | null
           reminder_note?: string | null
           source?: string
@@ -602,20 +656,28 @@ export type Database = {
           timestamp?: string
           updated_at?: string
           user_id: string
+          workflow_stage?: string | null
         }
         Update: {
+          ai_confidence_score?: number | null
+          ai_interest_level?: string | null
           ai_next_action?: string | null
+          ai_qualification_status?: string | null
           ai_score?: number | null
           assigned_agent_id?: string | null
           category?: string | null
           created_at?: string
+          current_workflow_id?: string | null
           email?: string | null
           id?: string
+          last_interaction_at?: string | null
           last_message?: string | null
+          lead_type?: string | null
           list?: string | null
           name?: string
           notes?: string | null
           phone?: string
+          reminder_count?: number | null
           reminder_date?: string | null
           reminder_note?: string | null
           source?: string
@@ -623,6 +685,7 @@ export type Database = {
           timestamp?: string
           updated_at?: string
           user_id?: string
+          workflow_stage?: string | null
         }
         Relationships: [
           {
@@ -630,6 +693,13 @@ export type Database = {
             columns: ["assigned_agent_id"]
             isOneToOne: false
             referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_leads_current_workflow"
+            columns: ["current_workflow_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflows"
             referencedColumns: ["id"]
           },
         ]
@@ -729,6 +799,117 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      workflow_executions: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          current_step: number | null
+          id: string
+          lead_id: string
+          next_step_at: string | null
+          started_at: string | null
+          status: string | null
+          step_data: Json | null
+          workflow_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string
+          lead_id: string
+          next_step_at?: string | null
+          started_at?: string | null
+          status?: string | null
+          step_data?: Json | null
+          workflow_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string
+          lead_id?: string
+          next_step_at?: string | null
+          started_at?: string | null
+          status?: string | null
+          step_data?: Json | null
+          workflow_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_executions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_executions_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_message_log: {
+        Row: {
+          channel: string | null
+          created_at: string | null
+          delivery_status: string | null
+          id: string
+          lead_id: string
+          message_sent: string | null
+          message_template: string | null
+          reply_content: string | null
+          reply_received_at: string | null
+          sent_at: string | null
+          workflow_execution_id: string | null
+        }
+        Insert: {
+          channel?: string | null
+          created_at?: string | null
+          delivery_status?: string | null
+          id?: string
+          lead_id: string
+          message_sent?: string | null
+          message_template?: string | null
+          reply_content?: string | null
+          reply_received_at?: string | null
+          sent_at?: string | null
+          workflow_execution_id?: string | null
+        }
+        Update: {
+          channel?: string | null
+          created_at?: string | null
+          delivery_status?: string | null
+          id?: string
+          lead_id?: string
+          message_sent?: string | null
+          message_template?: string | null
+          reply_content?: string | null
+          reply_received_at?: string | null
+          sent_at?: string | null
+          workflow_execution_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_message_log_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_message_log_workflow_execution_id_fkey"
+            columns: ["workflow_execution_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_executions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       workspaces: {
         Row: {
