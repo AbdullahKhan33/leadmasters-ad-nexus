@@ -254,6 +254,26 @@ export function AppSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
+          {/* AI Sales Automation */}
+          <SidebarMenuItem>
+            <SidebarMenuButton 
+              onClick={onAISalesAutomationClick}
+              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'ai-sales-automation')}`}
+            >
+              {isCollapsed ? (
+                <div className="flex flex-col items-center space-y-1">
+                  <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'ai-sales-automation')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="text-xs font-medium">AI Sales</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'ai-sales-automation')} group-hover:scale-110 transition-transform duration-200`} />
+                  <span className="font-semibold">AI Sales Automation</span>
+                </div>
+              )}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
           {/* CRM Menu with Submenu */}
           <SidebarMenuItem>
             <div className="space-y-1">
