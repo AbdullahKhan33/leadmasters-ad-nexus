@@ -43,8 +43,10 @@ export function PriorityQueueCard({
     </div>
   );
 
+  const topPriorityLeads = [...urgent.slice(0, 2), ...highValue.slice(0, 1)].slice(0, 3);
+
   return (
-    <Card className="border-l-4 border-l-red-500 bg-gradient-to-r from-red-50/50 via-orange-50/50 to-yellow-50/50 dark:from-red-950/20 dark:via-orange-950/20 dark:to-yellow-950/20">
+    <Card className="border-l-4 border-l-red-500 bg-gradient-to-br from-red-50/50 to-orange-50/50 dark:from-red-950/20 dark:to-orange-950/20">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -52,78 +54,61 @@ export function PriorityQueueCard({
             Priority Queue
           </CardTitle>
           <Badge variant="destructive" className="animate-pulse">
-            {totalPriority} items
+            {totalPriority}
           </Badge>
         </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Needs immediate attention
+        </p>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Urgent Actions */}
-        {urgent.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-red-600 dark:text-red-400">
-              <AlertCircle className="h-4 w-4" />
-              Urgent Actions ({urgent.length})
-            </div>
-            <div className="space-y-1">
-              {urgent.slice(0, 3).map(lead => (
-                <PriorityItem
+      <CardContent className="space-y-3">
+        {/* Top Priority Leads Preview */}
+        <div className="space-y-2">
+          {topPriorityLeads.length > 0 ? (
+            topPriorityLeads.map(lead => {
+              const Icon = urgent.includes(lead) ? AlertCircle : TrendingUp;
+              return (
+                <div
                   key={lead.id}
-                  lead={lead}
-                  icon={AlertCircle}
-                  reason={lead.stage === 'no-reply' ? 'No reply - final attempt' : 'Qualified but unassigned'}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+                  onClick={() => onLeadClick(lead.id)}
+                  className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 cursor-pointer transition-colors group"
+                >
+                  <Icon className="h-3.5 w-3.5 text-red-500" />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-sm truncate">{lead.name}</div>
+                    <div className="text-xs text-muted-foreground truncate">{lead.source}</div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-xs text-muted-foreground text-center py-2">No priority items</p>
+          )}
+        </div>
 
-        {/* High Value Leads */}
-        {highValue.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-orange-600 dark:text-orange-400">
-              <TrendingUp className="h-4 w-4" />
-              High Value ({highValue.length})
-            </div>
-            <div className="space-y-1">
-              {highValue.slice(0, 2).map(lead => (
-                <PriorityItem
-                  key={lead.id}
-                  lead={lead}
-                  icon={TrendingUp}
-                  reason={`${lead.budget} • AI Score ${Math.round((lead.aiScore || 0) * 100)}%`}
-                />
-              ))}
-            </div>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-3 gap-2 pt-2 border-t">
+          <div className="text-center">
+            <div className="text-lg font-bold text-red-600 dark:text-red-400">{urgent.length}</div>
+            <div className="text-xs text-muted-foreground">Urgent</div>
           </div>
-        )}
-
-        {/* Expiring Soon */}
-        {expiring.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-yellow-600 dark:text-yellow-400">
-              <Clock className="h-4 w-4" />
-              Expiring Soon ({expiring.length})
-            </div>
-            <div className="space-y-1">
-              {expiring.slice(0, 3).map(lead => (
-                <PriorityItem
-                  key={lead.id}
-                  lead={lead}
-                  icon={Clock}
-                  reason={`Next action: ${formatTimeUntil(lead.nextAction!)}`}
-                />
-              ))}
-            </div>
+          <div className="text-center">
+            <div className="text-lg font-bold text-orange-600 dark:text-orange-400">{highValue.length}</div>
+            <div className="text-xs text-muted-foreground">High Value</div>
           </div>
-        )}
+          <div className="text-center">
+            <div className="text-lg font-bold text-yellow-600 dark:text-yellow-400">{expiring.length}</div>
+            <div className="text-xs text-muted-foreground">Expiring</div>
+          </div>
+        </div>
 
         <Button 
           variant="outline" 
           size="sm" 
-          className="w-full hover:bg-gradient-to-r hover:from-red-50 hover:to-orange-50 dark:hover:from-red-950 dark:hover:to-orange-950"
+          className="w-full mt-2"
           onClick={onViewAll}
         >
-          View All Priority Items ({totalPriority})
+          View All ({totalPriority})
         </Button>
       </CardContent>
     </Card>
