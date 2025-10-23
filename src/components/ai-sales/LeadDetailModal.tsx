@@ -61,12 +61,24 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editedLead, setEditedLead] = useState<Lead | null>(null);
+  const [selectedAgentId, setSelectedAgentId] = useState<string>('');
 
   useEffect(() => {
     if (lead) {
       setEditedLead(lead);
+      // Find agent ID if lead is assigned
+      if (lead.assignedTo) {
+        const agent = agents.find(a => 
+          a.display_name === lead.assignedTo || 
+          a.email === lead.assignedTo || 
+          a.agent_code === lead.assignedTo
+        );
+        setSelectedAgentId(agent?.id || '');
+      } else {
+        setSelectedAgentId('');
+      }
     }
-  }, [lead]);
+  }, [lead, agents]);
 
   if (!lead || !editedLead) return null;
 
@@ -86,17 +98,23 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
         .update({
           phone: editedLead.phone,
           email: editedLead.email,
-          assigned_agent_id: editedLead.assignedTo ? 
-            agents.find(a => a.display_name === editedLead.assignedTo || a.email === editedLead.assignedTo)?.id 
-            : null
+          assigned_agent_id: selectedAgentId || null
         })
         .eq('id', editedLead.id);
 
       if (leadError) throw leadError;
 
-      // If agent was assigned, create assignment record
-      if (editedLead.assignedTo && editedLead.assignedTo !== lead.assignedTo) {
-        const agent = agents.find(a => a.display_name === editedLead.assignedTo || a.email === editedLead.assignedTo);
+      // Get previous agent assignment to check if we need to update
+      const previousAgent = agents.find(a => 
+        a.display_name === lead.assignedTo || 
+        a.email === lead.assignedTo || 
+        a.agent_code === lead.assignedTo
+      );
+      const previousAgentId = previousAgent?.id;
+
+      // If agent was newly assigned or changed, create assignment record
+      if (selectedAgentId && selectedAgentId !== previousAgentId) {
+        const agent = agents.find(a => a.id === selectedAgentId);
         if (agent) {
           const { error: assignError } = await supabase
             .from('agent_lead_assignments')
@@ -111,13 +129,15 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
             console.warn('Assignment record creation failed:', assignError);
           }
 
-          // Update agent's assigned leads count
-          await supabase
-            .from('agents')
-            .update({ 
-              assigned_leads_count: (agent.assigned_leads_count || 0) + 1 
-            })
-            .eq('id', agent.id);
+          // Update agent's assigned leads count (only if newly assigned)
+          if (!previousAgentId) {
+            await supabase
+              .from('agents')
+              .update({ 
+                assigned_leads_count: (agent.assigned_leads_count || 0) + 1 
+              })
+              .eq('id', agent.id);
+          }
         }
       }
 
@@ -143,6 +163,17 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
 
   const handleCancel = () => {
     setEditedLead(lead);
+    // Reset selected agent ID
+    if (lead?.assignedTo) {
+      const agent = agents.find(a => 
+        a.display_name === lead.assignedTo || 
+        a.email === lead.assignedTo || 
+        a.agent_code === lead.assignedTo
+      );
+      setSelectedAgentId(agent?.id || '');
+    } else {
+      setSelectedAgentId('');
+    }
     setIsEditing(false);
   };
 
@@ -344,13 +375,20 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
                     Assign to Agent
                   </Label>
                   <Select
-                    value={editedLead.assignedTo || 'unassigned'}
-                    onValueChange={(value) => 
-                      setEditedLead({ 
-                        ...editedLead, 
-                        assignedTo: value === 'unassigned' ? undefined : value 
-                      })
-                    }
+                    value={selectedAgentId || 'unassigned'}
+                    onValueChange={(value) => {
+                      if (value === 'unassigned') {
+                        setSelectedAgentId('');
+                        setEditedLead({ ...editedLead, assignedTo: undefined });
+                      } else {
+                        setSelectedAgentId(value);
+                        const agent = agents.find(a => a.id === value);
+                        setEditedLead({ 
+                          ...editedLead, 
+                          assignedTo: agent?.display_name || agent?.email || agent?.agent_code
+                        });
+                      }
+                    }}
                   >
                     <SelectTrigger id="assignedTo">
                       <SelectValue placeholder="Select agent" />
@@ -358,7 +396,7 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
                     <SelectContent>
                       <SelectItem value="unassigned">Unassigned</SelectItem>
                       {agents.map(agent => (
-                        <SelectItem key={agent.id} value={agent.display_name || agent.email || agent.agent_code}>
+                        <SelectItem key={agent.id} value={agent.id}>
                           {agent.display_name || agent.email || agent.agent_code}
                           {agent.assigned_leads_count > 0 && (
                             <span className="text-xs text-muted-foreground ml-2">
@@ -429,16 +467,53 @@ export function LeadDetailModal({ open, onOpenChange, lead, onLeadUpdated }: Lea
             </div>
           ) : (
             <div className="flex flex-wrap gap-2 pt-4">
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  toast({
+                    title: "Coming Soon",
+                    description: "Stage management feature will be available soon"
+                  });
+                }}
+              >
                 Change Stage
               </Button>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  toast({
+                    title: "Coming Soon",
+                    description: "Notes feature will be available soon"
+                  });
+                }}
+              >
                 Add Note
               </Button>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  toast({
+                    title: "Coming Soon",
+                    description: "Messaging feature will be available soon"
+                  });
+                }}
+              >
                 Send Message
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => {
+                  toast({
+                    title: "Coming Soon",
+                    description: "CRM integration will be available soon"
+                  });
+                }}
+              >
                 View in CRM
                 <ExternalLink className="h-3 w-3" />
               </Button>

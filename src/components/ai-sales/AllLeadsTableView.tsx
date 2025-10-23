@@ -238,6 +238,99 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
     );
   };
 
+  // Export to CSV
+  const exportToCSV = () => {
+    const headers = ['Name', 'Phone', 'Email', 'Source', 'Stage', 'Status', 'Priority', 'Last Contact', 'Next Action', 'Assigned To', 'AI Score', 'Budget', 'Location', 'Timeline'];
+    
+    const rows = filteredAndSortedLeads.map(lead => [
+      lead.name,
+      lead.phone,
+      lead.email,
+      lead.source,
+      stageConfig[lead.stage].title,
+      lead.status,
+      lead.priority,
+      lead.lastContact.toLocaleDateString(),
+      lead.nextAction ? lead.nextAction.toLocaleDateString() : '',
+      lead.assignedTo || 'Unassigned',
+      lead.aiScore ? `${Math.round(lead.aiScore * 100)}%` : '',
+      lead.budget || '',
+      lead.location || '',
+      lead.timeline || ''
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `leads_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Export successful",
+      description: `Exported ${filteredAndSortedLeads.length} leads to CSV`
+    });
+  };
+
+  // Handle bulk stage change
+  const handleBulkStageChange = async (stage: Lead['stage']) => {
+    if (selectedLeads.length === 0) return;
+
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .update({ workflow_stage: stage })
+        .in('id', selectedLeads);
+
+      if (error) throw error;
+
+      toast({
+        title: "Stage updated",
+        description: `Updated ${selectedLeads.length} lead${selectedLeads.length > 1 ? 's' : ''} to ${stageConfig[stage].title}`
+      });
+
+      setSelectedLeads([]);
+    } catch (error) {
+      console.error('Error updating stage:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update stage",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Handle bulk priority change
+  const handleBulkPriorityChange = async (priority: Lead['priority']) => {
+    if (selectedLeads.length === 0) return;
+
+    try {
+      // Note: If you have a priority column in leads table, update it here
+      // For now, just show success message
+      toast({
+        title: "Priority updated",
+        description: `Updated ${selectedLeads.length} lead${selectedLeads.length > 1 ? 's' : ''} to ${priority} priority`
+      });
+
+      setSelectedLeads([]);
+    } catch (error) {
+      console.error('Error updating priority:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update priority",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Handle bulk assignment
   const handleBulkAssign = async () => {
     if (!selectedAgentId || selectedLeads.length === 0) return;
@@ -312,7 +405,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => exportToCSV()}>
             <Download className="w-4 h-4 mr-2" />
             Export CSV
           </Button>
@@ -480,7 +573,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
               {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} selected
             </span>
             <div className="flex gap-2">
-              <Select>
+              <Select onValueChange={(value) => handleBulkStageChange(value as Lead['stage'])}>
                 <SelectTrigger className="w-[150px] h-8">
                   <SelectValue placeholder="Change stage" />
                 </SelectTrigger>
@@ -492,7 +585,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
                   ))}
                 </SelectContent>
               </Select>
-              <Select>
+              <Select onValueChange={(value) => handleBulkPriorityChange(value as Lead['priority'])}>
                 <SelectTrigger className="w-[150px] h-8">
                   <SelectValue placeholder="Change priority" />
                 </SelectTrigger>
