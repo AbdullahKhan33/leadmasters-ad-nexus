@@ -31,10 +31,6 @@ function PostBuilderPage() {
     navigate('/', { state: { view: 'social-logins' } });
   };
 
-  const handleInspirationHubClick = () => {
-    navigate('/', { state: { view: 'inspiration-hub' } });
-  };
-
   const handleAnalyticsClick = () => {
     navigate('/', { state: { view: 'analytics' } });
   };
@@ -92,7 +88,6 @@ function PostBuilderPage() {
             onPostBuilderClick={handlePostBuilderClick}
             onAdBuilderClick={handleAdBuilderClick}
             onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
             onWorkspacesClick={handleWorkspacesClick}
@@ -114,7 +109,6 @@ function PostBuilderPage() {
             onPostBuilderClick={handlePostBuilderClick}
             onAdBuilderClick={handleAdBuilderClick}
             onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
@@ -223,7 +217,6 @@ function AdBuilderPage() {
             onPostBuilderClick={handlePostBuilderClick}
             onAdBuilderClick={handleAdBuilderClick}
             onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
             onWorkspacesClick={handleWorkspacesClick}
@@ -245,7 +238,6 @@ function AdBuilderPage() {
             onPostBuilderClick={handlePostBuilderClick}
             onAdBuilderClick={handleAdBuilderClick}
             onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}

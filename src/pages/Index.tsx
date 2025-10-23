@@ -6,7 +6,6 @@ import { AdBuilder } from "@/components/AdBuilder";
 import { PostBuilder } from "@/components/PostBuilder";
 import { SocialLogins } from "@/components/SocialLogins";
 import { Dashboard } from "@/components/Dashboard";
-import { InspirationHub } from "@/components/InspirationHub";
 import { InsightsOverview } from "@/components/InsightsOverview";
 import { Schedule } from "@/components/Schedule";
 import { Workspaces } from "@/components/Workspaces";
@@ -33,8 +32,8 @@ import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 import { CreateCampaignInline } from "@/pages/CreateCampaignPage";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'inspiration-hub' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
 type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'published-posts' | 'campaign-create' | 'ai-sales-automation';
 
 function IndexContent() {
@@ -157,12 +156,6 @@ function IndexContent() {
     });
   };
 
-  const handleInspirationHubClick = () => {
-    handleNavigationClick('inspiration-hub', () => {
-      console.log('Inspiration Hub clicked');
-      setCurrentView('inspiration-hub');
-    });
-  };
 
   const handleAnalyticsClick = () => {
     handleNavigationClick('analytics', () => {
@@ -302,7 +295,6 @@ function IndexContent() {
             onPostBuilderClick={handlePostBuilderClick}
             onAdBuilderClick={handleAdBuilderClick}
             onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
             onWorkspacesClick={handleWorkspacesClick}
@@ -324,7 +316,6 @@ function IndexContent() {
             onPostBuilderClick={handlePostBuilderClick}
             onAdBuilderClick={handleAdBuilderClick}
             onSocialLoginsClick={handleSocialLoginsClick}
-            onInspirationHubClick={handleInspirationHubClick}
             onAnalyticsClick={handleAnalyticsClick}
             onScheduleClick={handleScheduleClick}
             onSmartAutomationsClick={handleSmartAutomationsClick}
@@ -359,8 +350,6 @@ function IndexContent() {
               <PostBuilder />
             ) : currentView === 'published-posts' ? (
               <PublishedPosts />
-            ) : currentView === 'inspiration-hub' ? (
-              <InspirationHub />
             ) : currentView === 'analytics' ? (
               <InsightsOverview />
             ) : currentView === 'schedule' ? (

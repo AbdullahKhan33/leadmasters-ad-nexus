@@ -192,7 +192,6 @@ function CreateCampaignPageContent() {
           onPostBuilderClick={() => {}}
           onAdBuilderClick={() => {}}
           onSocialLoginsClick={() => {}}
-          onInspirationHubClick={() => {}}
           onAnalyticsClick={() => {}}
           onScheduleClick={() => {}}
           onWorkspacesClick={() => {}}

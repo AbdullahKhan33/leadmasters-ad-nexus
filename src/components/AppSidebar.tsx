@@ -37,7 +37,6 @@ export function AppSidebar({
   onAdBuilderClick, 
   onSocialLoginsClick,
   onDashboardClick,
-  onInspirationHubClick,
   onAnalyticsClick,
   onScheduleClick,
   onSmartAutomationsClick,
@@ -56,7 +55,6 @@ export function AppSidebar({
   onAdBuilderClick: () => void;
   onSocialLoginsClick: () => void;
   onDashboardClick: () => void;
-  onInspirationHubClick: () => void;
   onAnalyticsClick: () => void;
   onScheduleClick: () => void;
   onSmartAutomationsClick: () => void;
@@ -69,7 +67,7 @@ export function AppSidebar({
   onServicesClick: () => void;
   onPublishedPostsClick: () => void;
   onAISalesAutomationClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'inspiration-hub' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
@@ -213,25 +211,6 @@ export function AppSidebar({
                 <div className="flex items-center space-x-3">
                   <Archive className={`w-5 h-5 ${getIconStyles(currentView === 'published-posts')} group-hover:scale-110 transition-transform duration-200`} />
                   <span className="font-semibold">Published Posts</span>
-                </div>
-              )}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton 
-              onClick={onInspirationHubClick}
-              className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'inspiration-hub')}`}
-            >
-              {isCollapsed ? (
-                <div className="flex flex-col items-center space-y-1">
-                  <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="text-xs font-medium">Inspiration</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-3">
-                  <Lightbulb className={`w-5 h-5 ${getIconStyles(currentView === 'inspiration-hub')} group-hover:scale-110 transition-transform duration-200`} />
-                  <span className="font-semibold">Inspiration Hub</span>
                 </div>
               )}
             </SidebarMenuButton>
