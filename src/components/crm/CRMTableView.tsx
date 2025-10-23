@@ -1,15 +1,17 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 import { usePremium } from "@/contexts/PremiumContext";
 import { CRMSearchBar } from "./CRMSearchBar";
 import { CRMAIFeaturesBanner } from "./CRMAIFeaturesBanner";
 import { CRMTableHeader } from "./CRMTableHeader";
 import { CRMTableRow } from "./CRMTableRow";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Lead {
   id: string;
@@ -35,83 +37,11 @@ interface CRMTableViewProps {
   onImportClick: () => void;
 }
 
-const mockLeads: Lead[] = [
-  {
-    id: "1",
-    name: "Ahmed Hassan",
-    phone: "+971501234567",
-    email: "ahmed.hassan@gmail.com",
-    source: "WhatsApp",
-    status: "New",
-    list: "premium",
-    category: "customer",
-    lastMessage: "Interested in premium package",
-    timestamp: "2 mins ago",
-    notes: "Very interested in our services",
-    aiScore: 95,
-    aiNextAction: "Send pricing details within 1 hour"
-  },
-  {
-    id: "2",
-    name: "Fatima Al Zahra",
-    phone: "+971509876543",
-    email: "fatima.alzahra@gmail.com",
-    source: "Facebook",
-    status: "Active",
-    list: "general",
-    category: "customer",
-    lastMessage: "Thank you for the proposal",
-    timestamp: "1 hour ago",
-    aiScore: 87,
-    aiNextAction: "Follow up on decision timeline"
-  },
-  {
-    id: "3",
-    name: "Mohammed Ali",
-    phone: "+971501111222",
-    email: "mohammed.ali@gmail.com",
-    source: "Instagram",
-    status: "Awaiting Reply",
-    list: "general",
-    category: "lead",
-    lastMessage: "Looking for social media manager",
-    timestamp: "3 hours ago",
-    aiScore: 78,
-    aiNextAction: "Share case studies and portfolio"
-  },
-  {
-    id: "4",
-    name: "Sara Al Rashid",
-    phone: "+971502345678",
-    email: "sara.rashid@gmail.com",
-    source: "WhatsApp",
-    status: "New",
-    list: "vip",
-    category: "prospect",
-    lastMessage: "Need help with digital marketing",
-    timestamp: "5 hours ago",
-    aiScore: 82,
-    aiNextAction: "Schedule consultation call"
-  },
-  {
-    id: "5",
-    name: "Omar Abdullah",
-    phone: "+971503456789",
-    email: "omar.abdullah@gmail.com",
-    source: "LinkedIn",
-    status: "Active",
-    list: "general",
-    category: "customer",
-    lastMessage: "Interested in your services package",
-    timestamp: "1 day ago",
-    aiScore: 91,
-    aiNextAction: "Send detailed proposal"
-  }
-];
-
-export function CRMTableView({ onUpgradeClick, onImportClick }: CRMTableViewProps) {
+export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }: CRMTableViewProps) {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
-  const [leads, setLeads] = useState(mockLeads);
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [visibleColumns, setVisibleColumns] = useState({
     lead: true,
     contact: true,
@@ -127,16 +57,111 @@ export function CRMTableView({ onUpgradeClick, onImportClick }: CRMTableViewProp
   const canShowAIScore = isPremium && premiumFeatures.aiLeadScoring;
   const canShowAIActions = isPremium && premiumFeatures.aiSuggestedTemplates;
 
-  const handleDeleteLead = (leadId: string) => {
-    setLeads(prevLeads => prevLeads.filter(lead => lead.id !== leadId));
+  // Fetch leads from Supabase (excluding AI automation leads)
+  const fetchLeads = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .neq('lead_source_type', 'ai_automation')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const convertedLeads: Lead[] = (data || []).map((dbLead: any) => ({
+        id: dbLead.id,
+        name: dbLead.name,
+        phone: dbLead.phone,
+        email: dbLead.email || '',
+        source: dbLead.source || 'Unknown',
+        status: dbLead.status || 'New',
+        list: dbLead.list || 'general',
+        category: dbLead.category || 'customer',
+        lastMessage: dbLead.last_message || '',
+        timestamp: new Date(dbLead.last_interaction_at || dbLead.created_at).toLocaleString(),
+        notes: dbLead.notes || '',
+        reminderDate: dbLead.reminder_date,
+        reminderNote: dbLead.reminder_note || '',
+        aiScore: dbLead.ai_score,
+        aiNextAction: dbLead.ai_next_action || ''
+      }));
+
+      setLeads(convertedLeads);
+    } catch (error: any) {
+      console.error('Error fetching CRM leads:', error);
+      toast({
+        title: "Error loading contacts",
+        description: "Failed to load CRM contacts",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleLeadUpdate = (leadId: string, updates: Partial<Lead>) => {
-    setLeads(prevLeads => 
-      prevLeads.map(lead => 
-        lead.id === leadId ? { ...lead, ...updates } : lead
-      )
-    );
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const handleDeleteLead = async (leadId: string) => {
+    try {
+      const { error } = await supabase
+        .from('leads')
+        .delete()
+        .eq('id', leadId);
+
+      if (error) throw error;
+
+      setLeads(prevLeads => prevLeads.filter(lead => lead.id !== leadId));
+      toast({
+        title: "Lead deleted",
+        description: "Contact has been removed successfully",
+      });
+    } catch (error) {
+      console.error('Error deleting lead:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete contact",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleLeadUpdate = async (leadId: string, updates: Partial<Lead>) => {
+    try {
+      // Map UI fields back to database columns
+      const dbUpdates: any = {};
+      if (updates.status) dbUpdates.status = updates.status;
+      if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+      if (updates.reminderDate !== undefined) dbUpdates.reminder_date = updates.reminderDate;
+      if (updates.reminderNote !== undefined) dbUpdates.reminder_note = updates.reminderNote;
+
+      const { error } = await supabase
+        .from('leads')
+        .update(dbUpdates)
+        .eq('id', leadId);
+
+      if (error) throw error;
+
+      setLeads(prevLeads => 
+        prevLeads.map(lead => 
+          lead.id === leadId ? { ...lead, ...updates } : lead
+        )
+      );
+
+      toast({
+        title: "Contact updated",
+        description: "Changes saved successfully",
+      });
+    } catch (error) {
+      console.error('Error updating lead:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update contact",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredLeads = leads.filter((lead) => {
@@ -188,31 +213,44 @@ export function CRMTableView({ onUpgradeClick, onImportClick }: CRMTableViewProp
         {/* Table Card - Full width container */}
         <Card className="border border-gray-200 shadow-sm bg-white flex-1 flex flex-col min-h-0 w-full">
           <CardContent className="p-0 flex-1 flex flex-col min-h-0">
-            <ScrollArea className="flex-1 w-full">
-              <div className="min-w-[1200px]">
-                <Table>
-                  <CRMTableHeader 
-                    canShowAIScore={canShowAIScore}
-                    canShowAIActions={canShowAIActions}
-                    visibleColumns={visibleColumns}
-                  />
-                  <TableBody>
-                    {filteredLeads.map((lead) => (
-                      <CRMTableRow
-                        key={lead.id}
-                        lead={lead}
-                        canShowAIScore={canShowAIScore}
-                        canShowAIActions={canShowAIActions}
-                        onUpgradeClick={onUpgradeClick}
-                        visibleColumns={visibleColumns}
-                        onDelete={handleDeleteLead}
-                        onLeadUpdate={handleLeadUpdate}
-                      />
-                    ))}
-                  </TableBody>
-                </Table>
+            {isLoading ? (
+              <div className="flex items-center justify-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
-            </ScrollArea>
+            ) : filteredLeads.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-64 text-center">
+                <p className="text-lg font-medium text-gray-900">No contacts found</p>
+                <p className="text-sm text-gray-600 mt-2">
+                  {searchQuery ? "Try adjusting your search" : "Import contacts or move leads from AI Sales Automation"}
+                </p>
+              </div>
+            ) : (
+              <ScrollArea className="flex-1 w-full">
+                <div className="min-w-[1200px]">
+                  <Table>
+                    <CRMTableHeader 
+                      canShowAIScore={canShowAIScore}
+                      canShowAIActions={canShowAIActions}
+                      visibleColumns={visibleColumns}
+                    />
+                    <TableBody>
+                      {filteredLeads.map((lead) => (
+                        <CRMTableRow
+                          key={lead.id}
+                          lead={lead}
+                          canShowAIScore={canShowAIScore}
+                          canShowAIActions={canShowAIActions}
+                          onUpgradeClick={onUpgradeClick}
+                          visibleColumns={visibleColumns}
+                          onDelete={handleDeleteLead}
+                          onLeadUpdate={handleLeadUpdate}
+                        />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </ScrollArea>
+            )}
           </CardContent>
         </Card>
       </div>

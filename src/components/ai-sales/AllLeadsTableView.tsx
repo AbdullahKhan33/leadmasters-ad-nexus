@@ -350,6 +350,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
       });
 
       setSelectedLeads([]);
+      fetchLeads(); // Refresh the data
     } catch (error) {
       console.error('Error updating stage:', error);
       toast({
