@@ -284,6 +284,7 @@ function TemplateCard({ template, industry, region, onCreateFromTemplate, onCust
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onCustomize && onCustomize(template.id)}
     >
       {/* Gradient overlay */}
       <div 
@@ -337,17 +338,7 @@ function TemplateCard({ template, industry, region, onCreateFromTemplate, onCust
           </div>
         </div>
 
-        <div className="flex gap-2">
-          {onCustomize && (
-            <Button
-              onClick={() => onCustomize(template.id)}
-              variant="outline"
-              className="flex-1 transition-all duration-200"
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              Customize
-            </Button>
-          )}
+        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
           <Button
             onClick={handleCreate}
             disabled={isCreating}

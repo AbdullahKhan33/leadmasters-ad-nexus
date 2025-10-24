@@ -23,20 +23,39 @@ function matchesSingleCriterion(lead: Lead, criterion: SegmentCriteria): boolean
   // Get field value from lead (check source_metadata first, then top-level)
   const leadValue = lead.source_metadata?.[field] ?? lead[field];
   
+  // Handle null/undefined leadValue
+  if (leadValue === null || leadValue === undefined) return false;
+  
   // Handle different operators
   switch (operator) {
     case 'equals':
+      // If leadValue is an array, check if it contains the value
+      if (Array.isArray(leadValue)) {
+        return leadValue.some(v => String(v).toLowerCase() === String(value).toLowerCase());
+      }
       return String(leadValue).toLowerCase() === String(value).toLowerCase();
       
     case 'in':
       if (!Array.isArray(value)) return false;
+      // If leadValue is an array, check for any overlap
+      if (Array.isArray(leadValue)) {
+        return value.some(v => 
+          leadValue.some(lv => String(lv).toLowerCase() === String(v).toLowerCase())
+        );
+      }
       const normalizedLeadValue = String(leadValue).toLowerCase();
       return value.some(v => String(v).toLowerCase() === normalizedLeadValue);
       
     case 'not_equals':
+      if (Array.isArray(leadValue)) {
+        return !leadValue.some(v => String(v).toLowerCase() === String(value).toLowerCase());
+      }
       return String(leadValue).toLowerCase() !== String(value).toLowerCase();
       
     case 'contains':
+      if (Array.isArray(leadValue)) {
+        return leadValue.some(v => String(v).toLowerCase().includes(String(value).toLowerCase()));
+      }
       return String(leadValue).toLowerCase().includes(String(value).toLowerCase());
       
     case 'greater_than':
@@ -47,6 +66,11 @@ function matchesSingleCriterion(lead: Lead, criterion: SegmentCriteria): boolean
       
     case 'not_in':
       if (!Array.isArray(value)) return true;
+      if (Array.isArray(leadValue)) {
+        return !value.some(v => 
+          leadValue.some(lv => String(lv).toLowerCase() === String(v).toLowerCase())
+        );
+      }
       const normalizedValue = String(leadValue).toLowerCase();
       return !value.some(v => String(v).toLowerCase() === normalizedValue);
       

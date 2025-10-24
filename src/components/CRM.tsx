@@ -9,7 +9,8 @@ import {
   Users, 
   TableProperties,
   Megaphone,
-  UserPlus
+  UserPlus,
+  Upload
 } from "lucide-react";
 import { CRMTableView } from "./crm/CRMTableView";
 import { CSVImportModal } from "./crm/CSVImportModal";
@@ -61,6 +62,7 @@ export function CRM() {
   const handleSeedContacts = async () => {
     try {
       setIsSeeding(true);
+      
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
@@ -71,40 +73,588 @@ export function CRM() {
         return;
       }
 
-      // Delete all existing leads for this user first
-      await supabase.from('leads').delete().eq('user_id', user.id);
+      // First, delete all existing leads for this user
+      const { error: deleteError } = await supabase
+        .from('leads')
+        .delete()
+        .eq('user_id', user.id);
 
-      // Realistic contacts from India and Middle East (120+ contacts) - condensed version
-      const realContacts = [
-        // Real Estate + EdTech contacts with proper source_metadata
-        { user_id: user.id, name: "Aditya Sharma", phone: "+91 98765 43210", email: "aditya.s@gmail.com", source: "Instagram", status: "New", source_metadata: { country: "india", city: "mumbai", category: "real_estate", property_type: "apartment", property_purpose: "investment", budget_range: "inr_2cr_plus", timeline: "3_6_months", seed: true } },
-        { user_id: user.id, name: "Priya Malhotra", phone: "+91 98123 45678", email: "priya.m@outlook.com", source: "Facebook", status: "Active", source_metadata: { country: "india", city: "mumbai", category: "real_estate", property_type: "penthouse", property_purpose: "first_home", budget_range: "inr_2cr_plus", timeline: "3_6_months", seed: true } },
-        { user_id: user.id, name: "Vikram Desai", phone: "+91 97234 56789", email: "vikram.d@yahoo.com", source: "WhatsApp", status: "Qualified", source_metadata: { country: "india", city: "mumbai", category: "real_estate", property_type: "apartment", property_purpose: "investment", budget_range: "inr_2cr_plus", timeline: "3_6_months", seed: true } },
-        { user_id: user.id, name: "Rahul Verma", phone: "+91 95456 78901", email: "rahul.v@gmail.com", source: "Website", status: "New", source_metadata: { country: "india", city: "jaipur", category: "real_estate", property_type: "apartment", buyer_type: "first_time", property_purpose: "first_home", budget_range: "inr_30_50l", timeline: "1_3_months", seed: true } },
-        { user_id: user.id, name: "Sneha Patel", phone: "+91 94567 89012", email: "sneha.p@yahoo.com", source: "Referral", status: "Active", source_metadata: { country: "india", city: "pune", category: "real_estate", property_type: "villa", buyer_type: "first_time", property_purpose: "first_home", budget_range: "inr_50_75l", timeline: "3_6_months", seed: true } },
-        { user_id: user.id, name: "Rohan Nair", phone: "+91 90901 23456", email: "rohan.n@gmail.com", source: "LinkedIn", status: "New", source_metadata: { country: "india", city: "bangalore", category: "real_estate", buyer_type: "nri_expat", property_type: "apartment", property_purpose: "investment", property_features: ["ready_to_move", "security"], budget_range: "inr_75l_1cr", seed: true } },
-        { user_id: user.id, name: "Mohammed Al Maktoum", phone: "+971 50 123 4567", email: "mohammed.am@gmail.com", source: "LinkedIn", status: "New", source_metadata: { country: "uae", city: "dubai", category: "real_estate", property_type: "apartment", property_purpose: "investment", budget_range: "aed_2_5m", property_features: ["pool", "gym", "furnished"], timeline: "3_6_months", seed: true } },
-        { user_id: user.id, name: "Fatima Hassan", phone: "+971 50 234 5678", email: "fatima.h@yahoo.com", source: "Instagram", status: "Active", source_metadata: { country: "uae", city: "dubai", category: "real_estate", property_type: "penthouse", property_purpose: "investment", budget_range: "aed_5m_plus", property_features: ["pool", "gym", "furnished"], timeline: "immediate", seed: true } },
-        { user_id: user.id, name: "Rashid Khan", phone: "+971 50 567 8901", email: "rashid.k@gmail.com", source: "Website", status: "New", source_metadata: { country: "uae", city: "dubai", category: "real_estate", property_type: "apartment", buyer_type: "first_time", budget_range: "aed_500k_1m", timeline: "1_3_months", seed: true } },
-        { user_id: user.id, name: "Hassan Al-Thani", phone: "+974 5555 1234", email: "hassan.at@gmail.com", source: "LinkedIn", status: "New", source_metadata: { country: "qatar", city: "doha", category: "real_estate", property_type: "apartment", buyer_type: "nri_expat", timeline: "immediate", property_features: ["furnished", "parking", "security"], seed: true } },
-        { user_id: user.id, name: "Faisal Al-Saud", phone: "+966 50 111 2233", email: "faisal.as@gmail.com", source: "LinkedIn", status: "New", source_metadata: { country: "saudi_arabia", city: "riyadh", category: "real_estate", property_type: "apartment", buyer_type: "upgrading", budget_range: "sar_qar_1_3m", timeline: "3_6_months", seed: true } },
-        { user_id: user.id, name: "Ankit Gupta", phone: "+91 86345 67890", email: "ankit.g@gmail.com", source: "Facebook", status: "New", source_metadata: { country: "india", city: "bangalore", category: "edtech", course_interest: "programming", career_stage: "career_switcher", course_budget: "inr_50k_1l", learning_preference: "live_classes", course_timeline: "bootcamp", demo_status: "not_contacted", seed: true } },
-        { user_id: user.id, name: "Pooja Rao", phone: "+91 85456 78901", email: "pooja.r@yahoo.com", source: "Instagram", status: "Active", source_metadata: { country: "india", city: "mumbai", category: "edtech", course_interest: "data_science", career_stage: "career_switcher", course_budget: "inr_1l_plus", learning_preference: "hybrid", course_timeline: "bootcamp", demo_status: "demo_scheduled", seed: true } },
-        { user_id: user.id, name: "Ali Rahman", phone: "+971 51 111 2233", email: "ali.r@gmail.com", source: "LinkedIn", status: "New", source_metadata: { country: "uae", city: "dubai", category: "edtech", course_interest: "business_mba", career_stage: "executive", course_budget: "aed_sar_10_20k", learning_preference: "in_person", language_preference: ["english", "arabic"], demo_status: "not_contacted", seed: true } },
-        { user_id: user.id, name: "Yusuf Al-Khater", phone: "+974 5566 1122", email: "yusuf.ak@gmail.com", source: "LinkedIn", status: "New", source_metadata: { country: "qatar", city: "doha", category: "edtech", course_interest: "business_mba", career_stage: "executive", course_budget: "aed_sar_20k_plus", learning_preference: "in_person", language_preference: ["english", "arabic"], demo_status: "not_contacted", seed: true } },
-        { user_id: user.id, name: "Nasser Al-Qahtani", phone: "+966 51 777 8899", email: "nasser.aq@gmail.com", source: "LinkedIn", status: "New", source_metadata: { country: "saudi_arabia", city: "riyadh", category: "edtech", course_interest: "business_mba", career_stage: "executive", course_budget: "aed_sar_20k_plus", learning_preference: "in_person", language_preference: ["arabic", "english"], demo_status: "not_contacted", seed: true } },
-        // ... Add remaining 104 contacts following the exact same pattern from the full list above
+      if (deleteError) throw deleteError;
+
+      // Indian names pool
+      const indianNames = [
+        "Aditya Sharma", "Priya Malhotra", "Vikram Desai", "Sneha Patel", "Rajesh Kumar",
+        "Kavya Nair", "Arjun Singh", "Ananya Das", "Rohan Gupta", "Divya Iyer",
+        "Karthik Reddy", "Meera Krishnan", "Sanjay Verma", "Pooja Mehta", "Amit Joshi",
+        "Ritu Kapoor", "Varun Chopra", "Nisha Agarwal", "Manish Kulkarni", "Shruti Menon"
       ];
 
-      const { error } = await supabase.from('leads').insert(realContacts);
+      // UAE names pool
+      const uaeNames = [
+        "Mohammed Al Maktoum", "Fatima Al Mansouri", "Ahmed Al Rashid", "Zara Khan",
+        "Khalid Al Mulla", "Layla Ibrahim", "Rashid Al Falasi", "Mariam Al Hamadi",
+        "Yusuf Al Mazrouei", "Noor Al Shamsi", "Sultan Al Kaabi", "Hessa Al Suwaidi"
+      ];
+
+      // Qatar names pool
+      const qatarNames = [
+        "Hassan Al Thani", "Aisha Al Attiyah", "Omar Al Kuwari", "Maryam Al Jaber",
+        "Jassim Al Ansari", "Noora Al Sulaiti", "Abdullah Al Marri", "Sara Al Naimi"
+      ];
+
+      // Saudi names pool
+      const saudiNames = [
+        "Faisal Al Saud", "Nasser Al Qahtani", "Khaled Al Otaibi", "Leila Al Harbi",
+        "Ibrahim Al Ghamdi", "Reem Al Dosari", "Turki Al Shehri", "Haya Al Mutairi"
+      ];
+
+      const sources = ['whatsapp', 'facebook', 'instagram', 'linkedin', 'website', 'referral'];
+      const statuses = ['New', 'Active', 'Qualified'];
+
+      // Helper function to generate phone numbers
+      const generatePhone = (country: string) => {
+        const formats: Record<string, string> = {
+          india: `+91 ${Math.floor(90000 + Math.random() * 10000)} ${Math.floor(10000 + Math.random() * 90000)}`,
+          uae: `+971 ${50 + Math.floor(Math.random() * 9)} ${Math.floor(100 + Math.random() * 900)} ${Math.floor(1000 + Math.random() * 9000)}`,
+          qatar: `+974 ${Math.floor(5000 + Math.random() * 5000)} ${Math.floor(1000 + Math.random() * 9000)}`,
+          saudi_arabia: `+966 ${50 + Math.floor(Math.random() * 9)} ${Math.floor(100 + Math.random() * 900)} ${Math.floor(1000 + Math.random() * 9000)}`
+        };
+        return formats[country];
+      };
+
+      // Helper to get random item
+      const random = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+      // Generate 120+ contacts matching template criteria
+      const contacts: any[] = [];
+      let nameIndex = { indian: 0, uae: 0, qatar: 0, saudi: 0 };
+
+      // Helper to get next unique name
+      const getNextName = (pool: string[], key: 'indian' | 'uae' | 'qatar' | 'saudi') => {
+        const name = pool[nameIndex[key] % pool.length];
+        nameIndex[key]++;
+        return name;
+      };
+
+      // REAL ESTATE CONTACTS (60 contacts)
+
+      // Mumbai Luxury (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(indianNames, 'indian'),
+          phone: generatePhone('india'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'india',
+            city: 'mumbai',
+            property_type: random(['apartment', 'penthouse']),
+            budget_range: 'inr_2cr_plus',
+            timeline: '3_6_months',
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Tier-2 First Home (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(indianNames, 'indian'),
+          phone: generatePhone('india'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'india',
+            city: random(['tier2_india', 'jaipur', 'pune', 'ahmedabad']),
+            property_type: random(['apartment', 'villa']),
+            budget_range: random(['inr_30_50l', 'inr_50_75l']),
+            buyer_type: 'first_time',
+            property_purpose: 'first_home',
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // NRI Investment (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(indianNames, 'indian'),
+          phone: generatePhone('india'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'india',
+            buyer_type: 'nri_expat',
+            property_type: random(['apartment', 'commercial']),
+            property_purpose: random(['investment', 'rental_income']),
+            property_features: ['ready_to_move', 'security'],
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Dubai Downtown Luxury (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(uaeNames, 'uae'),
+          phone: generatePhone('uae'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'uae',
+            city: 'dubai',
+            property_type: random(['apartment', 'penthouse']),
+            budget_range: random(['aed_2_5m', 'aed_5m_plus']),
+            property_purpose: 'investment',
+            property_features: ['pool', 'gym', 'furnished'],
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Affordable Dubai Family (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(uaeNames, 'uae'),
+          phone: generatePhone('uae'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'uae',
+            city: random(['dubai', 'sharjah', 'ajman']),
+            property_type: random(['apartment', 'townhouse']),
+            budget_range: 'aed_500k_1m',
+            buyer_type: 'first_time',
+            timeline: '1_3_months',
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Dubai Off-Plan (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(uaeNames, 'uae'),
+          phone: generatePhone('uae'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'uae',
+            city: 'dubai',
+            property_type: random(['apartment', 'villa']),
+            property_features: 'under_construction',
+            budget_range: 'aed_1_2m',
+            timeline: '6_12_months',
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Doha Expat Rental (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(qatarNames, 'qatar'),
+          phone: generatePhone('qatar'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'qatar',
+            city: 'doha',
+            property_type: random(['apartment', 'villa']),
+            buyer_type: 'nri_expat',
+            timeline: random(['immediate', '1_3_months']),
+            property_features: ['furnished', 'parking', 'security'],
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Qatar Investment (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(qatarNames, 'qatar'),
+          phone: generatePhone('qatar'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'qatar',
+            city: random(['doha', 'al_wakrah']),
+            property_type: random(['commercial', 'apartment']),
+            property_purpose: random(['investment', 'rental_income']),
+            buyer_type: 'investor',
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Doha Luxury Villa (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(qatarNames, 'qatar'),
+          phone: generatePhone('qatar'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'qatar',
+            city: 'doha',
+            property_type: 'villa',
+            budget_range: 'sar_qar_3m_plus',
+            property_features: ['pool', 'security', 'furnished'],
+            timeline: '3_6_months',
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Riyadh Vision 2030 (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(saudiNames, 'saudi'),
+          phone: generatePhone('saudi_arabia'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'saudi_arabia',
+            city: 'riyadh',
+            property_type: random(['commercial', 'apartment']),
+            property_purpose: 'investment',
+            timeline: random(['6_12_months', '1_year_plus']),
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Riyadh Family Compound (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(saudiNames, 'saudi'),
+          phone: generatePhone('saudi_arabia'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'saudi_arabia',
+            city: 'riyadh',
+            property_type: random(['villa', 'townhouse']),
+            property_purpose: 'first_home',
+            budget_range: 'sar_qar_1_3m',
+            property_features: ['security', 'parking'],
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // Jeddah Waterfront (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(saudiNames, 'saudi'),
+          phone: generatePhone('saudi_arabia'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'customer',
+          source_metadata: {
+            seed: true,
+            country: 'saudi_arabia',
+            city: 'jeddah',
+            property_type: random(['apartment', 'villa']),
+            budget_range: 'sar_qar_3m_plus',
+            property_features: ['ready_to_move', 'furnished'],
+            timeline: '1_3_months',
+            category: 'real_estate'
+          }
+        });
+      }
+
+      // EDTECH CONTACTS (60 contacts)
+
+      // India Career Switcher (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(indianNames, 'indian'),
+          phone: generatePhone('india'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'india',
+            career_stage: random(['career_switcher', 'fresh_graduate']),
+            course_interest: random(['programming', 'data_science']),
+            course_budget: 'inr_50k_1l',
+            course_timeline: 'bootcamp',
+            category: 'edtech'
+          }
+        });
+      }
+
+      // India Test Prep (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(indianNames, 'indian'),
+          phone: generatePhone('india'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'india',
+            course_interest: 'test_prep',
+            career_stage: random(['student', 'professional_upskilling']),
+            course_budget: random(['inr_10_25k', 'inr_25_50k']),
+            course_timeline: 'short_course',
+            category: 'edtech'
+          }
+        });
+      }
+
+      // India Professional Upskilling (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(indianNames, 'indian'),
+          phone: generatePhone('india'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'india',
+            career_stage: random(['professional_upskilling', 'executive']),
+            course_interest: random(['business_mba', 'digital_marketing', 'certifications']),
+            course_budget: random(['inr_25_50k', 'inr_1l_plus']),
+            learning_preference: random(['self_paced', 'hybrid']),
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Dubai Expat Career (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(uaeNames, 'uae'),
+          phone: generatePhone('uae'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'uae',
+            city: random(['dubai', 'abu_dhabi']),
+            career_stage: random(['career_switcher', 'professional_upskilling']),
+            course_interest: random(['programming', 'data_science', 'digital_marketing']),
+            course_budget: random(['aed_sar_5_10k', 'aed_sar_10_20k']),
+            demo_status: random(['demo_completed', 'demo_scheduled']),
+            category: 'edtech'
+          }
+        });
+      }
+
+      // UAE Professional Certifications (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(uaeNames, 'uae'),
+          phone: generatePhone('uae'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'uae',
+            career_stage: random(['professional_upskilling', 'executive']),
+            course_interest: random(['certifications', 'business_mba']),
+            course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
+            learning_preference: random(['live_classes', 'in_person']),
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Dubai Arabic Learners (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(uaeNames, 'uae'),
+          phone: generatePhone('uae'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'uae',
+            city: 'dubai',
+            course_interest: 'language_learning',
+            language_preference: 'arabic',
+            career_stage: 'professional_upskilling',
+            course_budget: 'aed_sar_1_5k',
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Doha Expat Upskilling (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(qatarNames, 'qatar'),
+          phone: generatePhone('qatar'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'qatar',
+            city: 'doha',
+            career_stage: 'professional_upskilling',
+            course_interest: random(['business_mba', 'digital_marketing', 'data_science']),
+            course_budget: random(['aed_sar_5_10k', 'aed_sar_10_20k']),
+            learning_preference: random(['hybrid', 'live_classes']),
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Qatar Graduate Programs (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(qatarNames, 'qatar'),
+          phone: generatePhone('qatar'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'qatar',
+            career_stage: random(['fresh_graduate', 'student']),
+            course_interest: random(['programming', 'design', 'business_mba']),
+            course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
+            course_timeline: 'degree_program',
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Qatar Executive Education (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(qatarNames, 'qatar'),
+          phone: generatePhone('qatar'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'qatar',
+            city: 'doha',
+            career_stage: 'executive',
+            course_interest: random(['business_mba', 'certifications']),
+            course_budget: 'aed_sar_20k_plus',
+            learning_preference: random(['in_person', 'live_classes']),
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Riyadh Vision 2030 Skills (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(saudiNames, 'saudi'),
+          phone: generatePhone('saudi_arabia'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'saudi_arabia',
+            city: 'riyadh',
+            course_interest: random(['programming', 'data_science', 'digital_marketing']),
+            career_stage: random(['fresh_graduate', 'career_switcher']),
+            course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
+            language_preference: ['arabic', 'english'],
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Saudi Women Career (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(saudiNames, 'saudi'),
+          phone: generatePhone('saudi_arabia'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'saudi_arabia',
+            career_stage: random(['fresh_graduate', 'career_switcher', 'professional_upskilling']),
+            course_interest: random(['business_mba', 'digital_marketing', 'design']),
+            course_budget: random(['aed_sar_5_10k', 'aed_sar_10_20k']),
+            learning_preference: random(['self_paced', 'live_classes']),
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Riyadh Tech Talent (5)
+      for (let i = 0; i < 5; i++) {
+        contacts.push({
+          name: getNextName(saudiNames, 'saudi'),
+          phone: generatePhone('saudi_arabia'),
+          status: random(statuses),
+          source: random(sources),
+          category: 'lead',
+          source_metadata: {
+            seed: true,
+            country: 'saudi_arabia',
+            city: random(['riyadh', 'jeddah']),
+            career_stage: random(['student', 'fresh_graduate']),
+            course_interest: random(['programming', 'data_science']),
+            course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
+            demo_status: 'demo_completed',
+            category: 'edtech'
+          }
+        });
+      }
+
+      // Insert all contacts
+      const { error } = await supabase
+        .from('leads')
+        .insert(
+          contacts.map(contact => ({
+            ...contact,
+            user_id: user.id,
+            email: null,
+            list: 'general',
+            timestamp: new Date().toISOString()
+          }))
+        );
 
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: `${realContacts.length} real contacts from India & Middle East added successfully`,
+        description: `${contacts.length} real contacts from India and Middle East have been added!`,
       });
 
+      // Reload to see changes
       window.location.reload();
     } catch (error: any) {
       console.error('Error seeding contacts:', error);
@@ -131,15 +681,13 @@ export function CRM() {
               <p className="text-gray-600 text-sm font-medium">WhatsApp Lead Management</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button 
-                variant="gradient" 
-                size="sm" 
-                className="shadow-sm hover:shadow-md transition-all duration-200"
+              <Button
                 onClick={handleSeedContacts}
                 disabled={isSeeding}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg"
               >
-                <UserPlus className="w-4 h-4 mr-2" />
-                {isSeeding ? 'Replacing...' : 'Replace With Real Contacts (120+)'}
+                <Upload className="mr-2 h-4 w-4" />
+                {isSeeding ? "Seeding..." : "Replace With Real Contacts (120+)"}
               </Button>
               <Button 
                 variant="outline" 
@@ -186,7 +734,7 @@ export function CRM() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-auto">
           <Tabs value={activeTab} className="h-full">
             <TabsContent value="campaigns" className="h-full m-0">
               <CampaignDashboard />

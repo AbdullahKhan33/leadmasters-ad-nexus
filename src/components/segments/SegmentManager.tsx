@@ -55,8 +55,8 @@ export function SegmentManager() {
     name: seg.name,
     description: seg.description || '',
     color: '#3b82f6',
-    criteria: [],
-    leadCount: 0,
+    criteria: Array.isArray(seg.criteria) ? seg.criteria : [],
+    leadCount: seg.lead_count || 0,
     isActive: seg.is_active,
     createdAt: seg.created_at,
     updatedAt: seg.updated_at || seg.created_at
