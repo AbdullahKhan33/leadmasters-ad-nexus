@@ -245,7 +245,7 @@ export function WorkflowTemplateCard({
           </div>
 
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Workflow Steps</p>
+            <p className="text-xs text-muted-foreground">Campaign Steps</p>
             <p className="text-xs leading-relaxed">{steps}</p>
           </div>
 

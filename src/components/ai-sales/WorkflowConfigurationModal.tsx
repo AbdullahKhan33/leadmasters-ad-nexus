@@ -192,8 +192,8 @@ export function WorkflowConfigurationModal({
       if (error) throw error;
 
       toast({
-        title: "Workflow Launched!",
-        description: `Successfully launched workflow for ${eligibleLeadsCount} leads`
+        title: "Campaign Launched!",
+        description: `Successfully launched campaign for ${eligibleLeadsCount} leads`
       });
 
       setShowLaunchDialog(false);
@@ -230,7 +230,7 @@ export function WorkflowConfigurationModal({
 
       toast({
         title: "Status Updated",
-        description: `Workflow ${pendingStatus === 'paused' ? 'paused' : 'resumed'} successfully`
+        description: `Campaign ${pendingStatus === 'paused' ? 'paused' : 'resumed'} successfully`
       });
 
       setShowStatusChangeDialog(false);
@@ -239,7 +239,7 @@ export function WorkflowConfigurationModal({
       console.error('Error updating status:', error);
       toast({
         title: "Error",
-        description: "Failed to update workflow status",
+        description: "Failed to update campaign status",
         variant: "destructive"
       });
     } finally {
@@ -270,7 +270,7 @@ export function WorkflowConfigurationModal({
 
       toast({
         title: "Configuration Updated",
-        description: "Workflow configuration saved successfully"
+        description: "Campaign configuration saved successfully"
       });
 
       onSave();
@@ -278,7 +278,7 @@ export function WorkflowConfigurationModal({
       console.error('Error saving workflow configuration:', error);
       toast({
         title: "Error",
-        description: "Failed to save workflow configuration",
+        description: "Failed to save campaign configuration",
         variant: "destructive"
       });
     } finally {
@@ -299,7 +299,7 @@ export function WorkflowConfigurationModal({
           <DialogHeader>
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle>Configure Workflow</DialogTitle>
+                <DialogTitle>Configure Automated Campaign</DialogTitle>
                 <DialogDescription>
                   Set up targeting and message sequence for <span className="font-semibold text-foreground">{workflowName}</span>
                 </DialogDescription>
@@ -313,13 +313,13 @@ export function WorkflowConfigurationModal({
           </DialogHeader>
 
           <div className="space-y-6">
-            {/* Status and Progress for Active Workflows */}
+            {/* Status and Progress for Active Campaigns */}
             {workflowStatus !== 'draft' && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <BarChart3 className="h-5 w-5 text-blue-600" />
-                    <h3 className="font-semibold text-blue-900">Workflow Progress</h3>
+                    <h3 className="font-semibold text-blue-900">Campaign Progress</h3>
                   </div>
                   {workflowStatus === 'active' ? (
                     <Button size="sm" variant="outline" onClick={() => handleStatusChange('paused')}>
@@ -353,7 +353,7 @@ export function WorkflowConfigurationModal({
               <AlertDescription>
                 {workflowStatus === 'draft' 
                   ? 'Select a target segment and message sequence, then launch to start processing leads.'
-                  : 'You can edit the configuration below. Changes will apply to new leads entering the workflow.'}
+                  : 'You can edit the configuration below. Changes will apply to new leads entering the campaign.'}
               </AlertDescription>
             </Alert>
 
@@ -504,7 +504,7 @@ export function WorkflowConfigurationModal({
               {workflowStatus === 'draft' ? (
                 <Button onClick={handleLaunch} disabled={isSubmitting || !selectedSegmentId || !selectedSequenceId}>
                   <Play className="w-4 h-4 mr-1" />
-                  {isSubmitting ? 'Launching...' : 'Launch Workflow'}
+                  {isSubmitting ? 'Launching...' : 'Launch Campaign'}
                 </Button>
               ) : (
                 <Button onClick={handleSave} disabled={isSubmitting}>
@@ -520,7 +520,7 @@ export function WorkflowConfigurationModal({
       <AlertDialog open={showLaunchDialog} onOpenChange={setShowLaunchDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Launch Workflow?</AlertDialogTitle>
+            <AlertDialogTitle>Launch Campaign?</AlertDialogTitle>
             <AlertDialogDescription>
               You're about to launch <span className="font-semibold">{workflowName}</span> for:
               <div className="mt-3 p-3 bg-blue-50 rounded-lg space-y-2">
@@ -542,7 +542,7 @@ export function WorkflowConfigurationModal({
                 </div>
               </div>
               <p className="mt-3 text-sm">
-                Once launched, the workflow will automatically process leads from the selected segment.
+                Once launched, the campaign will automatically process leads from the selected segment.
               </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -560,12 +560,12 @@ export function WorkflowConfigurationModal({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {pendingStatus === 'paused' ? 'Pause' : 'Resume'} Workflow?
+              {pendingStatus === 'paused' ? 'Pause' : 'Resume'} Campaign?
             </AlertDialogTitle>
             <AlertDialogDescription>
               {pendingStatus === 'paused' 
-                ? 'This will pause the workflow. No new messages will be sent until you resume it.'
-                : 'This will resume the workflow and continue processing leads.'}
+                ? 'This will pause the campaign. No new messages will be sent until you resume it.'
+                : 'This will resume the campaign and continue processing leads.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

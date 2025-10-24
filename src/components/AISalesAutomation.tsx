@@ -89,7 +89,7 @@ export function AISalesAutomation() {
               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:via-pink-600 data-[state=active]:to-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-purple-50/60 transition-all duration-200 rounded-lg font-semibold flex items-center gap-2"
             >
               <Workflow className="w-4 h-4" />
-              Workflows
+              Automated Campaigns
             </TabsTrigger>
             <TabsTrigger 
               value="integrations" 
@@ -123,16 +123,16 @@ export function AISalesAutomation() {
             />
           </TabsContent>
 
-          {/* Workflows Tab */}
+          {/* Automated Campaigns Tab */}
           <TabsContent value="workflows" className="space-y-4 mt-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-xl font-semibold">Workflow Templates</h2>
-                <p className="text-sm text-muted-foreground">Pre-built automation sequences for lead nurturing</p>
+                <h2 className="text-xl font-semibold">Automated Campaigns</h2>
+                <p className="text-sm text-muted-foreground">Pre-configured campaigns that automatically nurture leads through message sequences</p>
               </div>
               <Button className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-500 hover:opacity-90">
                 <Plus className="w-4 h-4 mr-2" />
-                Create Custom Workflow
+                Create Custom Campaign
               </Button>
             </div>
 
