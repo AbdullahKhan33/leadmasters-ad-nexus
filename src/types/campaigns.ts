@@ -79,3 +79,36 @@ export interface CampaignFolder {
   created_at: string;
   updated_at: string;
 }
+
+export interface WorkflowSequence {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  icon: string;
+  color: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WorkflowSequenceStep {
+  id: string;
+  sequence_id: string;
+  template_id: string;
+  step_order: number;
+  delay_hours: number;
+  channel: 'email' | 'whatsapp';
+  condition: Record<string, any> | null;
+  created_at: string;
+}
+
+export interface WorkflowSequenceWithSteps extends WorkflowSequence {
+  steps: (WorkflowSequenceStep & {
+    template: CampaignTemplate;
+  })[];
+  total_steps: number;
+  total_duration_hours: number;
+  email_count: number;
+  whatsapp_count: number;
+}
