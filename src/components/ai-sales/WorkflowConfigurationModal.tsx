@@ -292,55 +292,81 @@ export function WorkflowConfigurationModal({
     return `${days} day${days !== 1 ? 's' : ''}`;
   };
 
+  // Show loading state
+  if (segmentsLoading) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-4xl">
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading configuration...</p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  const isConfigured = selectedSegmentId && selectedSequenceId;
+  const canLaunch = isConfigured && workflowStatus === 'draft' && eligibleLeadsCount > 0;
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle>Configure Automated Campaign</DialogTitle>
-                <DialogDescription>
-                  Set up targeting and message sequence for <span className="font-semibold text-foreground">{workflowName}</span>
+                <DialogTitle className="text-2xl">Configure Campaign</DialogTitle>
+                <DialogDescription className="mt-1">
+                  {workflowName}
                 </DialogDescription>
               </div>
               {workflowStatus !== 'draft' && (
-                <Badge variant={workflowStatus === 'active' ? 'default' : 'secondary'}>
+                <Badge 
+                  className={workflowStatus === 'active' ? 'bg-emerald-600' : 'bg-amber-600'}
+                >
                   {workflowStatus === 'active' ? 'Active' : workflowStatus === 'paused' ? 'Paused' : 'Completed'}
                 </Badge>
               )}
             </div>
           </DialogHeader>
 
-          <div className="space-y-6">
-            {/* Status and Progress for Active Campaigns */}
+          <div className="space-y-6 mt-4">
+            {/* Progress for Active/Paused Campaigns */}
             {workflowStatus !== 'draft' && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-muted rounded-lg p-4 border">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-blue-600" />
-                    <h3 className="font-semibold text-blue-900">Campaign Progress</h3>
+                    <BarChart3 className="h-5 w-5" />
+                    <h3 className="font-semibold">Campaign Progress</h3>
                   </div>
-                  {workflowStatus === 'active' ? (
-                    <Button size="sm" variant="outline" onClick={() => handleStatusChange('paused')}>
-                      <Pause className="w-4 h-4 mr-1" />
-                      Pause
-                    </Button>
-                  ) : (
-                    <Button size="sm" onClick={() => handleStatusChange('active')}>
-                      <Play className="w-4 h-4 mr-1" />
-                      Resume
-                    </Button>
-                  )}
+                  <div className="flex gap-2">
+                    {workflowStatus === 'active' && (
+                      <Button size="sm" variant="outline" onClick={() => handleStatusChange('paused')}>
+                        <Pause className="w-4 h-4 mr-1" />
+                        Pause Campaign
+                      </Button>
+                    )}
+                    {workflowStatus === 'paused' && (
+                      <Button size="sm" onClick={() => handleStatusChange('active')}>
+                        <Play className="w-4 h-4 mr-1" />
+                        Resume Campaign
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Leads Processed</span>
-                    <span className="font-semibold">{processedLeadCount} / {targetLeadCount}</span>
+                    <span className="font-semibold">
+                      {processedLeadCount} / {targetLeadCount} ({targetLeadCount > 0 ? Math.round((processedLeadCount / targetLeadCount) * 100) : 0}%)
+                    </span>
                   </div>
-                  <div className="w-full bg-blue-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all"
+                      className="bg-primary h-2 rounded-full transition-all"
                       style={{ width: `${targetLeadCount > 0 ? (processedLeadCount / targetLeadCount) * 100 : 0}%` }}
                     />
                   </div>
@@ -348,162 +374,185 @@ export function WorkflowConfigurationModal({
               </div>
             )}
 
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {workflowStatus === 'draft' 
-                  ? 'Select a target segment and message sequence, then launch to start processing leads.'
-                  : 'You can edit the configuration below. Changes will apply to new leads entering the campaign.'}
-              </AlertDescription>
-            </Alert>
+            {/* Section 1: Target Audience */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-sm font-semibold text-primary">1</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold">Target Audience</h3>
+                  <p className="text-sm text-muted-foreground">Select which leads will receive this campaign</p>
+                </div>
+              </div>
 
-            {/* Segment Selection */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                Target Audience (Segment)
-              </Label>
-              <Select value={selectedSegmentId} onValueChange={handleSegmentChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a segment to target..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">None</SelectItem>
-                  {segments.map((seg) => (
-                    <SelectItem key={seg.id} value={seg.id}>
-                      <div className="flex items-center gap-2">
-                        <div 
-                          className="w-3 h-3 rounded-full" 
-                          style={{ backgroundColor: seg.color }}
-                        />
-                        {seg.name}
-                        <Badge variant="outline" className="text-xs ml-2">
-                          {seg.lead_count} leads
-                        </Badge>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {segments.length === 0 ? (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    No segments found. Create segments in the CRM to target specific groups of leads.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <Select value={selectedSegmentId} onValueChange={handleSegmentChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a segment..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {segments.map((seg) => (
+                      <SelectItem key={seg.id} value={seg.id}>
+                        {seg.name} ({seg.lead_count} leads)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+
               {selectedSegment && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  {selectedSegment.description}
-                </p>
+                <div className="bg-muted/50 rounded-lg p-3 border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div 
+                      className="w-3 h-3 rounded-full" 
+                      style={{ backgroundColor: selectedSegment.color }}
+                    />
+                    <p className="font-medium">{selectedSegment.name}</p>
+                  </div>
+                  {selectedSegment.description && (
+                    <p className="text-sm text-muted-foreground">{selectedSegment.description}</p>
+                  )}
+                  <p className="text-sm font-medium mt-2">
+                    Total leads in segment: {selectedSegment.lead_count}
+                  </p>
+                  {eligibleLeadsCount > 0 && workflowStatus === 'draft' && (
+                    <p className="text-sm text-emerald-600 font-medium">
+                      Eligible for campaign: {eligibleLeadsCount}
+                    </p>
+                  )}
+                </div>
               )}
             </div>
 
-            {/* Sequence Selection */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Layers className="w-4 h-4" />
-                Message Sequence
-              </Label>
-              <Select value={selectedSequenceId} onValueChange={handleSequenceChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a workflow sequence..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">None</SelectItem>
-                  {sequences.map((seq) => (
-                    <SelectItem key={seq.id} value={seq.id}>
-                      <div className="flex items-center gap-2">
-                        <Layers className="w-4 h-4" />
-                        {seq.name}
-                        <Badge variant="outline" className="text-xs ml-2">
-                          {seq.total_steps} steps
-                        </Badge>
+            {/* Section 2: Message Sequence */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-sm font-semibold text-primary">2</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold">Message Sequence</h3>
+                  <p className="text-sm text-muted-foreground">Choose what messages to send and when</p>
+                </div>
+              </div>
+
+              {sequences.length === 0 ? (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    No sequences found. Create workflow sequences in Templates to use here.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <Select value={selectedSequenceId} onValueChange={handleSequenceChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a sequence..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sequences.map((seq) => (
+                      <SelectItem key={seq.id} value={seq.id}>
+                        {seq.name} ({seq.total_steps} steps)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+
+              {/* Sequence Preview */}
+              {selectedSequence && (
+                <div className="bg-muted/50 rounded-lg p-4 border space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium">{selectedSequence.name}</p>
+                    <Badge variant="outline">{selectedSequence.total_steps} steps</Badge>
+                  </div>
+                  {selectedSequence.description && (
+                    <p className="text-sm text-muted-foreground">{selectedSequence.description}</p>
+                  )}
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      <span>{formatDuration(selectedSequence.total_duration_hours)}</span>
+                    </div>
+                    {selectedSequence.email_count > 0 && (
+                      <div className="flex items-center gap-1">
+                        <Mail className="w-4 h-4" />
+                        <span>{selectedSequence.email_count} emails</span>
                       </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    )}
+                    {selectedSequence.whatsapp_count > 0 && (
+                      <div className="flex items-center gap-1">
+                        <MessageSquare className="w-4 h-4" />
+                        <span>{selectedSequence.whatsapp_count} WhatsApp</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Eligible Leads Preview */}
-            {selectedSegmentId && selectedSequenceId && workflowStatus === 'draft' && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            {/* Section 3: Review & Launch */}
+            {isConfigured && workflowStatus === 'draft' && (
+              <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-green-600" />
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-sm font-semibold text-primary">3</span>
+                  </div>
                   <div>
-                    <p className="font-semibold text-green-900">Ready to Launch</p>
-                    <p className="text-sm text-green-700">
-                      {eligibleLeadsCount} eligible lead{eligibleLeadsCount !== 1 ? 's' : ''} will receive this {selectedSequence?.total_steps}-step sequence
-                    </p>
+                    <h3 className="font-semibold">Review & Launch</h3>
+                    <p className="text-sm text-muted-foreground">Campaign is ready to launch</p>
+                  </div>
+                </div>
+
+                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                      <Users className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-emerald-900 mb-2">Ready to Launch</p>
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <p className="text-emerald-700">Target Segment</p>
+                          <p className="font-semibold text-emerald-900">{selectedSegment?.name}</p>
+                        </div>
+                        <div>
+                          <p className="text-emerald-700">Message Sequence</p>
+                          <p className="font-semibold text-emerald-900">{selectedSequence?.name}</p>
+                        </div>
+                        <div>
+                          <p className="text-emerald-700">Eligible Leads</p>
+                          <p className="font-semibold text-emerald-900 text-lg">{eligibleLeadsCount}</p>
+                        </div>
+                        <div>
+                          <p className="text-emerald-700">Total Steps</p>
+                          <p className="font-semibold text-emerald-900 text-lg">{selectedSequence?.total_steps}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-          {/* Preview Selected Sequence */}
-          {selectedSequence && (
-            <div className="border rounded-lg p-4 space-y-4 bg-muted/30">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-semibold text-base">{selectedSequence.name}</h3>
-                  <p className="text-sm text-muted-foreground">{selectedSequence.description}</p>
-                </div>
-                <Badge>{selectedSequence.is_active ? "Active" : "Inactive"}</Badge>
-              </div>
-
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <Layers className="w-4 h-4 text-muted-foreground" />
-                  <span>{selectedSequence.total_steps} steps</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
-                  <span>{formatDuration(selectedSequence.total_duration_hours)}</span>
-                </div>
-                {selectedSequence.email_count > 0 && (
-                  <Badge variant="outline">
-                    <Mail className="w-3 h-3 mr-1" />
-                    {selectedSequence.email_count} Email
-                  </Badge>
-                )}
-                {selectedSequence.whatsapp_count > 0 && (
-                  <Badge variant="outline">
-                    <MessageSquare className="w-3 h-3 mr-1" />
-                    {selectedSequence.whatsapp_count} WhatsApp
-                  </Badge>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm">Sequence Steps:</Label>
-                <div className="space-y-2 max-h-60 overflow-y-auto">
-                  {selectedSequence.steps.map((step, index) => (
-                    <div key={step.id} className="flex items-start gap-2 text-sm bg-background rounded-lg p-3 border">
-                      <Badge variant="outline" className="mt-0.5">{step.step_order}</Badge>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          {step.channel === 'email' ? (
-                            <Mail className="w-3 h-3 text-purple-600" />
-                          ) : (
-                            <MessageSquare className="w-3 h-3 text-green-600" />
-                          )}
-                          <span className="font-medium">{step.template.name}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {step.delay_hours === 0 
-                            ? 'Sent immediately' 
-                            : `Sent after ${formatDuration(step.delay_hours)}`}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
             {/* Action Buttons */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className="flex justify-end gap-2 pt-4 border-t">
               <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
                 Cancel
               </Button>
               {workflowStatus === 'draft' ? (
-                <Button onClick={handleLaunch} disabled={isSubmitting || !selectedSegmentId || !selectedSequenceId}>
-                  <Play className="w-4 h-4 mr-1" />
+                <Button 
+                  onClick={handleLaunch} 
+                  disabled={isSubmitting || !canLaunch}
+                >
+                  <Play className="w-4 h-4 mr-2" />
                   {isSubmitting ? 'Launching...' : 'Launch Campaign'}
                 </Button>
               ) : (
