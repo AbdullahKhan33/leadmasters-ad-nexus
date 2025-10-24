@@ -134,6 +134,9 @@ export function WorkflowSequenceBuilderModal({
 
     setIsSubmitting(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       if (sequence) {
         // Update existing sequence
         const { error: seqError } = await supabase
@@ -144,29 +147,32 @@ export function WorkflowSequenceBuilderModal({
             color,
             updated_at: new Date().toISOString()
           })
-          .eq('id', sequence.id);
+          .eq('id', sequence.id)
+          .eq('user_id', user.id);
 
         if (seqError) throw seqError;
 
         // Delete old steps
-        await supabase
+        const { error: deleteError } = await supabase
           .from('workflow_sequence_steps')
           .delete()
           .eq('sequence_id', sequence.id);
 
-        // Insert new steps
+        if (deleteError) throw deleteError;
+
+        // Insert new steps with explicit fields
         const { error: stepsError } = await supabase
           .from('workflow_sequence_steps')
           .insert(steps.map(step => ({
             sequence_id: sequence.id,
-            ...step
+            template_id: step.template_id,
+            step_order: step.step_order,
+            delay_hours: step.delay_hours,
+            channel: step.channel
           })));
 
         if (stepsError) throw stepsError;
       } else {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error("Not authenticated");
-
         // Create new sequence
         const { data: newSeq, error: seqError } = await supabase
           .from('workflow_sequences')
@@ -183,12 +189,15 @@ export function WorkflowSequenceBuilderModal({
 
         if (seqError) throw seqError;
 
-        // Insert steps
+        // Insert steps with explicit fields
         const { error: stepsError } = await supabase
           .from('workflow_sequence_steps')
           .insert(steps.map(step => ({
             sequence_id: newSeq.id,
-            ...step
+            template_id: step.template_id,
+            step_order: step.step_order,
+            delay_hours: step.delay_hours,
+            channel: step.channel
           })));
 
         if (stepsError) throw stepsError;
