@@ -188,6 +188,25 @@ export function SegmentManager() {
     }
   };
 
+  const handleCustomizeTemplate = (templateId: string) => {
+    const template = templates.find(t => t.id === templateId);
+    if (!template) return;
+    
+    const customSegment: CustomSegment = {
+      id: '',
+      name: template.name,
+      description: template.description,
+      criteria: template.criteria,
+      color: '#8B5CF6',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    setSelectedSegment(customSegment);
+    setIsBuilderOpen(true);
+  };
+
   const openBuilder = (segment?: CustomSegment) => {
     setSelectedSegment(segment || null);
     setIsBuilderOpen(true);
@@ -300,6 +319,7 @@ export function SegmentManager() {
           <TemplateGallery 
             templates={templates}
             onCreateFromTemplate={handleCreateFromTemplate}
+            onCustomizeTemplate={handleCustomizeTemplate}
           />
         </TabsContent>
       </Tabs>

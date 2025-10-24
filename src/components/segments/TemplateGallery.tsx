@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Building2, 
   GraduationCap, 
@@ -11,16 +10,17 @@ import {
   Star, 
   Target,
   MapPin,
-  TrendingUp
+  Edit
 } from 'lucide-react';
 import { SegmentTemplate } from '@/types/segments';
 
 interface TemplateGalleryProps {
   templates: SegmentTemplate[];
   onCreateFromTemplate: (templateId: string) => void;
+  onCustomizeTemplate?: (templateId: string) => void;
 }
 
-export function TemplateGallery({ templates, onCreateFromTemplate }: TemplateGalleryProps) {
+export function TemplateGallery({ templates, onCreateFromTemplate, onCustomizeTemplate }: TemplateGalleryProps) {
   const [selectedIndustry, setSelectedIndustry] = useState<'all' | 'real_estate' | 'edtech'>('all');
   const [selectedRegion, setSelectedRegion] = useState<'all' | 'india' | 'uae' | 'qatar' | 'saudi'>('all');
   const [tab, setTab] = useState<'all' | 'real_estate' | 'edtech'>('all');
@@ -167,51 +167,48 @@ const isEmpty = (tab === 'all' ? allTemplates : tab === 'real_estate' ? realEsta
         </TabsList>
 
         <TabsContent value="all" className="mt-6">
-          <ScrollArea className="max-h-[70vh] pr-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {allTemplates.map((template) => (
-                <TemplateCard
-                  key={template.id}
-                  template={template}
-                  industry={getIndustryFromTemplate(template)}
-                  region={getRegionFromTemplate(template)}
-                  onCreateFromTemplate={onCreateFromTemplate}
-                />
-              ))}
-            </div>
-          </ScrollArea>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {allTemplates.map((template) => (
+              <TemplateCard
+                key={template.id}
+                template={template}
+                industry={getIndustryFromTemplate(template)}
+                region={getRegionFromTemplate(template)}
+                onCreateFromTemplate={onCreateFromTemplate}
+                onCustomize={onCustomizeTemplate}
+              />
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="real_estate" className="mt-6">
-          <ScrollArea className="max-h-[70vh] pr-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {realEstateAll.map((template) => (
-                <TemplateCard
-                  key={template.id}
-                  template={template}
-                  industry="real_estate"
-                  region={getRegionFromTemplate(template)}
-                  onCreateFromTemplate={onCreateFromTemplate}
-                />
-              ))}
-            </div>
-          </ScrollArea>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {realEstateAll.map((template) => (
+              <TemplateCard
+                key={template.id}
+                template={template}
+                industry="real_estate"
+                region={getRegionFromTemplate(template)}
+                onCreateFromTemplate={onCreateFromTemplate}
+                onCustomize={onCustomizeTemplate}
+              />
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="edtech" className="mt-6">
-          <ScrollArea className="max-h-[70vh] pr-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {edtechAll.map((template) => (
-                <TemplateCard
-                  key={template.id}
-                  template={template}
-                  industry="edtech"
-                  region={getRegionFromTemplate(template)}
-                  onCreateFromTemplate={onCreateFromTemplate}
-                />
-              ))}
-            </div>
-          </ScrollArea>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {edtechAll.map((template) => (
+              <TemplateCard
+                key={template.id}
+                template={template}
+                industry="edtech"
+                region={getRegionFromTemplate(template)}
+                onCreateFromTemplate={onCreateFromTemplate}
+                onCustomize={onCustomizeTemplate}
+              />
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
 
@@ -231,9 +228,10 @@ interface TemplateCardProps {
   industry: 'real_estate' | 'edtech' | 'other';
   region: 'india' | 'uae' | 'qatar' | 'saudi' | 'other';
   onCreateFromTemplate: (templateId: string) => void;
+  onCustomize?: (templateId: string) => void;
 }
 
-function TemplateCard({ template, industry, region, onCreateFromTemplate }: TemplateCardProps) {
+function TemplateCard({ template, industry, region, onCreateFromTemplate, onCustomize }: TemplateCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -339,24 +337,36 @@ function TemplateCard({ template, industry, region, onCreateFromTemplate }: Temp
           </div>
         </div>
 
-        <Button
-          onClick={handleCreate}
-          disabled={isCreating}
-          variant="gradient"
-          className="w-full transition-all duration-200 hover:opacity-90"
-        >
-          {isCreating ? (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-primary-foreground/20 border-t-primary-foreground rounded-full animate-spin" />
-              Creating...
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              Use Template
-            </div>
+        <div className="flex gap-2">
+          {onCustomize && (
+            <Button
+              onClick={() => onCustomize(template.id)}
+              variant="outline"
+              className="flex-1 transition-all duration-200"
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Customize
+            </Button>
           )}
-        </Button>
+          <Button
+            onClick={handleCreate}
+            disabled={isCreating}
+            variant="gradient"
+            className="flex-1 transition-all duration-200 hover:opacity-90"
+          >
+            {isCreating ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-primary-foreground/20 border-t-primary-foreground rounded-full animate-spin" />
+                Creating...
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                Use
+              </div>
+            )}
+          </Button>
+        </div>
       </CardContent>
 
       {/* Hover effect */}
