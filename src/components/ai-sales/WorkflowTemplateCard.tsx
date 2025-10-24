@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { LucideIcon, Layers, Clock, Mail, MessageSquare } from "lucide-react";
+import { LucideIcon, Layers, Clock, Mail, MessageSquare, Users, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { WorkflowSequenceWithSteps } from "@/types/campaigns";
+import { WorkflowSequenceWithSteps, Segment } from "@/types/campaigns";
 import { WorkflowConfigurationModal } from "./WorkflowConfigurationModal";
 
 interface WorkflowTemplateCardProps {
@@ -33,6 +33,11 @@ export function WorkflowTemplateCard({
   type
 }: WorkflowTemplateCardProps) {
   const [sequence, setSequence] = useState<WorkflowSequenceWithSteps | null>(null);
+  const [segment, setSegment] = useState<Segment | null>(null);
+  const [workflowStatus, setWorkflowStatus] = useState<string>('draft');
+  const [targetLeadCount, setTargetLeadCount] = useState<number>(0);
+  const [processedLeadCount, setProcessedLeadCount] = useState<number>(0);
+  const [segmentId, setSegmentId] = useState<string | null>(null);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,14 +48,34 @@ export function WorkflowTemplateCard({
   const fetchWorkflowSequence = async () => {
     setIsLoading(true);
     try {
-      // Fetch the workflow to get its sequence_id
+      // Fetch the workflow with all its data
       const { data: workflow, error: workflowError } = await supabase
         .from('automation_workflows')
-        .select('workflow_sequence_id')
+        .select('workflow_sequence_id, segment_id, workflow_status, target_lead_count, processed_lead_count')
         .eq('id', workflowId)
         .maybeSingle();
 
       if (workflowError) throw workflowError;
+
+      if (workflow) {
+        setWorkflowStatus(workflow.workflow_status || 'draft');
+        setTargetLeadCount(workflow.target_lead_count || 0);
+        setProcessedLeadCount(workflow.processed_lead_count || 0);
+        setSegmentId(workflow.segment_id);
+
+        // Fetch segment if exists
+        if (workflow.segment_id) {
+          const { data: seg, error: segError } = await supabase
+            .from('segments')
+            .select('*')
+            .eq('id', workflow.segment_id)
+            .maybeSingle();
+
+          if (!segError && seg) {
+            setSegment(seg as Segment);
+          }
+        }
+      }
 
       if (workflow?.workflow_sequence_id) {
         // Fetch the sequence with its steps
@@ -101,6 +126,19 @@ export function WorkflowTemplateCard({
     return `${days}d`;
   };
 
+  const getStatusBadge = () => {
+    switch (workflowStatus) {
+      case 'active':
+        return <Badge className="bg-green-600">Active</Badge>;
+      case 'paused':
+        return <Badge variant="secondary">Paused</Badge>;
+      case 'completed':
+        return <Badge variant="outline">Completed</Badge>;
+      default:
+        return <Badge variant="outline">Not Launched</Badge>;
+    }
+  };
+
   return (
     <>
       <Card className="hover:shadow-lg transition-all duration-200 group relative overflow-hidden">
@@ -111,9 +149,7 @@ export function WorkflowTemplateCard({
             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Icon className="w-6 h-6 text-purple-600" />
             </div>
-            <Badge variant={isActive ? "default" : "secondary"} className={isActive ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0" : ""}>
-              {isActive ? "Active" : "Inactive"}
-            </Badge>
+            {getStatusBadge()}
           </div>
           <CardTitle className="text-base group-hover:text-purple-600 transition-colors">
             {name}
@@ -122,6 +158,37 @@ export function WorkflowTemplateCard({
         </CardHeader>
 
         <CardContent className="relative space-y-4">
+          {/* Segment Info */}
+          {segment && (
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-3 border border-indigo-200">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-indigo-600" />
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: segment.color }} />
+                  <p className="text-sm font-semibold text-indigo-900">{segment.name}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Progress Bar for Active/Paused Workflows */}
+          {workflowStatus !== 'draft' && targetLeadCount > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1 text-muted-foreground">
+                  <BarChart3 className="w-3 h-3" />
+                  <span>Progress</span>
+                </div>
+                <span className="font-semibold">{processedLeadCount}/{targetLeadCount} leads</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-1.5">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all"
+                  style={{ width: `${(processedLeadCount / targetLeadCount) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
           {/* Sequence Info */}
           {sequence ? (
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 border border-blue-200">
@@ -207,6 +274,10 @@ export function WorkflowTemplateCard({
         workflowId={workflowId}
         workflowName={name}
         currentSequence={sequence}
+        currentSegmentId={segmentId}
+        workflowStatus={workflowStatus}
+        targetLeadCount={targetLeadCount}
+        processedLeadCount={processedLeadCount}
         onSave={() => {
           fetchWorkflowSequence();
           setIsConfigModalOpen(false);

@@ -180,12 +180,18 @@ export type Database = {
           description: string | null
           id: string
           is_active: boolean | null
+          launched_at: string | null
+          launched_by: string | null
           name: string
+          processed_lead_count: number | null
+          segment_id: string | null
+          target_lead_count: number | null
           trigger_config: Json
           type: string
           updated_at: string | null
           user_id: string
           workflow_sequence_id: string | null
+          workflow_status: string | null
         }
         Insert: {
           actions?: Json
@@ -193,12 +199,18 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean | null
+          launched_at?: string | null
+          launched_by?: string | null
           name: string
+          processed_lead_count?: number | null
+          segment_id?: string | null
+          target_lead_count?: number | null
           trigger_config?: Json
           type: string
           updated_at?: string | null
           user_id: string
           workflow_sequence_id?: string | null
+          workflow_status?: string | null
         }
         Update: {
           actions?: Json
@@ -206,14 +218,27 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean | null
+          launched_at?: string | null
+          launched_by?: string | null
           name?: string
+          processed_lead_count?: number | null
+          segment_id?: string | null
+          target_lead_count?: number | null
           trigger_config?: Json
           type?: string
           updated_at?: string | null
           user_id?: string
           workflow_sequence_id?: string | null
+          workflow_status?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "automation_workflows_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "segments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "automation_workflows_workflow_sequence_id_fkey"
             columns: ["workflow_sequence_id"]
