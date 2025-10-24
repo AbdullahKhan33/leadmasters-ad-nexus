@@ -1,11 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, Users, CheckCircle, Clock, Target } from "lucide-react";
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, FunnelChart, Funnel, LabelList } from "recharts";
+import { useWorkflowAnalytics } from "@/hooks/useWorkflowAnalytics";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const metricCards = [
+const getMetricCards = (analytics: any) => [
   {
     title: "Total Leads Processed",
-    value: "156",
+    value: analytics?.totalLeadsProcessed?.toString() || "0",
     trend: "+23%",
     isPositive: true,
     icon: Users,
@@ -13,7 +15,7 @@ const metricCards = [
   },
   {
     title: "Response Rate",
-    value: "47.4%",
+    value: `${analytics?.responseRate || 0}%`,
     trend: "+5%",
     isPositive: true,
     icon: CheckCircle,
@@ -21,7 +23,7 @@ const metricCards = [
   },
   {
     title: "Qualification Rate",
-    value: "38.5%",
+    value: `${analytics?.qualificationRate || 0}%`,
     trend: "-2%",
     isPositive: false,
     icon: Target,
@@ -29,7 +31,7 @@ const metricCards = [
   },
   {
     title: "Avg Time to Qualify",
-    value: "2.4h",
+    value: `${analytics?.avgTimeToQualify || 0}h`,
     trend: "-30min",
     isPositive: true,
     icon: Clock,
@@ -37,7 +39,7 @@ const metricCards = [
   },
   {
     title: "Conversion Rate (Won)",
-    value: "18.2%",
+    value: `${analytics?.conversionRate || 0}%`,
     trend: "+3%",
     isPositive: true,
     icon: TrendingUp,
@@ -45,31 +47,29 @@ const metricCards = [
   }
 ];
 
-const funnelData = [
-  { name: "New Leads", value: 156, fill: "hsl(var(--chart-1))" },
-  { name: "AI Responded", value: 74, fill: "hsl(var(--chart-2))" },
-  { name: "AI Qualified", value: 60, fill: "hsl(var(--chart-3))" },
-  { name: "Interested", value: 42, fill: "hsl(var(--chart-4))" },
-  { name: "7-Day Nurture", value: 35, fill: "hsl(var(--chart-5))" },
-  { name: "Lead Won", value: 28, fill: "hsl(var(--primary))" }
-];
-
-const workflowPerformance = [
-  { name: "No Reply Sequence", responseRate: 42, conversion: 12 },
-  { name: "Qualified Routing", responseRate: 87, conversion: 45 },
-  { name: "7-Day Nurturing", responseRate: 68, conversion: 28 },
-  { name: "Long-Term", responseRate: 15, conversion: 5 }
-];
-
-const sourceBreakdown = [
-  { name: "99acres", value: 35, fill: "#8b5cf6" },
-  { name: "Meta", value: 25, fill: "#ec4899" },
-  { name: "MagicBricks", value: 18, fill: "#3b82f6" },
-  { name: "Custom API", value: 12, fill: "#10b981" },
-  { name: "Others", value: 10, fill: "#6b7280" }
-];
-
 export function AutomationAnalytics() {
+  const { analytics, isLoading } = useWorkflowAnalytics();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {[1, 2, 3, 4, 5].map(i => (
+            <Card key={i}>
+              <CardHeader><Skeleton className="h-10 w-10" /></CardHeader>
+              <CardContent><Skeleton className="h-8 w-20" /></CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const metricCards = getMetricCards(analytics);
+  const funnelData = analytics?.funnelData || [];
+  const workflowPerformance = analytics?.workflowPerformance || [];
+  const sourceBreakdown = analytics?.sourceBreakdown || [];
+
   return (
     <div className="space-y-6">
       {/* Top Metrics */}
