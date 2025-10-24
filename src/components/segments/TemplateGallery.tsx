@@ -115,35 +115,35 @@ const isEmpty = (tab === 'all' ? allTemplates : tab === 'real_estate' ? realEsta
         <div className="flex items-center gap-2 ml-auto">
           <span className="text-sm font-medium text-muted-foreground">Region:</span>
           <Button
-            variant={selectedRegion === 'all' ? 'default' : 'outline'}
+            variant={selectedRegion === 'all' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedRegion('all')}
           >
             All
           </Button>
           <Button
-            variant={selectedRegion === 'india' ? 'default' : 'outline'}
+            variant={selectedRegion === 'india' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedRegion('india')}
           >
             India
           </Button>
           <Button
-            variant={selectedRegion === 'uae' ? 'default' : 'outline'}
+            variant={selectedRegion === 'uae' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedRegion('uae')}
           >
             UAE
           </Button>
           <Button
-            variant={selectedRegion === 'qatar' ? 'default' : 'outline'}
+            variant={selectedRegion === 'qatar' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedRegion('qatar')}
           >
             Qatar
           </Button>
           <Button
-            variant={selectedRegion === 'saudi' ? 'default' : 'outline'}
+            variant={selectedRegion === 'saudi' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedRegion('saudi')}
           >
@@ -183,35 +183,39 @@ const isEmpty = (tab === 'all' ? allTemplates : tab === 'real_estate' ? realEsta
         </TabsContent>
 
         <TabsContent value="real_estate" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {realEstateTemplates.map((template) => (
-              <TemplateCard
-                key={template.id}
-                template={template}
-                industry="real_estate"
-                region={getRegionFromTemplate(template)}
-                onCreateFromTemplate={onCreateFromTemplate}
-              />
-            ))}
-          </div>
+          <ScrollArea className="max-h-[70vh] pr-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {realEstateAll.map((template) => (
+                <TemplateCard
+                  key={template.id}
+                  template={template}
+                  industry="real_estate"
+                  region={getRegionFromTemplate(template)}
+                  onCreateFromTemplate={onCreateFromTemplate}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         </TabsContent>
 
         <TabsContent value="edtech" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {edtechTemplates.map((template) => (
-              <TemplateCard
-                key={template.id}
-                template={template}
-                industry="edtech"
-                region={getRegionFromTemplate(template)}
-                onCreateFromTemplate={onCreateFromTemplate}
-              />
-            ))}
-          </div>
+          <ScrollArea className="max-h-[70vh] pr-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {edtechAll.map((template) => (
+                <TemplateCard
+                  key={template.id}
+                  template={template}
+                  industry="edtech"
+                  region={getRegionFromTemplate(template)}
+                  onCreateFromTemplate={onCreateFromTemplate}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         </TabsContent>
       </Tabs>
 
-      {filteredTemplates.length === 0 && (
+      {isEmpty && (
         <div className="text-center py-12">
           <Target className="w-16 h-16 mx-auto text-muted-foreground mb-4 opacity-50" />
           <h3 className="text-lg font-medium mb-2">No templates found</h3>
@@ -338,11 +342,8 @@ function TemplateCard({ template, industry, region, onCreateFromTemplate }: Temp
         <Button
           onClick={handleCreate}
           disabled={isCreating}
-          className={`w-full transition-all duration-200 ${
-            isHovered 
-              ? 'bg-gradient-to-r from-primary to-primary/80 shadow-lg transform -translate-y-0.5' 
-              : ''
-          }`}
+          variant="gradient"
+          className="w-full transition-all duration-200 hover:opacity-90"
         >
           {isCreating ? (
             <div className="flex items-center gap-2">
