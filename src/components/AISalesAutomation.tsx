@@ -139,11 +139,11 @@ export function AISalesAutomation() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {workflows.map((workflow) => {
                 const iconMap: Record<string, any> = {
-                  'follow_up': MessageCircle,
-                  'routing': UserCheck,
-                  'nurturing': Calendar,
+                  'no_reply': MessageCircle,
+                  'qualified_nurturing': UserCheck,
+                  'long_term': RefreshCw,
                 };
-                const icon = iconMap[workflow.type] || RefreshCw;
+                const icon = iconMap[workflow.type] || Calendar;
                 
                 // Mock metrics for display
                 const mockMetrics: Record<string, any> = {

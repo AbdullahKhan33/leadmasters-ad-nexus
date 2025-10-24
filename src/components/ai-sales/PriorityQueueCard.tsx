@@ -43,7 +43,15 @@ export function PriorityQueueCard({
     </div>
   );
 
-  const topPriorityLeads = [...urgent.slice(0, 2), ...highValue.slice(0, 1)].slice(0, 3);
+  // Deduplicate leads by ID to avoid duplicate keys
+  const seenIds = new Set<string>();
+  const topPriorityLeads = [...urgent.slice(0, 2), ...highValue.slice(0, 1)]
+    .filter(lead => {
+      if (seenIds.has(lead.id)) return false;
+      seenIds.add(lead.id);
+      return true;
+    })
+    .slice(0, 3);
 
   return (
     <Card className="border-l-4 border-l-red-500 bg-gradient-to-br from-red-50/50 to-orange-50/50 dark:from-red-950/20 dark:to-orange-950/20">
