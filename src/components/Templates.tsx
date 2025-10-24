@@ -63,8 +63,17 @@ export function Templates() {
   const fetchTemplates = async () => {
     setIsLoading(true);
     try {
+      // Fetch all templates first
+      const { data: allTemplates, error: allError } = await supabase
+        .from('campaign_templates')
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+
+      if (allError) throw allError;
+
       // Fetch templates with their sequence information
-      const { data, error } = await supabase
+      const { data: templatesWithSequences, error } = await supabase
         .from('campaign_templates')
         .select(`
           *,
@@ -78,22 +87,14 @@ export function Templates() {
       
       if (error && error.code !== 'PGRST116') throw error;
 
-      // Also fetch standalone templates (not in any sequence)
-      const { data: standaloneData, error: standaloneError } = await supabase
-        .from('campaign_templates')
-        .select('*')
-        .eq('is_active', true)
-        .not('id', 'in', `(SELECT template_id FROM workflow_sequence_steps)`)
-        .order('name');
-
-      if (standaloneError) throw standaloneError;
-
       // Group templates by sequence
       const emailGroups = new Map<string, GroupedTemplates>();
       const whatsappGroups = new Map<string, GroupedTemplates>();
+      const templatesInSequences = new Set<string>();
 
-      if (data) {
-        data.forEach((template: any) => {
+      if (templatesWithSequences) {
+        templatesWithSequences.forEach((template: any) => {
+          templatesInSequences.add(template.id);
           const step = template.workflow_sequence_steps?.[0];
           if (!step?.workflow_sequences) return;
 
@@ -118,9 +119,11 @@ export function Templates() {
       setGroupedEmailTemplates(Array.from(emailGroups.values()));
       setGroupedWhatsappTemplates(Array.from(whatsappGroups.values()));
       
-      if (standaloneData) {
-        setStandaloneEmailTemplates(standaloneData.filter(t => t.type === 'email') as CampaignTemplate[]);
-        setStandaloneWhatsappTemplates(standaloneData.filter(t => t.type === 'whatsapp') as CampaignTemplate[]);
+      // Filter standalone templates (not in any sequence)
+      if (allTemplates) {
+        const standalone = allTemplates.filter(t => !templatesInSequences.has(t.id));
+        setStandaloneEmailTemplates(standalone.filter(t => t.type === 'email') as CampaignTemplate[]);
+        setStandaloneWhatsappTemplates(standalone.filter(t => t.type === 'whatsapp') as CampaignTemplate[]);
       }
     } catch (error) {
       console.error('Error fetching templates:', error);
