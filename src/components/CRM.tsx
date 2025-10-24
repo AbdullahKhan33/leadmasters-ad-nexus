@@ -692,6 +692,43 @@ export function CRM() {
               <Button 
                 variant="outline" 
                 size="sm" 
+                className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-red-200 hover:bg-gradient-to-r hover:from-red-50/50 hover:to-red-50/50 hover:text-red-700"
+                onClick={async () => {
+                  try {
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (!user) {
+                      toast({ title: "Error", description: "You must be logged in", variant: "destructive" });
+                      return;
+                    }
+                    // Delete seeded contacts marked with source_metadata.seed = true
+                    const { error: seedDelErr } = await supabase
+                      .from('leads')
+                      .delete()
+                      .eq('user_id', user.id)
+                      .filter('source_metadata->>seed', 'eq', 'true');
+                    if (seedDelErr) throw seedDelErr;
+
+                    // Delete common test/dummy names
+                    const { error: testDelErr } = await supabase
+                      .from('leads')
+                      .delete()
+                      .eq('user_id', user.id)
+                      .or("name.ilike.Lead%25,name.ilike.%25Test%25,name.eq.John Doe,name.eq.Charlie Brown,name.ilike.Test Customer%25");
+                    if (testDelErr) throw testDelErr;
+
+                    toast({ title: "Cleaned", description: "Removed seeded/test contacts." });
+                    window.location.reload();
+                  } catch (e: any) {
+                    console.error('Error cleaning contacts:', e);
+                    toast({ title: "Error", description: e.message || 'Failed to clean contacts', variant: "destructive" });
+                  }
+                }}
+              >
+                Clean Seeded/Test Contacts
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
                 className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-purple-200 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-purple-50/50 hover:text-purple-700"
                 onClick={handleImportClick}
               >

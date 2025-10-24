@@ -153,10 +153,13 @@ export function SegmentManager() {
     try {
       await createFromTemplate(templateId);
       await refetch(); // Refresh segments from database
+      setActiveTab('segments');
       toast({
         title: "Success",
         description: "Segment created from template",
       });
+      // Scroll to top where new segments are visible
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       toast({
         title: "Error",
@@ -165,7 +168,6 @@ export function SegmentManager() {
       });
     }
   };
-
   const handleResetSegments = async () => {
     if (!window.confirm('This will delete all your segments and create new ones from templates. Are you sure?')) {
       return;
