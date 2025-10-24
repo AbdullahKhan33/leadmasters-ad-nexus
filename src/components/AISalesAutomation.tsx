@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Bot, Workflow, Plug, TrendingUp, BarChart3, Plus, MessageCircle, UserCheck, Calendar, RefreshCw, Globe, Mail, MessageSquare, Phone, Table } from "lucide-react";
@@ -8,10 +8,40 @@ import { IntegrationCard } from "./ai-sales/IntegrationCard";
 import { AutomationAnalytics } from "./ai-sales/AutomationAnalytics";
 import { AllLeadsTableView, TableFilters } from "./ai-sales/AllLeadsTableView";
 import { Lead } from "@/data/dummyLeads";
+import { supabase } from "@/integrations/supabase/client";
+
+interface WorkflowData {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  is_active: boolean;
+}
 
 export function AISalesAutomation() {
   const [activeTab, setActiveTab] = useState<string>('pipeline');
   const [tableFilters, setTableFilters] = useState<Partial<TableFilters> | null>(null);
+  const [workflows, setWorkflows] = useState<WorkflowData[]>([]);
+
+  useEffect(() => {
+    if (activeTab === 'workflows') {
+      fetchWorkflows();
+    }
+  }, [activeTab]);
+
+  const fetchWorkflows = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('automation_workflows')
+        .select('id, name, description, type, is_active')
+        .order('name');
+      
+      if (error) throw error;
+      if (data) setWorkflows(data);
+    } catch (error) {
+      console.error('Error fetching workflows:', error);
+    }
+  };
 
   const handleNavigateToTable = (filters: Partial<TableFilters>) => {
     setTableFilters(filters);
@@ -107,54 +137,40 @@ export function AISalesAutomation() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <WorkflowTemplateCard
-                workflowId="no-reply-workflow"
-                name="No Reply Follow-up Sequence"
-                description="Automated reminder system"
-                icon={MessageCircle}
-                activeLeads={3}
-                successRate="42%"
-                avgTime="36 hours"
-                steps="D1 (24h) → D2 (48h) → D3 (72h) → Long-term"
-                isActive={true}
-                type="Automated reminder"
-              />
-              <WorkflowTemplateCard
-                workflowId="qualified-routing-workflow"
-                name="Qualified Lead → Sales Routing"
-                description="Intelligent auto-assignment"
-                icon={UserCheck}
-                activeLeads={2}
-                successRate="87%"
-                avgTime="45 minutes"
-                steps="AI Qualify → Assign Round-robin → Notify Agent → Check follow-up"
-                isActive={true}
-                type="Auto-assignment"
-              />
-              <WorkflowTemplateCard
-                workflowId="nurturing-7day-workflow"
-                name="7-Day Nurturing Sequence"
-                description="Progressive engagement campaign"
-                icon={Calendar}
-                activeLeads={3}
-                successRate="68%"
-                avgTime="6.5 days"
-                steps="D1 intro → D3 properties → D5 tour → D7 interest check"
-                isActive={true}
-                type="Engagement campaign"
-              />
-              <WorkflowTemplateCard
-                workflowId="long-term-pool-workflow"
-                name="Long-Term Nurturing Pool"
-                description="Re-engagement automation"
-                icon={RefreshCw}
-                activeLeads={1}
-                successRate="15%"
-                avgTime="15 days/loop"
-                steps="Every 15 days → Check interest → Branch logic"
-                isActive={true}
-                type="Low-touch re-engagement"
-              />
+              {workflows.map((workflow) => {
+                const iconMap: Record<string, any> = {
+                  'follow_up': MessageCircle,
+                  'routing': UserCheck,
+                  'nurturing': Calendar,
+                };
+                const icon = iconMap[workflow.type] || RefreshCw;
+                
+                // Mock metrics for display
+                const mockMetrics: Record<string, any> = {
+                  'No Reply Follow-up Sequence': { activeLeads: 3, successRate: "42%", avgTime: "36 hours", steps: "D1 (24h) → D2 (48h) → D3 (72h) → Long-term" },
+                  'Qualified Lead → Sales Routing': { activeLeads: 2, successRate: "87%", avgTime: "45 minutes", steps: "AI Qualify → Assign Round-robin → Notify Agent → Check follow-up" },
+                  '7-Day Nurturing Sequence': { activeLeads: 3, successRate: "68%", avgTime: "6.5 days", steps: "D1 intro → D3 properties → D5 tour → D7 interest check" },
+                  'Long-Term Nurturing Pool': { activeLeads: 1, successRate: "15%", avgTime: "15 days/loop", steps: "Every 15 days → Check interest → Branch logic" }
+                };
+                
+                const metrics = mockMetrics[workflow.name] || { activeLeads: 0, successRate: "0%", avgTime: "N/A", steps: "Not configured" };
+                
+                return (
+                  <WorkflowTemplateCard
+                    key={workflow.id}
+                    workflowId={workflow.id}
+                    name={workflow.name}
+                    description={workflow.description || ""}
+                    icon={icon}
+                    activeLeads={metrics.activeLeads}
+                    successRate={metrics.successRate}
+                    avgTime={metrics.avgTime}
+                    steps={metrics.steps}
+                    isActive={workflow.is_active}
+                    type={workflow.type}
+                  />
+                );
+              })}
             </div>
           </TabsContent>
 
