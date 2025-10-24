@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { WorkflowSequenceCard } from "./templates/WorkflowSequenceCard";
 import { WorkflowSequenceBuilderModal } from "./templates/WorkflowSequenceBuilderModal";
 import { TemplatesUpsell } from "./templates/TemplatesUpsell";
+import { TemplateEditorModal } from "./templates/TemplateEditorModal";
 
 export function Templates() {
   const { toast } = useToast();
@@ -25,6 +26,18 @@ export function Templates() {
   }>({
     isOpen: false,
     sequence: null
+  });
+
+  const [templateEditorModal, setTemplateEditorModal] = useState<{
+    isOpen: boolean;
+    type: "email" | "whatsapp";
+    mode: "create" | "edit";
+    template: any;
+  }>({
+    isOpen: false,
+    type: "email",
+    mode: "create",
+    template: null
   });
 
   useEffect(() => {
@@ -205,6 +218,50 @@ export function Templates() {
     }
   };
 
+  const handleCreateTemplate = (type: "email" | "whatsapp") => {
+    setTemplateEditorModal({
+      isOpen: true,
+      type,
+      mode: "create",
+      template: null
+    });
+  };
+
+  const handleSaveTemplate = async (template: any) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      const { error } = await supabase
+        .from("campaign_templates")
+        .insert({
+          user_id: user.id,
+          name: template.name,
+          type: templateEditorModal.type,
+          content: template.content,
+          subject: template.subject,
+          is_active: true
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `Template created successfully!`
+      });
+      
+      fetchTemplates();
+      setTemplateEditorModal({ ...templateEditorModal, isOpen: false });
+    } catch (error: any) {
+      console.error("Error saving template:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save template",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-purple-50/30 min-h-screen">
       <div className="max-w-7xl mx-auto p-6 space-y-8">
@@ -270,6 +327,13 @@ export function Templates() {
                   <Filter className="w-4 h-4" />
                   Filter
                 </Button>
+                <Button 
+                  onClick={() => handleCreateTemplate("email")}
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white flex items-center gap-2 h-10 text-sm px-4 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Plus className="w-4 h-4" />
+                  New Email Template
+                </Button>
               </div>
             </div>
             
@@ -332,6 +396,13 @@ export function Templates() {
                 <Button variant="outline" size="sm" className="flex items-center gap-2 h-10 text-sm px-4 border-gray-200 hover:bg-gray-50 transition-all duration-300">
                   <Filter className="w-4 h-4" />
                   Filter
+                </Button>
+                <Button 
+                  onClick={() => handleCreateTemplate("whatsapp")}
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white flex items-center gap-2 h-10 text-sm px-4 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Plus className="w-4 h-4" />
+                  New WhatsApp Template
                 </Button>
               </div>
             </div>
@@ -439,6 +510,16 @@ export function Templates() {
             fetchWorkflowSequences();
             setSequenceBuilderModal({ isOpen: false, sequence: null });
           }}
+        />
+
+        {/* Template Editor Modal */}
+        <TemplateEditorModal
+          isOpen={templateEditorModal.isOpen}
+          onClose={() => setTemplateEditorModal({ ...templateEditorModal, isOpen: false })}
+          template={templateEditorModal.template}
+          type={templateEditorModal.type}
+          mode={templateEditorModal.mode}
+          onSave={handleSaveTemplate}
         />
       </div>
     </div>

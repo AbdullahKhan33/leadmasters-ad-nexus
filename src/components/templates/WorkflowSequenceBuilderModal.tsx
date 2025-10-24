@@ -10,6 +10,7 @@ import { Plus, Trash2, GripVertical, Mail, MessageSquare } from "lucide-react";
 import { WorkflowSequenceWithSteps, CampaignTemplate } from "@/types/campaigns";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { TemplateEditorModal } from "./TemplateEditorModal";
 
 interface WorkflowSequenceBuilderModalProps {
   isOpen: boolean;
@@ -38,6 +39,9 @@ export function WorkflowSequenceBuilderModal({
   const [color, setColor] = useState("#8B5CF6");
   const [steps, setSteps] = useState<SequenceStepForm[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTemplateEditorOpen, setIsTemplateEditorOpen] = useState(false);
+  const [templateEditorType, setTemplateEditorType] = useState<"email" | "whatsapp">("email");
+  const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -215,6 +219,56 @@ export function WorkflowSequenceBuilderModal({
     return `${days} day${days !== 1 ? 's' : ''}`;
   };
 
+  const handleCreateTemplateForStep = (stepIndex: number, channel: "email" | "whatsapp") => {
+    setEditingStepIndex(stepIndex);
+    setTemplateEditorType(channel);
+    setIsTemplateEditorOpen(true);
+  };
+
+  const handleSaveNewTemplate = async (template: any) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { data: newTemplate, error } = await supabase
+        .from("campaign_templates")
+        .insert({
+          user_id: user.id,
+          name: template.name,
+          type: templateEditorType,
+          content: template.content,
+          subject: template.subject,
+          is_active: true
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Refresh templates list
+      await fetchTemplates();
+
+      // Auto-select the newly created template for the step
+      if (editingStepIndex !== null && newTemplate) {
+        updateStep(editingStepIndex, 'template_id', newTemplate.id);
+      }
+
+      toast({
+        title: "Success",
+        description: "Template created successfully!"
+      });
+
+      setIsTemplateEditorOpen(false);
+    } catch (error) {
+      console.error('Error creating template:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create template",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -285,28 +339,50 @@ export function WorkflowSequenceBuilderModal({
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <Label className="text-xs">Template</Label>
-                      <Select 
-                        value={step.template_id} 
-                        onValueChange={(value) => updateStep(index, 'template_id', value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select template..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {templates.map(template => (
-                            <SelectItem key={template.id} value={template.id}>
-                              <div className="flex items-center gap-2">
-                                {template.type === 'email' ? (
-                                  <Mail className="w-3 h-3" />
-                                ) : (
-                                  <MessageSquare className="w-3 h-3" />
-                                )}
-                                {template.name}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="flex gap-2">
+                        <Select 
+                          value={step.template_id} 
+                          onValueChange={(value) => updateStep(index, 'template_id', value)}
+                        >
+                          <SelectTrigger className="flex-1">
+                            <SelectValue placeholder="Select template..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <div className="p-2 border-b mb-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="w-full justify-start text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                                onClick={() => handleCreateTemplateForStep(index, 'email')}
+                              >
+                                <Mail className="w-3 h-3 mr-2" />
+                                + New Email Template
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="w-full justify-start text-green-600 hover:text-green-700 hover:bg-green-50"
+                                onClick={() => handleCreateTemplateForStep(index, 'whatsapp')}
+                              >
+                                <MessageSquare className="w-3 h-3 mr-2" />
+                                + New WhatsApp Template
+                              </Button>
+                            </div>
+                            {templates.map(template => (
+                              <SelectItem key={template.id} value={template.id}>
+                                <div className="flex items-center gap-2">
+                                  {template.type === 'email' ? (
+                                    <Mail className="w-3 h-3" />
+                                  ) : (
+                                    <MessageSquare className="w-3 h-3" />
+                                  )}
+                                  {template.name}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
                     <div className="space-y-1">
@@ -394,6 +470,16 @@ export function WorkflowSequenceBuilderModal({
             </Button>
           </div>
         </div>
+
+        {/* Template Editor Modal */}
+        <TemplateEditorModal
+          isOpen={isTemplateEditorOpen}
+          onClose={() => setIsTemplateEditorOpen(false)}
+          template={null}
+          type={templateEditorType}
+          mode="create"
+          onSave={handleSaveNewTemplate}
+        />
       </DialogContent>
     </Dialog>
   );
