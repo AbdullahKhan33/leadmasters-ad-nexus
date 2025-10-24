@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Building2, 
   GraduationCap, 
@@ -22,6 +23,7 @@ interface TemplateGalleryProps {
 export function TemplateGallery({ templates, onCreateFromTemplate }: TemplateGalleryProps) {
   const [selectedIndustry, setSelectedIndustry] = useState<'all' | 'real_estate' | 'edtech'>('all');
   const [selectedRegion, setSelectedRegion] = useState<'all' | 'india' | 'uae' | 'qatar' | 'saudi'>('all');
+  const [tab, setTab] = useState<'all' | 'real_estate' | 'edtech'>('all');
 
   const getIndustryFromTemplate = (template: SegmentTemplate): 'real_estate' | 'edtech' | 'other' => {
     const name = template.name.toLowerCase();
@@ -63,18 +65,19 @@ export function TemplateGallery({ templates, onCreateFromTemplate }: TemplateGal
     return 'other';
   };
 
-  const filteredTemplates = templates.filter(template => {
-    const industry = getIndustryFromTemplate(template);
+  // Filter by region first (independent of industry)
+  const baseByRegion = templates.filter((template) => {
     const region = getRegionFromTemplate(template);
-    
-    const matchesIndustry = selectedIndustry === 'all' || industry === selectedIndustry;
-    const matchesRegion = selectedRegion === 'all' || region === selectedRegion;
-    
-    return matchesIndustry && matchesRegion;
+    return selectedRegion === 'all' || region === selectedRegion;
   });
 
-  const realEstateTemplates = filteredTemplates.filter(t => getIndustryFromTemplate(t) === 'real_estate');
-  const edtechTemplates = filteredTemplates.filter(t => getIndustryFromTemplate(t) === 'edtech');
+  // Data for each tab
+  const allTemplates = selectedIndustry === 'all'
+    ? baseByRegion
+    : baseByRegion.filter((t) => getIndustryFromTemplate(t) === selectedIndustry);
+  const realEstateAll = baseByRegion.filter((t) => getIndustryFromTemplate(t) === 'real_estate');
+  const edtechAll = baseByRegion.filter((t) => getIndustryFromTemplate(t) === 'edtech');
+const isEmpty = (tab === 'all' ? allTemplates : tab === 'real_estate' ? realEstateAll : edtechAll).length === 0;
 
   return (
     <div className="space-y-6">
@@ -83,14 +86,14 @@ export function TemplateGallery({ templates, onCreateFromTemplate }: TemplateGal
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">Industry:</span>
           <Button
-            variant={selectedIndustry === 'all' ? 'default' : 'outline'}
+            variant={selectedIndustry === 'all' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedIndustry('all')}
           >
             All
           </Button>
           <Button
-            variant={selectedIndustry === 'real_estate' ? 'default' : 'outline'}
+            variant={selectedIndustry === 'real_estate' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedIndustry('real_estate')}
             className="gap-2"
@@ -99,7 +102,7 @@ export function TemplateGallery({ templates, onCreateFromTemplate }: TemplateGal
             Real Estate
           </Button>
           <Button
-            variant={selectedIndustry === 'edtech' ? 'default' : 'outline'}
+            variant={selectedIndustry === 'edtech' ? 'gradient' : 'outline'}
             size="sm"
             onClick={() => setSelectedIndustry('edtech')}
             className="gap-2"
@@ -150,31 +153,33 @@ export function TemplateGallery({ templates, onCreateFromTemplate }: TemplateGal
       </div>
 
       {/* Templates Grid */}
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as 'all' | 'real_estate' | 'edtech')} className="w-full">
         <TabsList>
-          <TabsTrigger value="all">All Templates ({filteredTemplates.length})</TabsTrigger>
+          <TabsTrigger value="all">All Templates ({baseByRegion.length})</TabsTrigger>
           <TabsTrigger value="real_estate">
             <Building2 className="w-4 h-4 mr-2" />
-            Real Estate ({realEstateTemplates.length})
+            Real Estate ({realEstateAll.length})
           </TabsTrigger>
           <TabsTrigger value="edtech">
             <GraduationCap className="w-4 h-4 mr-2" />
-            EdTech ({edtechTemplates.length})
+            EdTech ({edtechAll.length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTemplates.map((template) => (
-              <TemplateCard
-                key={template.id}
-                template={template}
-                industry={getIndustryFromTemplate(template)}
-                region={getRegionFromTemplate(template)}
-                onCreateFromTemplate={onCreateFromTemplate}
-              />
-            ))}
-          </div>
+          <ScrollArea className="max-h-[70vh] pr-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {allTemplates.map((template) => (
+                <TemplateCard
+                  key={template.id}
+                  template={template}
+                  industry={getIndustryFromTemplate(template)}
+                  region={getRegionFromTemplate(template)}
+                  onCreateFromTemplate={onCreateFromTemplate}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         </TabsContent>
 
         <TabsContent value="real_estate" className="mt-6">
