@@ -108,6 +108,7 @@ export function AISalesAutomation() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <WorkflowTemplateCard
+                workflowId="no-reply-workflow"
                 name="No Reply Follow-up Sequence"
                 description="Automated reminder system"
                 icon={MessageCircle}
@@ -119,6 +120,7 @@ export function AISalesAutomation() {
                 type="Automated reminder"
               />
               <WorkflowTemplateCard
+                workflowId="qualified-routing-workflow"
                 name="Qualified Lead → Sales Routing"
                 description="Intelligent auto-assignment"
                 icon={UserCheck}
@@ -130,6 +132,7 @@ export function AISalesAutomation() {
                 type="Auto-assignment"
               />
               <WorkflowTemplateCard
+                workflowId="nurturing-7day-workflow"
                 name="7-Day Nurturing Sequence"
                 description="Progressive engagement campaign"
                 icon={Calendar}
@@ -141,6 +144,7 @@ export function AISalesAutomation() {
                 type="Engagement campaign"
               />
               <WorkflowTemplateCard
+                workflowId="long-term-pool-workflow"
                 name="Long-Term Nurturing Pool"
                 description="Re-engagement automation"
                 icon={RefreshCw}
