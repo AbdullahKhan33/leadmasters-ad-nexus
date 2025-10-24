@@ -17,11 +17,13 @@ import {
   Star,
   Sparkles
 } from 'lucide-react';
+import { useSegmentsData } from '@/hooks/useSegmentsData';
 import { useSegments } from '@/hooks/useSegments';
 import { SegmentBuilder } from './SegmentBuilder';
 import { TemplateGallery } from './TemplateGallery';
 import { CustomSegment } from '@/types/segments';
 import { useToast } from '@/hooks/use-toast';
+import { Segment } from '@/types/campaigns';
 
 export function SegmentManager() {
   const [activeTab, setActiveTab] = useState('segments');
@@ -29,28 +31,49 @@ export function SegmentManager() {
   const [selectedSegment, setSelectedSegment] = useState<CustomSegment | null>(null);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
   
+  // Fetch actual segments from database
+  const { segments: dbSegments, isLoading: dbLoading, refetch } = useSegmentsData();
+  
+  // Use the template hook for templates only
   const { 
-    segments, 
     templates, 
-    isLoading, 
-    error, 
     createSegment, 
     updateSegment, 
     deleteSegment, 
     duplicateSegment, 
-    createFromTemplate, 
-    searchSegments 
+    createFromTemplate 
   } = useSegments();
   
-  const { toast } = useToast();
+  // Convert database segments to CustomSegment format and filter by search
+  const segments = dbSegments.map(seg => ({
+    id: seg.id,
+    name: seg.name,
+    description: seg.description || '',
+    color: '#3b82f6',
+    criteria: [],
+    leadCount: 0,
+    isActive: seg.is_active,
+    createdAt: seg.created_at,
+    updatedAt: seg.updated_at || seg.created_at
+  } as CustomSegment));
   
-  const filteredSegments = searchSegments(searchQuery);
+  const filteredSegments = searchQuery 
+    ? segments.filter(seg => 
+        seg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        seg.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : segments;
+  
+  const isLoading = dbLoading;
+  
+  const { toast } = useToast();
   
   const handleCreateSegment = async (segmentData: Omit<CustomSegment, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
       await createSegment(segmentData);
       setIsBuilderOpen(false);
       setSelectedSegment(null);
+      await refetch(); // Refresh segments from database
       toast({
         title: "Success",
         description: "Segment created successfully",
@@ -71,6 +94,7 @@ export function SegmentManager() {
       await updateSegment(selectedSegment.id, segmentData);
       setIsBuilderOpen(false);
       setSelectedSegment(null);
+      await refetch(); // Refresh segments from database
       toast({
         title: "Success",
         description: "Segment updated successfully",
@@ -88,6 +112,7 @@ export function SegmentManager() {
     if (window.confirm(`Are you sure you want to delete "${segment.name}"?`)) {
       try {
         await deleteSegment(segment.id);
+        await refetch(); // Refresh segments from database
         toast({
           title: "Success",
           description: "Segment deleted successfully",
@@ -105,6 +130,7 @@ export function SegmentManager() {
   const handleDuplicateSegment = async (segment: CustomSegment) => {
     try {
       await duplicateSegment(segment.id);
+      await refetch(); // Refresh segments from database
       toast({
         title: "Success",
         description: "Segment duplicated successfully",
@@ -160,10 +186,12 @@ export function SegmentManager() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Audience Segments</h2>
-          <p className="text-gray-600">Create and manage custom audience segments for targeted campaigns</p>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-chart-2 bg-clip-text text-transparent">
+            Audience Segments
+          </h2>
+          <p className="text-muted-foreground">Create and manage custom audience segments for targeted campaigns</p>
         </div>
-        <Button onClick={() => openBuilder()} className="gap-2">
+        <Button onClick={() => openBuilder()} variant="gradient" className="gap-2">
           <Plus className="w-4 h-4" />
           Create Segment
         </Button>
@@ -194,14 +222,18 @@ export function SegmentManager() {
         </TabsList>
 
         <TabsContent value="segments" className="space-y-4">
-          {filteredSegments.length === 0 ? (
+          {isLoading ? (
             <div className="text-center py-12">
-              <Target className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No segments found</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-muted-foreground">Loading segments...</p>
+            </div>
+          ) : filteredSegments.length === 0 ? (
+            <div className="text-center py-12">
+              <Target className="w-16 h-16 mx-auto text-muted-foreground/40 mb-4" />
+              <h3 className="text-lg font-medium mb-2">No segments found</h3>
+              <p className="text-muted-foreground mb-4">
                 {searchQuery ? 'Try adjusting your search terms' : 'Create your first custom segment to get started'}
               </p>
-              <Button onClick={() => openBuilder()} className="gap-2">
+              <Button onClick={() => openBuilder()} variant="gradient" className="gap-2">
                 <Plus className="w-4 h-4" />
                 Create Segment
               </Button>
