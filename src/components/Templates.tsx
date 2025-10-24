@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Mail, MessageSquare, Sparkles, Filter, Plus, Workflow } from "lucide-react";
 import { CampaignTemplate, WorkflowSequenceWithSteps } from "@/types/campaigns";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,12 +12,23 @@ import { WorkflowSequenceCard } from "./templates/WorkflowSequenceCard";
 import { WorkflowSequenceBuilderModal } from "./templates/WorkflowSequenceBuilderModal";
 import { TemplatesUpsell } from "./templates/TemplatesUpsell";
 import { TemplateEditorModal } from "./templates/TemplateEditorModal";
+import { TemplateCard } from "./templates/TemplateCard";
+
+interface GroupedTemplates {
+  sequenceId: string;
+  sequenceName: string;
+  sequenceColor: string;
+  sequenceIcon: string;
+  templates: CampaignTemplate[];
+}
 
 export function Templates() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"email" | "whatsapp" | "workflows">("email");
-  const [emailTemplates, setEmailTemplates] = useState<CampaignTemplate[]>([]);
-  const [whatsappTemplates, setWhatsappTemplates] = useState<CampaignTemplate[]>([]);
+  const [groupedEmailTemplates, setGroupedEmailTemplates] = useState<GroupedTemplates[]>([]);
+  const [groupedWhatsappTemplates, setGroupedWhatsappTemplates] = useState<GroupedTemplates[]>([]);
+  const [standaloneEmailTemplates, setStandaloneEmailTemplates] = useState<CampaignTemplate[]>([]);
+  const [standaloneWhatsappTemplates, setStandaloneWhatsappTemplates] = useState<CampaignTemplate[]>([]);
   const [workflowSequences, setWorkflowSequences] = useState<WorkflowSequenceWithSteps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -51,18 +63,64 @@ export function Templates() {
   const fetchTemplates = async () => {
     setIsLoading(true);
     try {
+      // Fetch templates with their sequence information
       const { data, error } = await supabase
         .from('campaign_templates')
-        .select('*')
+        .select(`
+          *,
+          workflow_sequence_steps!inner(
+            sequence_id,
+            workflow_sequences(id, name, color, icon)
+          )
+        `)
         .eq('is_active', true)
         .order('name');
       
-      if (error) throw error;
-      
+      if (error && error.code !== 'PGRST116') throw error;
+
+      // Also fetch standalone templates (not in any sequence)
+      const { data: standaloneData, error: standaloneError } = await supabase
+        .from('campaign_templates')
+        .select('*')
+        .eq('is_active', true)
+        .not('id', 'in', `(SELECT template_id FROM workflow_sequence_steps)`)
+        .order('name');
+
+      if (standaloneError) throw standaloneError;
+
+      // Group templates by sequence
+      const emailGroups = new Map<string, GroupedTemplates>();
+      const whatsappGroups = new Map<string, GroupedTemplates>();
+
       if (data) {
-        const typedData = data as CampaignTemplate[];
-        setEmailTemplates(typedData.filter(t => t.type === 'email'));
-        setWhatsappTemplates(typedData.filter(t => t.type === 'whatsapp'));
+        data.forEach((template: any) => {
+          const step = template.workflow_sequence_steps?.[0];
+          if (!step?.workflow_sequences) return;
+
+          const sequence = step.workflow_sequences;
+          const isEmail = template.type === 'email';
+          const targetMap = isEmail ? emailGroups : whatsappGroups;
+
+          if (!targetMap.has(sequence.id)) {
+            targetMap.set(sequence.id, {
+              sequenceId: sequence.id,
+              sequenceName: sequence.name,
+              sequenceColor: sequence.color || '#8B5CF6',
+              sequenceIcon: sequence.icon || 'Workflow',
+              templates: []
+            });
+          }
+
+          targetMap.get(sequence.id)!.templates.push(template);
+        });
+      }
+
+      setGroupedEmailTemplates(Array.from(emailGroups.values()));
+      setGroupedWhatsappTemplates(Array.from(whatsappGroups.values()));
+      
+      if (standaloneData) {
+        setStandaloneEmailTemplates(standaloneData.filter(t => t.type === 'email') as CampaignTemplate[]);
+        setStandaloneWhatsappTemplates(standaloneData.filter(t => t.type === 'whatsapp') as CampaignTemplate[]);
       }
     } catch (error) {
       console.error('Error fetching templates:', error);
@@ -227,7 +285,16 @@ export function Templates() {
     });
   };
 
-  const handleSaveTemplate = async (template: any) => {
+  const handleEditTemplate = (template: CampaignTemplate) => {
+    setTemplateEditorModal({
+      isOpen: true,
+      type: template.type as "email" | "whatsapp",
+      mode: "edit",
+      template
+    });
+  };
+
+  const handleDuplicateTemplate = async (template: CampaignTemplate) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("User not authenticated");
@@ -236,8 +303,8 @@ export function Templates() {
         .from("campaign_templates")
         .insert({
           user_id: user.id,
-          name: template.name,
-          type: templateEditorModal.type,
+          name: `${template.name} (Copy)`,
+          type: template.type,
           content: template.content,
           subject: template.subject,
           is_active: true
@@ -247,8 +314,89 @@ export function Templates() {
 
       toast({
         title: "Success",
-        description: `Template created successfully!`
+        description: "Template duplicated successfully"
       });
+      
+      fetchTemplates();
+    } catch (error) {
+      console.error("Error duplicating template:", error);
+      toast({
+        title: "Error",
+        description: "Failed to duplicate template",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteTemplate = async (templateId: string) => {
+    if (!confirm("Are you sure you want to delete this template?")) return;
+
+    try {
+      const { error } = await supabase
+        .from("campaign_templates")
+        .update({ is_active: false })
+        .eq('id', templateId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Template deleted successfully"
+      });
+      
+      fetchTemplates();
+    } catch (error) {
+      console.error("Error deleting template:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete template",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSaveTemplate = async (template: any) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      if (templateEditorModal.mode === "edit" && template.id) {
+        // Update existing template
+        const { error } = await supabase
+          .from("campaign_templates")
+          .update({
+            name: template.name,
+            content: template.content,
+            subject: template.subject,
+          })
+          .eq('id', template.id);
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Template updated successfully"
+        });
+      } else {
+        // Create new template
+        const { error } = await supabase
+          .from("campaign_templates")
+          .insert({
+            user_id: user.id,
+            name: template.name,
+            type: templateEditorModal.type,
+            content: template.content,
+            subject: template.subject,
+            is_active: true
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Template created successfully"
+        });
+      }
       
       fetchTemplates();
       setTemplateEditorModal({ ...templateEditorModal, isOpen: false });
@@ -290,7 +438,7 @@ export function Templates() {
                 <Mail className="w-4 h-4" />
                 Email Templates
                 <Badge variant="secondary" className="ml-1 bg-purple-100 text-purple-700 text-xs font-bold">
-                  {emailTemplates.length}
+                  {groupedEmailTemplates.reduce((acc, g) => acc + g.templates.length, 0) + standaloneEmailTemplates.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger 
@@ -300,7 +448,7 @@ export function Templates() {
                 <MessageSquare className="w-4 h-4" />
                 WhatsApp Templates
                 <Badge variant="secondary" className="ml-1 bg-green-100 text-green-700 text-xs font-bold">
-                  {whatsappTemplates.length}
+                  {groupedWhatsappTemplates.reduce((acc, g) => acc + g.templates.length, 0) + standaloneWhatsappTemplates.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger 
@@ -342,46 +490,75 @@ export function Templates() {
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
                 <p className="mt-4 text-sm text-muted-foreground">Loading templates...</p>
               </div>
-            ) : emailTemplates.length === 0 ? (
+            ) : groupedEmailTemplates.length === 0 && standaloneEmailTemplates.length === 0 ? (
               <div className="text-center py-12 border-2 border-dashed rounded-lg">
                 <Mail className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">No email templates found</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {emailTemplates.map((template) => (
-                  <Card key={template.id} className="group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border-0 shadow-lg backdrop-blur-sm bg-white/90">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <CardHeader className="pb-3 relative z-10">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="p-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-lg">
-                              <Mail className="w-4 h-4 text-white" />
-                            </div>
-                            <CardTitle className="text-base font-bold text-gray-900">
-                              {template.name}
-                            </CardTitle>
+              <div className="space-y-6">
+                {/* Grouped by Workflow Sequences */}
+                {groupedEmailTemplates.length > 0 && (
+                  <Accordion type="multiple" className="space-y-4">
+                    {groupedEmailTemplates.map((group) => (
+                      <AccordionItem 
+                        key={group.sequenceId} 
+                        value={group.sequenceId}
+                        className="border rounded-lg bg-white shadow-sm"
+                      >
+                        <AccordionTrigger className="px-6 hover:no-underline">
+                          <div className="flex items-center gap-3">
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ backgroundColor: group.sequenceColor }}
+                            />
+                            <span className="font-bold text-lg">{group.sequenceName}</span>
+                            <Badge variant="secondary" className="ml-2">
+                              {group.templates.length} templates
+                            </Badge>
                           </div>
-                          {template.subject && (
-                            <CardDescription className="text-sm text-gray-700 mb-2 font-medium">
-                              {template.subject}
-                            </CardDescription>
-                          )}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="pt-0 px-4 pb-4 relative z-10">
-                      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 border border-white/60 shadow-inner">
-                        <pre className="text-sm text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-20 overflow-hidden">
-                          {template.content.length > 120 ? `${template.content.substring(0, 120)}...` : template.content}
-                        </pre>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 pb-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
+                            {group.templates.map((template) => (
+                              <TemplateCard
+                                key={template.id}
+                                template={template}
+                                onEdit={handleEditTemplate}
+                                onDelete={handleDeleteTemplate}
+                                onDuplicate={handleDuplicateTemplate}
+                              />
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                )}
+
+                {/* Standalone Templates */}
+                {standaloneEmailTemplates.length > 0 && (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 px-2">
+                      <div className="w-3 h-3 rounded-full bg-gray-400" />
+                      <h3 className="font-bold text-lg">Standalone Templates</h3>
+                      <Badge variant="secondary">
+                        {standaloneEmailTemplates.length} templates
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {standaloneEmailTemplates.map((template) => (
+                        <TemplateCard
+                          key={template.id}
+                          template={template}
+                          onEdit={handleEditTemplate}
+                          onDelete={handleDeleteTemplate}
+                          onDuplicate={handleDuplicateTemplate}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </TabsContent>
@@ -412,41 +589,75 @@ export function Templates() {
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
                 <p className="mt-4 text-sm text-muted-foreground">Loading templates...</p>
               </div>
-            ) : whatsappTemplates.length === 0 ? (
+            ) : groupedWhatsappTemplates.length === 0 && standaloneWhatsappTemplates.length === 0 ? (
               <div className="text-center py-12 border-2 border-dashed rounded-lg">
                 <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground">No WhatsApp templates found</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {whatsappTemplates.map((template) => (
-                  <Card key={template.id} className="group relative overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border-0 shadow-lg backdrop-blur-sm bg-white/90">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <CardHeader className="pb-3 relative z-10">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl shadow-lg">
-                              <MessageSquare className="w-4 h-4 text-white" />
-                            </div>
-                            <CardTitle className="text-base font-bold text-gray-900">
-                              {template.name}
-                            </CardTitle>
+              <div className="space-y-6">
+                {/* Grouped by Workflow Sequences */}
+                {groupedWhatsappTemplates.length > 0 && (
+                  <Accordion type="multiple" className="space-y-4">
+                    {groupedWhatsappTemplates.map((group) => (
+                      <AccordionItem 
+                        key={group.sequenceId} 
+                        value={group.sequenceId}
+                        className="border rounded-lg bg-white shadow-sm"
+                      >
+                        <AccordionTrigger className="px-6 hover:no-underline">
+                          <div className="flex items-center gap-3">
+                            <div 
+                              className="w-3 h-3 rounded-full" 
+                              style={{ backgroundColor: group.sequenceColor }}
+                            />
+                            <span className="font-bold text-lg">{group.sequenceName}</span>
+                            <Badge variant="secondary" className="ml-2">
+                              {group.templates.length} templates
+                            </Badge>
                           </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="pt-0 px-4 pb-4 relative z-10">
-                      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 border border-white/60 shadow-inner">
-                        <pre className="text-sm text-gray-800 whitespace-pre-wrap font-sans leading-relaxed max-h-20 overflow-hidden">
-                          {template.content.length > 120 ? `${template.content.substring(0, 120)}...` : template.content}
-                        </pre>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 pb-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
+                            {group.templates.map((template) => (
+                              <TemplateCard
+                                key={template.id}
+                                template={template}
+                                onEdit={handleEditTemplate}
+                                onDelete={handleDeleteTemplate}
+                                onDuplicate={handleDuplicateTemplate}
+                              />
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                )}
+
+                {/* Standalone Templates */}
+                {standaloneWhatsappTemplates.length > 0 && (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 px-2">
+                      <div className="w-3 h-3 rounded-full bg-gray-400" />
+                      <h3 className="font-bold text-lg">Standalone Templates</h3>
+                      <Badge variant="secondary">
+                        {standaloneWhatsappTemplates.length} templates
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {standaloneWhatsappTemplates.map((template) => (
+                        <TemplateCard
+                          key={template.id}
+                          template={template}
+                          onEdit={handleEditTemplate}
+                          onDelete={handleDeleteTemplate}
+                          onDuplicate={handleDuplicateTemplate}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </TabsContent>
