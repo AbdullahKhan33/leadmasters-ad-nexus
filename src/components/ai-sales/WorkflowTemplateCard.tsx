@@ -2,119 +2,99 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { LucideIcon, Layers, Clock, Mail, MessageSquare, Users, BarChart3 } from "lucide-react";
+import { AlertTriangle, Layers, Clock, Mail, MessageSquare, Users, BarChart3, Rocket, Play, Pause, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { WorkflowSequenceWithSteps, Segment } from "@/types/campaigns";
 import { WorkflowConfigurationModal } from "./WorkflowConfigurationModal";
 
 interface WorkflowTemplateCardProps {
   workflowId: string;
-  name: string;
-  description: string;
-  icon: LucideIcon;
-  activeLeads: number;
-  successRate: string;
-  avgTime: string;
-  steps: string;
-  isActive: boolean;
-  type: string;
+  onRefresh?: () => void;
 }
 
-export function WorkflowTemplateCard({
-  workflowId,
-  name,
-  description,
-  icon: Icon,
-  activeLeads,
-  successRate,
-  avgTime,
-  steps,
-  isActive,
-  type
-}: WorkflowTemplateCardProps) {
+export function WorkflowTemplateCard({ workflowId, onRefresh }: WorkflowTemplateCardProps) {
+  const [workflow, setWorkflow] = useState<any>(null);
   const [sequence, setSequence] = useState<WorkflowSequenceWithSteps | null>(null);
   const [segment, setSegment] = useState<Segment | null>(null);
-  const [workflowStatus, setWorkflowStatus] = useState<string>('draft');
-  const [targetLeadCount, setTargetLeadCount] = useState<number>(0);
-  const [processedLeadCount, setProcessedLeadCount] = useState<number>(0);
-  const [segmentId, setSegmentId] = useState<string | null>(null);
+  const [eligibleLeads, setEligibleLeads] = useState<number>(0);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchWorkflowSequence();
+    fetchWorkflowData();
   }, [workflowId]);
 
-  const fetchWorkflowSequence = async () => {
+  const fetchWorkflowData = async () => {
     setIsLoading(true);
     try {
-      // Fetch the workflow with all its data
-      const { data: workflow, error: workflowError } = await supabase
+      // Fetch the workflow
+      const { data: workflowData, error: workflowError } = await supabase
         .from('automation_workflows')
-        .select('workflow_sequence_id, segment_id, workflow_status, target_lead_count, processed_lead_count')
+        .select('*')
         .eq('id', workflowId)
         .maybeSingle();
 
       if (workflowError) throw workflowError;
+      if (!workflowData) return;
 
-      if (workflow) {
-        setWorkflowStatus(workflow.workflow_status || 'draft');
-        setTargetLeadCount(workflow.target_lead_count || 0);
-        setProcessedLeadCount(workflow.processed_lead_count || 0);
-        setSegmentId(workflow.segment_id);
+      setWorkflow(workflowData);
 
-        // Fetch segment if exists
-        if (workflow.segment_id) {
-          const { data: seg, error: segError } = await supabase
-            .from('segments')
-            .select('*')
-            .eq('id', workflow.segment_id)
-            .maybeSingle();
+      // Fetch segment if exists
+      if (workflowData.segment_id) {
+        const { data: segmentData, error: segError } = await supabase
+          .from('segments')
+          .select('*')
+          .eq('id', workflowData.segment_id)
+          .maybeSingle();
 
-          if (!segError && seg) {
-            setSegment(seg as Segment);
-          }
+        if (!segError && segmentData) {
+          setSegment(segmentData as Segment);
+          
+          // Calculate eligible leads
+          const { count } = await supabase
+            .from('leads')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', workflowData.user_id)
+            .is('current_workflow_id', null);
+          
+          setEligibleLeads(count || 0);
         }
       }
 
-      if (workflow?.workflow_sequence_id) {
-        // Fetch the sequence with its steps
-        const { data: seq, error: seqError } = await supabase
+      // Fetch sequence if exists
+      if (workflowData.workflow_sequence_id) {
+        const { data: seqData, error: seqError } = await supabase
           .from('workflow_sequences')
           .select('*')
-          .eq('id', workflow.workflow_sequence_id)
-          .single();
+          .eq('id', workflowData.workflow_sequence_id)
+          .maybeSingle();
 
-        if (seqError) throw seqError;
+        if (!seqError && seqData) {
+          // Fetch steps
+          const { data: stepsData, error: stepsError } = await supabase
+            .from('workflow_sequence_steps')
+            .select('*')
+            .eq('sequence_id', seqData.id)
+            .order('step_order', { ascending: true });
 
-        // Fetch steps with templates
-        const { data: steps, error: stepsError } = await supabase
-          .from('workflow_sequence_steps')
-          .select(`
-            *,
-            template:campaign_templates(*)
-          `)
-          .eq('sequence_id', seq.id)
-          .order('step_order', { ascending: true });
+          if (!stepsError && stepsData) {
+            const totalDuration = stepsData.reduce((acc, step) => Math.max(acc, step.delay_hours), 0);
+            const emailCount = stepsData.filter(s => s.channel === 'email').length;
+            const whatsappCount = stepsData.filter(s => s.channel === 'whatsapp').length;
 
-        if (stepsError) throw stepsError;
-
-        // Calculate metrics
-        const totalDuration = steps?.reduce((acc, step) => Math.max(acc, step.delay_hours), 0) || 0;
-        const emailCount = steps?.filter(s => s.channel === 'email').length || 0;
-        const whatsappCount = steps?.filter(s => s.channel === 'whatsapp').length || 0;
-
-        setSequence({
-          ...seq,
-          steps: steps || [],
-          total_steps: steps?.length || 0,
-          total_duration_hours: totalDuration,
-          email_count: emailCount,
-          whatsapp_count: whatsappCount
-        } as WorkflowSequenceWithSteps);
+            setSequence({
+              ...seqData,
+              steps: stepsData || [],
+              total_steps: stepsData.length,
+              total_duration_hours: totalDuration,
+              email_count: emailCount,
+              whatsapp_count: whatsappCount
+            } as WorkflowSequenceWithSteps);
+          }
+        }
       }
     } catch (error) {
-      console.error('Error fetching workflow sequence:', error);
+      console.error('Error fetching workflow data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -126,82 +106,176 @@ export function WorkflowTemplateCard({
     return `${days}d`;
   };
 
+  if (isLoading || !workflow) {
+    return (
+      <Card className="animate-pulse">
+        <CardHeader>
+          <div className="h-4 bg-muted rounded w-3/4" />
+          <div className="h-3 bg-muted rounded w-1/2 mt-2" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="h-20 bg-muted rounded" />
+            <div className="h-10 bg-muted rounded" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const isConfigured = workflow.segment_id && workflow.workflow_sequence_id;
+  const isActive = workflow.workflow_status === 'active';
+  const isPaused = workflow.workflow_status === 'paused';
+  const isDraft = workflow.workflow_status === 'draft';
+
   const getStatusBadge = () => {
-    switch (workflowStatus) {
-      case 'active':
-        return <Badge className="bg-green-600">Active</Badge>;
-      case 'paused':
-        return <Badge variant="secondary">Paused</Badge>;
-      case 'completed':
-        return <Badge variant="outline">Completed</Badge>;
-      default:
-        return <Badge variant="outline">Not Launched</Badge>;
+    if (isActive) return <Badge className="bg-emerald-600 hover:bg-emerald-700">Active</Badge>;
+    if (isPaused) return <Badge className="bg-amber-600 hover:bg-amber-700">Paused</Badge>;
+    return <Badge variant="outline">Draft</Badge>;
+  };
+
+  const handleStatusChange = async (newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('automation_workflows')
+        .update({ workflow_status: newStatus })
+        .eq('id', workflowId);
+
+      if (error) throw error;
+      
+      await fetchWorkflowData();
+      onRefresh?.();
+    } catch (error) {
+      console.error('Error updating status:', error);
     }
   };
 
   return (
     <>
-      <Card className="hover:shadow-lg transition-all duration-200 group relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-pink-50/30 to-blue-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
-        
-        <CardHeader className="relative">
-          <div className="flex items-start justify-between mb-3">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Icon className="w-6 h-6 text-purple-600" />
+      <Card className="hover:shadow-lg transition-all duration-200">
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                {getStatusBadge()}
+                {isActive && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleStatusChange('paused')}
+                    className="h-6 px-2"
+                  >
+                    <Pause className="w-3 h-3 mr-1" />
+                    Pause
+                  </Button>
+                )}
+                {isPaused && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleStatusChange('active')}
+                    className="h-6 px-2"
+                  >
+                    <Play className="w-3 h-3 mr-1" />
+                    Resume
+                  </Button>
+                )}
+              </div>
+              <CardTitle className="text-lg">{workflow.name}</CardTitle>
+              {workflow.description && (
+                <CardDescription className="mt-1">{workflow.description}</CardDescription>
+              )}
             </div>
-            {getStatusBadge()}
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsConfigModalOpen(true)}
+            >
+              <Settings className="w-4 h-4" />
+            </Button>
           </div>
-          <CardTitle className="text-base group-hover:text-purple-600 transition-colors">
-            {name}
-          </CardTitle>
-          <CardDescription className="text-xs">{description}</CardDescription>
         </CardHeader>
 
-        <CardContent className="relative space-y-4">
-          {/* Segment Info */}
-          {segment && (
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-3 border border-indigo-200">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-indigo-600" />
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: segment.color }} />
-                  <p className="text-sm font-semibold text-indigo-900">{segment.name}</p>
+        <CardContent className="space-y-4">
+          {/* Show configuration status for draft campaigns */}
+          {isDraft && !isConfigured && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-amber-900 mb-2">Setup Required</p>
+                  <ul className="text-sm text-amber-800 space-y-1">
+                    {!workflow.segment_id && <li>• Target segment not selected</li>}
+                    {!workflow.workflow_sequence_id && <li>• Message sequence not selected</li>}
+                  </ul>
+                  <Button
+                    size="sm"
+                    className="mt-3 bg-amber-600 hover:bg-amber-700"
+                    onClick={() => setIsConfigModalOpen(true)}
+                  >
+                    Configure Campaign
+                  </Button>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Progress Bar for Active/Paused Workflows */}
-          {workflowStatus !== 'draft' && targetLeadCount > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <BarChart3 className="w-3 h-3" />
-                  <span>Progress</span>
+          {/* Show configured status for draft campaigns that are ready */}
+          {isDraft && isConfigured && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <BarChart3 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-semibold text-emerald-900 mb-3">✓ Fully Configured</p>
+                  
+                  {segment && (
+                    <div className="flex items-center gap-2 text-sm text-emerald-800 mb-2">
+                      <Users className="w-4 h-4" />
+                      <span>Segment: <strong>{segment.name}</strong> ({segment.lead_count} leads)</span>
+                    </div>
+                  )}
+                  
+                  {sequence && (
+                    <div className="flex items-center gap-2 text-sm text-emerald-800 mb-2">
+                      <Layers className="w-4 h-4" />
+                      <span>Sequence: <strong>{sequence.name}</strong> ({sequence.total_steps} steps, {formatDuration(sequence.total_duration_hours)})</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-2 text-sm text-emerald-800">
+                    <Rocket className="w-4 h-4" />
+                    <span>Ready to launch for <strong>{eligibleLeads} eligible leads</strong></span>
+                  </div>
                 </div>
-                <span className="font-semibold">{processedLeadCount}/{targetLeadCount} leads</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-1.5">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-1.5 rounded-full transition-all"
-                  style={{ width: `${(processedLeadCount / targetLeadCount) * 100}%` }}
-                />
               </div>
             </div>
           )}
-          {/* Sequence Info */}
-          {sequence ? (
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 border border-blue-200">
-              <div className="flex items-center gap-2 mb-2">
-                <Layers className="w-4 h-4 text-blue-600" />
-                <p className="text-sm font-semibold text-blue-900">{sequence.name}</p>
+
+          {/* Segment Info for active/paused */}
+          {!isDraft && segment && (
+            <div className="bg-muted rounded-lg p-3 border">
+              <div className="flex items-center gap-2 mb-1">
+                <Users className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Target Segment</span>
               </div>
-              <div className="flex items-center gap-4 text-xs text-blue-700">
-                <div className="flex items-center gap-1">
-                  <Badge variant="outline" className="text-xs">
-                    {sequence.total_steps} steps
-                  </Badge>
-                </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: segment.color }} />
+                <p className="text-sm font-semibold">{segment.name}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Sequence Info for active/paused */}
+          {!isDraft && sequence && (
+            <div className="bg-muted rounded-lg p-3 border">
+              <div className="flex items-center gap-2 mb-2">
+                <Layers className="w-4 h-4 text-muted-foreground" />
+                <p className="text-sm font-medium">{sequence.name}</p>
+              </div>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <Badge variant="outline" className="text-xs">
+                  {sequence.total_steps} steps
+                </Badge>
                 <div className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   <span>{formatDuration(sequence.total_duration_hours)}</span>
@@ -220,51 +294,36 @@ export function WorkflowTemplateCard({
                 )}
               </div>
             </div>
-          ) : (
-            <div className="bg-amber-50 rounded-lg p-3 border border-amber-200">
-              <p className="text-xs text-amber-800 font-medium">
-                ⚠️ No template sequence configured
-              </p>
+          )}
+
+          {/* Progress Bar for Active/Paused */}
+          {!isDraft && workflow.target_lead_count > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Progress</span>
+                <span className="font-semibold">
+                  {workflow.processed_lead_count}/{workflow.target_lead_count} leads ({Math.round((workflow.processed_lead_count / workflow.target_lead_count) * 100)}%)
+                </span>
+              </div>
+              <div className="w-full bg-muted rounded-full h-2">
+                <div 
+                  className="bg-primary h-2 rounded-full transition-all"
+                  style={{ width: `${(workflow.processed_lead_count / workflow.target_lead_count) * 100}%` }}
+                />
+              </div>
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p className="text-xs text-muted-foreground">Active Leads</p>
-              <p className="text-lg font-bold text-purple-600">{activeLeads}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Success Rate</p>
-              <p className="text-lg font-bold text-green-600">{successRate}</p>
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Average Time</p>
-            <p className="text-sm font-semibold">{avgTime}</p>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Campaign Steps</p>
-            <p className="text-xs leading-relaxed">{steps}</p>
-          </div>
-
-          <div className="flex gap-2 pt-2">
-            <Button 
-              size="sm" 
-              className="flex-1 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-500 hover:opacity-90"
-            >
-              View Details
-            </Button>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="flex-1"
+          {/* Action buttons */}
+          {isDraft && isConfigured && (
+            <Button
+              className="w-full"
               onClick={() => setIsConfigModalOpen(true)}
             >
-              Configure
+              <Rocket className="w-4 h-4 mr-2" />
+              Launch Campaign
             </Button>
-          </div>
+          )}
         </CardContent>
       </Card>
 
@@ -272,14 +331,15 @@ export function WorkflowTemplateCard({
         isOpen={isConfigModalOpen}
         onClose={() => setIsConfigModalOpen(false)}
         workflowId={workflowId}
-        workflowName={name}
+        workflowName={workflow.name}
         currentSequence={sequence}
-        currentSegmentId={segmentId}
-        workflowStatus={workflowStatus}
-        targetLeadCount={targetLeadCount}
-        processedLeadCount={processedLeadCount}
+        currentSegmentId={workflow.segment_id}
+        workflowStatus={workflow.workflow_status}
+        targetLeadCount={workflow.target_lead_count}
+        processedLeadCount={workflow.processed_lead_count}
         onSave={() => {
-          fetchWorkflowSequence();
+          fetchWorkflowData();
+          onRefresh?.();
           setIsConfigModalOpen(false);
         }}
       />

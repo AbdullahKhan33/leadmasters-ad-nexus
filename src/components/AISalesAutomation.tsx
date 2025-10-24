@@ -6,6 +6,8 @@ import { AutomationPipeline } from "./ai-sales/AutomationPipeline";
 import { WorkflowTemplateCard } from "./ai-sales/WorkflowTemplateCard";
 import { IntegrationCard } from "./ai-sales/IntegrationCard";
 import { AutomationAnalytics } from "./ai-sales/AutomationAnalytics";
+import { CampaignStatusSummary } from "./ai-sales/CampaignStatusSummary";
+import { CreateCampaignModal } from "./ai-sales/CreateCampaignModal";
 import { AllLeadsTableView, TableFilters } from "./ai-sales/AllLeadsTableView";
 import { Lead } from "@/data/dummyLeads";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +24,7 @@ export function AISalesAutomation() {
   const [activeTab, setActiveTab] = useState<string>('pipeline');
   const [tableFilters, setTableFilters] = useState<Partial<TableFilters> | null>(null);
   const [workflows, setWorkflows] = useState<WorkflowData[]>([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'workflows') {
@@ -128,50 +131,46 @@ export function AISalesAutomation() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-xl font-semibold">Automated Campaigns</h2>
-                <p className="text-sm text-muted-foreground">Pre-configured campaigns that automatically nurture leads through message sequences</p>
+                <p className="text-sm text-muted-foreground">Launch multi-step message sequences to targeted lead segments</p>
               </div>
-              <Button className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-500 hover:opacity-90">
+              <Button onClick={() => setIsCreateModalOpen(true)}>
                 <Plus className="w-4 h-4 mr-2" />
-                Create Custom Campaign
+                Create Campaign
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {workflows.map((workflow) => {
-                const iconMap: Record<string, any> = {
-                  'no_reply': MessageCircle,
-                  'qualified_nurturing': UserCheck,
-                  'long_term': RefreshCw,
-                };
-                const icon = iconMap[workflow.type] || Calendar;
-                
-                // Mock metrics for display
-                const mockMetrics: Record<string, any> = {
-                  'No Reply Follow-up Sequence': { activeLeads: 3, successRate: "42%", avgTime: "36 hours", steps: "D1 (24h) → D2 (48h) → D3 (72h) → Long-term" },
-                  'Qualified Lead → Sales Routing': { activeLeads: 2, successRate: "87%", avgTime: "45 minutes", steps: "AI Qualify → Assign Round-robin → Notify Agent → Check follow-up" },
-                  '7-Day Nurturing Sequence': { activeLeads: 3, successRate: "68%", avgTime: "6.5 days", steps: "D1 intro → D3 properties → D5 tour → D7 interest check" },
-                  'Long-Term Nurturing Pool': { activeLeads: 1, successRate: "15%", avgTime: "15 days/loop", steps: "Every 15 days → Check interest → Branch logic" }
-                };
-                
-                const metrics = mockMetrics[workflow.name] || { activeLeads: 0, successRate: "0%", avgTime: "N/A", steps: "Not configured" };
-                
-                return (
+            <CampaignStatusSummary
+              total={workflows.length}
+              active={workflows.filter(w => w.is_active).length}
+              paused={0}
+              draft={workflows.filter(w => !w.is_active).length}
+            />
+
+            {workflows.length === 0 ? (
+              <div className="text-center py-12 border-2 border-dashed rounded-lg">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+                  <MessageSquare className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">No campaigns yet</h3>
+                <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
+                  Create your first automated campaign to start engaging leads with personalized message sequences
+                </p>
+                <Button onClick={() => setIsCreateModalOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Your First Campaign
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {workflows.map((workflow) => (
                   <WorkflowTemplateCard
                     key={workflow.id}
                     workflowId={workflow.id}
-                    name={workflow.name}
-                    description={workflow.description || ""}
-                    icon={icon}
-                    activeLeads={metrics.activeLeads}
-                    successRate={metrics.successRate}
-                    avgTime={metrics.avgTime}
-                    steps={metrics.steps}
-                    isActive={workflow.is_active}
-                    type={workflow.type}
+                    onRefresh={fetchWorkflows}
                   />
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            )}
           </TabsContent>
 
           {/* Integrations Tab */}
@@ -302,6 +301,14 @@ export function AISalesAutomation() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <CreateCampaignModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCampaignCreated={(campaignId) => {
+          fetchWorkflows();
+        }}
+      />
     </div>
   );
 }
