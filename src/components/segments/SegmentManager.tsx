@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useSegmentsData } from '@/hooks/useSegmentsData';
 import { useSegments } from '@/hooks/useSegments';
+import { useSegmentsDb } from '@/hooks/useSegmentsDb';
 import { SegmentBuilder } from './SegmentBuilder';
 import { TemplateGallery } from './TemplateGallery';
 import { CustomSegment } from '@/types/segments';
@@ -35,14 +36,18 @@ export function SegmentManager() {
   const { segments: dbSegments, isLoading: dbLoading, refetch } = useSegmentsData();
   
   // Use the template hook for templates only
+  const { templates } = useSegments();
+  
+  // Use the DB hook for CRUD operations
   const { 
-    templates, 
     createSegment, 
     updateSegment, 
     deleteSegment, 
     duplicateSegment, 
-    createFromTemplate 
-  } = useSegments();
+    createFromTemplate,
+    deleteAllUserSegments,
+    createDefaultSegments
+  } = useSegmentsDb();
   
   // Convert database segments to CustomSegment format and filter by search
   const segments = dbSegments.map(seg => ({
@@ -147,6 +152,7 @@ export function SegmentManager() {
   const handleCreateFromTemplate = async (templateId: string) => {
     try {
       await createFromTemplate(templateId);
+      await refetch(); // Refresh segments from database
       toast({
         title: "Success",
         description: "Segment created from template",
@@ -155,6 +161,28 @@ export function SegmentManager() {
       toast({
         title: "Error",
         description: "Failed to create segment from template",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleResetSegments = async () => {
+    if (!window.confirm('This will delete all your segments and create new ones from templates. Are you sure?')) {
+      return;
+    }
+    
+    try {
+      await deleteAllUserSegments();
+      await createDefaultSegments();
+      await refetch();
+      toast({
+        title: "Success",
+        description: "Segments reset successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to reset segments",
         variant: "destructive"
       });
     }
@@ -191,10 +219,16 @@ export function SegmentManager() {
           </h2>
           <p className="text-muted-foreground">Create and manage custom audience segments for targeted campaigns</p>
         </div>
-        <Button onClick={() => openBuilder()} variant="gradient" className="gap-2">
-          <Plus className="w-4 h-4" />
-          Create Segment
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleResetSegments} variant="outline" size="sm" className="gap-2">
+            <Target className="w-4 h-4" />
+            Reset My Segments
+          </Button>
+          <Button onClick={() => openBuilder()} variant="gradient" className="gap-2">
+            <Plus className="w-4 h-4" />
+            Create Segment
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filters */}
