@@ -42,6 +42,7 @@ export function WorkflowSequenceBuilderModal({
   const [isTemplateEditorOpen, setIsTemplateEditorOpen] = useState(false);
   const [templateEditorType, setTemplateEditorType] = useState<"email" | "whatsapp">("email");
   const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -234,6 +235,33 @@ export function WorkflowSequenceBuilderModal({
     setIsTemplateEditorOpen(true);
   };
 
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+
+    const newSteps = [...steps];
+    const draggedStep = newSteps[draggedIndex];
+    
+    // Remove from old position
+    newSteps.splice(draggedIndex, 1);
+    // Insert at new position
+    newSteps.splice(index, 0, draggedStep);
+    
+    // Update step orders
+    const reorderedSteps = newSteps.map((step, i) => ({ ...step, step_order: i + 1 }));
+    
+    setSteps(reorderedSteps);
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
   const handleSaveNewTemplate = async (template: any) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -338,7 +366,16 @@ export function WorkflowSequenceBuilderModal({
             )}
 
             {steps.map((step, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
+              <div 
+                key={index} 
+                className={`flex items-start gap-3 p-4 border rounded-lg transition-opacity ${
+                  draggedIndex === index ? 'opacity-50' : ''
+                }`}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragEnd={handleDragEnd}
+              >
                 <div className="flex items-center gap-2 mt-2">
                   <GripVertical className="w-4 h-4 text-muted-foreground cursor-move" />
                   <Badge>{index + 1}</Badge>
