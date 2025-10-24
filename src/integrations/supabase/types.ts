@@ -185,6 +185,7 @@ export type Database = {
           type: string
           updated_at: string | null
           user_id: string
+          workflow_sequence_id: string | null
         }
         Insert: {
           actions?: Json
@@ -197,6 +198,7 @@ export type Database = {
           type: string
           updated_at?: string | null
           user_id: string
+          workflow_sequence_id?: string | null
         }
         Update: {
           actions?: Json
@@ -209,8 +211,17 @@ export type Database = {
           type?: string
           updated_at?: string | null
           user_id?: string
+          workflow_sequence_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "automation_workflows_workflow_sequence_id_fkey"
+            columns: ["workflow_sequence_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_sequences"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       business_discovery_submissions: {
         Row: {
@@ -916,6 +927,90 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      workflow_sequence_steps: {
+        Row: {
+          channel: string
+          condition: Json | null
+          created_at: string | null
+          delay_hours: number
+          id: string
+          sequence_id: string
+          step_order: number
+          template_id: string
+        }
+        Insert: {
+          channel: string
+          condition?: Json | null
+          created_at?: string | null
+          delay_hours?: number
+          id?: string
+          sequence_id: string
+          step_order: number
+          template_id: string
+        }
+        Update: {
+          channel?: string
+          condition?: Json | null
+          created_at?: string | null
+          delay_hours?: number
+          id?: string
+          sequence_id?: string
+          step_order?: number
+          template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_sequence_steps_sequence_id_fkey"
+            columns: ["sequence_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_sequences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_sequence_steps_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "campaign_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_sequences: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       workspaces: {
         Row: {
