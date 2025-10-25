@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bot, ChevronRight, Sparkles } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
 interface AIAutomationStatusCardProps {
@@ -9,6 +8,7 @@ interface AIAutomationStatusCardProps {
   draftWorkflows: number;
   activeWorkflows: number;
   isLoading: boolean;
+  onNavigate: (view: string, filter?: any) => void;
 }
 
 export function AIAutomationStatusCard({
@@ -16,8 +16,8 @@ export function AIAutomationStatusCard({
   draftWorkflows,
   activeWorkflows,
   isLoading,
+  onNavigate,
 }: AIAutomationStatusCardProps) {
-  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -51,7 +51,7 @@ export function AIAutomationStatusCard({
               </p>
               <div className="flex gap-3">
                 <Button
-                  onClick={() => navigate("/", { state: { view: "ai-sales" } })}
+                  onClick={() => onNavigate("ai-sales-automation")}
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                 >
                   Create Workflow
@@ -59,7 +59,7 @@ export function AIAutomationStatusCard({
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => navigate("/", { state: { view: "ai-sales" } })}
+                  onClick={() => onNavigate("ai-sales-automation")}
                 >
                   Learn More
                 </Button>
@@ -92,7 +92,7 @@ export function AIAutomationStatusCard({
               </p>
               <div className="flex gap-3">
                 <Button
-                  onClick={() => navigate("/", { state: { view: "ai-sales" } })}
+                  onClick={() => onNavigate("ai-sales-automation")}
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                 >
                   Launch Workflows
@@ -100,7 +100,7 @@ export function AIAutomationStatusCard({
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => navigate("/", { state: { view: "ai-sales" } })}
+                  onClick={() => onNavigate("ai-sales-automation")}
                 >
                   View All
                 </Button>
@@ -132,7 +132,7 @@ export function AIAutomationStatusCard({
             </p>
             <div className="flex gap-3">
               <Button
-                onClick={() => navigate("/", { state: { view: "ai-sales" } })}
+                onClick={() => onNavigate("ai-sales-automation")}
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
               >
                 Manage Workflows
@@ -140,7 +140,7 @@ export function AIAutomationStatusCard({
               </Button>
               <Button
                 variant="outline"
-                onClick={() => navigate("/", { state: { view: "ai-sales" } })}
+                onClick={() => onNavigate("ai-sales-automation")}
               >
                 View Analytics
               </Button>

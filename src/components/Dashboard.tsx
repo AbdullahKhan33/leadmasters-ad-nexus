@@ -1,5 +1,6 @@
 import { Sparkles } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { PricingScreen } from "./PricingScreen";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWhatsAppMetrics } from "@/hooks/useWhatsAppMetrics";
@@ -17,12 +18,18 @@ import {
 export function Dashboard() {
   const [showPricing, setShowPricing] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   const { data: whatsappMetrics, isLoading: metricsLoading } = useWhatsAppMetrics(user?.id);
   const { data: leadStats, isLoading: statsLoading } = useLeadStats(user?.id);
   const { data: dashboardData, isLoading: dashboardLoading } = useDashboardData(user?.id);
 
   const isLoading = metricsLoading || statsLoading || dashboardLoading;
+
+  // Navigation helpers that use proper app routing
+  const navigateToView = (view: string, filter?: any) => {
+    navigate("/app", { state: { view, filter } });
+  };
 
   return (
     <>
@@ -47,6 +54,7 @@ export function Dashboard() {
             totalWhatsAppLeads={whatsappMetrics?.totalWhatsAppLeads ?? 0}
             agingLeads={whatsappMetrics?.agingLeads ?? 0}
             isLoading={isLoading}
+            onNavigate={navigateToView}
           />
 
           {/* WhatsApp Metrics Row */}
@@ -57,12 +65,14 @@ export function Dashboard() {
             responseRate={whatsappMetrics?.responseRate ?? 0}
             totalLeads={whatsappMetrics?.totalWhatsAppLeads ?? 0}
             isLoading={isLoading}
+            onNavigate={navigateToView}
           />
 
           {/* Hybrid Quick Actions */}
           <HybridQuickActions
             agingLeads={whatsappMetrics?.agingLeads ?? 0}
             activeWorkflows={dashboardData?.activeWorkflows ?? 0}
+            onNavigate={navigateToView}
           />
 
           {/* WhatsApp Pipeline Chart */}
@@ -70,6 +80,7 @@ export function Dashboard() {
             <WhatsAppPipelineChart
               leadsByStatus={whatsappMetrics.leadsByStatus}
               isLoading={isLoading}
+              onNavigate={navigateToView}
             />
           )}
 
@@ -79,6 +90,7 @@ export function Dashboard() {
             draftWorkflows={dashboardData?.draftWorkflows ?? 0}
             activeWorkflows={dashboardData?.activeWorkflows ?? 0}
             isLoading={isLoading}
+            onNavigate={navigateToView}
           />
 
           {/* Empty State (only show if no WhatsApp leads) */}
@@ -86,6 +98,7 @@ export function Dashboard() {
             <WhatsAppEmptyState
               hasOtherLeads={(leadStats?.otherLeads ?? 0) > 0}
               otherLeadsCount={leadStats?.otherLeads ?? 0}
+              onNavigate={navigateToView}
             />
           )}
         </div>

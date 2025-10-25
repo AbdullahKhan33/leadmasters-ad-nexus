@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { useNavigate } from "react-router-dom";
 
 interface WhatsAppPipelineChartProps {
   leadsByStatus: {
@@ -10,14 +9,14 @@ interface WhatsAppPipelineChartProps {
     Won: number;
   };
   isLoading: boolean;
+  onNavigate: (view: string, filter?: any) => void;
 }
 
 export function WhatsAppPipelineChart({
   leadsByStatus,
   isLoading,
+  onNavigate,
 }: WhatsAppPipelineChartProps) {
-  const navigate = useNavigate();
-
   const data = [
     { name: "New", value: leadsByStatus.New, color: "#10b981" },
     { name: "Active", value: leadsByStatus.Active, color: "#3b82f6" },
@@ -30,9 +29,7 @@ export function WhatsAppPipelineChart({
     totalLeads > 0 ? Math.round((leadsByStatus.Won / totalLeads) * 100) : 0;
 
   const handleBarClick = (status: string) => {
-    navigate("/", {
-      state: { view: "crm", filter: { status, source: "whatsapp" } },
-    });
+    onNavigate("crm", { status, source: "whatsapp" });
   };
 
   if (isLoading) {

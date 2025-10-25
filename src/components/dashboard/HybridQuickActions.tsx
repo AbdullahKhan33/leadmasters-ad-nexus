@@ -10,19 +10,18 @@ import {
   ChevronRight,
   Sparkles,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 interface HybridQuickActionsProps {
   agingLeads: number;
   activeWorkflows: number;
+  onNavigate: (view: string, filter?: any) => void;
 }
 
 export function HybridQuickActions({
   agingLeads,
   activeWorkflows,
+  onNavigate,
 }: HybridQuickActionsProps) {
-  const navigate = useNavigate();
-
   return (
     <div className="space-y-6">
       {/* WhatsApp Actions Section */}
@@ -48,11 +47,7 @@ export function HybridQuickActions({
             </CardHeader>
             <CardContent>
               <Button
-                onClick={() =>
-                  navigate("/", {
-                    state: { view: "crm", filter: { aging: true, source: "whatsapp" } },
-                  })
-                }
+                onClick={() => onNavigate("crm", { aging: true, source: "whatsapp" })}
                 className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white group/btn"
               >
                 Reply Now
@@ -74,7 +69,7 @@ export function HybridQuickActions({
             </CardHeader>
             <CardContent>
               <Button
-                onClick={() => navigate("/", { state: { view: "templates" } })}
+                onClick={() => onNavigate("templates")}
                 className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white group/btn"
               >
                 Send
@@ -96,7 +91,7 @@ export function HybridQuickActions({
             </CardHeader>
             <CardContent>
               <Button
-                onClick={() => navigate("/", { state: { view: "ai-sales" } })}
+                onClick={() => onNavigate("ai-sales")}
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white group/btn"
               >
                 Launch
@@ -130,7 +125,7 @@ export function HybridQuickActions({
             <CardContent className="pt-0 relative z-10">
               <Button
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl group/btn transition-all duration-300 py-2 text-sm font-semibold"
-                onClick={() => navigate("/post-builder")}
+                onClick={() => onNavigate("post-builder")}
               >
                 Create Post
                 <ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
@@ -156,7 +151,7 @@ export function HybridQuickActions({
             <CardContent className="pt-0 relative z-10">
               <Button
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl group/btn transition-all duration-300 py-2 text-sm font-semibold"
-                onClick={() => navigate("/ad-builder")}
+                onClick={() => onNavigate("ad-builder")}
               >
                 Launch Ad
                 <ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
@@ -182,7 +177,7 @@ export function HybridQuickActions({
             <CardContent className="pt-0 relative z-10">
               <Button
                 className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl group/btn transition-all duration-300 py-2 text-sm font-semibold"
-                onClick={() => navigate("/", { state: { view: "insights-summary" } })}
+                onClick={() => onNavigate("insights-summary")}
               >
                 View Summary
                 <ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />

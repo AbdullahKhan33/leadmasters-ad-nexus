@@ -1,30 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AlertCircle, MessageSquare } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 
 interface WhatsAppHeroSectionProps {
   totalWhatsAppLeads: number;
   agingLeads: number;
   isLoading: boolean;
+  onNavigate: (view: string, filter?: any) => void;
 }
 
 export function WhatsAppHeroSection({
   totalWhatsAppLeads,
   agingLeads,
   isLoading,
+  onNavigate,
 }: WhatsAppHeroSectionProps) {
-  const navigate = useNavigate();
-
   const handleViewAllLeads = () => {
-    navigate("/", { state: { view: "crm", filter: { source: "whatsapp" } } });
+    onNavigate("crm", { source: "whatsapp" });
   };
 
   const handleReplyUrgent = () => {
-    navigate("/", {
-      state: { view: "crm", filter: { aging: true, source: "whatsapp" } },
-    });
+    onNavigate("crm", { aging: true, source: "whatsapp" });
   };
 
   if (isLoading) {
@@ -53,14 +50,14 @@ export function WhatsAppHeroSection({
           </div>
           <div className="flex gap-3 justify-center">
             <Button
-              onClick={() => navigate("/", { state: { view: "crm" } })}
+              onClick={() => onNavigate("crm")}
               className="bg-green-600 hover:bg-green-700"
             >
               Import Leads
             </Button>
             <Button
               variant="outline"
-              onClick={() => navigate("/", { state: { view: "insights-whatsapp" } })}
+              onClick={() => onNavigate("insights-whatsapp")}
             >
               Learn More
             </Button>

@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Flame, MessageSquare, Clock, TrendingUp, ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 
 interface WhatsAppMetricsRowProps {
@@ -11,6 +10,7 @@ interface WhatsAppMetricsRowProps {
   responseRate: number;
   totalLeads: number;
   isLoading: boolean;
+  onNavigate: (view: string, filter?: any) => void;
 }
 
 export function WhatsAppMetricsRow({
@@ -20,9 +20,8 @@ export function WhatsAppMetricsRow({
   responseRate,
   totalLeads,
   isLoading,
+  onNavigate,
 }: WhatsAppMetricsRowProps) {
-  const navigate = useNavigate();
-
   const metrics = [
     {
       icon: Flame,
@@ -34,8 +33,7 @@ export function WhatsAppMetricsRow({
       iconBg: "bg-red-100",
       iconColor: "text-red-600",
       action: "Contact",
-      onClick: () =>
-        navigate("/", { state: { view: "crm", filter: { status: "Qualified", source: "whatsapp" } } }),
+      onClick: () => onNavigate("crm", { status: "Qualified", source: "whatsapp" }),
       progress: totalLeads > 0 ? (qualifiedLeads / totalLeads) * 100 : 0,
     },
     {
@@ -48,8 +46,7 @@ export function WhatsAppMetricsRow({
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
       action: "Reply",
-      onClick: () =>
-        navigate("/", { state: { view: "crm", filter: { status: "Active", source: "whatsapp" } } }),
+      onClick: () => onNavigate("crm", { status: "Active", source: "whatsapp" }),
       progress: totalLeads > 0 ? (activeChats / totalLeads) * 100 : 0,
     },
     {
@@ -62,8 +59,7 @@ export function WhatsAppMetricsRow({
       iconBg: "bg-amber-100",
       iconColor: "text-amber-600",
       action: "View",
-      onClick: () =>
-        navigate("/", { state: { view: "crm", filter: { aging: true, source: "whatsapp" } } }),
+      onClick: () => onNavigate("crm", { aging: true, source: "whatsapp" }),
       progress: totalLeads > 0 ? (agingLeads / totalLeads) * 100 : 0,
     },
     {
@@ -76,7 +72,7 @@ export function WhatsAppMetricsRow({
       iconBg: "bg-blue-100",
       iconColor: "text-blue-600",
       action: "Improve",
-      onClick: () => navigate("/", { state: { view: "insights-whatsapp" } }),
+      onClick: () => onNavigate("insights-whatsapp"),
       progress: responseRate,
       isPercentage: true,
     },

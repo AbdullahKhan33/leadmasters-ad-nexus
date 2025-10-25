@@ -1,18 +1,18 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, FileUp, Target, ExternalLink } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 interface WhatsAppEmptyStateProps {
   hasOtherLeads: boolean;
   otherLeadsCount: number;
+  onNavigate: (view: string, filter?: any) => void;
 }
 
 export function WhatsAppEmptyState({
   hasOtherLeads,
   otherLeadsCount,
+  onNavigate,
 }: WhatsAppEmptyStateProps) {
-  const navigate = useNavigate();
 
   if (hasOtherLeads) {
     return (
@@ -33,14 +33,14 @@ export function WhatsAppEmptyState({
             </div>
             <div className="flex gap-3 justify-center">
               <Button
-                onClick={() => navigate("/", { state: { view: "crm" } })}
+                onClick={() => onNavigate("crm")}
                 className="bg-green-600 hover:bg-green-700"
               >
                 Update Lead Sources
               </Button>
               <Button
                 variant="outline"
-                onClick={() => navigate("/", { state: { view: "insights-whatsapp" } })}
+                onClick={() => onNavigate("insights-whatsapp")}
               >
                 Learn More
               </Button>
@@ -99,12 +99,12 @@ export function WhatsAppEmptyState({
 
           <div className="flex gap-3 justify-center">
             <Button
-              onClick={() => navigate("/", { state: { view: "crm" } })}
+              onClick={() => onNavigate("crm")}
               className="bg-green-600 hover:bg-green-700"
             >
               Import CSV
             </Button>
-            <Button variant="outline" onClick={() => navigate("/ad-builder")}>
+            <Button variant="outline" onClick={() => onNavigate("ad-builder")}>
               Connect Facebook
             </Button>
           </div>
