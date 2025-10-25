@@ -408,7 +408,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
                   onSelect={(date) => {
                     if (date) {
                       onUpdate(index, { 
-                        value: { ...dateValue, min: date.toISOString().split('T')[0] } as any
+                        value: { ...dateValue, min: format(date, 'yyyy-MM-dd') } as any
                       });
                       setIsFromDateOpen(false);
                     }
@@ -439,7 +439,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
                   onSelect={(date) => {
                     if (date) {
                       onUpdate(index, { 
-                        value: { ...dateValue, max: date.toISOString().split('T')[0] } as any
+                        value: { ...dateValue, max: format(date, 'yyyy-MM-dd') } as any
                       });
                       setIsToDateOpen(false);
                     }
@@ -476,7 +476,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
               selected={singleDate ? new Date(singleDate) : undefined}
               onSelect={(date) => {
                 if (date) {
-                  onUpdate(index, { value: date.toISOString().split('T')[0] });
+                  onUpdate(index, { value: format(date, 'yyyy-MM-dd') });
                   setIsSingleDateOpen(false);
                 }
               }}
