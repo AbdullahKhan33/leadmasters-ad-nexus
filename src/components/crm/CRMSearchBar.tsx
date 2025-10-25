@@ -9,6 +9,7 @@ import { Search, Filter } from "lucide-react";
 interface ColumnVisibility {
   lead: boolean;
   contact: boolean;
+  email: boolean;
   source: boolean;
   status: boolean;
   lastMessage: boolean;
@@ -28,6 +29,7 @@ export function CRMSearchBar({ searchQuery, onSearchChange, visibleColumns, onCo
   const columnLabels = {
     lead: "Lead",
     contact: "Contact",
+    email: "Email",
     source: "Source", 
     status: "Status",
     lastMessage: "Last Message",

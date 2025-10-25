@@ -5,6 +5,7 @@ import { Lock } from "lucide-react";
 interface ColumnVisibility {
   lead: boolean;
   contact: boolean;
+  email: boolean;
   source: boolean;
   status: boolean;
   lastMessage: boolean;
@@ -25,6 +26,7 @@ export function CRMTableHeader({ canShowAIScore, canShowAIActions, visibleColumn
       <TableRow className="hover:bg-transparent">
         {visibleColumns.lead && <TableHead className="w-[250px] px-6 py-4">Lead</TableHead>}
         {visibleColumns.contact && <TableHead className="w-[180px] px-4 py-4">Contact</TableHead>}
+        {visibleColumns.email && <TableHead className="w-[200px] px-4 py-4">Email</TableHead>}
         {visibleColumns.source && <TableHead className="w-[120px] px-4 py-4">Source</TableHead>}
         {visibleColumns.status && <TableHead className="w-[140px] px-4 py-4">Status</TableHead>}
         {visibleColumns.lastMessage && <TableHead className="w-[250px] px-4 py-4">Last Message</TableHead>}

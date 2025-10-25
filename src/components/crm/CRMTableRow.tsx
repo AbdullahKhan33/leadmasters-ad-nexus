@@ -29,6 +29,7 @@ interface Lead {
 interface ColumnVisibility {
   lead: boolean;
   contact: boolean;
+  email: boolean;
   source: boolean;
   status: boolean;
   lastMessage: boolean;
@@ -124,6 +125,13 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
             <p className="text-sm font-medium truncate">{lead.phone}</p>
             <p className="text-xs text-gray-500 truncate">{lead.source}</p>
           </div>
+        </TableCell>
+      )}
+      {visibleColumns.email && (
+        <TableCell className="px-4 py-4">
+          <p className="text-sm text-gray-900 truncate" title={lead.email}>
+            {lead.email || <span className="text-gray-400">No email</span>}
+          </p>
         </TableCell>
       )}
       {visibleColumns.source && (

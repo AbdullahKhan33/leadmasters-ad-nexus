@@ -73,6 +73,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
   const [visibleColumns, setVisibleColumns] = useState({
     lead: true,
     contact: true,
+    email: true,
     source: true,
     status: true,
     lastMessage: true,
