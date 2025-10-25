@@ -36,33 +36,53 @@ export function CRM() {
     }
   }, [location.state]);
 
-  // Auto-load sample data once for first-time users
+  // Auto-load sample data and ensure proper timestamp spread
   useEffect(() => {
     const autoLoadSampleData = async () => {
       try {
-        // Check if we've already loaded sample data
-        const hasLoadedBefore = localStorage.getItem('SAMPLE_DATA_LOADED');
-        if (hasLoadedBefore === '1') return;
-
-        // Check if user has any leads
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { count, error } = await supabase
+        // Check existing leads and their timestamp spread
+        const { data: existingLeads, error } = await supabase
           .from('leads')
-          .select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id);
+          .select('created_at, source_metadata')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(100);
 
         if (error) throw error;
 
-        // If no leads exist, automatically seed sample data
-        if (count === 0) {
-          console.log('First-time user detected, loading sample data...');
+        // Determine if we need to reseed:
+        // 1. No leads exist
+        // 2. All leads have same/similar created_at (bad spread)
+        // 3. Not marked as seed data
+        let needsReseed = false;
+        
+        if (!existingLeads || existingLeads.length === 0) {
+          needsReseed = true;
+          console.log('No leads found, will seed sample data');
+        } else {
+          // Check timestamp spread
+          const dates = existingLeads.map(l => new Date(l.created_at).getTime()).filter(d => !isNaN(d));
+          if (dates.length > 1) {
+            const oldest = Math.min(...dates);
+            const newest = Math.max(...dates);
+            const spreadDays = (newest - oldest) / (1000 * 60 * 60 * 24);
+            
+            if (spreadDays < 7) {
+              needsReseed = true;
+              console.log(`Timestamp spread only ${spreadDays.toFixed(1)} days, reseeding for better distribution`);
+            }
+          }
+        }
+
+        if (needsReseed) {
+          console.log('Reseeding contacts with proper timestamp distribution...');
           await handleSeedContacts();
-          localStorage.setItem('SAMPLE_DATA_LOADED', '1');
         }
       } catch (error) {
-        console.error('Error checking for sample data:', error);
+        console.error('Error checking/seeding sample data:', error);
       }
     };
 
