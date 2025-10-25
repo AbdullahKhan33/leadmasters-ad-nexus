@@ -57,6 +57,21 @@ interface EditLeadModalProps {
 export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModalProps) {
   const metadata = lead.source_metadata || {};
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Parse name if firstName/lastName not in metadata
+  let initialFirstName = metadata.first_name || '';
+  let initialLastName = metadata.last_name || '';
+  
+  if (!initialFirstName && !initialLastName && lead.name) {
+    const nameParts = lead.name.trim().split(' ');
+    if (nameParts.length === 1) {
+      initialFirstName = nameParts[0];
+    } else if (nameParts.length >= 2) {
+      initialFirstName = nameParts[0];
+      initialLastName = nameParts.slice(1).join(' ');
+    }
+  }
+  
   const [formData, setFormData] = useState({
     // Basic fields
     phone: lead.phone,
@@ -68,8 +83,8 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
     notes: lead.notes || '',
     lastMessage: lead.lastMessage || '',
     // Lead Information from metadata
-    firstName: metadata.first_name || '',
-    lastName: metadata.last_name || '',
+    firstName: initialFirstName,
+    lastName: initialLastName,
     company: metadata.company || '',
     title: metadata.title || '',
     mobile: metadata.mobile || '',
@@ -97,6 +112,21 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
   // Update form when lead changes
   useEffect(() => {
     const metadata = lead.source_metadata || {};
+    
+    // Parse name if firstName/lastName not in metadata
+    let firstName = metadata.first_name || '';
+    let lastName = metadata.last_name || '';
+    
+    if (!firstName && !lastName && lead.name) {
+      const nameParts = lead.name.trim().split(' ');
+      if (nameParts.length === 1) {
+        firstName = nameParts[0];
+      } else if (nameParts.length >= 2) {
+        firstName = nameParts[0];
+        lastName = nameParts.slice(1).join(' ');
+      }
+    }
+    
     setFormData({
       phone: lead.phone,
       email: lead.email || '',
@@ -106,8 +136,8 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
       category: lead.category || 'customer',
       notes: lead.notes || '',
       lastMessage: lead.lastMessage || '',
-      firstName: metadata.first_name || '',
-      lastName: metadata.last_name || '',
+      firstName: firstName,
+      lastName: lastName,
       company: metadata.company || '',
       title: metadata.title || '',
       mobile: metadata.mobile || '',
