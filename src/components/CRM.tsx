@@ -10,7 +10,8 @@ import {
   TableProperties,
   Megaphone,
   UserPlus,
-  Upload
+  Upload,
+  Loader2
 } from "lucide-react";
 import { CRMTableView } from "./crm/CRMTableView";
 import { CSVImportModal } from "./crm/CSVImportModal";
@@ -525,6 +526,8 @@ export function CRM() {
             city: 'riyadh',
             property_type: 'villa',
             property_purpose: 'investment',
+            budget_range: 'sar_qar_3m_plus',
+            property_features: ['pool', 'security', 'furnished'],
             timeline: random(['6_12_months', '1_year_plus']),
             category: 'real_estate',
             lead_score: randomLeadScore(),
@@ -1164,6 +1167,20 @@ export function CRM() {
               <p className="text-gray-600 text-sm font-medium">WhatsApp Lead Management</p>
             </div>
             <div className="flex items-center space-x-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                disabled={isSeeding}
+                className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-red-200 hover:bg-gradient-to-r hover:from-red-50/50 hover:to-red-50/50 hover:text-red-700"
+                onClick={handleSeedContacts}
+              >
+                {isSeeding ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <UserPlus className="w-4 h-4 mr-2" />
+                )}
+                Reset & Reseed Contacts
+              </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
