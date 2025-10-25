@@ -28,10 +28,10 @@ export function useSegmentsData() {
 
       if (segError) throw segError;
 
-      // Fetch leads to compute counts
+      // Fetch leads to compute counts (with all needed fields for criteria matching)
       const { data: leadsData, error: leadsError } = await supabase
         .from('leads')
-        .select('id, source_metadata, status, source')
+        .select('id, source_metadata, status, source, email, phone, created_at, updated_at, last_interaction_at, timestamp')
         .eq('user_id', user.id);
 
       if (leadsError) throw leadsError;

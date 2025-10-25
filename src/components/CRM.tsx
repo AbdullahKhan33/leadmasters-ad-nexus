@@ -36,6 +36,39 @@ export function CRM() {
     }
   }, [location.state]);
 
+  // Auto-load sample data once for first-time users
+  useEffect(() => {
+    const autoLoadSampleData = async () => {
+      try {
+        // Check if we've already loaded sample data
+        const hasLoadedBefore = localStorage.getItem('SAMPLE_DATA_LOADED');
+        if (hasLoadedBefore === '1') return;
+
+        // Check if user has any leads
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { count, error } = await supabase
+          .from('leads')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+
+        // If no leads exist, automatically seed sample data
+        if (count === 0) {
+          console.log('First-time user detected, loading sample data...');
+          await handleSeedContacts();
+          localStorage.setItem('SAMPLE_DATA_LOADED', '1');
+        }
+      } catch (error) {
+        console.error('Error checking for sample data:', error);
+      }
+    };
+
+    autoLoadSampleData();
+  }, []);
+
   const handleTabChange = (value: string) => {
     console.log("CRM tab change:", value);
     setActiveTab(value);
@@ -1092,51 +1125,6 @@ export function CRM() {
               <p className="text-gray-600 text-sm font-medium">WhatsApp Lead Management</p>
             </div>
             <div className="flex items-center space-x-3">
-              <Button
-                onClick={handleSeedContacts}
-                disabled={isSeeding}
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg"
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                {isSeeding ? "Seeding..." : "Replace With Real Contacts (120+)"}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-red-200 hover:bg-gradient-to-r hover:from-red-50/50 hover:to-red-50/50 hover:text-red-700"
-                onClick={async () => {
-                  try {
-                    const { data: { user } } = await supabase.auth.getUser();
-                    if (!user) {
-                      toast({ title: "Error", description: "You must be logged in", variant: "destructive" });
-                      return;
-                    }
-                    // Delete seeded contacts marked with source_metadata.seed = true
-                    const { error: seedDelErr } = await supabase
-                      .from('leads')
-                      .delete()
-                      .eq('user_id', user.id)
-                      .filter('source_metadata->>seed', 'eq', 'true');
-                    if (seedDelErr) throw seedDelErr;
-
-                    // Delete common test/dummy names
-                    const { error: testDelErr } = await supabase
-                      .from('leads')
-                      .delete()
-                      .eq('user_id', user.id)
-                      .or("name.ilike.Lead%25,name.ilike.%25Test%25,name.eq.John Doe,name.eq.Charlie Brown,name.ilike.Test Customer%25");
-                    if (testDelErr) throw testDelErr;
-
-                    toast({ title: "Cleaned", description: "Removed seeded/test contacts." });
-                    window.location.reload();
-                  } catch (e: any) {
-                    console.error('Error cleaning contacts:', e);
-                    toast({ title: "Error", description: e.message || 'Failed to clean contacts', variant: "destructive" });
-                  }
-                }}
-              >
-                Clean Seeded/Test Contacts
-              </Button>
               <Button 
                 variant="outline" 
                 size="sm" 

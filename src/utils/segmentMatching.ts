@@ -20,13 +20,20 @@ export function matchesCriteria(lead: Lead, criteria: SegmentCriteria[]): boolea
 function matchesSingleCriterion(lead: Lead, criterion: SegmentCriteria): boolean {
   const { field, operator, value } = criterion;
   
-  // Get field value - use database columns for date fields, otherwise check source_metadata
+  // Get field value - prioritize actual DB columns for date fields
   let leadValue;
-  if (field === 'created_at' || field === 'updated_at') {
-    leadValue = lead[field];
-  } else if (field === 'last_interaction_at' || field === 'reminder_date') {
-    leadValue = lead.source_metadata?.[field] ?? lead[field];
+  if (field === 'created_at') {
+    // For created_at, use the actual DB column or fallback to timestamp
+    leadValue = lead.created_at || lead.timestamp;
+  } else if (field === 'updated_at') {
+    leadValue = lead.updated_at;
+  } else if (field === 'last_interaction_at') {
+    // Check top-level field first, then source_metadata
+    leadValue = lead.last_interaction_at || lead.source_metadata?.last_interaction_at;
+  } else if (field === 'reminder_date') {
+    leadValue = lead.reminder_date || lead.source_metadata?.reminder_date;
   } else {
+    // For all other fields, check source_metadata first
     leadValue = lead.source_metadata?.[field] ?? lead[field];
   }
   
