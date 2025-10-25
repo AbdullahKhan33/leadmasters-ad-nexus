@@ -45,9 +45,10 @@ interface CRMTableRowProps {
   visibleColumns: ColumnVisibility;
   onDelete?: (leadId: string) => void;
   onLeadUpdate?: (leadId: string, updates: Partial<Lead>) => void;
+  onLeadClick?: (lead: Lead) => void;
 }
 
-export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick, visibleColumns, onDelete, onLeadUpdate }: CRMTableRowProps) {
+export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeClick, visibleColumns, onDelete, onLeadUpdate, onLeadClick }: CRMTableRowProps) {
   const { toast } = useToast();
   const getScoreColor = (score: number) => {
     if (score >= 90) return "text-green-600 bg-green-100";
@@ -79,8 +80,22 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
     }
   };
 
+  const handleRowClick = (e: React.MouseEvent) => {
+    // Don't trigger if clicking on buttons or interactive elements
+    const target = e.target as HTMLElement;
+    if (target.closest('button') || target.closest('[role="button"]')) {
+      return;
+    }
+    if (onLeadClick) {
+      onLeadClick(lead);
+    }
+  };
+
   return (
-    <TableRow className="hover:bg-gray-50/50">
+    <TableRow 
+      className="hover:bg-blue-50/50 cursor-pointer transition-colors"
+      onClick={handleRowClick}
+    >
       {visibleColumns.lead && (
         <TableCell className="px-6 py-4">
           <div className="flex items-center space-x-3">

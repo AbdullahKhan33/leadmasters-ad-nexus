@@ -4,12 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Upload, Loader2 } from "lucide-react";
+import { Upload, Loader2, UserPlus } from "lucide-react";
 import { usePremium } from "@/contexts/PremiumContext";
 import { CRMSearchBar } from "./CRMSearchBar";
 import { CRMAIFeaturesBanner } from "./CRMAIFeaturesBanner";
 import { CRMTableHeader } from "./CRMTableHeader";
 import { CRMTableRow } from "./CRMTableRow";
+import { AddLeadModal } from "./AddLeadModal";
+import { LeadDetailModal } from "./LeadDetailModal";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -42,6 +44,9 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
   const [searchQuery, setSearchQuery] = useState("");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState({
     lead: true,
     contact: true,
@@ -135,8 +140,15 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
     try {
       // Map UI fields back to database columns
       const dbUpdates: any = {};
+      if (updates.name) dbUpdates.name = updates.name;
+      if (updates.phone) dbUpdates.phone = updates.phone;
+      if (updates.email !== undefined) dbUpdates.email = updates.email;
+      if (updates.source) dbUpdates.source = updates.source;
       if (updates.status) dbUpdates.status = updates.status;
+      if (updates.list) dbUpdates.list = updates.list;
+      if (updates.category) dbUpdates.category = updates.category;
       if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
+      if (updates.lastMessage !== undefined) dbUpdates.last_message = updates.lastMessage;
       if (updates.reminderDate !== undefined) dbUpdates.reminder_date = updates.reminderDate;
       if (updates.reminderNote !== undefined) dbUpdates.reminder_note = updates.reminderNote;
 
@@ -157,6 +169,9 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
         title: "Contact updated",
         description: "Changes saved successfully",
       });
+      
+      // Refresh the lead data to get latest from DB
+      await fetchLeads();
     } catch (error) {
       console.error('Error updating lead:', error);
       toast({
@@ -165,6 +180,11 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
         variant: "destructive",
       });
     }
+  };
+
+  const handleLeadClick = (lead: Lead) => {
+    setSelectedLead(lead);
+    setIsDetailModalOpen(true);
   };
 
   const filteredLeads = leads.filter((lead) => {
@@ -195,6 +215,14 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
             <p className="text-gray-600 mt-1">Complete overview of your lead pipeline</p>
           </div>
           <div className="flex items-center space-x-3">
+            <Button 
+              size="sm" 
+              className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
+              onClick={() => setIsAddModalOpen(true)}
+            >
+              <UserPlus className="w-4 h-4 mr-2" />
+              Add New Lead
+            </Button>
             <Button 
               variant="outline" 
               size="sm" 
@@ -252,6 +280,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
                           visibleColumns={visibleColumns}
                           onDelete={handleDeleteLead}
                           onLeadUpdate={handleLeadUpdate}
+                          onLeadClick={handleLeadClick}
                         />
                       ))}
                     </TableBody>
@@ -262,6 +291,23 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
           </CardContent>
         </Card>
       </div>
+
+      {/* Modals */}
+      <AddLeadModal 
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSuccess={fetchLeads}
+      />
+      
+      <LeadDetailModal
+        lead={selectedLead}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedLead(null);
+        }}
+        onUpdate={handleLeadUpdate}
+      />
     </div>
   );
 }
