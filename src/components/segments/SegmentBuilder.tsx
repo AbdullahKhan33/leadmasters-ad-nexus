@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,11 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { Plus, X, Users, Target, Palette, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, X, Users, Target, Palette, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { CustomSegment, SegmentCriteria, SEGMENT_FILTERS } from '@/types/segments';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { matchesCriteria } from '@/utils/segmentMatching';
 
 interface SegmentBuilderProps {
   segment?: CustomSegment;
@@ -35,8 +37,48 @@ export function SegmentBuilder({ segment, onSave, onCancel, isLoading }: Segment
     isActive: segment?.isActive ?? true,
     criteria: segment?.criteria || []
   });
+  const [estimatedLeads, setEstimatedLeads] = useState<number>(0);
+  const [isCalculating, setIsCalculating] = useState(false);
 
   const { toast } = useToast();
+
+  // Calculate actual matching leads count when criteria changes
+  useEffect(() => {
+    const calculateMatchingLeads = async () => {
+      if (formData.criteria.length === 0) {
+        setEstimatedLeads(0);
+        return;
+      }
+
+      setIsCalculating(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Fetch all leads
+        const { data: leads, error } = await supabase
+          .from('leads')
+          .select('*')
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+
+        // Count leads that match all criteria
+        const matchingCount = (leads || []).filter(lead => 
+          matchesCriteria(lead, formData.criteria)
+        ).length;
+
+        setEstimatedLeads(matchingCount);
+      } catch (error) {
+        console.error('Error calculating matching leads:', error);
+        setEstimatedLeads(0);
+      } finally {
+        setIsCalculating(false);
+      }
+    };
+
+    calculateMatchingLeads();
+  }, [formData.criteria]);
 
   const addCriteria = () => {
     const newCriteria: SegmentCriteria = {
@@ -171,8 +213,6 @@ export function SegmentBuilder({ segment, onSave, onCancel, isLoading }: Segment
     });
   };
 
-  const estimatedLeads = Math.floor(Math.random() * 500) + 50;
-
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
@@ -270,8 +310,15 @@ export function SegmentBuilder({ segment, onSave, onCancel, isLoading }: Segment
                   <Badge style={{ backgroundColor: formData.color, color: 'white' }}>
                     {formData.name || 'Unnamed Segment'}
                   </Badge>
-                  <span className="text-sm text-gray-600">
-                    ~{estimatedLeads} leads estimated
+                  <span className="text-sm text-gray-600 flex items-center gap-1">
+                    {isCalculating ? (
+                      <>
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        Calculating...
+                      </>
+                    ) : (
+                      `${estimatedLeads} ${estimatedLeads === 1 ? 'lead' : 'leads'} match`
+                    )}
                   </span>
                 </div>
                 <div className="text-sm text-gray-600 space-y-1">
