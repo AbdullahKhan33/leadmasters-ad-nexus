@@ -1170,20 +1170,6 @@ export function CRM() {
               <Button 
                 variant="outline" 
                 size="sm" 
-                disabled={isSeeding}
-                className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-red-200 hover:bg-gradient-to-r hover:from-red-50/50 hover:to-red-50/50 hover:text-red-700"
-                onClick={handleSeedContacts}
-              >
-                {isSeeding ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <UserPlus className="w-4 h-4 mr-2" />
-                )}
-                Reset & Reseed Contacts
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
                 className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-purple-200 hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-purple-50/50 hover:text-purple-700"
                 onClick={handleImportClick}
               >
