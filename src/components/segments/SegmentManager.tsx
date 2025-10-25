@@ -189,6 +189,171 @@ export function SegmentManager() {
       });
     }
   };
+  
+  const handleCreateSampleSegments = async () => {
+    try {
+      const supabase = await import('@/integrations/supabase/client').then(m => m.supabase);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Sample segments to create (Real Estate + EdTech)
+      const sampleSegments = [
+        // Real Estate Segments
+        {
+          name: 'Delhi NCR First-Time Homebuyers',
+          description: 'First-time buyers in Delhi looking for homes ₹50L-₹1Cr, ready in 1-3 months',
+          criteria: [
+            { id: 'c1', field: 'city', operator: 'equals' as const, value: 'delhi', label: 'City: Delhi' },
+            { id: 'c2', field: 'budget_range', operator: 'in' as const, value: ['inr_50_75l', 'inr_75l_1cr'], label: 'Budget: ₹50-75L, ₹75L-1Cr' },
+            { id: 'c3', field: 'buyer_type', operator: 'equals' as const, value: 'first_time', label: 'Buyer Type: First-time' },
+            { id: 'c4', field: 'timeline', operator: 'equals' as const, value: '1_3_months', label: 'Timeline: 1-3 Months' }
+          ],
+          color: '#3B82F6',
+          is_active: true
+        },
+        {
+          name: 'Dubai Downtown Luxury Buyers',
+          description: 'Luxury property investors in Downtown Dubai, Marina - AED 2-5M+',
+          criteria: [
+            { id: 'c1', field: 'city', operator: 'equals' as const, value: 'dubai', label: 'City: Dubai' },
+            { id: 'c2', field: 'property_type', operator: 'in' as const, value: ['apartment', 'penthouse'], label: 'Property Type: Apartment, Penthouse' },
+            { id: 'c3', field: 'budget_range', operator: 'in' as const, value: ['aed_2_5m', 'aed_5m_plus'], label: 'Budget: AED 2-5M+' },
+            { id: 'c4', field: 'property_purpose', operator: 'equals' as const, value: 'investment', label: 'Purpose: Investment' }
+          ],
+          color: '#10B981',
+          is_active: true
+        },
+        {
+          name: 'Doha Investment Property Seekers',
+          description: 'Investment property buyers in Doha, Al Wakrah - QAR 1M+',
+          criteria: [
+            { id: 'c1', field: 'city', operator: 'in' as const, value: ['doha', 'al_wakrah'], label: 'City: Doha, Al Wakrah' },
+            { id: 'c2', field: 'property_purpose', operator: 'in' as const, value: ['investment', 'rental_income'], label: 'Purpose: Investment, Rental Income' },
+            { id: 'c3', field: 'buyer_type', operator: 'equals' as const, value: 'investor', label: 'Buyer Type: Investor' }
+          ],
+          color: '#F59E0B',
+          is_active: true
+        },
+        {
+          name: 'Riyadh Premium Villa Buyers',
+          description: 'Premium villa buyers in Riyadh - SAR 3M+ with luxury features',
+          criteria: [
+            { id: 'c1', field: 'city', operator: 'equals' as const, value: 'riyadh', label: 'City: Riyadh' },
+            { id: 'c2', field: 'property_type', operator: 'in' as const, value: ['villa', 'townhouse'], label: 'Property Type: Villa, Townhouse' },
+            { id: 'c3', field: 'budget_range', operator: 'equals' as const, value: 'sar_qar_3m_plus', label: 'Budget: SAR 3M+' }
+          ],
+          color: '#8B5CF6',
+          is_active: true
+        },
+        // EdTech Segments
+        {
+          name: 'India Tech Career Switchers',
+          description: 'Career changers in India interested in programming/data science - ₹50K-₹1L budget',
+          criteria: [
+            { id: 'c1', field: 'country', operator: 'equals' as const, value: 'india', label: 'Country: India' },
+            { id: 'c2', field: 'career_stage', operator: 'equals' as const, value: 'career_switcher', label: 'Career Stage: Career Switcher' },
+            { id: 'c3', field: 'course_interest', operator: 'in' as const, value: ['programming', 'data_science'], label: 'Course Interest: Programming, Data Science' },
+            { id: 'c4', field: 'course_budget', operator: 'in' as const, value: ['inr_50k_1l', 'inr_1l_plus'], label: 'Budget: ₹50K-₹1L+' }
+          ],
+          color: '#06B6D4',
+          is_active: true
+        },
+        {
+          name: 'Delhi Professional Upskilling',
+          description: 'Working professionals in Delhi seeking business/marketing courses - ₹1L-₹2L',
+          criteria: [
+            { id: 'c1', field: 'city', operator: 'equals' as const, value: 'delhi', label: 'City: Delhi' },
+            { id: 'c2', field: 'career_stage', operator: 'equals' as const, value: 'professional_upskilling', label: 'Career Stage: Professional Upskilling' },
+            { id: 'c3', field: 'course_interest', operator: 'in' as const, value: ['business_mba', 'digital_marketing'], label: 'Course Interest: Business/MBA, Digital Marketing' }
+          ],
+          color: '#84CC16',
+          is_active: true
+        },
+        {
+          name: 'Dubai Expat Career Growth',
+          description: 'Early career professionals in Dubai - AED 5K-10K courses',
+          criteria: [
+            { id: 'c1', field: 'city', operator: 'equals' as const, value: 'dubai', label: 'City: Dubai' },
+            { id: 'c2', field: 'career_stage', operator: 'in' as const, value: ['fresh_graduate', 'career_switcher'], label: 'Career Stage: Fresh Graduate, Career Switcher' },
+            { id: 'c3', field: 'course_budget', operator: 'in' as const, value: ['aed_sar_5_10k', 'aed_sar_10_20k'], label: 'Budget: AED 5K-20K' }
+          ],
+          color: '#F97316',
+          is_active: true
+        },
+        {
+          name: 'High-Priority Hot Leads',
+          description: 'Hot leads with high scores created in last 30 days - immediate follow-up needed',
+          criteria: [
+            { id: 'c1', field: 'lead_score', operator: 'greater_than' as const, value: 70, label: 'Lead Score: >70' },
+            { id: 'c2', field: 'priority_level', operator: 'equals' as const, value: 'high', label: 'Priority: High' },
+            { id: 'c3', field: 'created_at', operator: 'in_last_days' as const, value: { days: 30 }, label: 'Created: Last 30 days' },
+            { id: 'c4', field: 'qualification_status', operator: 'in' as const, value: ['qualified', 'hot_lead'], label: 'Status: Qualified, Hot Lead' }
+          ],
+          color: '#EF4444',
+          is_active: true
+        },
+        {
+          name: 'Re-engagement - Inactive Leads',
+          description: 'Leads not contacted in 30+ days with email - re-engagement campaign',
+          criteria: [
+            { id: 'c1', field: 'last_interaction_at', operator: 'in_last_days' as const, value: { days: 60 }, label: 'Last Interaction: 30-60 days ago' },
+            { id: 'c2', field: 'email_status', operator: 'equals' as const, value: 'has_email', label: 'Email: Has Email' },
+            { id: 'c3', field: 'lead_score', operator: 'greater_than' as const, value: 40, label: 'Lead Score: >40' }
+          ],
+          color: '#EC4899',
+          is_active: true
+        }
+      ];
+      
+      // Check for duplicates and insert only new ones
+      let createdCount = 0;
+      for (const segment of sampleSegments) {
+        const { data: existing } = await supabase
+          .from('segments')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('name', segment.name)
+          .maybeSingle();
+        
+        if (!existing) {
+          const { error } = await supabase
+            .from('segments')
+            .insert({
+              user_id: user.id,
+              name: segment.name,
+              description: segment.description,
+              criteria: segment.criteria,
+              color: segment.color,
+              is_active: segment.is_active,
+              lead_count: 0
+            });
+          
+          if (!error) createdCount++;
+        }
+      }
+
+      await refetch();
+      toast({
+        title: "Success",
+        description: `Created ${createdCount} sample segment${createdCount !== 1 ? 's' : ''}`,
+      });
+    } catch (error: any) {
+      console.error('Error creating sample segments:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create sample segments",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleCustomizeTemplate = (templateId: string) => {
     const template = templates.find(t => t.id === templateId);
@@ -241,6 +406,10 @@ export function SegmentManager() {
           <p className="text-muted-foreground">Create and manage custom audience segments for targeted campaigns</p>
         </div>
         <div className="flex gap-2">
+          <Button onClick={handleCreateSampleSegments} variant="outline" size="sm" className="gap-2">
+            <Sparkles className="w-4 h-4" />
+            Create Sample Segments
+          </Button>
           <Button onClick={handleResetSegments} variant="outline" size="sm" className="gap-2">
             <Target className="w-4 h-4" />
             Reset My Segments
