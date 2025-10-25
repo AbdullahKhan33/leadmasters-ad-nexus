@@ -28,8 +28,8 @@ export interface Segment {
 export interface SegmentCriteria {
   id: string;
   field: string; // e.g., 'age', 'location', 'source', 'status', 'lastActivity'
-  operator: 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than' | 'in' | 'not_in' | 'between';
-  value: string | number | string[] | { min: number; max: number };
+  operator: 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than' | 'in' | 'not_in' | 'between' | 'before' | 'after' | 'in_last_days' | 'in_next_days';
+  value: string | number | string[] | { min: number; max: number } | { days: number };
   label: string;
 }
 
@@ -77,13 +77,97 @@ export interface SegmentAnalytics {
 export interface SegmentFilter {
   field: string;
   label: string;
-  type: 'text' | 'number' | 'select' | 'multiselect' | 'date' | 'range';
+  type: 'text' | 'number' | 'select' | 'multiselect' | 'date' | 'daterange' | 'range';
   options?: { value: string; label: string; }[];
   placeholder?: string;
 }
 
 // Available segment filters
 export const SEGMENT_FILTERS: SegmentFilter[] = [
+  // Date & Time Filters
+  {
+    field: 'created_at',
+    label: 'Lead Created Date',
+    type: 'daterange',
+    placeholder: 'Select date'
+  },
+  {
+    field: 'last_interaction_at',
+    label: 'Last Interaction Date',
+    type: 'daterange',
+    placeholder: 'Select date'
+  },
+  {
+    field: 'reminder_date',
+    label: 'Follow-up Due Date',
+    type: 'daterange',
+    placeholder: 'Select date'
+  },
+  
+  // Lead Quality & Scoring
+  {
+    field: 'lead_score',
+    label: 'Lead Score',
+    type: 'number',
+    placeholder: '0-100'
+  },
+  {
+    field: 'qualification_status',
+    label: 'Qualification Status',
+    type: 'select',
+    options: [
+      { value: 'unqualified', label: 'Unqualified' },
+      { value: 'qualifying', label: 'Qualifying' },
+      { value: 'qualified', label: 'Qualified' },
+      { value: 'hot_lead', label: 'Hot Lead' },
+      { value: 'disqualified', label: 'Disqualified' }
+    ]
+  },
+  {
+    field: 'priority_level',
+    label: 'Priority Level',
+    type: 'select',
+    options: [
+      { value: 'high', label: 'High Priority' },
+      { value: 'medium', label: 'Medium Priority' },
+      { value: 'low', label: 'Low Priority' }
+    ]
+  },
+  
+  // Contact Information Status
+  {
+    field: 'email_status',
+    label: 'Email Status',
+    type: 'select',
+    options: [
+      { value: 'has_email', label: 'Has Email' },
+      { value: 'no_email', label: 'No Email' },
+      { value: 'email_verified', label: 'Email Verified' },
+      { value: 'email_bounced', label: 'Email Bounced' }
+    ]
+  },
+  {
+    field: 'phone_status',
+    label: 'Phone Status',
+    type: 'select',
+    options: [
+      { value: 'has_phone', label: 'Has Phone' },
+      { value: 'no_phone', label: 'No Phone' },
+      { value: 'phone_verified', label: 'Phone Verified' },
+      { value: 'phone_invalid', label: 'Phone Invalid' }
+    ]
+  },
+  {
+    field: 'whatsapp_status',
+    label: 'WhatsApp Status',
+    type: 'select',
+    options: [
+      { value: 'whatsapp_active', label: 'WhatsApp Active' },
+      { value: 'whatsapp_opted_out', label: 'WhatsApp Opted Out' },
+      { value: 'no_whatsapp', label: 'No WhatsApp' }
+    ]
+  },
+  
   // Location-Based Filters
   {
     field: 'country',

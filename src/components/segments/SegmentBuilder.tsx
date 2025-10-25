@@ -7,9 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Plus, X, Users, Target, Palette } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Plus, X, Users, Target, Palette, Calendar as CalendarIcon } from 'lucide-react';
 import { CustomSegment, SegmentCriteria, SEGMENT_FILTERS } from '@/types/segments';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 interface SegmentBuilderProps {
   segment?: CustomSegment;
@@ -84,7 +88,11 @@ export function SegmentBuilder({ segment, onSave, onCancel, isLoading }: Segment
       less_than: 'less than',
       in: 'is one of',
       not_in: 'is not one of',
-      between: 'between'
+      between: 'between',
+      before: 'before',
+      after: 'after',
+      in_last_days: 'in last',
+      in_next_days: 'in next'
     };
     return labels[operator as keyof typeof labels] || operator;
   };
@@ -96,8 +104,25 @@ export function SegmentBuilder({ segment, onSave, onCancel, isLoading }: Segment
     if (filter.type === 'select') {
       return filter.options?.find((o: any) => o.value === value)?.label || value;
     }
-    if (filter.type === 'range' && typeof value === 'object') {
+    if (filter.type === 'range' && typeof value === 'object' && 'min' in value && 'max' in value) {
       return `${value.min}-${value.max}`;
+    }
+    if ((filter.type === 'date' || filter.type === 'daterange') && typeof value === 'string') {
+      try {
+        return format(new Date(value), 'PP');
+      } catch {
+        return value;
+      }
+    }
+    if (typeof value === 'object' && 'min' in value && 'max' in value) {
+      try {
+        return `${format(new Date(value.min as string), 'PP')} - ${format(new Date(value.max as string), 'PP')}`;
+      } catch {
+        return `${value.min} - ${value.max}`;
+      }
+    }
+    if (typeof value === 'object' && 'days' in value) {
+      return `${value.days} days`;
     }
     return value;
   };
@@ -313,11 +338,137 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
       );
     }
     
+    if (selectedFilter.type === 'date' || selectedFilter.type === 'daterange') {
+      return [
+        { value: 'before', label: 'before' },
+        { value: 'after', label: 'after' },
+        { value: 'between', label: 'between' },
+        { value: 'in_last_days', label: 'in last X days' },
+        { value: 'in_next_days', label: 'in next X days' }
+      ];
+    }
+    
     return baseOptions;
   };
 
   const renderValueInput = () => {
     if (!selectedFilter) return null;
+    
+    // Date/Daterange type with date picker
+    if (selectedFilter.type === 'date' || selectedFilter.type === 'daterange') {
+      // For "in_last_days" or "in_next_days" operators, show number input
+      if (criteria.operator === 'in_last_days' || criteria.operator === 'in_next_days') {
+        const daysValue = typeof criteria.value === 'object' && 'days' in criteria.value 
+          ? criteria.value.days 
+          : (typeof criteria.value === 'number' ? criteria.value : 30);
+        
+        return (
+          <div className="flex items-center gap-2">
+            <Input
+              type="number"
+              value={daysValue}
+              onChange={(e) => onUpdate(index, { value: { days: Number(e.target.value) } })}
+              placeholder="Days"
+              className="w-24"
+              min={1}
+            />
+            <span className="text-sm text-muted-foreground">days</span>
+          </div>
+        );
+      }
+      
+      // For "between" operator, show two date pickers
+      if (criteria.operator === 'between') {
+        const dateValue = typeof criteria.value === 'object' && 'min' in criteria.value && 'max' in criteria.value
+          ? criteria.value
+          : { min: new Date().toISOString().split('T')[0], max: new Date().toISOString().split('T')[0] };
+        
+        return (
+          <div className="flex items-center gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-[140px] justify-start text-left font-normal",
+                    !dateValue.min && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateValue.min ? format(new Date(dateValue.min), "PP") : "From"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateValue.min ? new Date(dateValue.min as string) : undefined}
+                  onSelect={(date) => date && onUpdate(index, { 
+                    value: { ...dateValue, min: date.toISOString().split('T')[0] } as any
+                  })}
+                  initialFocus
+                  className="pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+            <span className="text-sm text-muted-foreground">to</span>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-[140px] justify-start text-left font-normal",
+                    !dateValue.max && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateValue.max ? format(new Date(dateValue.max), "PP") : "To"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateValue.max ? new Date(dateValue.max as string) : undefined}
+                  onSelect={(date) => date && onUpdate(index, { 
+                    value: { ...dateValue, max: date.toISOString().split('T')[0] } as any
+                  })}
+                  initialFocus
+                  className="pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        );
+      }
+      
+      // For "before" or "after" operators, show single date picker
+      const singleDate = typeof criteria.value === 'string' ? criteria.value : new Date().toISOString().split('T')[0];
+      
+      return (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-[240px] justify-start text-left font-normal",
+                !criteria.value && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {singleDate ? format(new Date(singleDate), "PPP") : "Pick a date"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={singleDate ? new Date(singleDate) : undefined}
+              onSelect={(date) => date && onUpdate(index, { value: date.toISOString().split('T')[0] })}
+              initialFocus
+              className="pointer-events-auto"
+            />
+          </PopoverContent>
+        </Popover>
+      );
+    }
     
     if (selectedFilter.type === 'select' || selectedFilter.type === 'multiselect') {
       return (
@@ -339,7 +490,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
       );
     }
     
-    if (criteria.operator === 'between') {
+    if (criteria.operator === 'between' && selectedFilter.type === 'number') {
       const value = criteria.value as { min: number; max: number } || { min: 0, max: 100 };
       return (
         <div className="flex items-center gap-2">
@@ -352,7 +503,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
             placeholder="Min"
             className="w-20"
           />
-          <span className="text-sm text-gray-500">to</span>
+          <span className="text-sm text-muted-foreground">to</span>
           <Input
             type="number"
             value={value.max}

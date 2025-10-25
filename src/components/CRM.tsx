@@ -124,6 +124,29 @@ export function CRM() {
 
       // Helper to get random item
       const random = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+      
+      // Helper to generate random date in the past X days
+      const randomPastDate = (maxDaysAgo: number) => {
+        const daysAgo = Math.floor(Math.random() * maxDaysAgo);
+        const date = new Date();
+        date.setDate(date.getDate() - daysAgo);
+        return date.toISOString();
+      };
+      
+      // Helper to generate random future date in next X days
+      const randomFutureDate = (maxDaysAhead: number) => {
+        const daysAhead = Math.floor(Math.random() * maxDaysAhead);
+        const date = new Date();
+        date.setDate(date.getDate() + daysAhead);
+        return date.toISOString();
+      };
+      
+      // Helper to generate lead score
+      const randomLeadScore = () => Math.floor(Math.random() * 100);
+      
+      // Helper to get qualification status
+      const qualificationStatuses = ['unqualified', 'qualifying', 'qualified', 'hot_lead'];
+      const priorityLevels = ['high', 'medium', 'low'];
 
       // Generate 120+ contacts matching template criteria
       const contacts: any[] = [];
@@ -140,12 +163,14 @@ export function CRM() {
 
       // Mumbai Luxury (5)
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(45);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'india',
@@ -153,19 +178,26 @@ export function CRM() {
             property_type: random(['apartment', 'penthouse']),
             budget_range: 'inr_2cr_plus',
             timeline: '3_6_months',
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(14),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null
           }
         });
       }
 
       // Tier-2 First Home (5)
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(60);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'india',
@@ -174,19 +206,26 @@ export function CRM() {
             budget_range: random(['inr_30_50l', 'inr_50_75l']),
             buyer_type: 'first_time',
             property_purpose: 'first_home',
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(30),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(14) : null
           }
         });
       }
 
       // NRI Investment (5)
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(90);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'india',
@@ -194,19 +233,26 @@ export function CRM() {
             property_type: random(['apartment', 'commercial']),
             property_purpose: random(['investment', 'rental_income']),
             property_features: ['ready_to_move', 'security'],
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(20),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null
           }
         });
       }
 
       // Dubai Downtown Luxury (5)
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(30);
         contacts.push({
           name: getNextName(uaeNames, 'uae'),
           phone: generatePhone('uae'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'uae',
@@ -215,7 +261,12 @@ export function CRM() {
             budget_range: random(['aed_2_5m', 'aed_5m_plus']),
             property_purpose: 'investment',
             property_features: ['pool', 'gym', 'furnished'],
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(7),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(7) : null
           }
         });
       }
@@ -643,7 +694,9 @@ export function CRM() {
             user_id: user.id,
             email: null,
             list: 'general',
-            timestamp: new Date().toISOString()
+            timestamp: contact.created_at || new Date().toISOString(),
+            last_interaction_at: contact.source_metadata?.last_interaction_at || null,
+            reminder_date: contact.source_metadata?.reminder_date || null
           }))
         );
 

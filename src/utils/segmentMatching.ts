@@ -21,10 +21,76 @@ function matchesSingleCriterion(lead: Lead, criterion: SegmentCriteria): boolean
   const { field, operator, value } = criterion;
   
   // Get field value from lead (check source_metadata first, then top-level)
-  const leadValue = lead.source_metadata?.[field] ?? lead[field];
+  let leadValue = lead.source_metadata?.[field] ?? lead[field];
+  
+  // Special handling for computed fields
+  if (field === 'email_status') {
+    if (!lead.email) return value === 'no_email';
+    return value === 'has_email';
+  }
+  
+  if (field === 'phone_status') {
+    if (!lead.phone) return value === 'no_phone';
+    return value === 'has_phone';
+  }
+  
+  if (field === 'lead_score') {
+    leadValue = lead.source_metadata?.lead_score ?? 0;
+  }
   
   // Handle null/undefined leadValue
-  if (leadValue === null || leadValue === undefined) return false;
+  if (leadValue === null || leadValue === undefined) {
+    // For date operators, null means no date set
+    if (operator === 'before' || operator === 'after' || operator === 'between' || 
+        operator === 'in_last_days' || operator === 'in_next_days') {
+      return false;
+    }
+    return false;
+  }
+  
+  // Handle date operators
+  if (operator === 'before' || operator === 'after' || operator === 'between' || 
+      operator === 'in_last_days' || operator === 'in_next_days') {
+    const leadDate = new Date(leadValue);
+    if (isNaN(leadDate.getTime())) return false;
+    
+    const now = new Date();
+    
+    switch (operator) {
+      case 'before':
+        if (typeof value !== 'string') return false;
+        return leadDate < new Date(value);
+        
+      case 'after':
+        if (typeof value !== 'string') return false;
+        return leadDate > new Date(value);
+        
+      case 'between':
+        if (typeof value !== 'object' || !('min' in value) || !('max' in value)) return false;
+        const minDate = new Date(value.min);
+        const maxDate = new Date(value.max);
+        return leadDate >= minDate && leadDate <= maxDate;
+        
+      case 'in_last_days':
+        const daysAgo = typeof value === 'object' && 'days' in value 
+          ? value.days 
+          : (typeof value === 'number' ? value : 30);
+        const pastDate = new Date(now);
+        pastDate.setDate(pastDate.getDate() - Number(daysAgo));
+        return leadDate >= pastDate && leadDate <= now;
+        
+      case 'in_next_days':
+        const daysAhead = typeof value === 'object' && 'days' in value 
+          ? value.days 
+          : (typeof value === 'number' ? value : 30);
+        const futureDate = new Date(now);
+        futureDate.setDate(futureDate.getDate() + Number(daysAhead));
+        return leadDate >= now && leadDate <= futureDate;
+        
+      default:
+        return false;
+    }
+  }
   
   // Handle different operators
   switch (operator) {
@@ -73,11 +139,6 @@ function matchesSingleCriterion(lead: Lead, criterion: SegmentCriteria): boolean
       }
       const normalizedValue = String(leadValue).toLowerCase();
       return !value.some(v => String(v).toLowerCase() === normalizedValue);
-      
-    case 'between':
-      if (typeof value !== 'object' || !('min' in value) || !('max' in value)) return false;
-      const numValue = Number(leadValue);
-      return numValue >= Number(value.min) && numValue <= Number(value.max);
       
     default:
       return false;
