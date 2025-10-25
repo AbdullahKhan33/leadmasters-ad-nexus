@@ -20,7 +20,6 @@ export function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModalProps) 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     // Basic fields
-    name: '',
     phone: '',
     email: '',
     source: 'Manual Entry',
@@ -59,14 +58,18 @@ export function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModalProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim() || !formData.phone.trim()) {
+    // Require either firstName or phone
+    if ((!formData.firstName.trim() && !formData.lastName.trim()) || !formData.phone.trim()) {
       toast({
         title: "Validation Error",
-        description: "Name and phone are required fields",
+        description: "First name/Last name and phone are required fields",
         variant: "destructive",
       });
       return;
     }
+    
+    // Generate name from first and last name
+    const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim() || 'Unnamed Lead';
 
     setIsSubmitting(true);
     try {
@@ -104,7 +107,7 @@ export function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModalProps) 
         .from('leads')
         .insert({
           user_id: user.id,
-          name: formData.name.trim(),
+          name: fullName,
           phone: formData.phone.trim(),
           email: formData.email.trim() || null,
           source: formData.source,
@@ -123,12 +126,11 @@ export function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModalProps) 
 
       toast({
         title: "Lead Added",
-        description: `${formData.name} has been added to your contacts`,
+        description: `${fullName} has been added to your contacts`,
       });
 
       // Reset form
       setFormData({
-        name: '',
         phone: '',
         email: '',
         source: 'Manual Entry',
@@ -192,33 +194,36 @@ export function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModalProps) 
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
+                <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Enter full name"
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="Primary email"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
+                <Label htmlFor="phone">Phone <span className="text-red-500">*</span></Label>
                 <Input
-                  id="company"
-                  value={formData.company}
-                  onChange={(e) => handleInputChange('company', e.target.value)}
-                  placeholder="Company name"
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  placeholder="Primary phone"
+                  required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label htmlFor="firstName">First Name <span className="text-red-500">*</span></Label>
                 <Input
                   id="firstName"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   placeholder="First name"
+                  required
                 />
               </div>
 
@@ -233,34 +238,22 @@ export function AddLeadModal({ isOpen, onClose, onSuccess }: AddLeadModalProps) 
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="company">Company</Label>
+                <Input
+                  id="company"
+                  value={formData.company}
+                  onChange={(e) => handleInputChange('company', e.target.value)}
+                  placeholder="Company name"
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
                 <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="Job title"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="Primary email"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone <span className="text-red-500">*</span></Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  placeholder="Primary phone"
-                  required
                 />
               </div>
 

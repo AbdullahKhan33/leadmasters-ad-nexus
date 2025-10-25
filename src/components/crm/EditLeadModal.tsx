@@ -59,7 +59,6 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     // Basic fields
-    name: lead.name,
     phone: lead.phone,
     email: lead.email || '',
     source: lead.source,
@@ -99,7 +98,6 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
   useEffect(() => {
     const metadata = lead.source_metadata || {};
     setFormData({
-      name: lead.name,
       phone: lead.phone,
       email: lead.email || '',
       source: lead.source,
@@ -135,14 +133,17 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim() || !formData.phone.trim()) {
+    if ((!formData.firstName.trim() && !formData.lastName.trim()) || !formData.phone.trim()) {
       toast({
         title: "Validation Error",
-        description: "Name and phone are required fields",
+        description: "First name/Last name and phone are required fields",
         variant: "destructive",
       });
       return;
     }
+    
+    // Generate name from first and last name
+    const fullName = `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim() || 'Unnamed Lead';
     
     setIsSubmitting(true);
     
@@ -171,7 +172,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
     if (formData.lastName) sourceMetadata.last_name = formData.lastName.trim();
     
     const updates = {
-      name: formData.name,
+      name: fullName,
       phone: formData.phone,
       email: formData.email,
       source: formData.source,
@@ -187,7 +188,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
     
     toast({
       title: "Lead Updated",
-      description: `${formData.name}'s information has been updated successfully`,
+      description: `${fullName}'s information has been updated successfully`,
       variant: "default",
     });
     
@@ -213,33 +214,36 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name <span className="text-red-500">*</span></Label>
+                <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Enter full name"
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="Primary email"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
+                <Label htmlFor="phone">Phone <span className="text-red-500">*</span></Label>
                 <Input
-                  id="company"
-                  value={formData.company}
-                  onChange={(e) => handleInputChange('company', e.target.value)}
-                  placeholder="Company name"
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  placeholder="Primary phone"
+                  required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label htmlFor="firstName">First Name <span className="text-red-500">*</span></Label>
                 <Input
                   id="firstName"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   placeholder="First name"
+                  required
                 />
               </div>
 
@@ -254,34 +258,22 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="company">Company</Label>
+                <Input
+                  id="company"
+                  value={formData.company}
+                  onChange={(e) => handleInputChange('company', e.target.value)}
+                  placeholder="Company name"
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
                 <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="Job title"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="Primary email"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone <span className="text-red-500">*</span></Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  placeholder="Primary phone"
-                  required
                 />
               </div>
 
