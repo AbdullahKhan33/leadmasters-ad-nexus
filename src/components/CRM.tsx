@@ -53,26 +53,33 @@ export function CRM() {
 
         if (error) throw error;
 
-        // Determine if we need to reseed:
-        // 1. No leads exist
-        // 2. All leads have same/similar created_at (bad spread)
-        // 3. Not marked as seed data
+        // Determine if we need to reseed (only if data is seed data)
         let needsReseed = false;
+        const total = existingLeads?.length || 0;
+        const seedCount = (existingLeads || []).filter((l:any) => l.source_metadata?.seed === true).length;
+        const nonSeedCount = total - seedCount;
         
-        if (!existingLeads || existingLeads.length === 0) {
+        if (total === 0) {
           needsReseed = true;
           console.log('No leads found, will seed sample data');
-        } else {
-          // Check timestamp spread
-          const dates = existingLeads.map(l => new Date(l.created_at).getTime()).filter(d => !isNaN(d));
+        } else if (nonSeedCount === 0) {
+          // Only consider reseed if all existing leads are seed data
+          const dates = existingLeads.map((l:any) => new Date(l.created_at).getTime()).filter((d:number) => !isNaN(d));
           if (dates.length > 1) {
             const oldest = Math.min(...dates);
             const newest = Math.max(...dates);
             const spreadDays = (newest - oldest) / (1000 * 60 * 60 * 24);
             
-            if (spreadDays < 7) {
+            // Check if many items share the same time-of-day (HH:MM)
+            const timeKeys = (existingLeads || []).map((l:any) => {
+              const d = new Date(l.created_at);
+              return `${d.getHours()}:${d.getMinutes()}`;
+            });
+            const uniqueTimes = new Set(timeKeys);
+            
+            if (spreadDays < 7 || uniqueTimes.size <= Math.max(3, Math.floor(timeKeys.length * 0.1))) {
               needsReseed = true;
-              console.log(`Timestamp spread only ${spreadDays.toFixed(1)} days, reseeding for better distribution`);
+              console.log(`Reseeding due to ${spreadDays < 7 ? 'low day spread' : 'uniform time-of-day'}`);
             }
           }
         }
@@ -178,22 +185,34 @@ export function CRM() {
       // Helper to get random item
       const random = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
       
-      // Helper to generate random date in the past X days (spread across year)
+      // Helper to generate random date in the past X days with randomized time-of-day
       const randomPastDate = (minDaysAgo: number, maxDaysAgo: number) => {
-        const daysAgo = minDaysAgo + Math.floor(Math.random() * (maxDaysAgo - minDaysAgo));
+        const daysAgo = minDaysAgo + Math.floor(Math.random() * Math.max(1, (maxDaysAgo - minDaysAgo + 1)));
         const date = new Date();
         date.setDate(date.getDate() - daysAgo);
+        // Randomize time-of-day to avoid identical times
+        date.setHours(
+          Math.floor(Math.random() * 24),
+          Math.floor(Math.random() * 60),
+          Math.floor(Math.random() * 60),
+          Math.floor(Math.random() * 1000)
+        );
         return date.toISOString();
       };
       
-      // Helper to generate random future date in next X days
+      // Helper to generate random future date in next X days with randomized time-of-day
       const randomFutureDate = (maxDaysAhead: number) => {
-        const daysAhead = Math.floor(Math.random() * maxDaysAhead);
+        const daysAhead = Math.floor(Math.random() * Math.max(1, maxDaysAhead + 1));
         const date = new Date();
         date.setDate(date.getDate() + daysAhead);
+        date.setHours(
+          Math.floor(Math.random() * 24),
+          Math.floor(Math.random() * 60),
+          Math.floor(Math.random() * 60),
+          Math.floor(Math.random() * 1000)
+        );
         return date.toISOString();
       };
-      
       // Helper to generate lead score
       const randomLeadScore = () => Math.floor(Math.random() * 100);
       
