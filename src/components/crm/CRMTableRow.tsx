@@ -83,7 +83,14 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
   const handleRowClick = (e: React.MouseEvent) => {
     // Don't trigger if clicking on buttons or interactive elements
     const target = e.target as HTMLElement;
-    if (target.closest('button') || target.closest('[role="button"]')) {
+    if (
+      target.closest('button') ||
+      target.closest('[role="button"]') ||
+      target.closest('[role="menuitem"]') ||
+      target.closest('[role="menu"]') ||
+      target.closest('input') ||
+      target.closest('select')
+    ) {
       return;
     }
     if (onLeadClick) {

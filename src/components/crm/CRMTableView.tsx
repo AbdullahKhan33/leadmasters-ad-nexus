@@ -11,7 +11,7 @@ import { CRMAIFeaturesBanner } from "./CRMAIFeaturesBanner";
 import { CRMTableHeader } from "./CRMTableHeader";
 import { CRMTableRow } from "./CRMTableRow";
 import { AddLeadModal } from "./AddLeadModal";
-import { LeadDetailModal } from "./LeadDetailModal";
+import { EditLeadModal } from "./EditLeadModal";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -69,7 +69,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
   const [isLoading, setIsLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState({
     lead: true,
     contact: true,
@@ -175,6 +175,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
       if (updates.lastMessage !== undefined) dbUpdates.last_message = updates.lastMessage;
       if (updates.reminderDate !== undefined) dbUpdates.reminder_date = updates.reminderDate;
       if (updates.reminderNote !== undefined) dbUpdates.reminder_note = updates.reminderNote;
+      if (updates.source_metadata !== undefined) dbUpdates.source_metadata = updates.source_metadata;
 
       const { error } = await supabase
         .from('leads')
@@ -208,7 +209,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
 
   const handleLeadClick = (lead: Lead) => {
     setSelectedLead(lead);
-    setIsDetailModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
   const filteredLeads = leads.filter((lead) => {
@@ -323,15 +324,17 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
         onSuccess={fetchLeads}
       />
       
-      <LeadDetailModal
-        lead={selectedLead}
-        isOpen={isDetailModalOpen}
-        onClose={() => {
-          setIsDetailModalOpen(false);
-          setSelectedLead(null);
-        }}
-        onUpdate={handleLeadUpdate}
-      />
+      {selectedLead && (
+        <EditLeadModal
+          lead={selectedLead}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedLead(null);
+          }}
+          onUpdate={handleLeadUpdate}
+        />
+      )}
     </div>
   );
 }
