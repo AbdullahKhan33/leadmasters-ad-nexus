@@ -31,6 +31,29 @@ interface Lead {
   reminderNote?: string;
   aiScore?: number;
   aiNextAction?: string;
+  source_metadata?: {
+    company?: string;
+    title?: string;
+    first_name?: string;
+    last_name?: string;
+    mobile?: string;
+    fax?: string;
+    website?: string;
+    industry?: string;
+    employees_count?: string;
+    annual_revenue?: string;
+    rating?: string;
+    secondary_email?: string;
+    skype_id?: string;
+    twitter?: string;
+    email_opt_out?: boolean;
+    street?: string;
+    city?: string;
+    state?: string;
+    zip_code?: string;
+    country?: string;
+    description?: string;
+  };
 }
 
 interface CRMTableViewProps {
@@ -91,7 +114,8 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
           reminderDate: dbLead.reminder_date,
           reminderNote: dbLead.reminder_note || '',
           aiScore: dbLead.ai_score,
-          aiNextAction: dbLead.ai_next_action || ''
+          aiNextAction: dbLead.ai_next_action || '',
+          source_metadata: dbLead.source_metadata || {}
         };
       });
 
