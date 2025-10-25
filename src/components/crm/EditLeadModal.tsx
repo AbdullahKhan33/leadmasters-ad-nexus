@@ -341,7 +341,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
                 <Label htmlFor="source">Lead Source</Label>
                 <Select value={formData.source} onValueChange={(value) => handleInputChange('source', value)}>
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select source" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Manual Entry">Manual Entry</SelectItem>
