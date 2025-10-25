@@ -57,6 +57,21 @@ interface EditLeadModalProps {
 export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModalProps) {
   const metadata = lead.source_metadata || {};
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const SOURCE_OPTIONS = [
+    'Manual Entry',
+    'WhatsApp',
+    'Facebook',
+    'Instagram',
+    'LinkedIn',
+    'Website',
+    'Referral',
+    'Walk-in',
+    'Phone Call',
+    'Advertisement',
+    'Partner',
+    'Trade Show',
+    'CSV Import'
+  ];
   
   // Parse name if firstName/lastName not in metadata
   let initialFirstName = metadata.first_name || '';
@@ -76,7 +91,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
     // Basic fields
     phone: lead.phone,
     email: lead.email || '',
-    source: lead.source,
+    source: SOURCE_OPTIONS.includes(lead.source) ? lead.source : (lead.source?.trim() || 'Manual Entry'),
     status: lead.status,
     list: lead.list || 'general',
     category: lead.category || 'customer',
@@ -130,7 +145,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
     setFormData({
       phone: lead.phone,
       email: lead.email || '',
-      source: lead.source,
+      source: SOURCE_OPTIONS.includes(lead.source) ? lead.source : (lead.source?.trim() || 'Manual Entry'),
       status: lead.status,
       list: lead.list || 'general',
       category: lead.category || 'customer',
@@ -344,6 +359,9 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
                     <SelectValue placeholder="Select source" />
                   </SelectTrigger>
                   <SelectContent>
+                    {!SOURCE_OPTIONS.includes(formData.source) && formData.source && (
+                      <SelectItem value={formData.source}>{formData.source}</SelectItem>
+                    )}
                     <SelectItem value="Manual Entry">Manual Entry</SelectItem>
                     <SelectItem value="WhatsApp">WhatsApp</SelectItem>
                     <SelectItem value="Facebook">Facebook</SelectItem>
