@@ -406,14 +406,6 @@ export function SegmentManager() {
           <p className="text-muted-foreground">Create and manage custom audience segments for targeted campaigns</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handleCreateSampleSegments} variant="outline" size="sm" className="gap-2">
-            <Sparkles className="w-4 h-4" />
-            Create Sample Segments
-          </Button>
-          <Button onClick={handleResetSegments} variant="outline" size="sm" className="gap-2">
-            <Target className="w-4 h-4" />
-            Reset My Segments
-          </Button>
           <Button onClick={() => openBuilder()} variant="gradient" className="gap-2">
             <Plus className="w-4 h-4" />
             Create Segment

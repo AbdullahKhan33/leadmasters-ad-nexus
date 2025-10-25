@@ -125,9 +125,9 @@ export function CRM() {
       // Helper to get random item
       const random = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
       
-      // Helper to generate random date in the past X days
-      const randomPastDate = (maxDaysAgo: number) => {
-        const daysAgo = Math.floor(Math.random() * maxDaysAgo);
+      // Helper to generate random date in the past X days (spread across year)
+      const randomPastDate = (minDaysAgo: number, maxDaysAgo: number) => {
+        const daysAgo = minDaysAgo + Math.floor(Math.random() * (maxDaysAgo - minDaysAgo));
         const date = new Date();
         date.setDate(date.getDate() - daysAgo);
         return date.toISOString();
@@ -161,9 +161,9 @@ export function CRM() {
 
       // REAL ESTATE CONTACTS (60 contacts)
 
-      // Mumbai Luxury (5)
+      // Mumbai Luxury (5) - Days 0-60
       for (let i = 0; i < 5; i++) {
-        const createdDate = randomPastDate(45);
+        const createdDate = randomPastDate(0, 60);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
@@ -179,18 +179,21 @@ export function CRM() {
             budget_range: 'inr_2cr_plus',
             timeline: '3_6_months',
             category: 'real_estate',
-            lead_score: randomLeadScore(),
-            qualification_status: random(qualificationStatuses),
-            priority_level: random(priorityLevels),
-            last_interaction_at: randomPastDate(14),
-            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null
+            lead_score: 70 + Math.floor(Math.random() * 30),
+            qualification_status: random(['qualified', 'hot_lead']),
+            priority_level: 'high',
+            last_interaction_at: randomPastDate(0, 14),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null,
+            email_status: random(['has_email', 'email_verified']),
+            phone_status: 'phone_verified',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Tier-2 First Home (5)
+      // Delhi NCR First-Time (5) - Days 30-120
       for (let i = 0; i < 5; i++) {
-        const createdDate = randomPastDate(60);
+        const createdDate = randomPastDate(30, 120);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
@@ -201,7 +204,7 @@ export function CRM() {
           source_metadata: {
             seed: true,
             country: 'india',
-            city: random(['tier2_india', 'jaipur', 'pune', 'ahmedabad']),
+            city: 'delhi',
             property_type: random(['apartment', 'villa']),
             budget_range: random(['inr_30_50l', 'inr_50_75l']),
             buyer_type: 'first_time',
@@ -210,15 +213,18 @@ export function CRM() {
             lead_score: randomLeadScore(),
             qualification_status: random(qualificationStatuses),
             priority_level: random(priorityLevels),
-            last_interaction_at: randomPastDate(30),
-            reminder_date: Math.random() > 0.5 ? randomFutureDate(14) : null
+            last_interaction_at: randomPastDate(10, 60),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(14) : null,
+            email_status: random(['has_email', 'no_email']),
+            phone_status: 'has_phone',
+            whatsapp_status: random(['whatsapp_active', 'whatsapp_opted_out'])
           }
         });
       }
 
-      // NRI Investment (5)
+      // NRI Investment (5) - Days 60-180
       for (let i = 0; i < 5; i++) {
-        const createdDate = randomPastDate(90);
+        const createdDate = randomPastDate(60, 180);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
@@ -237,15 +243,18 @@ export function CRM() {
             lead_score: randomLeadScore(),
             qualification_status: random(qualificationStatuses),
             priority_level: random(priorityLevels),
-            last_interaction_at: randomPastDate(20),
-            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null
+            last_interaction_at: randomPastDate(30, 120),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: random(['has_email', 'email_verified']),
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Dubai Downtown Luxury (5)
+      // Dubai Downtown Luxury (5) - Days 0-90
       for (let i = 0; i < 5; i++) {
-        const createdDate = randomPastDate(30);
+        const createdDate = randomPastDate(0, 90);
         contacts.push({
           name: getNextName(uaeNames, 'uae'),
           phone: generatePhone('uae'),
@@ -262,23 +271,28 @@ export function CRM() {
             property_purpose: 'investment',
             property_features: ['pool', 'gym', 'furnished'],
             category: 'real_estate',
-            lead_score: randomLeadScore(),
-            qualification_status: random(qualificationStatuses),
-            priority_level: random(priorityLevels),
-            last_interaction_at: randomPastDate(7),
-            reminder_date: Math.random() > 0.5 ? randomFutureDate(7) : null
+            lead_score: 65 + Math.floor(Math.random() * 35),
+            qualification_status: random(['qualified', 'hot_lead']),
+            priority_level: random(['high', 'medium']),
+            last_interaction_at: randomPastDate(0, 30),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(7) : null,
+            email_status: 'has_email',
+            phone_status: 'phone_verified',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Affordable Dubai Family (5)
+      // Affordable Dubai Family (5) - Days 45-150
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(45, 150);
         contacts.push({
           name: getNextName(uaeNames, 'uae'),
           phone: generatePhone('uae'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'uae',
@@ -287,19 +301,29 @@ export function CRM() {
             budget_range: 'aed_500k_1m',
             buyer_type: 'first_time',
             timeline: '1_3_months',
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(20, 90),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(14) : null,
+            email_status: random(['has_email', 'no_email']),
+            phone_status: 'has_phone',
+            whatsapp_status: random(['whatsapp_active', 'whatsapp_opted_out'])
           }
         });
       }
 
-      // Dubai Off-Plan (5)
+      // Dubai Off-Plan (5) - Days 90-240
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(90, 240);
         contacts.push({
           name: getNextName(uaeNames, 'uae'),
           phone: generatePhone('uae'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'uae',
@@ -308,19 +332,29 @@ export function CRM() {
             property_features: 'under_construction',
             budget_range: 'aed_1_2m',
             timeline: '6_12_months',
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(60, 180),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: random(['has_email', 'email_verified']),
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Doha Expat Rental (5)
+      // Doha Expat Rental (5) - Days 60-180
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(60, 180);
         contacts.push({
           name: getNextName(qatarNames, 'qatar'),
           phone: generatePhone('qatar'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'qatar',
@@ -329,39 +363,59 @@ export function CRM() {
             buyer_type: 'nri_expat',
             timeline: random(['immediate', '1_3_months']),
             property_features: ['furnished', 'parking', 'security'],
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(30, 120),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null,
+            email_status: random(['has_email', 'no_email']),
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Qatar Investment (5)
+      // Doha Investment (5) - Days 60-180
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(60, 180);
         contacts.push({
           name: getNextName(qatarNames, 'qatar'),
           phone: generatePhone('qatar'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'qatar',
-            city: random(['doha', 'al_wakrah']),
+            city: 'doha',
             property_type: random(['commercial', 'apartment']),
-            property_purpose: random(['investment', 'rental_income']),
+            property_purpose: 'investment',
             buyer_type: 'investor',
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(30, 120),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Doha Luxury Villa (5)
+      // Doha Luxury Villa (5) - Days 120-300
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(120, 300);
         contacts.push({
           name: getNextName(qatarNames, 'qatar'),
           phone: generatePhone('qatar'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'qatar',
@@ -370,39 +424,59 @@ export function CRM() {
             budget_range: 'sar_qar_3m_plus',
             property_features: ['pool', 'security', 'furnished'],
             timeline: '3_6_months',
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(90, 240),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: random(['has_email', 'email_verified']),
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Riyadh Vision 2030 (5)
+      // Riyadh Luxury Villas (5) - Days 90-270
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(90, 270);
         contacts.push({
           name: getNextName(saudiNames, 'saudi'),
           phone: generatePhone('saudi_arabia'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'saudi_arabia',
             city: 'riyadh',
-            property_type: random(['commercial', 'apartment']),
+            property_type: 'villa',
             property_purpose: 'investment',
             timeline: random(['6_12_months', '1_year_plus']),
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(60, 210),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Riyadh Family Compound (5)
+      // Riyadh Compounds (5) - Days 150-365
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(150, 365);
         contacts.push({
           name: getNextName(saudiNames, 'saudi'),
           phone: generatePhone('saudi_arabia'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'saudi_arabia',
@@ -411,19 +485,29 @@ export function CRM() {
             property_purpose: 'first_home',
             budget_range: 'sar_qar_1_3m',
             property_features: ['security', 'parking'],
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(120, 300),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: random(['has_email', 'no_email']),
+            phone_status: 'has_phone',
+            whatsapp_status: random(['whatsapp_active', 'whatsapp_opted_out'])
           }
         });
       }
 
-      // Jeddah Waterfront (5)
+      // Jeddah Waterfront (5) - Days 90-240
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(90, 240);
         contacts.push({
           name: getNextName(saudiNames, 'saudi'),
           phone: generatePhone('saudi_arabia'),
           status: random(statuses),
           source: random(sources),
           category: 'customer',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'saudi_arabia',
@@ -432,41 +516,61 @@ export function CRM() {
             budget_range: 'sar_qar_3m_plus',
             property_features: ['ready_to_move', 'furnished'],
             timeline: '1_3_months',
-            category: 'real_estate'
+            category: 'real_estate',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(60, 180),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
       // EDTECH CONTACTS (60 contacts)
 
-      // India Career Switcher (5)
+      // India Career Switcher (5) - Days 0-90
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(0, 90);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'india',
-            career_stage: random(['career_switcher', 'fresh_graduate']),
+            career_stage: 'career_switcher',
             course_interest: random(['programming', 'data_science']),
             course_budget: 'inr_50k_1l',
             course_timeline: 'bootcamp',
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(0, 60),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(14) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // India Test Prep (5)
+      // India Test Prep (5) - Days 60-180
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(60, 180);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'india',
@@ -474,60 +578,91 @@ export function CRM() {
             career_stage: random(['student', 'professional_upskilling']),
             course_budget: random(['inr_10_25k', 'inr_25_50k']),
             course_timeline: 'short_course',
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(30, 120),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null,
+            email_status: random(['has_email', 'no_email']),
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // India Professional Upskilling (5)
+      // Delhi Professional Upskilling (5) - Days 30-150
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(30, 150);
         contacts.push({
           name: getNextName(indianNames, 'indian'),
           phone: generatePhone('india'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'india',
-            career_stage: random(['professional_upskilling', 'executive']),
+            city: 'delhi',
+            career_stage: 'professional_upskilling',
             course_interest: random(['business_mba', 'digital_marketing', 'certifications']),
             course_budget: random(['inr_25_50k', 'inr_1l_plus']),
             learning_preference: random(['self_paced', 'hybrid']),
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(15, 100),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(14) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Dubai Expat Career (5)
+      // Dubai Expat Career Growth (5) - Days 60-180
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(60, 180);
         contacts.push({
           name: getNextName(uaeNames, 'uae'),
           phone: generatePhone('uae'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'uae',
-            city: random(['dubai', 'abu_dhabi']),
-            career_stage: random(['career_switcher', 'professional_upskilling']),
+            city: 'dubai',
+            career_stage: random(['early_career', 'professional_upskilling']),
             course_interest: random(['programming', 'data_science', 'digital_marketing']),
             course_budget: random(['aed_sar_5_10k', 'aed_sar_10_20k']),
             demo_status: random(['demo_completed', 'demo_scheduled']),
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(30, 120),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // UAE Professional Certifications (5)
+      // UAE Professional Certifications (5) - Days 90-240
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(90, 240);
         contacts.push({
           name: getNextName(uaeNames, 'uae'),
           phone: generatePhone('uae'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'uae',
@@ -535,19 +670,29 @@ export function CRM() {
             course_interest: random(['certifications', 'business_mba']),
             course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
             learning_preference: random(['live_classes', 'in_person']),
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(60, 180),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Dubai Arabic Learners (5)
+      // Dubai Arabic Learners (5) - Days 120-300
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(120, 300);
         contacts.push({
           name: getNextName(uaeNames, 'uae'),
           phone: generatePhone('uae'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'uae',
@@ -556,19 +701,29 @@ export function CRM() {
             language_preference: 'arabic',
             career_stage: 'professional_upskilling',
             course_budget: 'aed_sar_1_5k',
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(90, 240),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: random(['has_email', 'no_email']),
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Doha Expat Upskilling (5)
+      // Doha Expat Upskilling (5) - Days 90-270
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(90, 270);
         contacts.push({
           name: getNextName(qatarNames, 'qatar'),
           phone: generatePhone('qatar'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'qatar',
@@ -577,19 +732,29 @@ export function CRM() {
             course_interest: random(['business_mba', 'digital_marketing', 'data_science']),
             course_budget: random(['aed_sar_5_10k', 'aed_sar_10_20k']),
             learning_preference: random(['hybrid', 'live_classes']),
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(60, 210),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Qatar Graduate Programs (5)
+      // Qatar Graduate Programs (5) - Days 60-180
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(60, 180);
         contacts.push({
           name: getNextName(qatarNames, 'qatar'),
           phone: generatePhone('qatar'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'qatar',
@@ -597,19 +762,29 @@ export function CRM() {
             course_interest: random(['programming', 'design', 'business_mba']),
             course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
             course_timeline: 'degree_program',
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(30, 120),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Qatar Executive Education (5)
+      // Qatar Executive Education (5) - Days 150-365
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(150, 365);
         contacts.push({
           name: getNextName(qatarNames, 'qatar'),
           phone: generatePhone('qatar'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'qatar',
@@ -618,19 +793,29 @@ export function CRM() {
             course_interest: random(['business_mba', 'certifications']),
             course_budget: 'aed_sar_20k_plus',
             learning_preference: random(['in_person', 'live_classes']),
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(120, 300),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Riyadh Vision 2030 Skills (5)
+      // Riyadh Vision 2030 Skills (5) - Days 30-120
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(30, 120);
         contacts.push({
           name: getNextName(saudiNames, 'saudi'),
           phone: generatePhone('saudi_arabia'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'saudi_arabia',
@@ -639,19 +824,29 @@ export function CRM() {
             career_stage: random(['fresh_graduate', 'career_switcher']),
             course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
             language_preference: ['arabic', 'english'],
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(15, 90),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(14) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Saudi Women Career (5)
+      // Saudi Women Career (5) - Days 90-240
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(90, 240);
         contacts.push({
           name: getNextName(saudiNames, 'saudi'),
           phone: generatePhone('saudi_arabia'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'saudi_arabia',
@@ -659,19 +854,29 @@ export function CRM() {
             course_interest: random(['business_mba', 'digital_marketing', 'design']),
             course_budget: random(['aed_sar_5_10k', 'aed_sar_10_20k']),
             learning_preference: random(['self_paced', 'live_classes']),
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(60, 180),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(21) : null,
+            email_status: random(['has_email', 'no_email']),
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
 
-      // Riyadh Tech Talent (5)
+      // Riyadh Tech Talent (5) - Days 150-365
       for (let i = 0; i < 5; i++) {
+        const createdDate = randomPastDate(150, 365);
         contacts.push({
           name: getNextName(saudiNames, 'saudi'),
           phone: generatePhone('saudi_arabia'),
           status: random(statuses),
           source: random(sources),
           category: 'lead',
+          created_at: createdDate,
           source_metadata: {
             seed: true,
             country: 'saudi_arabia',
@@ -680,7 +885,15 @@ export function CRM() {
             course_interest: random(['programming', 'data_science']),
             course_budget: random(['aed_sar_10_20k', 'aed_sar_20k_plus']),
             demo_status: 'demo_completed',
-            category: 'edtech'
+            category: 'edtech',
+            lead_score: randomLeadScore(),
+            qualification_status: random(qualificationStatuses),
+            priority_level: random(priorityLevels),
+            last_interaction_at: randomPastDate(120, 300),
+            reminder_date: Math.random() > 0.5 ? randomFutureDate(30) : null,
+            email_status: 'has_email',
+            phone_status: 'has_phone',
+            whatsapp_status: 'whatsapp_active'
           }
         });
       }
@@ -702,9 +915,154 @@ export function CRM() {
 
       if (error) throw error;
 
+      // Now automatically create segments
+      const segments = [
+        {
+          name: "Mumbai Luxury Apartment Buyers",
+          description: "High-budget luxury apartment seekers in Mumbai (last 90 days)",
+          criteria: [
+            { field: 'city', operator: 'equals', value: 'mumbai' },
+            { field: 'budget_range', operator: 'equals', value: 'inr_2cr_plus' },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 90 } }
+          ],
+          color: "#8B5CF6",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "Delhi NCR First-Time Homebuyers",
+          description: "First-time buyers in Delhi NCR looking for homes",
+          criteria: [
+            { field: 'city', operator: 'equals', value: 'delhi' },
+            { field: 'buyer_type', operator: 'equals', value: 'first_time' },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 150 } }
+          ],
+          color: "#10B981",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "Dubai Downtown Luxury Buyers",
+          description: "High-budget luxury seekers in Dubai Downtown",
+          criteria: [
+            { field: 'city', operator: 'equals', value: 'dubai' },
+            { field: 'budget_range', operator: 'in', value: ['aed_2_5m', 'aed_5m_plus'] },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 120 } }
+          ],
+          color: "#F59E0B",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "Doha Investment Property Seekers",
+          description: "Investment property seekers in Doha",
+          criteria: [
+            { field: 'city', operator: 'equals', value: 'doha' },
+            { field: 'property_purpose', operator: 'equals', value: 'investment' },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 240 } }
+          ],
+          color: "#EF4444",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "Riyadh Premium Villa Buyers",
+          description: "Villa buyers in Riyadh with premium budgets",
+          criteria: [
+            { field: 'city', operator: 'equals', value: 'riyadh' },
+            { field: 'property_type', operator: 'equals', value: 'villa' },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 300 } }
+          ],
+          color: "#6366F1",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "India Tech Career Switchers",
+          description: "Career switchers interested in tech courses in India",
+          criteria: [
+            { field: 'country', operator: 'equals', value: 'india' },
+            { field: 'career_stage', operator: 'equals', value: 'career_switcher' },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 120 } }
+          ],
+          color: "#8B5CF6",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "Delhi Professional Upskilling",
+          description: "Working professionals seeking upskilling in Delhi",
+          criteria: [
+            { field: 'city', operator: 'equals', value: 'delhi' },
+            { field: 'career_stage', operator: 'equals', value: 'professional_upskilling' },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 180 } }
+          ],
+          color: "#10B981",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "Dubai Expat Career Growth",
+          description: "Expats in Dubai seeking career advancement",
+          criteria: [
+            { field: 'city', operator: 'equals', value: 'dubai' },
+            { field: 'career_stage', operator: 'in', value: ['early_career', 'professional_upskilling'] },
+            { field: 'created_at', operator: 'in_last_days', value: { days: 240 } }
+          ],
+          color: "#F59E0B",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "High-Priority Hot Leads",
+          description: "Recent leads with high scores and priority",
+          criteria: [
+            { field: 'created_at', operator: 'in_last_days', value: { days: 30 } },
+            { field: 'lead_score', operator: 'greater_than', value: 70 },
+            { field: 'priority_level', operator: 'equals', value: 'high' }
+          ],
+          color: "#DC2626",
+          is_active: true,
+          user_id: user.id
+        },
+        {
+          name: "Re-engagement - Inactive Leads",
+          description: "Qualified leads that haven't been contacted recently",
+          criteria: [
+            { field: 'last_interaction_at', operator: 'before', value: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString() },
+            { field: 'qualification_status', operator: 'in', value: ['qualified', 'hot_lead'] }
+          ],
+          color: "#9CA3AF",
+          is_active: true,
+          user_id: user.id
+        }
+      ];
+
+      // Check which segments already exist
+      const { data: existingSegments } = await supabase
+        .from('segments')
+        .select('name')
+        .eq('user_id', user.id);
+
+      const existingNames = new Set(existingSegments?.map(s => s.name) || []);
+      const newSegments = segments.filter(s => !existingNames.has(s.name));
+
+      if (newSegments.length > 0) {
+        const { error: segmentError } = await supabase
+          .from('segments')
+          .insert(newSegments.map(s => ({
+            ...s,
+            criteria: s.criteria as any
+          })));
+        
+        if (segmentError) {
+          console.error('Error creating segments:', segmentError);
+        }
+      }
+
       toast({
         title: "Success",
-        description: `${contacts.length} real contacts from India and Middle East have been added!`,
+        description: `Created ${contacts.length} contacts and ${newSegments.length} segments!`,
       });
 
       // Reload to see changes
