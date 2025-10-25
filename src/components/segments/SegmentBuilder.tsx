@@ -309,6 +309,9 @@ interface CriteriaRowProps {
 }
 
 function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) {
+  const [isFromDateOpen, setIsFromDateOpen] = useState(false);
+  const [isToDateOpen, setIsToDateOpen] = useState(false);
+  const [isSingleDateOpen, setIsSingleDateOpen] = useState(false);
   const selectedFilter = SEGMENT_FILTERS.find(f => f.field === criteria.field);
   
   const getOperatorOptions = () => {
@@ -385,7 +388,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
         
         return (
           <div className="flex items-center gap-2">
-            <Popover>
+            <Popover open={isFromDateOpen} onOpenChange={setIsFromDateOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -402,16 +405,21 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
                 <Calendar
                   mode="single"
                   selected={dateValue.min ? new Date(dateValue.min as string) : undefined}
-                  onSelect={(date) => date && onUpdate(index, { 
-                    value: { ...dateValue, min: date.toISOString().split('T')[0] } as any
-                  })}
+                  onSelect={(date) => {
+                    if (date) {
+                      onUpdate(index, { 
+                        value: { ...dateValue, min: date.toISOString().split('T')[0] } as any
+                      });
+                      setIsFromDateOpen(false);
+                    }
+                  }}
                   initialFocus
-                  className="pointer-events-auto"
+                  className={cn("p-3 pointer-events-auto")}
                 />
               </PopoverContent>
             </Popover>
             <span className="text-sm text-muted-foreground">to</span>
-            <Popover>
+            <Popover open={isToDateOpen} onOpenChange={setIsToDateOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -428,11 +436,16 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
                 <Calendar
                   mode="single"
                   selected={dateValue.max ? new Date(dateValue.max as string) : undefined}
-                  onSelect={(date) => date && onUpdate(index, { 
-                    value: { ...dateValue, max: date.toISOString().split('T')[0] } as any
-                  })}
+                  onSelect={(date) => {
+                    if (date) {
+                      onUpdate(index, { 
+                        value: { ...dateValue, max: date.toISOString().split('T')[0] } as any
+                      });
+                      setIsToDateOpen(false);
+                    }
+                  }}
                   initialFocus
-                  className="pointer-events-auto"
+                  className={cn("p-3 pointer-events-auto")}
                 />
               </PopoverContent>
             </Popover>
@@ -444,7 +457,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
       const singleDate = typeof criteria.value === 'string' ? criteria.value : new Date().toISOString().split('T')[0];
       
       return (
-        <Popover>
+        <Popover open={isSingleDateOpen} onOpenChange={setIsSingleDateOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -461,9 +474,14 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
             <Calendar
               mode="single"
               selected={singleDate ? new Date(singleDate) : undefined}
-              onSelect={(date) => date && onUpdate(index, { value: date.toISOString().split('T')[0] })}
+              onSelect={(date) => {
+                if (date) {
+                  onUpdate(index, { value: date.toISOString().split('T')[0] });
+                  setIsSingleDateOpen(false);
+                }
+              }}
               initialFocus
-              className="pointer-events-auto"
+              className={cn("p-3 pointer-events-auto")}
             />
           </PopoverContent>
         </Popover>
