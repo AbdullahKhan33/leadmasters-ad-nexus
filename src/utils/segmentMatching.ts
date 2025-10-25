@@ -39,11 +39,21 @@ function matchesSingleCriterion(lead: Lead, criterion: SegmentCriteria): boolean
   
   // Special handling for computed fields
   if (field === 'email_status') {
+    // Prefer explicit status from source_metadata if present
+    const metaEmailStatus = lead.source_metadata?.email_status;
+    if (metaEmailStatus !== undefined && metaEmailStatus !== null) {
+      return String(metaEmailStatus).toLowerCase() === String(value).toLowerCase();
+    }
     if (!lead.email) return value === 'no_email';
     return value === 'has_email';
   }
   
   if (field === 'phone_status') {
+    // Prefer explicit status from source_metadata if present
+    const metaPhoneStatus = lead.source_metadata?.phone_status;
+    if (metaPhoneStatus !== undefined && metaPhoneStatus !== null) {
+      return String(metaPhoneStatus).toLowerCase() === String(value).toLowerCase();
+    }
     if (!lead.phone) return value === 'no_phone';
     return value === 'has_phone';
   }

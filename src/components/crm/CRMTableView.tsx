@@ -69,23 +69,26 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
 
       if (error) throw error;
 
-      const convertedLeads: Lead[] = (data || []).map((dbLead: any) => ({
-        id: dbLead.id,
-        name: dbLead.name,
-        phone: dbLead.phone,
-        email: dbLead.email || '',
-        source: dbLead.source || 'Unknown',
-        status: dbLead.status || 'New',
-        list: dbLead.list || 'general',
-        category: dbLead.category || 'customer',
-        lastMessage: dbLead.last_message || '',
-        timestamp: new Date(dbLead.last_interaction_at || dbLead.created_at).toLocaleString(),
-        notes: dbLead.notes || '',
-        reminderDate: dbLead.reminder_date,
-        reminderNote: dbLead.reminder_note || '',
-        aiScore: dbLead.ai_score,
-        aiNextAction: dbLead.ai_next_action || ''
-      }));
+      const convertedLeads: Lead[] = (data || []).map((dbLead: any) => {
+        const ts = dbLead.last_interaction_at || dbLead.source_metadata?.last_interaction_at || dbLead.created_at || dbLead.timestamp;
+        return {
+          id: dbLead.id,
+          name: dbLead.name,
+          phone: dbLead.phone,
+          email: dbLead.email || '',
+          source: dbLead.source || 'Unknown',
+          status: dbLead.status || 'New',
+          list: dbLead.list || 'general',
+          category: dbLead.category || 'customer',
+          lastMessage: dbLead.last_message || '',
+          timestamp: ts ? new Date(ts).toLocaleString() : '',
+          notes: dbLead.notes || '',
+          reminderDate: dbLead.reminder_date,
+          reminderNote: dbLead.reminder_note || '',
+          aiScore: dbLead.ai_score,
+          aiNextAction: dbLead.ai_next_action || ''
+        };
+      });
 
       setLeads(convertedLeads);
     } catch (error: any) {
