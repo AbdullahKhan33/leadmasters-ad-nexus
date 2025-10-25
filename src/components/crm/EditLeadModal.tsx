@@ -359,12 +359,11 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
 
               <div className="space-y-2">
                 <Label htmlFor="industry">Industry</Label>
-                <Select value={formData.industry} onValueChange={(value) => handleInputChange('industry', value)}>
+                <Select value={formData.industry || undefined} onValueChange={(value) => handleInputChange('industry', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select industry" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
                     <SelectItem value="Technology">Technology</SelectItem>
                     <SelectItem value="Healthcare">Healthcare</SelectItem>
                     <SelectItem value="Finance">Finance</SelectItem>
@@ -401,12 +400,11 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
 
               <div className="space-y-2">
                 <Label htmlFor="rating">Rating</Label>
-                <Select value={formData.rating} onValueChange={(value) => handleInputChange('rating', value)}>
+                <Select value={formData.rating || undefined} onValueChange={(value) => handleInputChange('rating', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select rating" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
                     <SelectItem value="Hot">Hot</SelectItem>
                     <SelectItem value="Warm">Warm</SelectItem>
                     <SelectItem value="Cold">Cold</SelectItem>
