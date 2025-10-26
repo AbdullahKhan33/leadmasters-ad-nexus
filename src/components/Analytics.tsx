@@ -59,29 +59,29 @@ export function Analytics() {
   const keyStats = [
     { 
       title: "Total Posts", 
-      value: "247", 
-      change: "+12.3%", 
+      value: "847", 
+      change: "+23.4%", 
       isPositive: true, 
       icon: FileText 
     },
     { 
       title: "Total Ad Spend", 
-      value: "$24,847", 
-      change: "+8.5%", 
+      value: "$48,750", 
+      change: "+15.8%", 
       isPositive: true, 
       icon: DollarSign 
     },
     { 
       title: "Avg Engagement Rate", 
-      value: "6.8%", 
-      change: "+2.1%", 
+      value: "8.4%", 
+      change: "+3.7%", 
       isPositive: true, 
       icon: Heart 
     },
     { 
       title: "Total Leads", 
-      value: "3,247", 
-      change: "+18.7%", 
+      value: "5,847", 
+      change: "+28.3%", 
       isPositive: true, 
       icon: Target 
     },
@@ -89,40 +89,52 @@ export function Analytics() {
 
   // Engagement trend data
   const engagementData = [
-    { period: "Week 1", engagement: 4200 },
-    { period: "Week 2", engagement: 5800 },
-    { period: "Week 3", engagement: 4900 },
-    { period: "Week 4", engagement: 6400 },
-    { period: "Week 5", engagement: 7200 },
+    { period: "Week 1", engagement: 5420 },
+    { period: "Week 2", engagement: 6850 },
+    { period: "Week 3", engagement: 7290 },
+    { period: "Week 4", engagement: 8640 },
+    { period: "Week 5", engagement: 9520 },
+    { period: "Week 6", engagement: 8890 },
+    { period: "Week 7", engagement: 10240 },
+    { period: "Week 8", engagement: 11680 },
   ];
 
   // Top performing posts
   const topPosts = [
     {
       id: 1,
-      title: "Summer Product Launch",
+      title: "Summer Product Launch Campaign",
       platform: "Instagram",
-      likes: 2400,
-      comments: 156,
-      clicks: 890,
+      likes: 3840,
+      comments: 287,
+      clicks: 1450,
       image: "/placeholder.svg"
     },
     {
       id: 2,
-      title: "Customer Success Story",
+      title: "Customer Success Story - Enterprise",
       platform: "LinkedIn",
-      likes: 1800,
-      comments: 92,
-      clicks: 640,
+      likes: 2690,
+      comments: 156,
+      clicks: 980,
       image: "/placeholder.svg"
     },
     {
       id: 3,
-      title: "Behind the Scenes",
+      title: "Behind the Scenes - Team Culture",
       platform: "Facebook",
-      likes: 1600,
-      comments: 78,
-      clicks: 520,
+      likes: 2180,
+      comments: 142,
+      clicks: 760,
+      image: "/placeholder.svg"
+    },
+    {
+      id: 4,
+      title: "Product Demo Video",
+      platform: "Instagram",
+      likes: 1920,
+      comments: 98,
+      clicks: 645,
       image: "/placeholder.svg"
     },
   ];
@@ -153,10 +165,11 @@ export function Analytics() {
 
   // Platform breakdown data
   const platformData = [
-    { platform: "Instagram", performance: 85 },
-    { platform: "Facebook", performance: 72 },
-    { platform: "LinkedIn", performance: 68 },
-    { platform: "Twitter", performance: 54 },
+    { platform: "Instagram", performance: 88 },
+    { platform: "Facebook", performance: 76 },
+    { platform: "LinkedIn", performance: 72 },
+    { platform: "Twitter", performance: 64 },
+    { platform: "TikTok", performance: 58 },
   ];
 
   return (
