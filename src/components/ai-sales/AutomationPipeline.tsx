@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Lead } from "@/data/dummyLeads";
 import { PriorityQueueCard } from "./PriorityQueueCard";
 import { StageSummaryCard } from "./StageSummaryCard";
-import { LeadDetailModal as CRMLeadDetailModal } from "@/components/crm/LeadDetailModal";
+import { AILeadDetailModal } from "./AILeadDetailModal";
 import { TableFilters } from "./AllLeadsTableView";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -153,29 +153,7 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
 
   const selectedLead = selectedLeadId ? (leads.find(l => l.id === selectedLeadId) || null) : null;
 
-  const crmLead = useMemo(() => {
-    if (!selectedLead) return null;
-    const createdStr = selectedLead.createdAt ? selectedLead.createdAt.toLocaleString() : new Date().toLocaleString();
-    const aiScorePct = selectedLead.aiScore ? Math.round(selectedLead.aiScore * 100) : undefined;
-    return {
-      id: selectedLead.id,
-      name: selectedLead.name,
-      phone: selectedLead.phone,
-      email: selectedLead.email,
-      source: selectedLead.source,
-      status: selectedLead.status || 'New',
-      list: (selectedLead as any).list || 'general',
-      category: (selectedLead as any).category || 'customer',
-      lastMessage: (selectedLead as any).lastMessage || '',
-      timestamp: createdStr,
-      notes: selectedLead.notes,
-      aiScore: aiScorePct,
-      aiNextAction: (selectedLead as any).aiNextAction,
-      source_metadata: (selectedLead as any).source_metadata,
-    } as any;
-  }, [selectedLead]);
-
-  const handleCrmUpdate = async (leadId: string, updates: any) => {
+  const handleLeadUpdate = async (leadId: string, updates: any) => {
     try {
       const payload: any = {
         name: updates.name,
@@ -236,11 +214,11 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
       </div>
 
       {/* Lead Detail Modal */}
-      <CRMLeadDetailModal
-        lead={crmLead}
+      <AILeadDetailModal
+        lead={selectedLead}
         isOpen={selectedLeadId !== null}
         onClose={() => setSelectedLeadId(null)}
-        onUpdate={handleCrmUpdate}
+        onUpdate={handleLeadUpdate}
       />
     </div>
   );
