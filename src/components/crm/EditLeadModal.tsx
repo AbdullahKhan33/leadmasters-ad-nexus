@@ -522,12 +522,12 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
 
               <div className="space-y-2">
                 <Label htmlFor="assignedAgent">Assign to Agent</Label>
-                <Select value={formData.assignedAgentId} onValueChange={(value) => handleInputChange('assignedAgentId', value)}>
+                <Select value={formData.assignedAgentId || 'unassigned'} onValueChange={(value) => handleInputChange('assignedAgentId', value === 'unassigned' ? '' : value)}>
                   <SelectTrigger id="assignedAgent">
                     <SelectValue placeholder="Select agent (optional)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Unassigned</SelectItem>
+                    <SelectItem value="unassigned">Unassigned</SelectItem>
                     {agents.map(agent => (
                       <SelectItem key={agent.id} value={agent.id}>
                         {agent.display_name || agent.email || agent.agent_code}
