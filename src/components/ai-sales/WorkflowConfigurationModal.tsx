@@ -467,22 +467,92 @@ export function WorkflowConfigurationModal({
               </div>
             </div>
 
+            {/* Section 2: Template Selection */}
+            <div className="bg-card rounded-lg p-6 border shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-sm">
+                  <span className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">2</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Template Selection</h3>
+                  <p className="text-sm text-muted-foreground">Choose the template sequence to use for this campaign</p>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {sequences.length === 0 ? (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      No sequences found. Create workflow sequences in Templates to use here.
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <Select value={selectedSequenceId} onValueChange={handleSequenceChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a sequence..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sequences.map((seq) => (
+                        <SelectItem key={seq.id} value={seq.id}>
+                          {seq.name} ({seq.total_steps} steps)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+
+                {selectedSequence && (
+                  <div className="bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20 rounded-lg p-4 border-2 border-purple-200/50 dark:border-purple-800/50 shadow-sm">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="font-semibold text-base">{selectedSequence.name}</p>
+                      <Badge variant="outline" className="bg-white dark:bg-gray-900 shadow-sm">
+                        <Layers className="w-3 h-3 mr-1" />
+                        {selectedSequence.total_steps} steps
+                      </Badge>
+                    </div>
+                    {selectedSequence.description && (
+                      <p className="text-sm text-muted-foreground mb-3">{selectedSequence.description}</p>
+                    )}
+                    <div className="flex items-center gap-4 text-sm pt-2 border-t border-purple-200/50">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4 text-purple-600" />
+                        <span className="font-medium">{formatDuration(selectedSequence.total_duration_hours)}</span>
+                      </div>
+                      {selectedSequence.email_count > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          <Mail className="w-4 h-4 text-purple-600" />
+                          <span className="font-medium">{selectedSequence.email_count} emails</span>
+                        </div>
+                      )}
+                      {selectedSequence.whatsapp_count > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          <MessageSquare className="w-4 h-4 text-purple-600" />
+                          <span className="font-medium">{selectedSequence.whatsapp_count} WhatsApp</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Action Buttons */}
             <div className="flex justify-end gap-2 pt-2 border-t">
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              {workflowStatus === 'draft' && selectedSegmentId && eligibleLeadsCount > 0 && (
+              {workflowStatus === 'draft' && canLaunch && (
                 <Button 
                   onClick={handleLaunch}
                   disabled={isSubmitting}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
                 >
                   <Play className="w-4 h-4 mr-2" />
                   Launch Campaign
                 </Button>
               )}
-              {workflowStatus === 'draft' && selectedSegmentId && !eligibleLeadsCount && (
+              {workflowStatus === 'draft' && !canLaunch && (
                 <Button onClick={handleSave} disabled={isSubmitting}>
                   Save Configuration
                 </Button>
