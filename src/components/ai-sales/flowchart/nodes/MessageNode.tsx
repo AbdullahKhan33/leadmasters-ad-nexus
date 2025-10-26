@@ -44,12 +44,17 @@ export const MessageNode = memo(({ data, id }: NodeProps) => {
       </div>
       <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
       {isHovered && (
-        <button
-          onClick={handlePlusClick}
-          className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-lg transition-all z-10 animate-in fade-in zoom-in duration-200"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
+        <>
+          {/* Connecting line */}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 w-0.5 h-8 bg-blue-500/50 z-10" />
+          {/* Plus button */}
+          <button
+            onClick={handlePlusClick}
+            className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-lg transition-all z-10 animate-in fade-in zoom-in duration-200"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+        </>
       )}
     </div>
   );

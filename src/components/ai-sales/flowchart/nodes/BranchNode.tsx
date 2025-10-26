@@ -72,17 +72,21 @@ export const BranchNode = memo(({ data, id }: NodeProps) => {
       </div>
       {isHovered && (
         <>
+          {/* Connecting lines */}
+          <div className="absolute top-full left-[30%] -translate-x-1/2 w-0.5 h-8 bg-green-500/50 z-10" />
+          <div className="absolute top-full left-[70%] -translate-x-1/2 w-0.5 h-8 bg-red-500/50 z-10" />
+          {/* Plus buttons */}
           <button
             onClick={handlePlusClickYes}
-            className="absolute -bottom-3 left-[30%] -translate-x-1/2 w-6 h-6 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center shadow-lg transition-all z-10 animate-in fade-in zoom-in duration-200"
+            className="absolute -bottom-10 left-[30%] -translate-x-1/2 w-8 h-8 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center shadow-lg transition-all z-10 animate-in fade-in zoom-in duration-200"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </button>
           <button
             onClick={handlePlusClickNo}
-            className="absolute -bottom-3 left-[70%] -translate-x-1/2 w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-lg transition-all z-10 animate-in fade-in zoom-in duration-200"
+            className="absolute -bottom-10 left-[70%] -translate-x-1/2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-lg transition-all z-10 animate-in fade-in zoom-in duration-200"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-5 h-5" />
           </button>
         </>
       )}

@@ -63,7 +63,6 @@ export function FlowchartCampaignBuilder({
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [showNodeSelector, setShowNodeSelector] = useState(false);
-  const [selectorPosition, setSelectorPosition] = useState({ x: 0, y: 0 });
   const [addingFromNodeId, setAddingFromNodeId] = useState<string | null>(null);
   const [branchHandle, setBranchHandle] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -135,20 +134,10 @@ export function FlowchartCampaignBuilder({
   }, [nodes]);
 
   const handleAddNodeClick = useCallback((sourceNodeId: string, handle?: string) => {
-    const sourceNode = nodes.find((n) => n.id === sourceNodeId);
-    if (!sourceNode) return;
-
-    const bounds = reactFlowWrapper.current?.getBoundingClientRect();
-    if (bounds) {
-      setSelectorPosition({
-        x: sourceNode.position.x,
-        y: sourceNode.position.y + 150,
-      });
-      setAddingFromNodeId(sourceNodeId);
-      setBranchHandle(handle || null);
-      setShowNodeSelector(true);
-    }
-  }, [nodes]);
+    setAddingFromNodeId(sourceNodeId);
+    setBranchHandle(handle || null);
+    setShowNodeSelector(true);
+  }, []);
 
   const handleAddNode = (nodeType: string) => {
     const sourceNode = nodes.find((n) => n.id === addingFromNodeId);
@@ -322,7 +311,7 @@ export function FlowchartCampaignBuilder({
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
-          fitView
+          defaultViewport={{ x: 250, y: 100, zoom: 0.75 }}
           className="bg-muted/10"
         >
           <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
@@ -353,25 +342,15 @@ export function FlowchartCampaignBuilder({
         </ReactFlow>
 
         {/* Node Type Selector */}
-        {showNodeSelector && (
-          <div
-            style={{
-              position: "absolute",
-              left: selectorPosition.x,
-              top: selectorPosition.y,
-              zIndex: 1000,
-            }}
-          >
-            <NodeTypeSelector
-              onSelect={handleAddNode}
-              onClose={() => {
-                setShowNodeSelector(false);
-                setAddingFromNodeId(null);
-                setBranchHandle(null);
-              }}
-            />
-          </div>
-        )}
+        <NodeTypeSelector
+          open={showNodeSelector}
+          onSelect={handleAddNode}
+          onClose={() => {
+            setShowNodeSelector(false);
+            setAddingFromNodeId(null);
+            setBranchHandle(null);
+          }}
+        />
 
         {/* Node Configuration Panel */}
         <NodeConfigPanel
