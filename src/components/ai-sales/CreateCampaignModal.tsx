@@ -81,8 +81,17 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      // Determine the type based on campaign tier
-      const campaignType = campaignTier === "quick" ? quickTemplate : campaignTier;
+      // Determine type based on campaign tier (align with DB constraint)
+      let campaignType: string;
+      if (campaignTier === "quick") {
+        campaignType = quickTemplate;
+      } else if (campaignTier === "custom_linear") {
+        campaignType = "custom";
+      } else if (campaignTier === "advanced_branching") {
+        campaignType = "ai_automation";
+      } else {
+        campaignType = "custom";
+      }
 
       const { data, error } = await supabase
         .from('automation_workflows')
@@ -113,7 +122,7 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
       setQuickTemplate("no_reply");
       
       // If advanced branching, open flowchart builder
-      const shouldOpenFlowchart = campaignType === "advanced_branching";
+      const shouldOpenFlowchart = campaignTier === "advanced_branching";
       onCampaignCreated(data.id, shouldOpenFlowchart);
       onClose();
     } catch (error: any) {
