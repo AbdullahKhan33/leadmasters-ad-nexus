@@ -467,37 +467,12 @@ export function WorkflowConfigurationModal({
               </div>
             </div>
 
-            {/* Section 2: Workflow Design */}
-            <div className="bg-card rounded-lg p-6 border shadow-md hover:shadow-lg transition-shadow">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-sm">
-                  <span className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">2</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg">Workflow Design</h3>
-                  <p className="text-sm text-muted-foreground">Visual flowchart with messages, delays, and branches</p>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20 rounded-lg p-4 border-2 border-purple-200/50 dark:border-purple-800/50">
-                <div className="flex items-center gap-3">
-                  <GitBranch className="w-5 h-5 text-purple-600" />
-                  <div>
-                    <p className="font-medium text-sm mb-1">Custom flowchart designed</p>
-                    <p className="text-xs text-muted-foreground">
-                      Your workflow logic, messages, and branching paths are configured in the visual editor
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             {/* Action Buttons */}
             <div className="flex justify-end gap-2 pt-2 border-t">
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              {workflowStatus === 'draft' && canLaunch && (
+              {workflowStatus === 'draft' && selectedSegmentId && eligibleLeadsCount > 0 && (
                 <Button 
                   onClick={handleLaunch}
                   disabled={isSubmitting}
@@ -507,9 +482,14 @@ export function WorkflowConfigurationModal({
                   Launch Campaign
                 </Button>
               )}
-              {isConfigured && workflowStatus === 'draft' && !canLaunch && (
+              {workflowStatus === 'draft' && selectedSegmentId && !eligibleLeadsCount && (
                 <Button onClick={handleSave} disabled={isSubmitting}>
                   Save Configuration
+                </Button>
+              )}
+              {workflowStatus !== 'draft' && (
+                <Button onClick={handleSave} disabled={isSubmitting}>
+                  Save Changes
                 </Button>
               )}
             </div>
