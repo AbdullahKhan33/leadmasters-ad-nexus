@@ -728,7 +728,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
             </Button>
             <Button 
               type="submit" 
-              className="flex-1 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
+              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

@@ -162,19 +162,11 @@ export function AILeadDetailModal({ lead, isOpen, onClose, onUpdate }: AILeadDet
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background via-background to-primary/5">
-          <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <DialogHeader className="pb-4">
             <DialogTitle className="text-2xl flex items-center gap-2">
               <Bot className="w-6 h-6 text-primary" />
               AI Sales Lead Details
             </DialogTitle>
-            <Button 
-              onClick={() => setIsEditModalOpen(true)} 
-              size="sm"
-              className="ml-auto"
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
-            </Button>
           </DialogHeader>
 
           <div className="space-y-6">
@@ -546,7 +538,7 @@ export function AILeadDetailModal({ lead, isOpen, onClose, onUpdate }: AILeadDet
             </Button>
             <Button 
               onClick={() => setIsEditModalOpen(true)}
-              className="flex-1"
+              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
             >
               <Edit className="w-4 h-4 mr-2" />
               Edit Lead
