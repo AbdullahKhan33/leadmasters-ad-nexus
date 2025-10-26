@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Bot, Workflow, Plug, TrendingUp, BarChart3, Plus, MessageCircle, UserCheck, Calendar, RefreshCw, Globe, Mail, MessageSquare, Phone, Table } from "lucide-react";
 import { AutomationPipeline } from "./ai-sales/AutomationPipeline";
 import { WorkflowTemplateCard } from "./ai-sales/WorkflowTemplateCard";
@@ -265,10 +266,142 @@ export function AISalesAutomation() {
 
           {/* Integrations Tab */}
           <TabsContent value="integrations" className="space-y-6 mt-6">
-            {/* Lead Sources Section */}
+            {/* Dubai/UAE Real Estate Portals */}
             <div>
-              <h2 className="text-xl font-semibold mb-1">Lead Source Integrations</h2>
-              <p className="text-sm text-muted-foreground mb-4">Connect platforms to automatically ingest leads</p>
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-xl font-semibold">Dubai/UAE Real Estate Portals</h2>
+                <Badge className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white">🇦🇪 UAE</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">Connect to Dubai and UAE property portals for lead ingestion</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <IntegrationCard
+                  name="Property Finder"
+                  icon={Globe}
+                  isConnected={true}
+                  status="Webhook URL configured"
+                  stats={[
+                    { label: "Last sync", value: "1 hour ago" },
+                    { label: "Leads today", value: "18" }
+                  ]}
+                  actionLabel="Test Connection"
+                />
+                <IntegrationCard
+                  name="Bayut"
+                  icon={Globe}
+                  isConnected={true}
+                  status="API key active"
+                  stats={[
+                    { label: "Last sync", value: "3 hours ago" },
+                    { label: "Leads today", value: "14" }
+                  ]}
+                  actionLabel="Reconfigure"
+                />
+                <IntegrationCard
+                  name="Dubizzle Property"
+                  icon={Globe}
+                  isConnected={false}
+                  status="Setup required"
+                  actionLabel="Connect Now"
+                />
+                <IntegrationCard
+                  name="JustProperty"
+                  icon={Globe}
+                  isConnected={false}
+                  status="Setup required"
+                  actionLabel="Connect Now"
+                />
+              </div>
+            </div>
+
+            {/* Qatar Real Estate Portals */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-xl font-semibold">Qatar Real Estate Portals</h2>
+                <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">🇶🇦 Qatar</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">Connect to Qatar property portals for lead ingestion</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <IntegrationCard
+                  name="Property Finder Qatar"
+                  icon={Globe}
+                  isConnected={true}
+                  status="Webhook configured"
+                  stats={[
+                    { label: "Last sync", value: "2 hours ago" },
+                    { label: "Leads today", value: "9" }
+                  ]}
+                  actionLabel="Test Connection"
+                />
+                <IntegrationCard
+                  name="Qatar Living"
+                  icon={Globe}
+                  isConnected={false}
+                  status="Setup required"
+                  actionLabel="Connect Now"
+                />
+                <IntegrationCard
+                  name="Saakin Qatar"
+                  icon={Globe}
+                  isConnected={false}
+                  status="Setup required"
+                  actionLabel="Connect Now"
+                />
+              </div>
+            </div>
+
+            {/* Riyadh/Saudi Arabia Real Estate Portals */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-xl font-semibold">Riyadh/Saudi Arabia Real Estate Portals</h2>
+                <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">🇸🇦 KSA</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">Connect to Saudi Arabia property portals for lead ingestion</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <IntegrationCard
+                  name="Property Finder KSA"
+                  icon={Globe}
+                  isConnected={true}
+                  status="API key active"
+                  stats={[
+                    { label: "Last sync", value: "4 hours ago" },
+                    { label: "Leads today", value: "11" }
+                  ]}
+                  actionLabel="Configure"
+                />
+                <IntegrationCard
+                  name="Bayut KSA"
+                  icon={Globe}
+                  isConnected={false}
+                  status="Setup required"
+                  actionLabel="Connect Now"
+                />
+                <IntegrationCard
+                  name="Aqar (عقار)"
+                  icon={Globe}
+                  isConnected={false}
+                  status="Setup required"
+                  actionLabel="Connect Now"
+                />
+                <IntegrationCard
+                  name="Haraj"
+                  icon={Globe}
+                  isConnected={false}
+                  status="Setup required"
+                  actionLabel="Connect Now"
+                />
+              </div>
+            </div>
+
+            {/* India Real Estate Portals */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <h2 className="text-xl font-semibold">India Real Estate Portals</h2>
+                <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">🇮🇳 India</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">Connect to Indian property portals for lead ingestion</p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <IntegrationCard
@@ -281,17 +414,6 @@ export function AISalesAutomation() {
                     { label: "Leads today", value: "12" }
                   ]}
                   actionLabel="Test Connection"
-                />
-                <IntegrationCard
-                  name="Meta Lead Ads"
-                  icon={Globe}
-                  isConnected={true}
-                  status="OAuth authorized (45 days left)"
-                  stats={[
-                    { label: "Ad accounts", value: "2 linked" },
-                    { label: "Leads today", value: "8" }
-                  ]}
-                  actionLabel="Reconnect"
                 />
                 <IntegrationCard
                   name="MagicBricks"
@@ -312,6 +434,26 @@ export function AISalesAutomation() {
                   icon={Globe}
                   isConnected={false}
                   actionLabel="Request Integration"
+                />
+              </div>
+            </div>
+
+            {/* General Lead Sources */}
+            <div>
+              <h2 className="text-xl font-semibold mb-1">General Lead Sources</h2>
+              <p className="text-sm text-muted-foreground mb-4">Connect other platforms to automatically ingest leads</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <IntegrationCard
+                  name="Meta Lead Ads"
+                  icon={Globe}
+                  isConnected={true}
+                  status="OAuth authorized (45 days left)"
+                  stats={[
+                    { label: "Ad accounts", value: "2 linked" },
+                    { label: "Leads today", value: "8" }
+                  ]}
+                  actionLabel="Reconnect"
                 />
                 <IntegrationCard
                   name="Custom API"
