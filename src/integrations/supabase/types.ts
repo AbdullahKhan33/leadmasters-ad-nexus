@@ -955,36 +955,49 @@ export type Database = {
       }
       workflow_sequence_steps: {
         Row: {
+          branch_path: string | null
           channel: string
           condition: Json | null
           created_at: string | null
           delay_hours: number
           id: string
+          parent_step_id: string | null
           sequence_id: string
           step_order: number
           template_id: string
         }
         Insert: {
+          branch_path?: string | null
           channel: string
           condition?: Json | null
           created_at?: string | null
           delay_hours?: number
           id?: string
+          parent_step_id?: string | null
           sequence_id: string
           step_order: number
           template_id: string
         }
         Update: {
+          branch_path?: string | null
           channel?: string
           condition?: Json | null
           created_at?: string | null
           delay_hours?: number
           id?: string
+          parent_step_id?: string | null
           sequence_id?: string
           step_order?: number
           template_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "workflow_sequence_steps_parent_step_id_fkey"
+            columns: ["parent_step_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_sequence_steps"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "workflow_sequence_steps_sequence_id_fkey"
             columns: ["sequence_id"]

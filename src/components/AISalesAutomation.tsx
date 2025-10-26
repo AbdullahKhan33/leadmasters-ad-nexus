@@ -93,6 +93,18 @@ export function AISalesAutomation() {
     fetchWorkflows();
   };
 
+  // Listen for flowchart open events from WorkflowTemplateCard
+  useEffect(() => {
+    const handleOpenFlowchart = (event: any) => {
+      if (event.detail) {
+        setFlowchartCampaign({ id: event.detail.id, name: event.detail.name });
+      }
+    };
+    
+    window.addEventListener('openFlowchart', handleOpenFlowchart);
+    return () => window.removeEventListener('openFlowchart', handleOpenFlowchart);
+  }, []);
+
   // If flowchart is open, render only the flowchart builder
   if (flowchartCampaign) {
     return (

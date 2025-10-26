@@ -94,10 +94,13 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
           .maybeSingle();
 
         if (!seqError && seqData) {
-          // Fetch steps
+          // Fetch steps with template data
           const { data: stepsData, error: stepsError } = await supabase
             .from('workflow_sequence_steps')
-            .select('*')
+            .select(`
+              *,
+              template:campaign_templates(*)
+            `)
             .eq('sequence_id', seqData.id)
             .order('step_order', { ascending: true });
 
@@ -108,7 +111,7 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
 
             setSequence({
               ...seqData,
-              steps: stepsData || [],
+              steps: stepsData as any || [],
               total_steps: stepsData.length,
               total_duration_hours: totalDuration,
               email_count: emailCount,
@@ -391,6 +394,7 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
         onClose={() => setIsConfigModalOpen(false)}
         workflowId={workflowId}
         workflowName={workflow.name}
+        workflowType={workflow.type}
         currentSequence={sequence}
         currentSegmentId={workflow.segment_id}
         workflowStatus={workflow.workflow_status}
@@ -400,6 +404,14 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
           fetchWorkflowData();
           onRefresh?.();
           setIsConfigModalOpen(false);
+        }}
+        onOpenFlowchart={() => {
+          // Trigger the parent component to open flowchart
+          if (window.location.pathname.includes('/app')) {
+            window.dispatchEvent(new CustomEvent('openFlowchart', { 
+              detail: { id: workflow.id, name: workflow.name }
+            }));
+          }
         }}
       />
 

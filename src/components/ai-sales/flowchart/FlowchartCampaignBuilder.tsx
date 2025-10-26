@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import ReactFlow, {
   Node,
   Edge,
@@ -62,8 +62,49 @@ export function FlowchartCampaignBuilder({
   const [showNodeSelector, setShowNodeSelector] = useState(false);
   const [selectorPosition, setSelectorPosition] = useState({ x: 0, y: 0 });
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Load existing flowchart on mount
+  useEffect(() => {
+    loadFlowchart();
+  }, [campaignId]);
+
+  const loadFlowchart = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("automation_workflows")
+        .select("actions")
+        .eq("id", campaignId)
+        .single();
+
+      if (error) throw error;
+
+      if (data?.actions && typeof data.actions === 'object' && 'flowchart' in data.actions) {
+        const flowData = (data.actions as any).flowchart;
+        if (flowData?.nodes && flowData?.edges) {
+          setNodes(flowData.nodes);
+          setEdges(flowData.edges.map((edge: any) => ({
+            ...edge,
+            type: "smoothstep",
+            animated: true,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+            },
+          })));
+        }
+      }
+    } catch (error: any) {
+      console.error("Error loading flowchart:", error);
+      toast({
+        title: "Info",
+        description: "Starting with a blank canvas",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -154,6 +195,17 @@ export function FlowchartCampaignBuilder({
       setIsSaving(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading flowchart...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 bg-background">

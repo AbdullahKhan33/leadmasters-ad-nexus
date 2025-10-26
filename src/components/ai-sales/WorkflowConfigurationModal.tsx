@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Mail, MessageSquare, Clock, Layers, AlertCircle, Users, Play, Pause, BarChart3 } from "lucide-react";
+import { Mail, MessageSquare, Clock, Layers, AlertCircle, Users, Play, Pause, BarChart3, Zap, GitBranch } from "lucide-react";
 import { WorkflowSequenceWithSteps, Segment } from "@/types/campaigns";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -20,9 +20,11 @@ interface WorkflowConfigurationModalProps {
   currentSequence: WorkflowSequenceWithSteps | null;
   currentSegmentId?: string | null;
   workflowStatus?: string;
+  workflowType?: string;
   targetLeadCount?: number;
   processedLeadCount?: number;
   onSave: () => void;
+  onOpenFlowchart?: () => void;
 }
 
 export function WorkflowConfigurationModal({
@@ -33,9 +35,11 @@ export function WorkflowConfigurationModal({
   currentSequence,
   currentSegmentId,
   workflowStatus = 'draft',
+  workflowType,
   targetLeadCount = 0,
   processedLeadCount = 0,
-  onSave
+  onSave,
+  onOpenFlowchart
 }: WorkflowConfigurationModalProps) {
   const { toast } = useToast();
   const { segments, isLoading: segmentsLoading } = useSegmentsData();
@@ -310,6 +314,48 @@ export function WorkflowConfigurationModal({
 
   const isConfigured = selectedSegmentId && selectedSequenceId;
   const canLaunch = isConfigured && workflowStatus === 'draft' && eligibleLeadsCount > 0;
+  const isAdvancedBranching = workflowType === 'advanced_branching';
+
+  // For advanced branching campaigns, show different UI
+  if (isAdvancedBranching) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GitBranch className="w-5 h-5" />
+              {workflowName}
+            </DialogTitle>
+            <DialogDescription>
+              Advanced Campaign with Visual Flowchart Builder
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/20 mb-4">
+              <Zap className="w-8 h-8 text-purple-600" />
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Visual Flowchart Builder</h3>
+            <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+              Design your campaign with a drag-and-drop interface. Create conditional branches, delays, and multi-channel message flows.
+            </p>
+            <Button
+              onClick={() => {
+                if (onOpenFlowchart) {
+                  onOpenFlowchart();
+                  onClose();
+                }
+              }}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            >
+              <Play className="w-4 h-4 mr-2" />
+              Open Flowchart Builder
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <>
