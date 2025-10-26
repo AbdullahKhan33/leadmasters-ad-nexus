@@ -1,10 +1,8 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import { Handle, Position, NodeProps } from "reactflow";
 import { MessageSquare, Plus } from "lucide-react";
 
 export const MessageNode = memo(({ data, id }: NodeProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   const handleClick = () => {
     if (data.onNodeClick) {
       data.onNodeClick(id);
@@ -22,8 +20,6 @@ export const MessageNode = memo(({ data, id }: NodeProps) => {
     <div
       className="relative px-4 py-3 shadow-lg rounded-lg border-2 border-blue-500 bg-card min-w-[200px] cursor-pointer hover:shadow-xl transition-all group"
       onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <Handle type="target" position={Position.Top} className="w-3 h-3" />
       <div className="flex items-start gap-2">
@@ -43,19 +39,15 @@ export const MessageNode = memo(({ data, id }: NodeProps) => {
         </div>
       </div>
       <Handle type="source" position={Position.Bottom} className="w-3 h-3" />
-      {isHovered && (
-        <>
-          {/* Connecting line */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 w-0.5 h-8 bg-blue-500/50 z-10" />
-          {/* Plus button */}
-          <button
-            onClick={handlePlusClick}
-            className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-lg transition-all z-10 animate-in fade-in zoom-in duration-200"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
-        </>
-      )}
+      {/* Connecting line */}
+      <div className="absolute top-full left-1/2 -translate-x-1/2 w-1 h-16 bg-blue-500/60 z-10" />
+      {/* Plus button */}
+      <button
+        onClick={handlePlusClick}
+        className="absolute -bottom-[72px] left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center shadow-xl transition-all z-10 border-2 border-white dark:border-gray-800"
+      >
+        <Plus className="w-5 h-5" />
+      </button>
     </div>
   );
 });
