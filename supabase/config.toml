@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.start-workflow-executions]
 verify_jwt = false
+
+[functions.process-branching-workflows]
+verify_jwt = false
