@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Lead } from "@/data/dummyLeads";
 import { PriorityQueueCard } from "./PriorityQueueCard";
 import { StageSummaryCard } from "./StageSummaryCard";
-import { LeadDetailModal } from "./LeadDetailModal";
+import { LeadDetailModal as CRMLeadDetailModal } from "@/components/crm/LeadDetailModal";
 import { TableFilters } from "./AllLeadsTableView";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -58,6 +58,8 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
           source: (dbLead.source || 'Custom API') as Lead['source'],
           stage,
           status: dbLead.status || '',
+          lastMessage: dbLead.last_message || '',
+          timestamp: new Date(dbLead.created_at).toLocaleString(),
           aiScore: aiScoreNum,
           lastContact: new Date(dbLead.last_interaction_at || dbLead.created_at),
           priority,
@@ -151,6 +153,63 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
 
   const selectedLead = selectedLeadId ? (leads.find(l => l.id === selectedLeadId) || null) : null;
 
+  const crmLead = useMemo(() => {
+    if (!selectedLead) return null;
+    const createdStr = selectedLead.createdAt ? selectedLead.createdAt.toLocaleString() : new Date().toLocaleString();
+    const aiScorePct = selectedLead.aiScore ? Math.round(selectedLead.aiScore * 100) : undefined;
+    return {
+      id: selectedLead.id,
+      name: selectedLead.name,
+      phone: selectedLead.phone,
+      email: selectedLead.email,
+      source: selectedLead.source,
+      status: selectedLead.status || 'New',
+      list: (selectedLead as any).list || 'general',
+      category: (selectedLead as any).category || 'customer',
+      lastMessage: (selectedLead as any).lastMessage || '',
+      timestamp: createdStr,
+      notes: selectedLead.notes,
+      aiScore: aiScorePct,
+      aiNextAction: (selectedLead as any).aiNextAction,
+      source_metadata: (selectedLead as any).source_metadata,
+    } as any;
+  }, [selectedLead]);
+
+  const handleCrmUpdate = async (leadId: string, updates: any) => {
+    try {
+      const payload: any = {
+        name: updates.name,
+        phone: updates.phone,
+        email: updates.email,
+        source: updates.source,
+        status: updates.status,
+        list: updates.list,
+        category: updates.category,
+        notes: updates.notes,
+        last_message: updates.lastMessage,
+        source_metadata: updates.source_metadata,
+        updated_at: new Date().toISOString(),
+      };
+      Object.keys(payload).forEach((k) => payload[k] === undefined && delete payload[k]);
+      const { error } = await supabase.from('leads').update(payload).eq('id', leadId);
+      if (error) throw error;
+      setLeads(prev => prev.map(l => l.id === leadId ? { ...l, ...{
+        name: payload.name ?? l.name,
+        phone: payload.phone ?? l.phone,
+        email: payload.email ?? l.email,
+        source: (payload.source as any) ?? l.source,
+        status: payload.status ?? l.status,
+        notes: payload.notes ?? l.notes,
+      }} : l));
+      toast({ title: 'Lead updated', description: 'Changes saved successfully.' });
+    } catch (e) {
+      console.error('Failed to update lead', e);
+      toast({ title: 'Update failed', description: 'Could not save changes', variant: 'destructive' });
+    } finally {
+      setSelectedLeadId(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Priority Queue */}
@@ -177,11 +236,11 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
       </div>
 
       {/* Lead Detail Modal */}
-      <LeadDetailModal
-        open={selectedLeadId !== null}
-        onOpenChange={(open) => !open && setSelectedLeadId(null)}
-        lead={selectedLead}
-        onLeadUpdated={() => setSelectedLeadId(null)}
+      <CRMLeadDetailModal
+        lead={crmLead}
+        isOpen={selectedLeadId !== null}
+        onClose={() => setSelectedLeadId(null)}
+        onUpdate={handleCrmUpdate}
       />
     </div>
   );
