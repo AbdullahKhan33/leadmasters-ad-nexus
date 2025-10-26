@@ -100,7 +100,11 @@ export function WorkspaceSettings({ onBackClick }: WorkspaceSettingsProps) {
 
       await updateWorkspaceRegion(activeWorkspace.id, selectedRegion);
       
-      toast.success('Workspace settings updated successfully');
+      // Force page reload to refresh workspace context
+      toast.success('Workspace settings updated! Refreshing...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error('Error updating workspace:', error);
       toast.error('Failed to update workspace settings');
