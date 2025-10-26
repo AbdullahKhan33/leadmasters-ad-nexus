@@ -319,7 +319,8 @@ export function WorkflowConfigurationModal({
   // For advanced branching campaigns, show different UI
   if (isAdvancedBranching) {
     return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <>
+        <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center justify-between">
@@ -564,6 +565,83 @@ export function WorkflowConfigurationModal({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Launch Confirmation Dialog */}
+      <AlertDialog open={showLaunchDialog} onOpenChange={setShowLaunchDialog}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center">
+                <Play className="w-5 h-5 text-white" />
+              </div>
+              Launch Campaign?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-4 pt-2">
+              <p className="text-base">
+                You're about to launch <span className="font-semibold text-foreground">{workflowName}</span>:
+              </p>
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg p-4 space-y-3 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-sm">
+                <div className="flex items-center justify-between pb-2 border-b border-blue-200/50">
+                  <span className="text-sm font-medium">Target Segment:</span>
+                  <Badge className="bg-blue-500/10 text-blue-700 border-blue-500/20">{selectedSegment?.name}</Badge>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-purple-200/50">
+                  <span className="text-sm font-medium">Message Sequence:</span>
+                  <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/20">{selectedSequence?.name}</Badge>
+                </div>
+                <div className="flex items-center justify-between pb-2 border-b border-emerald-200/50">
+                  <span className="text-sm font-medium">Eligible Leads:</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400 text-lg">{eligibleLeadsCount}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Total Steps:</span>
+                  <span className="font-semibold text-foreground">{selectedSequence?.total_steps}</span>
+                </div>
+              </div>
+              <p className="text-sm bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                Once launched, the campaign will automatically process leads from the selected segment.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmLaunch} 
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+            >
+              {isSubmitting ? 'Launching...' : 'Confirm Launch'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Status Change Confirmation Dialog */}
+      <AlertDialog open={showStatusChangeDialog} onOpenChange={setShowStatusChangeDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {pendingStatus === 'paused' ? 'Pause' : 'Resume'} Campaign?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingStatus === 'paused' 
+                ? 'This will pause the campaign. No new messages will be sent until you resume it.'
+                : 'This will resume the campaign and continue processing leads.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmStatusChange} 
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+            >
+              {isSubmitting ? 'Updating...' : 'Confirm'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      </>
     );
   }
 
