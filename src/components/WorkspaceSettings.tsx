@@ -22,17 +22,20 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface WorkspaceSettingsProps {
   onBackClick?: () => void;
 }
 
 export function WorkspaceSettings({ onBackClick }: WorkspaceSettingsProps) {
-  const { activeWorkspace } = useWorkspace();
+  const { activeWorkspace, updateWorkspaceRegion } = useWorkspace();
   const [workspaceName, setWorkspaceName] = useState(activeWorkspace?.name || "");
   const [description, setDescription] = useState("");
   const [selectedIndustry, setSelectedIndustry] = useState(activeWorkspace?.industry || "");
   const [selectedCountry, setSelectedCountry] = useState(activeWorkspace?.country || "");
+  const [selectedRegion, setSelectedRegion] = useState(activeWorkspace?.region || 'global');
   const [aiSuggestions, setAiSuggestions] = useState(true);
   const [smartAutomations, setSmartAutomations] = useState(false);
   const [selectedAiModel, setSelectedAiModel] = useState("gpt-4");
@@ -64,6 +67,14 @@ export function WorkspaceSettings({ onBackClick }: WorkspaceSettingsProps) {
     { value: "claude", label: "Claude AI" }
   ];
 
+  const regions = [
+    { value: 'uae', label: '🇦🇪 UAE (Dubai)' },
+    { value: 'qatar', label: '🇶🇦 Qatar' },
+    { value: 'saudi_arabia', label: '🇸🇦 Saudi Arabia (Riyadh)' },
+    { value: 'india', label: '🇮🇳 India' },
+    { value: 'global', label: '🌍 Global (All Regions)' }
+  ];
+
   const roles = [
     { value: "admin", label: "Admin" },
     { value: "editor", label: "Editor" },
@@ -75,6 +86,26 @@ export function WorkspaceSettings({ onBackClick }: WorkspaceSettingsProps) {
     { id: 2, name: "Sarah Wilson", email: "sarah@company.com", role: "editor" },
     { id: 3, name: "Mike Johnson", email: "mike@company.com", role: "viewer" }
   ];
+
+  const handleSaveSettings = async () => {
+    if (!activeWorkspace) return;
+    
+    try {
+      const { error: nameError } = await supabase
+        .from('workspaces')
+        .update({ name: workspaceName })
+        .eq('id', activeWorkspace.id);
+        
+      if (nameError) throw nameError;
+
+      await updateWorkspaceRegion(activeWorkspace.id, selectedRegion);
+      
+      toast.success('Workspace settings updated successfully');
+    } catch (error) {
+      console.error('Error updating workspace:', error);
+      toast.error('Failed to update workspace settings');
+    }
+  };
 
   return (
     <div className="flex-1 p-6 bg-gray-50">
@@ -153,6 +184,18 @@ export function WorkspaceSettings({ onBackClick }: WorkspaceSettingsProps) {
               </div>
             </div>
             <div className="space-y-2">
+              <Label>Primary Operating Region</Label>
+              <CustomSelect
+                options={regions}
+                value={selectedRegion}
+                onValueChange={setSelectedRegion}
+                placeholder="Select your primary region"
+              />
+              <p className="text-xs text-muted-foreground">
+                This determines which regional portals appear in your AI Sales Automation integrations
+              </p>
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="description">Short Description</Label>
               <Textarea
                 id="description"
@@ -163,6 +206,12 @@ export function WorkspaceSettings({ onBackClick }: WorkspaceSettingsProps) {
                 rows={3}
               />
             </div>
+            <Button 
+              onClick={handleSaveSettings}
+              className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white"
+            >
+              Save Changes
+            </Button>
           </CardContent>
         </Card>
 

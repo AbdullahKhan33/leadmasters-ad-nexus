@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bot, Workflow, Plug, TrendingUp, BarChart3, Plus, MessageCircle, UserCheck, Calendar, RefreshCw, Globe, Mail, MessageSquare, Phone, Table } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Bot, Workflow, Plug, TrendingUp, BarChart3, Plus, MessageCircle, UserCheck, Calendar, RefreshCw, Globe, Mail, MessageSquare, Phone, Table, Info, Settings } from "lucide-react";
 import { AutomationPipeline } from "./ai-sales/AutomationPipeline";
 import { WorkflowTemplateCard } from "./ai-sales/WorkflowTemplateCard";
 import { IntegrationCard } from "./ai-sales/IntegrationCard";
@@ -13,6 +14,8 @@ import { FlowchartCampaignBuilder } from "./ai-sales/flowchart/FlowchartCampaign
 import { AllLeadsTableView, TableFilters } from "./ai-sales/AllLeadsTableView";
 import { Lead } from "@/data/dummyLeads";
 import { supabase } from "@/integrations/supabase/client";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
+import { useNavigate } from "react-router-dom";
 
 interface WorkflowData {
   id: string;
@@ -24,6 +27,8 @@ interface WorkflowData {
 }
 
 export function AISalesAutomation() {
+  const { activeWorkspace } = useWorkspace();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>('pipeline');
   const [tableFilters, setTableFilters] = useState<Partial<TableFilters> | null>(null);
   const [workflows, setWorkflows] = useState<WorkflowData[]>([]);
@@ -31,6 +36,8 @@ export function AISalesAutomation() {
   const [newlyCreatedWorkflowId, setNewlyCreatedWorkflowId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused' | 'draft'>('all');
   const [flowchartCampaign, setFlowchartCampaign] = useState<{ id: string; name: string } | null>(null);
+  
+  const workspaceRegion = activeWorkspace?.region || 'global';
 
   useEffect(() => {
     if (activeTab === 'workflows') {
@@ -266,7 +273,46 @@ export function AISalesAutomation() {
 
           {/* Integrations Tab */}
           <TabsContent value="integrations" className="space-y-6 mt-6">
+            {/* Region Selector / Alert */}
+            {workspaceRegion === 'global' ? (
+              <Alert className="border-purple-200 bg-purple-50">
+                <Info className="h-4 w-4 text-purple-600" />
+                <AlertTitle className="text-purple-900">Set Your Region</AlertTitle>
+                <AlertDescription className="text-purple-700">
+                  To see only relevant portals for your market, set your primary operating region in{' '}
+                  <button 
+                    onClick={() => navigate('/app/settings')} 
+                    className="underline font-medium hover:text-purple-900"
+                  >
+                    Workspace Settings
+                  </button>
+                  . Currently showing all regions.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-sm font-medium border-purple-300 bg-white">
+                    {workspaceRegion === 'uae' && '🇦🇪 Showing UAE Portals'}
+                    {workspaceRegion === 'qatar' && '🇶🇦 Showing Qatar Portals'}
+                    {workspaceRegion === 'saudi_arabia' && '🇸🇦 Showing Saudi Arabia Portals'}
+                    {workspaceRegion === 'india' && '🇮🇳 Showing India Portals'}
+                  </Badge>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => navigate('/app/settings')}
+                  className="text-purple-600 hover:text-purple-700 hover:bg-purple-100"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Change Region
+                </Button>
+              </div>
+            )}
+
             {/* Dubai/UAE Real Estate Portals */}
+            {(workspaceRegion === 'uae' || workspaceRegion === 'global') && (
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <h2 className="text-xl font-semibold">Dubai/UAE Real Estate Portals</h2>
@@ -313,8 +359,10 @@ export function AISalesAutomation() {
                 />
               </div>
             </div>
+            )}
 
             {/* Qatar Real Estate Portals */}
+            {(workspaceRegion === 'qatar' || workspaceRegion === 'global') && (
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <h2 className="text-xl font-semibold">Qatar Real Estate Portals</h2>
@@ -350,8 +398,10 @@ export function AISalesAutomation() {
                 />
               </div>
             </div>
+            )}
 
             {/* Riyadh/Saudi Arabia Real Estate Portals */}
+            {(workspaceRegion === 'saudi_arabia' || workspaceRegion === 'global') && (
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <h2 className="text-xl font-semibold">Riyadh/Saudi Arabia Real Estate Portals</h2>
@@ -394,8 +444,10 @@ export function AISalesAutomation() {
                 />
               </div>
             </div>
+            )}
 
             {/* India Real Estate Portals */}
+            {(workspaceRegion === 'india' || workspaceRegion === 'global') && (
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <h2 className="text-xl font-semibold">India Real Estate Portals</h2>
@@ -437,6 +489,7 @@ export function AISalesAutomation() {
                 />
               </div>
             </div>
+            )}
 
             {/* General Lead Sources */}
             <div>

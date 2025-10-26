@@ -12,6 +12,7 @@ interface Workspace {
   businessType: string;
   memberCount: number;
   isActive: boolean;
+  region?: string;
 }
 
 interface WorkspaceContextType {
@@ -21,6 +22,7 @@ interface WorkspaceContextType {
   selectWorkspace: (workspace: Workspace) => void;
   addWorkspace: (workspace: Workspace) => Promise<Workspace | null>;
   deleteWorkspace: (workspaceId: string) => void;
+  updateWorkspaceRegion: (workspaceId: string, region: string) => Promise<void>;
   isInWorkspace: boolean;
   hasWorkspaces: boolean;
   userRole: string | null;
@@ -96,7 +98,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
             
             const { data: assignedWorkspaces, error: workspacesError } = await supabase
               .from('workspaces')
-              .select('id, name, description')
+              .select('id, name, description, region')
               .in('id', workspaceIds);
 
             if (workspacesError) {
@@ -113,7 +115,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
               industry: '',
               businessType: '',
               memberCount: 0,
-              isActive: true
+              isActive: true,
+              region: ws.region || 'global'
             })) || [];
 
             setWorkspaces(formattedWorkspaces);
@@ -127,7 +130,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           // For admins, load workspaces from database first, then fallback to localStorage
           const { data: adminWorkspaces, error: workspacesError } = await supabase
             .from('workspaces')
-            .select('id, name, description')
+            .select('id, name, description, region')
             .eq('created_by', user.id);
 
           if (workspacesError) {
@@ -144,7 +147,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
               industry: '',
               businessType: '',
               memberCount: 0,
-              isActive: true
+              isActive: true,
+              region: ws.region || 'global'
             }));
 
             setWorkspaces(formattedWorkspaces);
@@ -276,6 +280,29 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const updateWorkspaceRegion = async (workspaceId: string, region: string) => {
+    try {
+      const { error } = await supabase
+        .from('workspaces')
+        .update({ region })
+        .eq('id', workspaceId);
+        
+      if (error) throw error;
+      
+      // Update local state
+      setWorkspaces(prev => prev.map(ws => 
+        ws.id === workspaceId ? { ...ws, region } : ws
+      ));
+      
+      if (activeWorkspace?.id === workspaceId) {
+        setActiveWorkspace({ ...activeWorkspace, region });
+      }
+    } catch (error) {
+      console.error('Error updating workspace region:', error);
+      throw error;
+    }
+  };
+
   const value = {
     activeWorkspace,
     workspaces,
@@ -283,6 +310,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     selectWorkspace,
     addWorkspace,
     deleteWorkspace,
+    updateWorkspaceRegion,
     isInWorkspace: activeWorkspace !== null,
     hasWorkspaces: workspaces.length > 0,
     userRole,
