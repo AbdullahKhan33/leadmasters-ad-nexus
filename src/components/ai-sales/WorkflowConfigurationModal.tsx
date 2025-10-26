@@ -551,12 +551,17 @@ export function WorkflowConfigurationModal({
                 <Button 
                   onClick={handleLaunch} 
                   disabled={isSubmitting || !canLaunch}
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
                 >
                   <Play className="w-4 h-4 mr-2" />
                   {isSubmitting ? 'Launching...' : 'Launch Campaign'}
                 </Button>
               ) : (
-                <Button onClick={handleSave} disabled={isSubmitting}>
+                <Button 
+                  onClick={handleSave} 
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                >
                   {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </Button>
               )}
@@ -597,7 +602,11 @@ export function WorkflowConfigurationModal({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmLaunch} disabled={isSubmitting}>
+            <AlertDialogAction 
+              onClick={confirmLaunch} 
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+            >
               {isSubmitting ? 'Launching...' : 'Confirm Launch'}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -619,7 +628,11 @@ export function WorkflowConfigurationModal({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmStatusChange} disabled={isSubmitting}>
+            <AlertDialogAction 
+              onClick={confirmStatusChange} 
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+            >
               {isSubmitting ? 'Updating...' : 'Confirm'}
             </AlertDialogAction>
           </AlertDialogFooter>

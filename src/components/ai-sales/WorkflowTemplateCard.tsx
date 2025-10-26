@@ -317,7 +317,7 @@ export function WorkflowTemplateCard({ workflowId, onRefresh }: WorkflowTemplate
           {/* Action buttons */}
           {isDraft && isConfigured && (
             <Button
-              className="w-full"
+              className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
               onClick={() => setIsConfigModalOpen(true)}
             >
               <Rocket className="w-4 h-4 mr-2" />
