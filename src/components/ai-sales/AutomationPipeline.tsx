@@ -6,6 +6,7 @@ import { LeadDetailModal } from "./LeadDetailModal";
 import { TableFilters } from "./AllLeadsTableView";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { ensureSeedAiAutomationLeads } from "@/utils/seedAiLeads";
 
 interface AutomationPipelineProps {
   onNavigateToTable: (filters: Partial<TableFilters>) => void;
@@ -85,7 +86,10 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
   };
 
   useEffect(() => {
-    fetchLeads();
+    (async () => {
+      await ensureSeedAiAutomationLeads(150);
+      await fetchLeads();
+    })();
   }, []);
 
   const stages: Lead['stage'][] = ['new', 'no-reply', 'qualified', 'nurturing', 'long-term', 'won'];
