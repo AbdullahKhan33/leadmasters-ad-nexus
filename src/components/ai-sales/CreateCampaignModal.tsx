@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Bell, Target, Clock, Sparkles } from "lucide-react";
+import { Zap, Workflow, GitBranch, Bell, Target, Clock } from "lucide-react";
 
 interface CreateCampaignModalProps {
   isOpen: boolean;
@@ -18,11 +19,33 @@ interface CreateCampaignModalProps {
 export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: CreateCampaignModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState("no_reply");
+  const [campaignTier, setCampaignTier] = useState<"quick" | "custom_linear" | "advanced_branching">("quick");
+  const [quickTemplate, setQuickTemplate] = useState("no_reply");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const campaignTypes = [
+  const campaignTiers = [
+    {
+      value: "quick" as const,
+      label: "Quick Campaign",
+      description: "Select from pre-configured templates for common scenarios",
+      icon: Zap,
+    },
+    {
+      value: "custom_linear" as const,
+      label: "Custom Campaign (Linear)",
+      description: "Build a simple step-by-step sequence without branching",
+      icon: Workflow,
+    },
+    {
+      value: "advanced_branching" as const,
+      label: "Advanced Campaign (Branching)",
+      description: "Visual flowchart builder with conditional logic and branching paths",
+      icon: GitBranch,
+    },
+  ];
+
+  const quickTemplates = [
     {
       value: "no_reply",
       label: "No Reply Follow-up",
@@ -41,12 +64,6 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
       description: "Re-engage leads that have gone cold",
       icon: Clock,
     },
-    {
-      value: "custom",
-      label: "Custom Campaign",
-      description: "Build your own custom automation flow",
-      icon: Sparkles,
-    },
   ];
 
   const handleCreate = async () => {
@@ -64,13 +81,16 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
+      // Determine the type based on campaign tier
+      const campaignType = campaignTier === "quick" ? quickTemplate : campaignTier;
+
       const { data, error } = await supabase
         .from('automation_workflows')
         .insert({
           user_id: user.id,
           name: name.trim(),
           description: description.trim() || null,
-          type: type,
+          type: campaignType,
           workflow_status: 'draft',
           trigger_config: {},
           actions: {},
@@ -89,7 +109,8 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
       // Reset form
       setName("");
       setDescription("");
-      setType("no_reply");
+      setCampaignTier("quick");
+      setQuickTemplate("no_reply");
       
       onCampaignCreated(data.id);
       onClose();
@@ -137,32 +158,59 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label>Campaign Type *</Label>
-            <RadioGroup value={type} onValueChange={setType}>
-              {campaignTypes.map((campaignType) => {
-                const Icon = campaignType.icon;
+            <RadioGroup value={campaignTier} onValueChange={(value) => setCampaignTier(value as any)}>
+              {campaignTiers.map((tier) => {
+                const Icon = tier.icon;
                 return (
                   <div
-                    key={campaignType.value}
-                    className="flex items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent cursor-pointer"
-                    onClick={() => setType(campaignType.value)}
+                    key={tier.value}
+                    className="flex items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent cursor-pointer transition-colors"
+                    onClick={() => setCampaignTier(tier.value)}
                   >
-                    <RadioGroupItem value={campaignType.value} id={campaignType.value} />
+                    <RadioGroupItem value={tier.value} id={tier.value} />
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <Icon className="w-4 h-4 text-primary" />
-                        <Label htmlFor={campaignType.value} className="font-medium cursor-pointer">
-                          {campaignType.label}
+                        <Label htmlFor={tier.value} className="font-medium cursor-pointer">
+                          {tier.label}
                         </Label>
                       </div>
-                      <p className="text-sm text-muted-foreground">{campaignType.description}</p>
+                      <p className="text-sm text-muted-foreground">{tier.description}</p>
                     </div>
                   </div>
                 );
               })}
             </RadioGroup>
           </div>
+
+          {campaignTier === "quick" && (
+            <div className="space-y-2">
+              <Label htmlFor="quick-template">Select Template</Label>
+              <Select value={quickTemplate} onValueChange={setQuickTemplate}>
+                <SelectTrigger id="quick-template">
+                  <SelectValue placeholder="Choose a template" />
+                </SelectTrigger>
+                <SelectContent>
+                  {quickTemplates.map((template) => {
+                    const Icon = template.icon;
+                    return (
+                      <SelectItem key={template.value} value={template.value}>
+                        <div className="flex items-center gap-2">
+                          <Icon className="w-4 h-4" />
+                          <span>{template.label}</span>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {quickTemplates.find(t => t.value === quickTemplate)?.description}
+              </p>
+            </div>
+          )}
         </div>
 
         <DialogFooter>
