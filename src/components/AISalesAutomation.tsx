@@ -18,6 +18,7 @@ interface WorkflowData {
   description: string;
   type: string;
   is_active: boolean;
+  workflow_status: string;
 }
 
 export function AISalesAutomation() {
@@ -26,6 +27,7 @@ export function AISalesAutomation() {
   const [workflows, setWorkflows] = useState<WorkflowData[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newlyCreatedWorkflowId, setNewlyCreatedWorkflowId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused' | 'draft'>('all');
 
   useEffect(() => {
     if (activeTab === 'workflows') {
@@ -37,7 +39,7 @@ export function AISalesAutomation() {
     try {
       const { data, error } = await supabase
         .from('automation_workflows')
-        .select('id, name, description, type, is_active')
+        .select('id, name, description, type, is_active, workflow_status')
         .order('name');
       
       if (error) throw error;
@@ -46,6 +48,16 @@ export function AISalesAutomation() {
       console.error('Error fetching workflows:', error);
     }
   };
+
+  const getFilteredWorkflows = () => {
+    if (statusFilter === 'all') return workflows;
+    if (statusFilter === 'active') return workflows.filter(w => w.workflow_status === 'active');
+    if (statusFilter === 'paused') return workflows.filter(w => w.workflow_status === 'paused');
+    if (statusFilter === 'draft') return workflows.filter(w => w.workflow_status === 'draft');
+    return workflows;
+  };
+
+  const filteredWorkflows = getFilteredWorkflows();
 
   const handleNavigateToTable = (filters: Partial<TableFilters>) => {
     setTableFilters(filters);
@@ -145,9 +157,11 @@ export function AISalesAutomation() {
 
             <CampaignStatusSummary
               total={workflows.length}
-              active={workflows.filter(w => w.is_active).length}
-              paused={0}
-              draft={workflows.filter(w => !w.is_active).length}
+              active={workflows.filter(w => w.workflow_status === 'active').length}
+              paused={workflows.filter(w => w.workflow_status === 'paused').length}
+              draft={workflows.filter(w => w.workflow_status === 'draft').length}
+              onFilterChange={setStatusFilter}
+              selectedFilter={statusFilter}
             />
 
             {workflows.length === 0 ? (
@@ -168,17 +182,31 @@ export function AISalesAutomation() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {workflows.map((workflow) => (
-                  <WorkflowTemplateCard
-                    key={workflow.id}
-                    workflowId={workflow.id}
-                    onRefresh={fetchWorkflows}
-                    autoOpenConfig={workflow.id === newlyCreatedWorkflowId}
-                    onConfigOpened={() => setNewlyCreatedWorkflowId(null)}
-                  />
-                ))}
-              </div>
+              <>
+                {filteredWorkflows.length === 0 ? (
+                  <div className="text-center py-12 border-2 border-dashed rounded-lg">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+                      <MessageSquare className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">No campaigns match this filter</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Try selecting a different status or create a new campaign
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredWorkflows.map((workflow) => (
+                      <WorkflowTemplateCard
+                        key={workflow.id}
+                        workflowId={workflow.id}
+                        onRefresh={fetchWorkflows}
+                        autoOpenConfig={workflow.id === newlyCreatedWorkflowId}
+                        onConfigOpened={() => setNewlyCreatedWorkflowId(null)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </TabsContent>
 

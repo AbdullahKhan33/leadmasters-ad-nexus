@@ -6,9 +6,11 @@ interface CampaignStatusSummaryProps {
   active: number;
   paused: number;
   draft: number;
+  onFilterChange?: (status: 'all' | 'active' | 'paused' | 'draft') => void;
+  selectedFilter?: 'all' | 'active' | 'paused' | 'draft';
 }
 
-export function CampaignStatusSummary({ total, active, paused, draft }: CampaignStatusSummaryProps) {
+export function CampaignStatusSummary({ total, active, paused, draft, onFilterChange, selectedFilter = 'all' }: CampaignStatusSummaryProps) {
   const stats = [
     {
       label: "Total Campaigns",
@@ -16,6 +18,7 @@ export function CampaignStatusSummary({ total, active, paused, draft }: Campaign
       icon: FileText,
       bgColor: "bg-primary/10",
       textColor: "text-primary",
+      filterKey: 'all' as const,
     },
     {
       label: "Active",
@@ -23,6 +26,7 @@ export function CampaignStatusSummary({ total, active, paused, draft }: Campaign
       icon: Play,
       bgColor: "bg-emerald-500/10",
       textColor: "text-emerald-600",
+      filterKey: 'active' as const,
     },
     {
       label: "Paused",
@@ -30,6 +34,7 @@ export function CampaignStatusSummary({ total, active, paused, draft }: Campaign
       icon: Pause,
       bgColor: "bg-amber-500/10",
       textColor: "text-amber-600",
+      filterKey: 'paused' as const,
     },
     {
       label: "Draft",
@@ -37,6 +42,7 @@ export function CampaignStatusSummary({ total, active, paused, draft }: Campaign
       icon: CheckCircle,
       bgColor: "bg-muted",
       textColor: "text-muted-foreground",
+      filterKey: 'draft' as const,
     },
   ];
 
@@ -44,15 +50,22 @@ export function CampaignStatusSummary({ total, active, paused, draft }: Campaign
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
       {stats.map((stat) => {
         const Icon = stat.icon;
+        const isSelected = selectedFilter === stat.filterKey;
         return (
-          <Card key={stat.label}>
+          <Card 
+            key={stat.label}
+            className={`cursor-pointer transition-all duration-200 shadow-md hover:shadow-lg ${
+              isSelected ? 'ring-2 ring-primary shadow-lg' : ''
+            }`}
+            onClick={() => onFilterChange?.(stat.filterKey)}
+          >
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">{stat.label}</p>
                   <p className="text-3xl font-bold">{stat.value}</p>
                 </div>
-                <div className={`w-12 h-12 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
+                <div className={`w-12 h-12 rounded-lg ${stat.bgColor} flex items-center justify-center shadow-sm`}>
                   <Icon className={`w-6 h-6 ${stat.textColor}`} />
                 </div>
               </div>

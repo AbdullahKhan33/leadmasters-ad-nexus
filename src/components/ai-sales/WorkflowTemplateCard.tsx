@@ -2,7 +2,18 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Layers, Clock, Mail, MessageSquare, Users, BarChart3, Rocket, Play, Pause, Settings } from "lucide-react";
+import { AlertTriangle, Layers, Clock, Mail, MessageSquare, Users, BarChart3, Rocket, Play, Pause, Settings, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { WorkflowSequenceWithSteps, Segment } from "@/types/campaigns";
 import { WorkflowConfigurationModal } from "./WorkflowConfigurationModal";
@@ -21,6 +32,8 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
   const [eligibleLeads, setEligibleLeads] = useState<number>(0);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchWorkflowData();
@@ -161,6 +174,31 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      const { error } = await supabase
+        .from('automation_workflows')
+        .delete()
+        .eq('id', workflowId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Campaign deleted",
+        description: "The campaign has been successfully deleted.",
+      });
+
+      onRefresh?.();
+    } catch (error) {
+      console.error('Error deleting workflow:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete campaign. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <>
       <Card className="hover:shadow-lg transition-all duration-200">
@@ -197,13 +235,23 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
                 <CardDescription className="mt-1">{workflow.description}</CardDescription>
               )}
             </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setIsConfigModalOpen(true)}
-            >
-              <Settings className="w-4 h-4" />
-            </Button>
+            <div className="flex gap-1">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsConfigModalOpen(true)}
+              >
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsDeleteDialogOpen(true)}
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </CardHeader>
 
@@ -354,6 +402,26 @@ export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, on
           setIsConfigModalOpen(false);
         }}
       />
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Campaign</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{workflow.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
