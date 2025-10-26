@@ -49,8 +49,10 @@ export function useWorkflowAnalytics() {
       const qualifiedLeads = leads?.filter(l => l.ai_qualification_status === 'qualified').length || 0;
       const wonLeads = leads?.filter(l => l.status === 'Won').length || 0;
 
-      // Use mock data if no real data exists
-      const useMockData = totalLeads === 0;
+      // Use mock data if there's no meaningful workflow activity
+      // (either no leads, or no responses/qualifications/executions)
+      const hasWorkflowActivity = (executions?.length || 0) > 0 || respondedLeads > 0 || qualifiedLeads > 0;
+      const useMockData = totalLeads === 0 || !hasWorkflowActivity;
       
       const responseRate = useMockData ? 68.5 : (totalLeads > 0 ? (respondedLeads / totalLeads) * 100 : 0);
       const qualificationRate = useMockData ? 42.3 : (totalLeads > 0 ? (qualifiedLeads / totalLeads) * 100 : 0);
