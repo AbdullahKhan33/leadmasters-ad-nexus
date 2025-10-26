@@ -237,7 +237,7 @@ export function AILeadDetailModal({ lead, isOpen, onClose, onUpdate }: AILeadDet
                   <div className="bg-background/50 rounded-md p-3 border border-border/50">
                     <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      Last Contact
+                      Last Contacted
                     </p>
                     <p className="text-sm font-medium">{formatTimeAgo(lead.lastContact)}</p>
                   </div>

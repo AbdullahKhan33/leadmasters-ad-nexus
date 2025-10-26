@@ -288,7 +288,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
 
   // Export to CSV
   const exportToCSV = () => {
-    const headers = ['Name', 'Phone', 'Email', 'Source', 'Stage', 'Status', 'Last Contact'];
+    const headers = ['Name', 'Phone', 'Email', 'Source', 'Stage', 'Status', 'Last Contacted'];
     
     const rows = filteredAndSortedLeads.map(lead => [
       lead.name,
@@ -740,7 +740,7 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
                 <TableHead>Stage</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Priority</TableHead>
-                <TableHead>Last Contact</TableHead>
+                <TableHead>Last Contacted</TableHead>
                 <TableHead>Assigned To</TableHead>
               </TableRow>
             </TableHeader>
