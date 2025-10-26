@@ -36,11 +36,11 @@ export function NodeTypeSelector({ onSelect, onClose }: NodeTypeSelectorProps) {
   ];
 
   return (
-    <Card className="p-2 shadow-lg border-2">
-      <div className="text-xs font-semibold px-2 py-1 text-muted-foreground">
+    <Card className="p-3 shadow-2xl border-2 bg-card backdrop-blur-sm animate-in fade-in zoom-in duration-200">
+      <div className="text-xs font-bold px-2 py-1.5 text-foreground border-b mb-2">
         Add Node
       </div>
-      <div className="space-y-1">
+      <div className="space-y-1.5 min-w-[220px]">
         {nodeTypes.map((node) => {
           const Icon = node.icon;
           return (
@@ -48,13 +48,13 @@ export function NodeTypeSelector({ onSelect, onClose }: NodeTypeSelectorProps) {
               key={node.type}
               variant="ghost"
               size="sm"
-              className="w-full justify-start text-left h-auto py-2"
+              className="w-full justify-start text-left h-auto py-2.5 hover:bg-muted/80 transition-colors"
               onClick={() => onSelect(node.type)}
             >
-              <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
+              <Icon className="w-5 h-5 mr-3 flex-shrink-0 text-primary" />
               <div className="flex-1">
-                <div className="font-medium text-xs">{node.label}</div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="font-semibold text-sm">{node.label}</div>
+                <div className="text-[11px] text-muted-foreground">
                   {node.description}
                 </div>
               </div>
@@ -62,11 +62,11 @@ export function NodeTypeSelector({ onSelect, onClose }: NodeTypeSelectorProps) {
           );
         })}
       </div>
-      <div className="border-t mt-1 pt-1">
+      <div className="border-t mt-2 pt-2">
         <Button
           variant="ghost"
           size="sm"
-          className="w-full text-xs"
+          className="w-full text-xs hover:bg-muted/80"
           onClick={onClose}
         >
           Cancel

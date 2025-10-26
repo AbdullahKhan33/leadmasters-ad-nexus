@@ -15,13 +15,14 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { X, Save, Play, Plus } from "lucide-react";
+import { X, Save } from "lucide-react";
 import { MessageNode } from "./nodes/MessageNode";
 import { DelayNode } from "./nodes/DelayNode";
 import { BranchNode } from "./nodes/BranchNode";
 import { EndNode } from "./nodes/EndNode";
 import { StartNode } from "./nodes/StartNode";
 import { NodeTypeSelector } from "./NodeTypeSelector";
+import { NodeConfigPanel } from "./NodeConfigPanel";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -59,8 +60,12 @@ export function FlowchartCampaignBuilder({
 }: FlowchartCampaignBuilderProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [showNodeSelector, setShowNodeSelector] = useState(false);
   const [selectorPosition, setSelectorPosition] = useState({ x: 0, y: 0 });
+  const [addingFromNodeId, setAddingFromNodeId] = useState<string | null>(null);
+  const [branchHandle, setBranchHandle] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -121,32 +126,104 @@ export function FlowchartCampaignBuilder({
     [setEdges]
   );
 
-  const handleAddNode = (nodeType: string) => {
-    const newNode: Node = {
-      id: `${nodeType}-${Date.now()}`,
-      type: nodeType,
-      position: selectorPosition,
-      data: {
-        label: `New ${nodeType}`,
-        content: "",
-        delay: 24,
-        condition: "",
-      },
-    };
-    setNodes((nds) => [...nds, newNode]);
-    setShowNodeSelector(false);
-  };
+  const handleNodeClick = useCallback((nodeId: string) => {
+    const node = nodes.find((n) => n.id === nodeId);
+    if (node) {
+      setSelectedNode(node);
+      setSidePanelOpen(true);
+    }
+  }, [nodes]);
 
-  const handlePaneClick = useCallback((event: React.MouseEvent) => {
+  const handleAddNodeClick = useCallback((sourceNodeId: string, handle?: string) => {
+    const sourceNode = nodes.find((n) => n.id === sourceNodeId);
+    if (!sourceNode) return;
+
     const bounds = reactFlowWrapper.current?.getBoundingClientRect();
     if (bounds) {
       setSelectorPosition({
-        x: event.clientX - bounds.left - 100,
-        y: event.clientY - bounds.top - 50,
+        x: sourceNode.position.x,
+        y: sourceNode.position.y + 150,
       });
+      setAddingFromNodeId(sourceNodeId);
+      setBranchHandle(handle || null);
       setShowNodeSelector(true);
     }
-  }, []);
+  }, [nodes]);
+
+  const handleAddNode = (nodeType: string) => {
+    const sourceNode = nodes.find((n) => n.id === addingFromNodeId);
+    if (!sourceNode) return;
+
+    const newNode: Node = {
+      id: `${nodeType}-${Date.now()}`,
+      type: nodeType,
+      position: {
+        x: sourceNode.position.x,
+        y: sourceNode.position.y + 150,
+      },
+      data: {
+        content: "",
+        delayValue: 24,
+        delayUnit: "hours",
+        conditionType: "lead_replied",
+        channel: "whatsapp",
+        onNodeClick: handleNodeClick,
+        onAddNode: handleAddNodeClick,
+      },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+
+    // Auto-create connection
+    const newEdge: Edge = {
+      id: `edge-${addingFromNodeId}-${newNode.id}-${Date.now()}`,
+      source: addingFromNodeId!,
+      target: newNode.id,
+      sourceHandle: branchHandle,
+      type: "smoothstep",
+      animated: true,
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+      },
+    };
+    setEdges((eds) => [...eds, newEdge]);
+
+    setShowNodeSelector(false);
+    setAddingFromNodeId(null);
+    setBranchHandle(null);
+
+    // Open config panel for new node
+    setSelectedNode(newNode);
+    setSidePanelOpen(true);
+  };
+
+  const handleUpdateNodeData = useCallback((nodeId: string, newData: any) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: { ...node.data, ...newData },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  // Update all existing nodes with callbacks when they change
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          onNodeClick: handleNodeClick,
+          onAddNode: handleAddNodeClick,
+        },
+      }))
+    );
+  }, [handleNodeClick, handleAddNodeClick]);
 
   const handleSaveFlow = async () => {
     setIsSaving(true);
@@ -215,7 +292,7 @@ export function FlowchartCampaignBuilder({
           <div>
             <h2 className="text-2xl font-bold">{campaignName}</h2>
             <p className="text-sm text-muted-foreground">
-              Visual Flowchart Builder - Click anywhere to add nodes
+              Visual Flowchart Builder - Click nodes to configure, hover to add next steps
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -244,7 +321,6 @@ export function FlowchartCampaignBuilder({
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
-          onPaneClick={handlePaneClick}
           nodeTypes={nodeTypes}
           fitView
           className="bg-muted/10"
@@ -257,9 +333,9 @@ export function FlowchartCampaignBuilder({
             <Card className="p-4 max-w-sm">
               <h3 className="font-semibold mb-2 text-sm">Quick Guide</h3>
               <ul className="text-xs space-y-1 text-muted-foreground">
-                <li>• Click anywhere on canvas to add nodes</li>
-                <li>• Drag from node handles to create connections</li>
-                <li>• Click nodes to edit their properties</li>
+                <li>• Hover over nodes to see + button</li>
+                <li>• Click + to add connected nodes</li>
+                <li>• Click nodes to configure settings</li>
                 <li>• Use mouse wheel to zoom in/out</li>
               </ul>
             </Card>
@@ -288,10 +364,22 @@ export function FlowchartCampaignBuilder({
           >
             <NodeTypeSelector
               onSelect={handleAddNode}
-              onClose={() => setShowNodeSelector(false)}
+              onClose={() => {
+                setShowNodeSelector(false);
+                setAddingFromNodeId(null);
+                setBranchHandle(null);
+              }}
             />
           </div>
         )}
+
+        {/* Node Configuration Panel */}
+        <NodeConfigPanel
+          open={sidePanelOpen}
+          onOpenChange={setSidePanelOpen}
+          node={selectedNode}
+          onSave={handleUpdateNodeData}
+        />
       </div>
     </div>
   );
