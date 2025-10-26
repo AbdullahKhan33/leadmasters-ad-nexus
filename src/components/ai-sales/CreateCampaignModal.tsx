@@ -13,7 +13,7 @@ import { Zap, Workflow, GitBranch, Bell, Target, Clock } from "lucide-react";
 interface CreateCampaignModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCampaignCreated: (campaignId: string) => void;
+  onCampaignCreated: (campaignId: string, openFlowchart?: boolean) => void;
 }
 
 export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: CreateCampaignModalProps) {
@@ -112,7 +112,9 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
       setCampaignTier("quick");
       setQuickTemplate("no_reply");
       
-      onCampaignCreated(data.id);
+      // If advanced branching, open flowchart builder
+      const shouldOpenFlowchart = campaignType === "advanced_branching";
+      onCampaignCreated(data.id, shouldOpenFlowchart);
       onClose();
     } catch (error: any) {
       console.error('Error creating campaign:', error);

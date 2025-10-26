@@ -8,6 +8,7 @@ import { IntegrationCard } from "./ai-sales/IntegrationCard";
 import { AutomationAnalytics } from "./ai-sales/AutomationAnalytics";
 import { CampaignStatusSummary } from "./ai-sales/CampaignStatusSummary";
 import { CreateCampaignModal } from "./ai-sales/CreateCampaignModal";
+import { FlowchartCampaignBuilder } from "./ai-sales/flowchart/FlowchartCampaignBuilder";
 import { AllLeadsTableView, TableFilters } from "./ai-sales/AllLeadsTableView";
 import { Lead } from "@/data/dummyLeads";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,6 +29,7 @@ export function AISalesAutomation() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newlyCreatedWorkflowId, setNewlyCreatedWorkflowId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'paused' | 'draft'>('all');
+  const [flowchartCampaign, setFlowchartCampaign] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     if (activeTab === 'workflows') {
@@ -67,6 +69,45 @@ export function AISalesAutomation() {
   const handleLeadClick = (leadId: string) => {
     // Lead detail modal is handled in AutomationPipeline
   };
+
+  const handleCampaignCreated = (campaignId: string, openFlowchart?: boolean) => {
+    setNewlyCreatedWorkflowId(campaignId);
+    if (openFlowchart) {
+      const campaign = workflows.find(w => w.id === campaignId);
+      if (campaign) {
+        setFlowchartCampaign({ id: campaign.id, name: campaign.name });
+      } else {
+        // If workflow not loaded yet, fetch it
+        supabase
+          .from('automation_workflows')
+          .select('id, name')
+          .eq('id', campaignId)
+          .single()
+          .then(({ data }) => {
+            if (data) {
+              setFlowchartCampaign({ id: data.id, name: data.name });
+            }
+          });
+      }
+    }
+    fetchWorkflows();
+  };
+
+  // If flowchart is open, render only the flowchart builder
+  if (flowchartCampaign) {
+    return (
+      <FlowchartCampaignBuilder
+        campaignId={flowchartCampaign.id}
+        campaignName={flowchartCampaign.name}
+        onClose={() => setFlowchartCampaign(null)}
+        onSave={() => {
+          setFlowchartCampaign(null);
+          fetchWorkflows();
+        }}
+      />
+    );
+  }
+
   return (
     <div className="h-full w-full overflow-auto bg-gradient-to-br from-gray-50 via-purple-50/30 to-pink-50/20">
       <div className="container mx-auto p-6 space-y-6">
@@ -342,10 +383,7 @@ export function AISalesAutomation() {
       <CreateCampaignModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onCampaignCreated={(campaignId) => {
-          setNewlyCreatedWorkflowId(campaignId);
-          fetchWorkflows();
-        }}
+        onCampaignCreated={handleCampaignCreated}
       />
     </div>
   );
