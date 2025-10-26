@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { useAgents } from "@/hooks/useAgents";
 
 interface Lead {
   id: string;
@@ -55,6 +56,7 @@ interface EditLeadModalProps {
 }
 
 export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModalProps) {
+  const { agents } = useAgents();
   const metadata = lead.source_metadata || {};
   const [isSubmitting, setIsSubmitting] = useState(false);
   const SOURCE_OPTIONS = [
@@ -97,6 +99,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
     category: lead.category || 'customer',
     notes: lead.notes || '',
     lastMessage: lead.lastMessage || '',
+    assignedAgentId: (lead as any).assigned_agent_id || '',
     // Lead Information from metadata
     firstName: initialFirstName,
     lastName: initialLastName,
@@ -151,6 +154,7 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
       category: lead.category || 'customer',
       notes: lead.notes || '',
       lastMessage: lead.lastMessage || '',
+      assignedAgentId: (lead as any).assigned_agent_id || '',
       firstName: firstName,
       lastName: lastName,
       company: metadata.company || '',
@@ -226,7 +230,8 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
       category: formData.category,
       notes: formData.notes,
       lastMessage: formData.lastMessage,
-      source_metadata: sourceMetadata
+      source_metadata: sourceMetadata,
+      assigned_agent_id: formData.assignedAgentId || null,
     };
     
     onUpdate(lead.id, updates);
@@ -511,6 +516,24 @@ export function EditLeadModal({ lead, isOpen, onClose, onUpdate }: EditLeadModal
                     <SelectItem value="customer">Customer</SelectItem>
                     <SelectItem value="subscriber">Subscriber</SelectItem>
                     <SelectItem value="partner">Partner</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="assignedAgent">Assign to Agent</Label>
+                <Select value={formData.assignedAgentId} onValueChange={(value) => handleInputChange('assignedAgentId', value)}>
+                  <SelectTrigger id="assignedAgent">
+                    <SelectValue placeholder="Select agent (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Unassigned</SelectItem>
+                    {agents.map(agent => (
+                      <SelectItem key={agent.id} value={agent.id}>
+                        {agent.display_name || agent.email || agent.agent_code}
+                        {agent.assigned_leads_count > 0 && ` (${agent.assigned_leads_count} leads)`}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

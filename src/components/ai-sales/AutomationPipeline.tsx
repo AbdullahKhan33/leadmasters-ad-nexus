@@ -155,6 +155,10 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
 
   const handleLeadUpdate = async (leadId: string, updates: any) => {
     try {
+      const currentLead = leads.find(l => l.id === leadId);
+      const previousAgentId = currentLead?.assigned_agent_id;
+      const newAgentId = updates.assigned_agent_id;
+      
       const payload: any = {
         name: updates.name,
         phone: updates.phone,
@@ -168,9 +172,69 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
         source_metadata: updates.source_metadata,
         updated_at: new Date().toISOString(),
       };
+      
+      // Handle agent assignment
+      if (newAgentId !== undefined) {
+        payload.assigned_agent_id = newAgentId || null;
+      }
+      
       Object.keys(payload).forEach((k) => payload[k] === undefined && delete payload[k]);
       const { error } = await supabase.from('leads').update(payload).eq('id', leadId);
       if (error) throw error;
+      
+      // Handle agent assignment record and count updates
+      if (newAgentId !== undefined && newAgentId !== previousAgentId) {
+        if (newAgentId) {
+          // Create assignment record
+          const { error: assignError } = await supabase
+            .from('agent_lead_assignments')
+            .insert({
+              agent_id: newAgentId,
+              lead_id: leadId,
+              status: 'assigned',
+              notes: 'Assigned via AI Sales Automation'
+            });
+          
+          if (assignError && !assignError.message.includes('duplicate')) {
+            console.warn('Assignment record creation failed:', assignError);
+          }
+          
+          // Update new agent's count
+          const { data: agentData } = await supabase
+            .from('agents')
+            .select('assigned_leads_count')
+            .eq('id', newAgentId)
+            .single();
+          
+          if (agentData && !previousAgentId) {
+            await supabase
+              .from('agents')
+              .update({ 
+                assigned_leads_count: (agentData.assigned_leads_count || 0) + 1 
+              })
+              .eq('id', newAgentId);
+          }
+        }
+        
+        // Update previous agent's count
+        if (previousAgentId) {
+          const { data: prevAgentData } = await supabase
+            .from('agents')
+            .select('assigned_leads_count')
+            .eq('id', previousAgentId)
+            .single();
+          
+          if (prevAgentData) {
+            await supabase
+              .from('agents')
+              .update({ 
+                assigned_leads_count: Math.max(0, (prevAgentData.assigned_leads_count || 0) - 1) 
+              })
+              .eq('id', previousAgentId);
+          }
+        }
+      }
+      
       setLeads(prev => prev.map(l => l.id === leadId ? { ...l, ...{
         name: payload.name ?? l.name,
         phone: payload.phone ?? l.phone,
@@ -178,13 +242,13 @@ export function AutomationPipeline({ onNavigateToTable, onLeadClick }: Automatio
         source: (payload.source as any) ?? l.source,
         status: payload.status ?? l.status,
         notes: payload.notes ?? l.notes,
+        assigned_agent_id: payload.assigned_agent_id ?? l.assigned_agent_id,
       }} : l));
       toast({ title: 'Lead updated', description: 'Changes saved successfully.' });
+      setSelectedLeadId(null);
     } catch (e) {
       console.error('Failed to update lead', e);
       toast({ title: 'Update failed', description: 'Could not save changes', variant: 'destructive' });
-    } finally {
-      setSelectedLeadId(null);
     }
   };
 

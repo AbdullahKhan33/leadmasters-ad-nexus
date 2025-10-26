@@ -53,7 +53,7 @@ import {
 import { useAgents } from "@/hooks/useAgents";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { LeadDetailModal } from "./LeadDetailModal";
+import { AILeadDetailModal } from "./AILeadDetailModal";
 
 export interface TableFilters {
   search: string;
@@ -990,13 +990,89 @@ export function AllLeadsTableView({ initialFilters, onLeadClick }: AllLeadsTable
       </Dialog>
 
       {/* Lead Detail Modal */}
-      <LeadDetailModal
-        open={selectedLeadId !== null}
-        onOpenChange={(open) => !open && setSelectedLeadId(null)}
+      <AILeadDetailModal
         lead={selectedLeadId ? leads.find(l => l.id === selectedLeadId) || null : null}
-        onLeadUpdated={() => {
-          fetchLeads();
-          setSelectedLeadId(null);
+        isOpen={selectedLeadId !== null}
+        onClose={() => setSelectedLeadId(null)}
+        onUpdate={async (leadId, updates) => {
+          try {
+            const currentLead = leads.find(l => l.id === leadId);
+            const previousAgentId = currentLead?.assigned_agent_id;
+            const newAgentId = (updates as any).assigned_agent_id;
+            
+            const payload: any = {
+              name: updates.name,
+              phone: updates.phone,
+              email: updates.email,
+              source: updates.source,
+              status: updates.status,
+              list: updates.list,
+              category: updates.category,
+              notes: updates.notes,
+              last_message: updates.lastMessage,
+              source_metadata: updates.source_metadata,
+              updated_at: new Date().toISOString(),
+            };
+            
+            // Handle agent assignment
+            if (newAgentId !== undefined) {
+              payload.assigned_agent_id = newAgentId || null;
+            }
+            
+            Object.keys(payload).forEach((k) => payload[k] === undefined && delete payload[k]);
+            const { error } = await supabase.from('leads').update(payload).eq('id', leadId);
+            if (error) throw error;
+            
+            // Handle agent assignment record and count updates
+            if (newAgentId !== undefined && newAgentId !== previousAgentId) {
+              if (newAgentId) {
+                // Create assignment record
+                const { error: assignError } = await supabase
+                  .from('agent_lead_assignments')
+                  .insert({
+                    agent_id: newAgentId,
+                    lead_id: leadId,
+                    status: 'assigned',
+                    notes: 'Assigned via AI Sales Automation'
+                  });
+                
+                if (assignError && !assignError.message.includes('duplicate')) {
+                  console.warn('Assignment record creation failed:', assignError);
+                }
+                
+                // Update new agent's count
+                const newAgent = agents.find(a => a.id === newAgentId);
+                if (newAgent && !previousAgentId) {
+                  await supabase
+                    .from('agents')
+                    .update({ 
+                      assigned_leads_count: (newAgent.assigned_leads_count || 0) + 1 
+                    })
+                    .eq('id', newAgentId);
+                }
+              }
+              
+              // Update previous agent's count
+              if (previousAgentId) {
+                const prevAgent = agents.find(a => a.id === previousAgentId);
+                if (prevAgent) {
+                  await supabase
+                    .from('agents')
+                    .update({ 
+                      assigned_leads_count: Math.max(0, (prevAgent.assigned_leads_count || 0) - 1) 
+                    })
+                    .eq('id', previousAgentId);
+                }
+              }
+            }
+            
+            toast({ title: 'Lead updated', description: 'Changes saved successfully.' });
+            fetchLeads();
+            setSelectedLeadId(null);
+          } catch (e) {
+            console.error('Failed to update lead', e);
+            toast({ title: 'Update failed', description: 'Could not save changes', variant: 'destructive' });
+          }
         }}
       />
     </div>
