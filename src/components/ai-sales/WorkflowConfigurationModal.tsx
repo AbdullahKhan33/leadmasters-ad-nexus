@@ -320,7 +320,7 @@ export function WorkflowConfigurationModal({
   if (isAdvancedBranching) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <GitBranch className="w-5 h-5" />
@@ -331,26 +331,141 @@ export function WorkflowConfigurationModal({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-8 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/20 mb-4">
-              <Zap className="w-8 h-8 text-purple-600" />
+          <div className="space-y-4">
+            {/* Edit Workflow Button */}
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 rounded-lg p-6 border-2 border-purple-200 dark:border-purple-800 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                  <GitBranch className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-1">Edit Workflow Design</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Modify your workflow logic, add branches, update messages, and adjust timing
+                  </p>
+                  <Button
+                    onClick={() => {
+                      if (onOpenFlowchart) {
+                        onOpenFlowchart();
+                        onClose();
+                      }
+                    }}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  >
+                    <GitBranch className="w-4 h-4 mr-2" />
+                    Open Workflow Editor
+                  </Button>
+                </div>
+              </div>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Visual Flowchart Builder</h3>
-            <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-              Design your campaign with a drag-and-drop interface. Create conditional branches, delays, and multi-channel message flows.
-            </p>
-            <Button
-              onClick={() => {
-                if (onOpenFlowchart) {
-                  onOpenFlowchart();
-                  onClose();
-                }
-              }}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-            >
-              <Play className="w-4 h-4 mr-2" />
-              Open Flowchart Builder
-            </Button>
+
+            {/* Campaign Configuration */}
+            <div className="space-y-4">
+              {workflowStatus !== 'draft' && (
+                <div className="bg-muted rounded-lg p-4 border">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <BarChart3 className="h-5 w-5" />
+                      <h3 className="font-semibold">Campaign Progress</h3>
+                    </div>
+                    <div className="flex gap-2">
+                      {workflowStatus === 'active' && (
+                        <Button size="sm" variant="outline" onClick={() => handleStatusChange('paused')}>
+                          <Pause className="w-4 h-4 mr-1" />
+                          Pause
+                        </Button>
+                      )}
+                      {workflowStatus === 'paused' && (
+                        <Button size="sm" onClick={() => handleStatusChange('active')}>
+                          <Play className="w-4 h-4 mr-1" />
+                          Resume
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Leads Processed</span>
+                      <span className="font-semibold">
+                        {processedLeadCount} / {targetLeadCount} ({targetLeadCount > 0 ? Math.round((processedLeadCount / targetLeadCount) * 100) : 0}%)
+                      </span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div 
+                        className="bg-primary h-2 rounded-full transition-all"
+                        style={{ width: `${targetLeadCount > 0 ? (processedLeadCount / targetLeadCount) * 100 : 0}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Target Segment Selection */}
+              <div className="bg-card rounded-lg p-4 border">
+                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Target Audience
+                </h3>
+                <div className="space-y-3">
+                  {segments.length === 0 ? (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        No segments found. Create segments in the CRM to target specific groups of leads.
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <Select value={selectedSegmentId} onValueChange={handleSegmentChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a segment..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {segments.map((seg) => (
+                          <SelectItem key={seg.id} value={seg.id}>
+                            {seg.name} ({seg.lead_count} leads)
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  {selectedSegment && (
+                    <div className="bg-muted/50 rounded-lg p-3 border">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: selectedSegment.color }}
+                        />
+                        <p className="font-medium text-sm">{selectedSegment.name}</p>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Users className="w-3 h-3" />
+                        <span>{eligibleLeadsCount} eligible leads</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-2 pt-2">
+              {workflowStatus === 'draft' && canLaunch && (
+                <Button 
+                  onClick={handleLaunch}
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                >
+                  <Play className="w-4 h-4 mr-2" />
+                  Launch Campaign
+                </Button>
+              )}
+              {isConfigured && workflowStatus === 'draft' && !canLaunch && (
+                <Button onClick={handleSave} disabled={isSubmitting}>
+                  Save Configuration
+                </Button>
+              )}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
