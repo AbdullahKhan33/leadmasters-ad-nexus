@@ -10,9 +10,11 @@ import { WorkflowConfigurationModal } from "./WorkflowConfigurationModal";
 interface WorkflowTemplateCardProps {
   workflowId: string;
   onRefresh?: () => void;
+  autoOpenConfig?: boolean;
+  onConfigOpened?: () => void;
 }
 
-export function WorkflowTemplateCard({ workflowId, onRefresh }: WorkflowTemplateCardProps) {
+export function WorkflowTemplateCard({ workflowId, onRefresh, autoOpenConfig, onConfigOpened }: WorkflowTemplateCardProps) {
   const [workflow, setWorkflow] = useState<any>(null);
   const [sequence, setSequence] = useState<WorkflowSequenceWithSteps | null>(null);
   const [segment, setSegment] = useState<Segment | null>(null);
@@ -23,6 +25,15 @@ export function WorkflowTemplateCard({ workflowId, onRefresh }: WorkflowTemplate
   useEffect(() => {
     fetchWorkflowData();
   }, [workflowId]);
+
+  useEffect(() => {
+    if (autoOpenConfig && !isLoading) {
+      setIsConfigModalOpen(true);
+      if (onConfigOpened) {
+        onConfigOpened();
+      }
+    }
+  }, [autoOpenConfig, isLoading]);
 
   const fetchWorkflowData = async () => {
     setIsLoading(true);

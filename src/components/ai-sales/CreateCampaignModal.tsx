@@ -18,25 +18,25 @@ interface CreateCampaignModalProps {
 export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: CreateCampaignModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState("no-reply-followup");
+  const [type, setType] = useState("no_reply");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const campaignTypes = [
     {
-      value: "no-reply-followup",
+      value: "no_reply",
       label: "No Reply Follow-up",
       description: "Automatically follow up with leads who haven't responded",
       icon: Bell,
     },
     {
-      value: "qualified-lead-nurturing",
+      value: "qualified_nurturing",
       label: "Qualified Lead Nurturing",
       description: "Nurture leads that show high interest",
       icon: Target,
     },
     {
-      value: "long-term-reengagement",
+      value: "long_term",
       label: "Long-Term Re-engagement",
       description: "Re-engage leads that have gone cold",
       icon: Clock,
@@ -89,7 +89,7 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
       // Reset form
       setName("");
       setDescription("");
-      setType("no-reply-followup");
+      setType("no_reply");
       
       onCampaignCreated(data.id);
       onClose();
@@ -169,7 +169,11 @@ export function CreateCampaignModal({ isOpen, onClose, onCampaignCreated }: Crea
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleCreate} disabled={isLoading}>
+          <Button 
+            onClick={handleCreate} 
+            disabled={isLoading}
+            className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+          >
             {isLoading ? "Creating..." : "Create Campaign"}
           </Button>
         </DialogFooter>

@@ -25,6 +25,7 @@ export function AISalesAutomation() {
   const [tableFilters, setTableFilters] = useState<Partial<TableFilters> | null>(null);
   const [workflows, setWorkflows] = useState<WorkflowData[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newlyCreatedWorkflowId, setNewlyCreatedWorkflowId] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeTab === 'workflows') {
@@ -133,7 +134,10 @@ export function AISalesAutomation() {
                 <h2 className="text-xl font-semibold">Automated Campaigns</h2>
                 <p className="text-sm text-muted-foreground">Launch multi-step message sequences to targeted lead segments</p>
               </div>
-              <Button onClick={() => setIsCreateModalOpen(true)}>
+              <Button 
+                onClick={() => setIsCreateModalOpen(true)}
+                className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Create Campaign
               </Button>
@@ -155,7 +159,10 @@ export function AISalesAutomation() {
                 <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
                   Create your first automated campaign to start engaging leads with personalized message sequences
                 </p>
-                <Button onClick={() => setIsCreateModalOpen(true)}>
+                <Button 
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Your First Campaign
                 </Button>
@@ -167,6 +174,8 @@ export function AISalesAutomation() {
                     key={workflow.id}
                     workflowId={workflow.id}
                     onRefresh={fetchWorkflows}
+                    autoOpenConfig={workflow.id === newlyCreatedWorkflowId}
+                    onConfigOpened={() => setNewlyCreatedWorkflowId(null)}
                   />
                 ))}
               </div>
@@ -306,6 +315,7 @@ export function AISalesAutomation() {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onCampaignCreated={(campaignId) => {
+          setNewlyCreatedWorkflowId(campaignId);
           fetchWorkflows();
         }}
       />
