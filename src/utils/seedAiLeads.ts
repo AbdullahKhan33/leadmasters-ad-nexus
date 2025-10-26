@@ -19,7 +19,94 @@ function makeName(i: number) {
     'Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis','Rodriguez','Martinez',
     'Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas','Taylor','Moore','Jackson','Martin'
   ];
-  return `${randomFrom(first)} ${randomFrom(last)} ${i}`;
+  const firstName = randomFrom(first);
+  const lastName = randomFrom(last);
+  return { firstName, lastName, fullName: `${firstName} ${lastName}` };
+}
+
+function makeCompany() {
+  const companies = [
+    'Tech Solutions Inc', 'Global Enterprises', 'Innovation Labs', 'Digital Dynamics', 'Smart Systems',
+    'Future Tech Corp', 'Alpha Industries', 'Beta Solutions', 'Gamma Technologies', 'Delta Innovations',
+    'Omega Consulting', 'Sigma Services', 'Prime Ventures', 'Apex Group', 'Zenith Corporation'
+  ];
+  return randomFrom(companies);
+}
+
+function makeJobTitle() {
+  const titles = [
+    'CEO', 'CTO', 'Marketing Director', 'Sales Manager', 'Operations Manager',
+    'Business Development Manager', 'Product Manager', 'VP of Sales', 'Head of Marketing',
+    'Account Executive', 'Customer Success Manager', 'Director of Operations'
+  ];
+  return randomFrom(titles);
+}
+
+function makeIndustry() {
+  const industries = [
+    'Technology', 'Healthcare', 'Finance', 'Real Estate', 'Education',
+    'Retail', 'Manufacturing', 'Hospitality', 'Automotive', 'Other'
+  ];
+  return randomFrom(industries);
+}
+
+function makeCity() {
+  const cities = [
+    'New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix',
+    'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose',
+    'Austin', 'Jacksonville', 'Fort Worth', 'Columbus', 'San Francisco'
+  ];
+  return randomFrom(cities);
+}
+
+function makeState() {
+  const states = [
+    'CA', 'NY', 'TX', 'FL', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI',
+    'NJ', 'VA', 'WA', 'AZ', 'MA', 'TN', 'IN', 'MO', 'MD', 'WI'
+  ];
+  return randomFrom(states);
+}
+
+function makeLastMessage(stage: AiDbStage): string {
+  const messages: Record<AiDbStage, string[]> = {
+    new: [
+      "Just submitted inquiry form",
+      "Initial contact made",
+      "Requested information about services",
+      "Expressed interest in product demo"
+    ],
+    no_reply: [
+      "Sent follow-up email - awaiting response",
+      "Left voicemail - no callback yet",
+      "Messaged on WhatsApp - not seen",
+      "Sent proposal - waiting for feedback"
+    ],
+    qualified: [
+      "Budget confirmed, moving to next stage",
+      "Decision maker identified and engaged",
+      "Timeline established for implementation",
+      "Requirements fully understood"
+    ],
+    nurturing_7day: [
+      "Scheduled demo for next week",
+      "Sent case studies for review",
+      "Following up after initial meeting",
+      "Sharing additional resources"
+    ],
+    long_term: [
+      "Will revisit in Q2 next year",
+      "Timing not right, staying in touch",
+      "Budget allocated for next fiscal year",
+      "Monitoring for future opportunities"
+    ],
+    won: [
+      "Contract signed and onboarding scheduled",
+      "Deal closed successfully",
+      "Payment received, project kicked off",
+      "Customer onboarded and active"
+    ]
+  };
+  return randomFrom(messages[stage]);
 }
 
 function stageToStatus(stage: AiDbStage): string {
@@ -100,16 +187,48 @@ export async function ensureSeedAiAutomationLeads(minTotal = 150) {
 
     for (const stage of keys) {
       for (let j = 0; j < plan[stage]; j++) {
-        const name = makeName(i);
+        const nameData = makeName(i);
         const num = 5000000000 + randomInt(0, 499999999);
         const phone = `+1${num}`;
-        const email = `${name.toLowerCase().replace(/\s+/g, '.')}.${Date.now()}${j}@example.com`;
+        const mobileNum = 5000000000 + randomInt(0, 499999999);
+        const mobile = `+1${mobileNum}`;
+        const email = `${nameData.firstName.toLowerCase()}.${nameData.lastName.toLowerCase()}@example.com`;
         const { created_at, last_interaction_at } = stageDate(stage);
-        const ai_score = randomInt(55, 98); // integer 55-98
+        const ai_score = randomInt(55, 98);
+        
+        const company = makeCompany();
+        const title = makeJobTitle();
+        const industry = makeIndustry();
+        const city = makeCity();
+        const state = makeState();
+        const lastMessage = makeLastMessage(stage);
+        
+        const employeesCounts = ['1-10', '11-50', '51-200', '201-500', '500+'];
+        const revenues = ['$100K-$500K', '$500K-$1M', '$1M-$5M', '$5M-$10M', '$10M+'];
+        const ratings = ['Hot', 'Warm', 'Cold'];
+        
+        const source_metadata = {
+          first_name: nameData.firstName,
+          last_name: nameData.lastName,
+          company,
+          title,
+          mobile,
+          website: `https://www.${company.toLowerCase().replace(/\s+/g, '')}.com`,
+          industry,
+          employees_count: randomFrom(employeesCounts),
+          annual_revenue: randomFrom(revenues),
+          rating: randomFrom(ratings),
+          city,
+          state,
+          country: 'United States',
+          zip_code: `${randomInt(10000, 99999)}`,
+          street: `${randomInt(100, 9999)} ${randomFrom(['Main', 'Oak', 'Pine', 'Maple', 'Cedar'])} ${randomFrom(['St', 'Ave', 'Blvd', 'Dr'])}`,
+          description: `Potential customer interested in our services. ${stage === 'qualified' ? 'Budget confirmed and timeline established.' : stage === 'won' ? 'Successfully onboarded customer.' : 'Following up on initial inquiry.'}`,
+        };
 
         rows.push({
           user_id: userId,
-          name,
+          name: nameData.fullName,
           phone,
           email,
           source: randomFrom(sources),
@@ -118,11 +237,13 @@ export async function ensureSeedAiAutomationLeads(minTotal = 150) {
           workflow_stage: stage === 'new' ? null : stage,
           ai_score,
           last_interaction_at,
+          last_message: lastMessage,
           created_at,
           updated_at: created_at,
-          notes: 'Seeded demo lead',
+          notes: `Seeded demo lead for ${stage} stage. ${stage === 'qualified' ? 'High priority - ready to move forward.' : stage === 'no_reply' ? 'Needs immediate follow-up.' : 'Standard nurturing process.'}`,
           category: 'customer',
           list: 'general',
+          source_metadata,
         });
         i += 1;
       }
