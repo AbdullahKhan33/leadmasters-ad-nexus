@@ -281,7 +281,7 @@ export function AISalesAutomation() {
                 <AlertDescription className="text-purple-700">
                   To see only relevant portals for your market, set your primary operating region in{' '}
                   <button 
-                    onClick={() => navigate('/app/settings')} 
+                    onClick={() => navigate('/app', { state: { view: 'workspace-settings' } })} 
                     className="underline font-medium hover:text-purple-900"
                   >
                     Workspace Settings
@@ -302,7 +302,7 @@ export function AISalesAutomation() {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  onClick={() => navigate('/app/settings')}
+                  onClick={() => navigate('/app', { state: { view: 'workspace-settings' } })}
                   className="text-purple-600 hover:text-purple-700 hover:bg-purple-100"
                 >
                   <Settings className="w-4 h-4 mr-2" />
