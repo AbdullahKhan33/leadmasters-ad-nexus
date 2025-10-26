@@ -314,7 +314,7 @@ export function WorkflowConfigurationModal({
 
   const isConfigured = selectedSegmentId && selectedSequenceId;
   const canLaunch = isConfigured && workflowStatus === 'draft' && eligibleLeadsCount > 0;
-  const isAdvancedBranching = workflowType === 'advanced_branching';
+  const isAdvancedBranching = workflowType === 'advanced_branching' || workflowType === 'ai_automation';
 
   // For advanced branching campaigns, show different UI
   if (isAdvancedBranching) {
@@ -553,6 +553,34 @@ export function WorkflowConfigurationModal({
                       style={{ width: `${targetLeadCount > 0 ? (processedLeadCount / targetLeadCount) * 100 : 0}%` }}
                     />
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Section 0: Edit Workflow (only for advanced branching) */}
+            {isAdvancedBranching && onOpenFlowchart && (
+              <div className="bg-card rounded-lg p-6 border shadow-md hover:shadow-lg transition-shadow">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-sm">
+                    <GitBranch className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg">Edit Workflow Design</h3>
+                    <p className="text-sm text-muted-foreground">Modify workflow logic, branches, messages, and timing</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => {
+                      onOpenFlowchart?.();
+                      onClose();
+                    }}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    size="lg"
+                  >
+                    <GitBranch className="w-4 h-4 mr-2" />
+                    Open Workflow Editor
+                  </Button>
                 </div>
               </div>
             )}
