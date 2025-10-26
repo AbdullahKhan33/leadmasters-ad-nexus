@@ -539,27 +539,25 @@ export function WorkflowConfigurationModal({
 
             {/* Action Buttons */}
             <div className="flex justify-end gap-2 pt-2 border-t">
-              <Button variant="outline" onClick={onClose}>
+              <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
                 Cancel
               </Button>
-              {workflowStatus === 'draft' && canLaunch && (
+              {workflowStatus === 'draft' ? (
                 <Button 
-                  onClick={handleLaunch}
-                  disabled={isSubmitting}
+                  onClick={handleLaunch} 
+                  disabled={isSubmitting || !canLaunch}
                   className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
                 >
                   <Play className="w-4 h-4 mr-2" />
-                  Launch Campaign
+                  {isSubmitting ? 'Launching...' : 'Launch Campaign'}
                 </Button>
-              )}
-              {workflowStatus === 'draft' && !canLaunch && (
-                <Button onClick={handleSave} disabled={isSubmitting}>
-                  Save Configuration
-                </Button>
-              )}
-              {workflowStatus !== 'draft' && (
-                <Button onClick={handleSave} disabled={isSubmitting}>
-                  Save Changes
+              ) : (
+                <Button 
+                  onClick={handleSave} 
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 text-white"
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </Button>
               )}
             </div>
