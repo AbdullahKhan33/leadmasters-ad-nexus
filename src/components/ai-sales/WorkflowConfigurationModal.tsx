@@ -375,165 +375,177 @@ export function WorkflowConfigurationModal({
             )}
 
             {/* Section 1: Target Audience */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-primary">1</span>
+            <div className="bg-card rounded-lg p-6 border shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center shadow-sm">
+                  <span className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">1</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold">Target Audience</h3>
+                  <h3 className="font-semibold text-lg">Target Audience</h3>
                   <p className="text-sm text-muted-foreground">Select which leads will receive this campaign</p>
                 </div>
               </div>
 
-              {segments.length === 0 ? (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    No segments found. Create segments in the CRM to target specific groups of leads.
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <Select value={selectedSegmentId} onValueChange={handleSegmentChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a segment..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {segments.map((seg) => (
-                      <SelectItem key={seg.id} value={seg.id}>
-                        {seg.name} ({seg.lead_count} leads)
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              <div className="space-y-3">
+                {segments.length === 0 ? (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      No segments found. Create segments in the CRM to target specific groups of leads.
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <Select value={selectedSegmentId} onValueChange={handleSegmentChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a segment..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {segments.map((seg) => (
+                        <SelectItem key={seg.id} value={seg.id}>
+                          {seg.name} ({seg.lead_count} leads)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
 
-              {selectedSegment && (
-                <div className="bg-muted/50 rounded-lg p-3 border">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div 
-                      className="w-3 h-3 rounded-full" 
-                      style={{ backgroundColor: selectedSegment.color }}
-                    />
-                    <p className="font-medium">{selectedSegment.name}</p>
+                {selectedSegment && (
+                  <div className="bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg p-4 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div 
+                        className="w-4 h-4 rounded-full shadow-sm" 
+                        style={{ backgroundColor: selectedSegment.color }}
+                      />
+                      <p className="font-semibold text-base">{selectedSegment.name}</p>
+                    </div>
+                    {selectedSegment.description && (
+                      <p className="text-sm text-muted-foreground mb-3">{selectedSegment.description}</p>
+                    )}
+                    <div className="flex items-center gap-4 pt-2 border-t border-blue-200/50">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm font-semibold">
+                          {selectedSegment.lead_count} total leads
+                        </span>
+                      </div>
+                      {eligibleLeadsCount > 0 && workflowStatus === 'draft' && (
+                        <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-500/20">
+                          {eligibleLeadsCount} eligible
+                        </Badge>
+                      )}
+                    </div>
                   </div>
-                  {selectedSegment.description && (
-                    <p className="text-sm text-muted-foreground">{selectedSegment.description}</p>
-                  )}
-                  <p className="text-sm font-medium mt-2">
-                    Total leads in segment: {selectedSegment.lead_count}
-                  </p>
-                  {eligibleLeadsCount > 0 && workflowStatus === 'draft' && (
-                    <p className="text-sm text-emerald-600 font-medium">
-                      Eligible for campaign: {eligibleLeadsCount}
-                    </p>
-                  )}
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Section 2: Message Sequence */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-primary">2</span>
+            <div className="bg-card rounded-lg p-6 border shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-sm">
+                  <span className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">2</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold">Message Sequence</h3>
+                  <h3 className="font-semibold text-lg">Message Sequence</h3>
                   <p className="text-sm text-muted-foreground">Choose what messages to send and when</p>
                 </div>
               </div>
 
-              {sequences.length === 0 ? (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    No sequences found. Create workflow sequences in Templates to use here.
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <Select value={selectedSequenceId} onValueChange={handleSequenceChange}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a sequence..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sequences.map((seq) => (
-                      <SelectItem key={seq.id} value={seq.id}>
-                        {seq.name} ({seq.total_steps} steps)
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              <div className="space-y-3">
+                {sequences.length === 0 ? (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      No sequences found. Create workflow sequences in Templates to use here.
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <Select value={selectedSequenceId} onValueChange={handleSequenceChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a sequence..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sequences.map((seq) => (
+                        <SelectItem key={seq.id} value={seq.id}>
+                          {seq.name} ({seq.total_steps} steps)
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
 
-              {/* Sequence Preview */}
-              {selectedSequence && (
-                <div className="bg-muted/50 rounded-lg p-4 border space-y-3">
-                  <div className="flex items-center justify-between">
-                    <p className="font-medium">{selectedSequence.name}</p>
-                    <Badge variant="outline">{selectedSequence.total_steps} steps</Badge>
-                  </div>
-                  {selectedSequence.description && (
-                    <p className="text-sm text-muted-foreground">{selectedSequence.description}</p>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      <span>{formatDuration(selectedSequence.total_duration_hours)}</span>
+                {/* Sequence Preview */}
+                {selectedSequence && (
+                  <div className="bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20 rounded-lg p-4 border-2 border-purple-200/50 dark:border-purple-800/50 shadow-sm">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="font-semibold text-base">{selectedSequence.name}</p>
+                      <Badge variant="outline" className="bg-white dark:bg-gray-900 shadow-sm">
+                        <Layers className="w-3 h-3 mr-1" />
+                        {selectedSequence.total_steps} steps
+                      </Badge>
                     </div>
-                    {selectedSequence.email_count > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Mail className="w-4 h-4" />
-                        <span>{selectedSequence.email_count} emails</span>
-                      </div>
+                    {selectedSequence.description && (
+                      <p className="text-sm text-muted-foreground mb-3">{selectedSequence.description}</p>
                     )}
-                    {selectedSequence.whatsapp_count > 0 && (
-                      <div className="flex items-center gap-1">
-                        <MessageSquare className="w-4 h-4" />
-                        <span>{selectedSequence.whatsapp_count} WhatsApp</span>
+                    <div className="flex items-center gap-4 text-sm pt-2 border-t border-purple-200/50">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4 text-purple-600" />
+                        <span className="font-medium">{formatDuration(selectedSequence.total_duration_hours)}</span>
                       </div>
-                    )}
+                      {selectedSequence.email_count > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          <Mail className="w-4 h-4 text-purple-600" />
+                          <span className="font-medium">{selectedSequence.email_count} emails</span>
+                        </div>
+                      )}
+                      {selectedSequence.whatsapp_count > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          <MessageSquare className="w-4 h-4 text-purple-600" />
+                          <span className="font-medium">{selectedSequence.whatsapp_count} WhatsApp</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             {/* Section 3: Review & Launch */}
             {isConfigured && workflowStatus === 'draft' && (
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-sm font-semibold text-primary">3</span>
+              <div className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950/30 dark:to-green-950/30 rounded-lg p-6 border-2 border-emerald-200/50 dark:border-emerald-800/50 shadow-lg">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center shadow-sm">
+                    <span className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">3</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold">Review & Launch</h3>
-                    <p className="text-sm text-muted-foreground">Campaign is ready to launch</p>
+                    <h3 className="font-semibold text-lg text-emerald-900 dark:text-emerald-100">Review & Launch</h3>
+                    <p className="text-sm text-emerald-700 dark:text-emerald-300">Campaign is ready to launch</p>
                   </div>
                 </div>
 
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                <div className="bg-white/80 dark:bg-gray-900/50 rounded-lg p-5 border border-emerald-200/50 shadow-sm">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                      <Users className="w-5 h-5 text-emerald-600" />
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center flex-shrink-0 shadow-md">
+                      <Users className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-emerald-900 mb-2">Ready to Launch</p>
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <p className="text-emerald-700">Target Segment</p>
-                          <p className="font-semibold text-emerald-900">{selectedSegment?.name}</p>
+                      <p className="font-bold text-lg text-emerald-900 dark:text-emerald-100 mb-3">Ready to Launch</p>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 rounded-lg p-3 border border-emerald-200/30">
+                          <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium mb-1">Target Segment</p>
+                          <p className="font-semibold text-emerald-900 dark:text-emerald-100">{selectedSegment?.name}</p>
                         </div>
-                        <div>
-                          <p className="text-emerald-700">Message Sequence</p>
-                          <p className="font-semibold text-emerald-900">{selectedSequence?.name}</p>
+                        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 rounded-lg p-3 border border-emerald-200/30">
+                          <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium mb-1">Message Sequence</p>
+                          <p className="font-semibold text-emerald-900 dark:text-emerald-100">{selectedSequence?.name}</p>
                         </div>
-                        <div>
-                          <p className="text-emerald-700">Eligible Leads</p>
-                          <p className="font-semibold text-emerald-900 text-lg">{eligibleLeadsCount}</p>
+                        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 rounded-lg p-3 border border-emerald-200/30">
+                          <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium mb-1">Eligible Leads</p>
+                          <p className="font-bold text-emerald-900 dark:text-emerald-100 text-2xl">{eligibleLeadsCount}</p>
                         </div>
-                        <div>
-                          <p className="text-emerald-700">Total Steps</p>
-                          <p className="font-semibold text-emerald-900 text-lg">{selectedSequence?.total_steps}</p>
+                        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 rounded-lg p-3 border border-emerald-200/30">
+                          <p className="text-emerald-700 dark:text-emerald-400 text-xs font-medium mb-1">Total Steps</p>
+                          <p className="font-bold text-emerald-900 dark:text-emerald-100 text-2xl">{selectedSequence?.total_steps}</p>
                         </div>
                       </div>
                     </div>
@@ -572,30 +584,37 @@ export function WorkflowConfigurationModal({
 
       {/* Launch Confirmation Dialog */}
       <AlertDialog open={showLaunchDialog} onOpenChange={setShowLaunchDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle>Launch Campaign?</AlertDialogTitle>
-            <AlertDialogDescription>
-              You're about to launch <span className="font-semibold">{workflowName}</span> for:
-              <div className="mt-3 p-3 bg-blue-50 rounded-lg space-y-2">
-                <div className="flex items-center justify-between">
+            <AlertDialogTitle className="text-xl flex items-center gap-2">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center">
+                <Play className="w-5 h-5 text-white" />
+              </div>
+              Launch Campaign?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-4 pt-2">
+              <p className="text-base">
+                You're about to launch <span className="font-semibold text-foreground">{workflowName}</span>:
+              </p>
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg p-4 space-y-3 border-2 border-blue-200/50 dark:border-blue-800/50 shadow-sm">
+                <div className="flex items-center justify-between pb-2 border-b border-blue-200/50">
                   <span className="text-sm font-medium">Target Segment:</span>
-                  <Badge>{selectedSegment?.name}</Badge>
+                  <Badge className="bg-blue-500/10 text-blue-700 border-blue-500/20">{selectedSegment?.name}</Badge>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between pb-2 border-b border-purple-200/50">
                   <span className="text-sm font-medium">Message Sequence:</span>
-                  <Badge variant="outline">{selectedSequence?.name}</Badge>
+                  <Badge variant="outline" className="bg-purple-500/10 text-purple-700 border-purple-500/20">{selectedSequence?.name}</Badge>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between pb-2 border-b border-emerald-200/50">
                   <span className="text-sm font-medium">Eligible Leads:</span>
-                  <span className="font-bold text-blue-600">{eligibleLeadsCount}</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400 text-lg">{eligibleLeadsCount}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Total Steps:</span>
-                  <span className="font-semibold">{selectedSequence?.total_steps}</span>
+                  <span className="font-semibold text-foreground">{selectedSequence?.total_steps}</span>
                 </div>
               </div>
-              <p className="mt-3 text-sm">
+              <p className="text-sm bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
                 Once launched, the campaign will automatically process leads from the selected segment.
               </p>
             </AlertDialogDescription>
