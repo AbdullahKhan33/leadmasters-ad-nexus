@@ -529,12 +529,11 @@ export function AILeadDetailModal({ lead, isOpen, onClose, onUpdate }: AILeadDet
           {/* Action Buttons */}
           <div className="flex space-x-2 pt-4 border-t border-border/50">
             <Button 
-              onClick={handleWhatsApp}
+              onClick={onClose}
               variant="outline"
               className="flex-1"
             >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Open WhatsApp
+              Cancel
             </Button>
             <Button 
               onClick={() => setIsEditModalOpen(true)}
