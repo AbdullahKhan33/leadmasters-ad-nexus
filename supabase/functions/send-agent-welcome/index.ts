@@ -16,7 +16,7 @@ interface AgentWelcomeRequest {
   agentName: string;
   agentEmail: string;
   agentCode: string;
-  tempPassword: string;
+  resetLink: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -26,16 +26,13 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { agentName, agentEmail, agentCode, tempPassword }: AgentWelcomeRequest = await req.json();
-
-    const loginUrl = `${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '')}.supabase.co/auth`;
+    const { agentName, agentEmail, agentCode, resetLink }: AgentWelcomeRequest = await req.json();
 
     const html = await renderAsync(
       React.createElement(AgentWelcomeEmail, {
         agentName,
         agentCode,
-        loginUrl,
-        tempPassword,
+        resetLink,
       })
     );
 

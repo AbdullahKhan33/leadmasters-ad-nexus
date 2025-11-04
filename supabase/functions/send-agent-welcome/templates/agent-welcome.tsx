@@ -13,15 +13,13 @@ import {
 interface AgentWelcomeEmailProps {
   agentName: string;
   agentCode: string;
-  loginUrl: string;
-  tempPassword: string;
+  resetLink: string;
 }
 
 export const AgentWelcomeEmail = ({
   agentName,
   agentCode,
-  loginUrl,
-  tempPassword,
+  resetLink,
 }: AgentWelcomeEmailProps) => (
   <Html>
     <Head />
@@ -33,26 +31,30 @@ export const AgentWelcomeEmail = ({
           Hi {agentName},
         </Text>
         <Text style={text}>
-          Your agent account has been created successfully. You can now access the LeadMasters platform 
-          to manage leads and track your performance.
+          Your agent account has been created successfully! To get started with the LeadMasters platform, 
+          you need to set your password first.
         </Text>
         
         <div style={detailsBox}>
-          <Text style={detailsHeader}>Your Login Details:</Text>
+          <Text style={detailsHeader}>Your Account Details:</Text>
           <Text style={detail}><strong>Agent Code:</strong> {agentCode}</Text>
-          <Text style={detail}><strong>Email:</strong> Use this email address to log in</Text>
-          <Text style={detail}><strong>Temporary Password:</strong> {tempPassword}</Text>
+          <Text style={detail}><strong>Email:</strong> {agentName.split('@')[0] ? 'Use the email address this was sent to' : 'Use your registered email'}</Text>
         </div>
 
+        <Text style={text}>
+          Click the button below to set your password and access your dashboard:
+        </Text>
+
         <Link
-          href={loginUrl}
+          href={resetLink}
           style={button}
         >
-          Access LeadMasters Dashboard
+          Set Your Password & Get Started
         </Link>
 
         <Text style={note}>
-          <strong>Important:</strong> You'll be required to change your password on first login for security.
+          <strong>Important:</strong> This link will expire in 24 hours for security reasons. 
+          If it expires, please contact your administrator for a new invitation.
         </Text>
 
         <Text style={footer}>

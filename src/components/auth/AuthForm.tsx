@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface AuthFormProps {
   onAuthSuccess?: () => void;
@@ -16,10 +15,6 @@ interface AuthFormProps {
 export function AuthForm({ onAuthSuccess }: AuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [currentUser, setCurrentUser] = useState<any>(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -56,96 +51,16 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
           variant: "destructive"
         });
       } else if (data.user) {
-        // Check if user is an agent who needs to change password
-        const { data: agentData } = await supabase
-          .from("agents")
-          .select("first_login_password_changed")
-          .eq("user_id", data.user.id)
-          .single();
-
-        if (agentData && !agentData.first_login_password_changed) {
-          // Agent needs to change password
-          setCurrentUser(data.user);
-          setShowPasswordChangeModal(true);
-        } else {
-          // Regular user or agent who already changed password
-          toast({
-            title: "Success",
-            description: "Signed in successfully!"
-          });
-          onAuthSuccess?.();
-        }
+        toast({
+          title: "Success",
+          description: "Signed in successfully!"
+        });
+        onAuthSuccess?.();
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "An unexpected error occurred",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handlePasswordChange = async () => {
-    if (!newPassword || !confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Please fill in both password fields",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      toast({
-        title: "Error", 
-        description: "Passwords do not match",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      toast({
-        title: "Error",
-        description: "Password must be at least 6 characters long",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      // Update password
-      const { error: passwordError } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-
-      if (passwordError) {
-        throw passwordError;
-      }
-
-      // Mark that agent has changed password
-      const { error: agentError } = await supabase
-        .from("agents")
-        .update({ first_login_password_changed: true })
-        .eq("user_id", currentUser.id);
-
-      if (agentError) {
-        throw agentError;
-      }
-
-      setShowPasswordChangeModal(false);
-      toast({
-        title: "Success",
-        description: "Password updated successfully!"
-      });
-      onAuthSuccess?.();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
         variant: "destructive"
       });
     } finally {
@@ -338,52 +253,6 @@ export function AuthForm({ onAuthSuccess }: AuthFormProps) {
           </Tabs>
         </CardContent>
       </Card>
-
-      {/* Password Change Modal for Agents */}
-      <Dialog open={showPasswordChangeModal} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Change Your Password</DialogTitle>
-            <DialogDescription>
-              As a new agent, you must change your temporary password before continuing.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
-              <Input
-                id="newPassword"
-                type="password"
-                placeholder="Enter new password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                disabled={isLoading}
-              />
-            </div>
-            
-            <Button 
-              onClick={handlePasswordChange} 
-              className="w-full" 
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Update Password
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

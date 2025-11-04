@@ -62,13 +62,9 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Use default password for testing
-    const tempPassword = "Password123!";
-
-    // Create user with admin privileges
+    // Create user with admin privileges (no password - will be set via reset link)
     const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
       email,
-      password: tempPassword,
       email_confirm: true,
       user_metadata: {
         display_name: displayName,
@@ -180,13 +176,30 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Agent created successfully:", agentData);
 
-    // Send welcome email
+    // Generate password reset link
+    const { data: resetData, error: resetError } = await supabaseAdmin.auth.admin.generateLink({
+      type: 'recovery',
+      email: email,
+      options: {
+        redirectTo: `${Deno.env.get('SUPABASE_URL')?.replace('.supabase.co', '')}.supabase.co/reset-password`,
+      },
+    });
+
+    if (resetError) {
+      console.error("Error generating reset link:", resetError);
+      throw resetError;
+    }
+
+    const resetLink = resetData.properties?.action_link;
+    console.log("Password reset link generated for agent");
+
+    // Send welcome email with reset link
     const { error: emailError } = await supabaseAdmin.functions.invoke("send-agent-welcome", {
       body: {
         agentName: displayName,
         agentEmail: email,
         agentCode,
-        tempPassword,
+        resetLink,
       },
     });
 
@@ -198,7 +211,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(JSON.stringify({ 
       success: true, 
       agent: agentData,
-      tempPassword 
+      message: 'Agent created successfully. Welcome email sent with password reset link.'
     }), {
       status: 200,
       headers: {

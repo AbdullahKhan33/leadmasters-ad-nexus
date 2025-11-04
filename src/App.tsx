@@ -22,6 +22,7 @@ import { BlogPostPage } from "./components/public/BlogPostPage";
 import { LegalPage } from "./components/public/LegalPage";
 import { BusinessDiscoveryPage } from "./components/public/BusinessDiscoveryPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<PublicWebsite />} />
                   <Route path="/login" element={<AuthPage />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/app/agents" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/app/agents/create" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                   <Route path="/app/agents/edit/:agentId" element={<ProtectedRoute><Index /></ProtectedRoute>} />
