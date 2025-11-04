@@ -23,18 +23,6 @@ export function ResetPasswordPage() {
   // Token validation
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type");
-  const isDevelopmentMode = !tokenHash || type !== "recovery";
-
-  useEffect(() => {
-    // Only show error in production mode (when tokens should be present)
-    if (!isDevelopmentMode && (!tokenHash || type !== "recovery")) {
-      toast({
-        title: "Invalid Link",
-        description: "This password reset link is invalid or has expired.",
-        variant: "destructive"
-      });
-    }
-  }, [tokenHash, type, toast, isDevelopmentMode]);
 
   // Calculate password strength
   useEffect(() => {
@@ -86,15 +74,6 @@ export function ResetPasswordPage() {
         title: "Error",
         description: "Password must be at least 6 characters long",
         variant: "destructive"
-      });
-      return;
-    }
-
-    // In development mode, just show a toast
-    if (isDevelopmentMode) {
-      toast({
-        title: "Development Mode",
-        description: "This is a UI preview only. Password reset functionality requires a valid reset link.",
       });
       return;
     }
@@ -158,13 +137,6 @@ export function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
       <Card className="w-full max-w-md">
-        {isDevelopmentMode && (
-          <div className="bg-yellow-50 border-b border-yellow-200 px-6 py-3">
-            <p className="text-sm font-medium text-yellow-800 text-center">
-              ⚠️ DEVELOPMENT MODE - UI Preview Only
-            </p>
-          </div>
-        )}
         <CardHeader className="text-center">
           <CardTitle>Set Your Password</CardTitle>
           <CardDescription>
@@ -275,7 +247,7 @@ export function ResetPasswordPage() {
               disabled={isLoading || !password || !confirmPassword || password !== confirmPassword}
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {isDevelopmentMode ? "Set Password & Continue (Demo Mode)" : "Set Password & Continue"}
+              Set Password & Continue
             </Button>
           </form>
         </CardContent>
