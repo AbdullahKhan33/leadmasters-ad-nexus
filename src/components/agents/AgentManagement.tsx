@@ -66,6 +66,8 @@ export function AgentManagement() {
     switch (status.toLowerCase()) {
       case 'active':
         return <Badge variant="default" className="bg-green-100 text-green-800">Active</Badge>;
+      case 'pending_invite':
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">Pending Invite</Badge>;
       case 'inactive':
         return <Badge variant="secondary">Inactive</Badge>;
       case 'suspended':

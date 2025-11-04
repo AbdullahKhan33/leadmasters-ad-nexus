@@ -44,7 +44,7 @@ export function CreateAgentPage() {
     displayName: "",
     phone: "",
     agentCode: "",
-    status: "active",
+    status: "pending_invite",
     permissions: {} as Record<string, boolean>,
     workspaceIds: [] as string[]
   });
@@ -152,7 +152,7 @@ export function CreateAgentPage() {
       console.log('Agent created successfully:', data);
       toast({
         title: "Success",
-        description: `Agent created successfully! Default password: ${data.tempPassword || "Password123!"}`
+        description: `Agent created successfully! A welcome email with password setup instructions has been sent to ${formData.email}`
       });
 
       // Navigate back to agents page
@@ -288,6 +288,7 @@ export function CreateAgentPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="pending_invite">Pending Invite</SelectItem>
                       <SelectItem value="active">Active</SelectItem>
                       <SelectItem value="inactive">Inactive</SelectItem>
                     </SelectContent>

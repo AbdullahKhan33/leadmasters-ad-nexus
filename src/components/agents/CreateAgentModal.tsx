@@ -47,7 +47,7 @@ export function CreateAgentModal({ open, onOpenChange }: CreateAgentModalProps) 
     agentCode: "",
     defaultPassword: "",
     workspaceId: "",
-    status: "active",
+    status: "pending_invite",
     permissions: {} as Record<string, boolean>
   });
   const { toast } = useToast();
@@ -186,6 +186,7 @@ export function CreateAgentModal({ open, onOpenChange }: CreateAgentModalProps) 
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="pending_invite">Pending Invite</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>

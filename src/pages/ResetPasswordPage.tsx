@@ -101,10 +101,13 @@ export function ResetPasswordPage() {
       }
 
       if (data.user) {
-        // Mark that the agent has changed their password
+        // Mark that the agent has changed their password AND activate their account
         const { error: agentError } = await supabase
           .from("agents")
-          .update({ first_login_password_changed: true })
+          .update({ 
+            first_login_password_changed: true,
+            status: 'active'
+          })
           .eq("user_id", data.user.id);
 
         if (agentError) {
