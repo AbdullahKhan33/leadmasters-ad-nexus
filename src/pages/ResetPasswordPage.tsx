@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Eye, EyeOff, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Logo } from "@/components/ui/logo";
 
 export function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -137,9 +138,12 @@ export function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle>Set Your Password</CardTitle>
-          <CardDescription>
+        <div className="flex justify-center pt-8 pb-2">
+          <Logo className="w-16 h-16" />
+        </div>
+        <CardHeader className="text-center space-y-4">
+          <CardTitle className="text-2xl font-bold">Set Your Password</CardTitle>
+          <CardDescription className="text-base">
             Welcome to LeadMasters! Please create a secure password for your agent account.
           </CardDescription>
         </CardHeader>
