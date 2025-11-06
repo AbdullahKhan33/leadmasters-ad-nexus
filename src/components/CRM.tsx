@@ -1156,7 +1156,7 @@ export function CRM() {
 
   return (
     <PremiumProvider>
-      <div className="h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 flex flex-col">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 flex flex-col">
         {/* Header */}
         <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 px-6 py-4 shadow-sm">
           <div className="flex items-center justify-between">
@@ -1212,8 +1212,8 @@ export function CRM() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto">
-          <Tabs value={activeTab} className="h-full">
+        <div className="flex-1">
+          <Tabs value={activeTab}>
             <TabsContent value="campaigns" className="h-full m-0">
               <CampaignDashboard />
             </TabsContent>
