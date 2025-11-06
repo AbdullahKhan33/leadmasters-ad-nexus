@@ -1224,8 +1224,8 @@ export function CRM() {
                 onImportClick={handleImportClick}
               />
             </TabsContent>
-            <TabsContent value="segments" className="h-full m-0">
-              <div className="h-full p-6">
+            <TabsContent value="segments" className="m-0">
+              <div className="p-6">
                 <SegmentManager />
               </div>
             </TabsContent>
