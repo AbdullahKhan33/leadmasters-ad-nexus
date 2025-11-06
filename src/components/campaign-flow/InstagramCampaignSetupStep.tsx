@@ -8,10 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save } from "lucide-react";
 import { InstagramCampaignData } from "../InstagramAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface InstagramCampaignSetupStepProps {
   data: InstagramCampaignData;
   onUpdate: (data: Partial<InstagramCampaignData>) => void;
   onNext: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function InstagramCampaignSetupStep({ data, onUpdate, onNext }: InstagramCampaignSetupStepProps) {

@@ -9,11 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Save, ArrowLeft, Users, MapPin, Heart } from "lucide-react";
 import { InstagramCampaignData } from "../InstagramAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface InstagramTargetAudienceStepProps {
   data: InstagramCampaignData;
   onUpdate: (data: Partial<InstagramCampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function InstagramTargetAudienceStep({ data, onUpdate, onNext, onBack }: InstagramTargetAudienceStepProps) {

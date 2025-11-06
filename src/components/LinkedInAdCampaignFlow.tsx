@@ -101,27 +101,30 @@ export function LinkedInAdCampaignFlow() {
     switch (currentStep) {
       case 1:
         return (
-          <LinkedInCampaignSetupStep 
-            data={campaignData} 
+          <LinkedInCampaignSetupStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
+            aiSuggestions={suggestions}
           />
         );
       case 2:
         return (
-          <LinkedInTargetAudienceStep 
-            data={campaignData} 
+          <LinkedInTargetAudienceStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       case 3:
         return (
-          <LinkedInAdContentStep 
-            data={campaignData} 
+          <LinkedInAdContentStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       default:

@@ -1,9 +1,11 @@
 export interface AIBusinessContext {
   industry: string;
   businessType: string;
-  targetMarket: string;
+  targetCountries: string[];
+  targetCities?: string;
   campaignGoal: string;
   budgetRange?: string;
+  currency: string;
   platform: 'facebook' | 'instagram' | 'google' | 'linkedin';
 }
 

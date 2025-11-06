@@ -100,27 +100,30 @@ export function GoogleAdCampaignFlow() {
     switch (currentStep) {
       case 1:
         return (
-          <GoogleCampaignSetupStep 
-            data={campaignData} 
+          <GoogleCampaignSetupStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
+            aiSuggestions={suggestions}
           />
         );
       case 2:
         return (
-          <GoogleTargetAudienceStep 
-            data={campaignData} 
+          <GoogleTargetAudienceStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       case 3:
         return (
-          <GoogleAdContentStep 
-            data={campaignData} 
+          <GoogleAdContentStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       default:

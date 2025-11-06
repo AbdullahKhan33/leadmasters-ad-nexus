@@ -107,27 +107,30 @@ export function FacebookAdCampaignFlow() {
     switch (currentStep) {
       case 1:
         return (
-          <CampaignSetupStep 
-            data={campaignData} 
+          <CampaignSetupStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
+            aiSuggestions={suggestions}
           />
         );
       case 2:
         return (
-          <TargetAudienceStep 
-            data={campaignData} 
+          <TargetAudienceStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       case 3:
         return (
-          <AdContentStep 
-            data={campaignData} 
+          <AdContentStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       default:

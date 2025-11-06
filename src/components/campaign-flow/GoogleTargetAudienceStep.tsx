@@ -10,11 +10,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Save } from "lucide-react";
 import { GoogleCampaignData } from "../GoogleAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface GoogleTargetAudienceStepProps {
   data: GoogleCampaignData;
   onUpdate: (data: Partial<GoogleCampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function GoogleTargetAudienceStep({ data, onUpdate, onNext, onBack }: GoogleTargetAudienceStepProps) {

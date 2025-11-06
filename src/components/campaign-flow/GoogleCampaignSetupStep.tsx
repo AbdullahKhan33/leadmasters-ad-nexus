@@ -8,10 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save } from "lucide-react";
 import { GoogleCampaignData } from "../GoogleAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface GoogleCampaignSetupStepProps {
   data: GoogleCampaignData;
   onUpdate: (data: Partial<GoogleCampaignData>) => void;
   onNext: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function GoogleCampaignSetupStep({ data, onUpdate, onNext }: GoogleCampaignSetupStepProps) {

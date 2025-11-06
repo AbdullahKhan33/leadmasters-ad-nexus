@@ -248,6 +248,54 @@ export type Database = {
           },
         ]
       }
+      business_contexts: {
+        Row: {
+          budget_range: string | null
+          business_type: string
+          campaign_goal: string
+          created_at: string | null
+          currency: string
+          id: string
+          industry: string
+          is_default: boolean | null
+          name: string
+          target_cities: string | null
+          target_countries: string[]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          budget_range?: string | null
+          business_type: string
+          campaign_goal: string
+          created_at?: string | null
+          currency: string
+          id?: string
+          industry: string
+          is_default?: boolean | null
+          name: string
+          target_cities?: string | null
+          target_countries: string[]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          budget_range?: string | null
+          business_type?: string
+          campaign_goal?: string
+          created_at?: string | null
+          currency?: string
+          id?: string
+          industry?: string
+          is_default?: boolean | null
+          name?: string
+          target_cities?: string | null
+          target_countries?: string[]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_discovery_submissions: {
         Row: {
           advertising_platforms: string[]

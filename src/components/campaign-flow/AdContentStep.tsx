@@ -12,10 +12,13 @@ import { CampaignData, CarouselCard } from "../FacebookAdCampaignFlow";
 import { CarouselCardEditModal } from "./CarouselCardEditModal";
 import { FacebookAdGallery } from "./FacebookAdGallery";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface AdContentStepProps {
   data: CampaignData;
   onUpdate: (data: Partial<CampaignData>) => void;
   onBack: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {

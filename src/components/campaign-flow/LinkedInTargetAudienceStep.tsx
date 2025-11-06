@@ -9,11 +9,14 @@ import { Slider } from "@/components/ui/slider";
 import { ArrowLeft, Save } from "lucide-react";
 import { LinkedInCampaignData } from "../LinkedInAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface LinkedInTargetAudienceStepProps {
   data: LinkedInCampaignData;
   onUpdate: (data: Partial<LinkedInCampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function LinkedInTargetAudienceStep({ data, onUpdate, onNext, onBack }: LinkedInTargetAudienceStepProps) {

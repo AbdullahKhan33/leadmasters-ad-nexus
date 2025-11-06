@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Sparkles, Loader2, Globe } from 'lucide-react';
 import { AIBusinessContext } from '@/types/ai-campaign';
+import { currencies, countries, getBudgetRanges } from '@/utils/currencyData';
+import { useBusinessContexts } from '@/hooks/useBusinessContexts';
+import { toast } from 'sonner';
 
 interface AIContextModalProps {
   open: boolean;
@@ -16,28 +20,90 @@ interface AIContextModalProps {
 }
 
 export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }: AIContextModalProps) {
+  const { contexts, saveContext } = useBusinessContexts();
+  const [saveForFuture, setSaveForFuture] = useState(false);
+  const [contextName, setContextName] = useState('');
+  const [selectedContextId, setSelectedContextId] = useState<string>('');
+  
   const [formData, setFormData] = useState({
     industry: '',
     businessType: '',
-    targetMarket: '',
+    targetCountries: [] as string[],
+    targetCities: '',
     campaignGoal: '',
+    currency: 'USD',
     budgetRange: ''
   });
 
-  const handleSubmit = () => {
-    if (!formData.industry || !formData.businessType || !formData.targetMarket || !formData.campaignGoal) {
+  const [countrySearchTerm, setCountrySearchTerm] = useState('');
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+
+  // Load selected context
+  useEffect(() => {
+    if (selectedContextId && selectedContextId !== 'new') {
+      const context = contexts.find(c => c.id === selectedContextId);
+      if (context) {
+        setFormData({
+          industry: context.industry,
+          businessType: context.business_type,
+          targetCountries: context.target_countries,
+          targetCities: context.target_cities || '',
+          campaignGoal: context.campaign_goal,
+          currency: context.currency,
+          budgetRange: context.budget_range || ''
+        });
+        setContextName(context.name);
+      }
+    }
+  }, [selectedContextId, contexts]);
+
+  const handleSubmit = async () => {
+    if (!formData.industry || !formData.businessType || formData.targetCountries.length === 0 || !formData.campaignGoal || !formData.currency) {
+      toast.error('Please fill in all required fields');
       return;
+    }
+
+    // Save context if checkbox is checked
+    if (saveForFuture && contextName.trim()) {
+      await saveContext({
+        name: contextName.trim(),
+        industry: formData.industry,
+        business_type: formData.businessType,
+        target_countries: formData.targetCountries,
+        target_cities: formData.targetCities || null,
+        campaign_goal: formData.campaignGoal,
+        currency: formData.currency,
+        budget_range: formData.budgetRange || null,
+        is_default: false,
+      });
     }
 
     onSubmit({
       ...formData,
+      targetCities: formData.targetCities || undefined,
+      budgetRange: formData.budgetRange || undefined,
       platform
     });
   };
 
+  const toggleCountry = (country: string) => {
+    setFormData(prev => ({
+      ...prev,
+      targetCountries: prev.targetCountries.includes(country)
+        ? prev.targetCountries.filter(c => c !== country)
+        : [...prev.targetCountries, country]
+    }));
+  };
+
+  const filteredCountries = countries.filter(c => 
+    c.toLowerCase().includes(countrySearchTerm.toLowerCase())
+  );
+
+  const budgetRanges = getBudgetRanges(formData.currency);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center">
@@ -46,91 +112,232 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             AI Campaign Assistant
           </DialogTitle>
           <DialogDescription>
-            Tell us about your business so AI can generate personalized campaign suggestions.
+            Tell us about your business to generate personalized campaign suggestions.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          {/* Load Saved Context */}
           <div className="space-y-2">
-            <Label htmlFor="industry">Industry *</Label>
+            <Label>Load Saved Context (Optional)</Label>
             <Select
-              value={formData.industry}
-              onValueChange={(value) => setFormData({ ...formData, industry: value })}
+              value={selectedContextId}
+              onValueChange={setSelectedContextId}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select your industry" />
+                <SelectValue placeholder="Create new or select saved..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Real Estate">Real Estate</SelectItem>
-                <SelectItem value="E-commerce">E-commerce</SelectItem>
-                <SelectItem value="SaaS">SaaS</SelectItem>
-                <SelectItem value="Education">Education</SelectItem>
-                <SelectItem value="Healthcare">Healthcare</SelectItem>
-                <SelectItem value="Finance">Finance</SelectItem>
-                <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
-                <SelectItem value="Travel & Hospitality">Travel & Hospitality</SelectItem>
-                <SelectItem value="Professional Services">Professional Services</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value="new">Create New Context</SelectItem>
+                {contexts.map(context => (
+                  <SelectItem key={context.id} value={context.id}>
+                    {context.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="businessType">Business Type *</Label>
-            <Input
-              id="businessType"
-              placeholder="e.g., B2B SaaS, Local Restaurant, Online Retailer"
-              value={formData.businessType}
-              onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
-            />
-          </div>
+          {/* Context Name (if saving) */}
+          {saveForFuture && (
+            <div className="space-y-2">
+              <Label htmlFor="contextName">Context Name *</Label>
+              <Input
+                id="contextName"
+                placeholder="e.g., Real Estate Mumbai Campaign"
+                value={contextName}
+                onChange={(e) => setContextName(e.target.value)}
+              />
+            </div>
+          )}
 
-          <div className="space-y-2">
-            <Label htmlFor="targetMarket">Target Market *</Label>
-            <Input
-              id="targetMarket"
-              placeholder="e.g., Small business owners in USA, College students"
-              value={formData.targetMarket}
-              onChange={(e) => setFormData({ ...formData, targetMarket: e.target.value })}
-            />
-          </div>
+          <div className="border-t pt-4 space-y-4">
+            {/* Industry */}
+            <div className="space-y-2">
+              <Label htmlFor="industry">Industry *</Label>
+              <Select
+                value={formData.industry}
+                onValueChange={(value) => setFormData({ ...formData, industry: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your industry" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Real Estate">Real Estate</SelectItem>
+                  <SelectItem value="E-commerce">E-commerce</SelectItem>
+                  <SelectItem value="SaaS">SaaS</SelectItem>
+                  <SelectItem value="Education">Education</SelectItem>
+                  <SelectItem value="Healthcare">Healthcare</SelectItem>
+                  <SelectItem value="Finance">Finance</SelectItem>
+                  <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
+                  <SelectItem value="Travel & Hospitality">Travel & Hospitality</SelectItem>
+                  <SelectItem value="Professional Services">Professional Services</SelectItem>
+                  <SelectItem value="Automotive">Automotive</SelectItem>
+                  <SelectItem value="Retail">Retail</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="campaignGoal">Campaign Goal *</Label>
-            <Select
-              value={formData.campaignGoal}
-              onValueChange={(value) => setFormData({ ...formData, campaignGoal: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select your goal" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Brand Awareness">Brand Awareness</SelectItem>
-                <SelectItem value="Lead Generation">Lead Generation</SelectItem>
-                <SelectItem value="Website Traffic">Website Traffic</SelectItem>
-                <SelectItem value="Conversions">Conversions</SelectItem>
-                <SelectItem value="App Installs">App Installs</SelectItem>
-                <SelectItem value="Engagement">Engagement</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+            {/* Business Type */}
+            <div className="space-y-2">
+              <Label htmlFor="businessType">Business Type *</Label>
+              <Input
+                id="businessType"
+                placeholder="e.g., B2B SaaS, Local Restaurant, Online Retailer"
+                value={formData.businessType}
+                onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="budgetRange">Budget Range (Optional)</Label>
-            <Select
-              value={formData.budgetRange}
-              onValueChange={(value) => setFormData({ ...formData, budgetRange: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select budget range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="$500-1000">$500 - $1,000</SelectItem>
-                <SelectItem value="$1000-5000">$1,000 - $5,000</SelectItem>
-                <SelectItem value="$5000-10000">$5,000 - $10,000</SelectItem>
-                <SelectItem value="$10000+">$10,000+</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Target Countries */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                Target Countries *
+              </Label>
+              <div className="relative">
+                <Input
+                  placeholder="Search and select countries..."
+                  value={countrySearchTerm}
+                  onChange={(e) => setCountrySearchTerm(e.target.value)}
+                  onFocus={() => setShowCountryDropdown(true)}
+                />
+                {showCountryDropdown && (
+                  <div className="absolute z-50 w-full mt-1 bg-background border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    <div className="p-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start text-xs mb-2"
+                        onClick={() => {
+                          setShowCountryDropdown(false);
+                          setCountrySearchTerm('');
+                        }}
+                      >
+                        Close
+                      </Button>
+                      {filteredCountries.map(country => (
+                        <div
+                          key={country}
+                          className="flex items-center space-x-2 p-2 hover:bg-accent rounded cursor-pointer"
+                          onClick={() => toggleCountry(country)}
+                        >
+                          <Checkbox
+                            checked={formData.targetCountries.includes(country)}
+                            onCheckedChange={() => toggleCountry(country)}
+                          />
+                          <span className="text-sm">{country}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {formData.targetCountries.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {formData.targetCountries.map(country => (
+                    <div key={country} className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                      {country}
+                      <button
+                        onClick={() => toggleCountry(country)}
+                        className="hover:bg-primary/20 rounded-full"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Target Cities */}
+            <div className="space-y-2">
+              <Label htmlFor="targetCities">Cities/Regions (Optional)</Label>
+              <Input
+                id="targetCities"
+                placeholder="e.g., Mumbai, Dubai, New York"
+                value={formData.targetCities}
+                onChange={(e) => setFormData({ ...formData, targetCities: e.target.value })}
+              />
+            </div>
+
+            {/* Campaign Goal */}
+            <div className="space-y-2">
+              <Label htmlFor="campaignGoal">Campaign Goal *</Label>
+              <Select
+                value={formData.campaignGoal}
+                onValueChange={(value) => setFormData({ ...formData, campaignGoal: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your goal" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Brand Awareness">Brand Awareness</SelectItem>
+                  <SelectItem value="Lead Generation">Lead Generation</SelectItem>
+                  <SelectItem value="Website Traffic">Website Traffic</SelectItem>
+                  <SelectItem value="Conversions">Conversions</SelectItem>
+                  <SelectItem value="App Installs">App Installs</SelectItem>
+                  <SelectItem value="Engagement">Engagement</SelectItem>
+                  <SelectItem value="Store Visits">Store Visits</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Currency */}
+            <div className="space-y-2">
+              <Label htmlFor="currency">Currency *</Label>
+              <Select
+                value={formData.currency}
+                onValueChange={(value) => setFormData({ ...formData, currency: value, budgetRange: '' })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {currencies.map(curr => (
+                    <SelectItem key={curr.code} value={curr.code}>
+                      {curr.symbol} {curr.name} ({curr.code})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Budget Range */}
+            <div className="space-y-2">
+              <Label htmlFor="budgetRange">Budget Range (Optional)</Label>
+              <Select
+                value={formData.budgetRange}
+                onValueChange={(value) => setFormData({ ...formData, budgetRange: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select budget range" />
+                </SelectTrigger>
+                <SelectContent>
+                  {budgetRanges.map(range => (
+                    <SelectItem key={range} value={range}>
+                      {range}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Save for Future */}
+            <div className="flex items-center space-x-2 pt-2">
+              <Checkbox
+                id="saveForFuture"
+                checked={saveForFuture}
+                onCheckedChange={(checked) => setSaveForFuture(checked as boolean)}
+              />
+              <label
+                htmlFor="saveForFuture"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              >
+                ☑️ Save this context for future use
+              </label>
+            </div>
           </div>
         </div>
 
@@ -141,7 +348,15 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
           <Button
             onClick={handleSubmit}
             className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:opacity-90"
-            disabled={!formData.industry || !formData.businessType || !formData.targetMarket || !formData.campaignGoal || isLoading}
+            disabled={
+              !formData.industry || 
+              !formData.businessType || 
+              formData.targetCountries.length === 0 || 
+              !formData.campaignGoal || 
+              !formData.currency ||
+              (saveForFuture && !contextName.trim()) ||
+              isLoading
+            }
           >
             {isLoading ? (
               <>

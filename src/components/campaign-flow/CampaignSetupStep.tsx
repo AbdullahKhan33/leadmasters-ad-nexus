@@ -8,10 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save } from "lucide-react";
 import { CampaignData } from "../FacebookAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface CampaignSetupStepProps {
   data: CampaignData;
   onUpdate: (data: Partial<CampaignData>) => void;
   onNext: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function CampaignSetupStep({ data, onUpdate, onNext }: CampaignSetupStepProps) {

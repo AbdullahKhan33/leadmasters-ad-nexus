@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { industry, businessType, targetMarket, campaignGoal, budgetRange, platform } = await req.json();
+    const { industry, businessType, targetCountries, targetCities, campaignGoal, budgetRange, currency, platform } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -23,10 +23,16 @@ serve(async (req) => {
     const userPrompt = `Generate campaign suggestions for:
 Industry: ${industry}
 Business Type: ${businessType}
-Target Market: ${targetMarket}
+Target Countries: ${Array.isArray(targetCountries) ? targetCountries.join(', ') : targetCountries}
+Target Cities: ${targetCities || 'Not specified'}
 Campaign Goal: ${campaignGoal}
+Currency: ${currency}
 Budget Range: ${budgetRange || 'Not specified'}
 Platform: ${platform}
+
+Provide country-specific insights and budget recommendations in ${currency}.
+Consider local market conditions, cultural nuances, and platform popularity in the target countries.
+Generate specific location targeting recommendations for ${Array.isArray(targetCountries) ? targetCountries.join(', ') : targetCountries}.
 
 Return suggestions in this exact JSON structure:
 {

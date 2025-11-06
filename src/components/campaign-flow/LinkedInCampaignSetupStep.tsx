@@ -8,10 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save } from "lucide-react";
 import { LinkedInCampaignData } from "../LinkedInAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface LinkedInCampaignSetupStepProps {
   data: LinkedInCampaignData;
   onUpdate: (data: Partial<LinkedInCampaignData>) => void;
   onNext: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function LinkedInCampaignSetupStep({ data, onUpdate, onNext }: LinkedInCampaignSetupStepProps) {

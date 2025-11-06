@@ -9,10 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Save, Eye, Upload } from "lucide-react";
 import { LinkedInCampaignData } from "../LinkedInAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface LinkedInAdContentStepProps {
   data: LinkedInCampaignData;
   onUpdate: (data: Partial<LinkedInCampaignData>) => void;
   onBack: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function LinkedInAdContentStep({ data, onUpdate, onBack }: LinkedInAdContentStepProps) {

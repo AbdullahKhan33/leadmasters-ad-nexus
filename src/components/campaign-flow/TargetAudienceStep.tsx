@@ -8,11 +8,14 @@ import { Slider } from "@/components/ui/slider";
 import { Save, ArrowLeft, Users, MapPin } from "lucide-react";
 import { CampaignData } from "../FacebookAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface TargetAudienceStepProps {
   data: CampaignData;
   onUpdate: (data: Partial<CampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function TargetAudienceStep({ data, onUpdate, onNext, onBack }: TargetAudienceStepProps) {

@@ -10,10 +10,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Save, ArrowLeft, Upload, Eye, Instagram, Globe, MessageCircle } from "lucide-react";
 import { InstagramCampaignData } from "../InstagramAdCampaignFlow";
 
+import { AICampaignSuggestions } from "@/types/ai-campaign";
+
 interface InstagramAdContentStepProps {
   data: InstagramCampaignData;
   onUpdate: (data: Partial<InstagramCampaignData>) => void;
   onBack: () => void;
+  aiSuggestions?: AICampaignSuggestions | null;
 }
 
 export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdContentStepProps) {

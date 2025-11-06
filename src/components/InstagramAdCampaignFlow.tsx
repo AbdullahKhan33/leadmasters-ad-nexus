@@ -103,27 +103,30 @@ export function InstagramAdCampaignFlow() {
     switch (currentStep) {
       case 1:
         return (
-          <InstagramCampaignSetupStep 
-            data={campaignData} 
+          <InstagramCampaignSetupStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
+            aiSuggestions={suggestions}
           />
         );
       case 2:
         return (
-          <InstagramTargetAudienceStep 
-            data={campaignData} 
+          <InstagramTargetAudienceStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       case 3:
         return (
-          <InstagramAdContentStep 
-            data={campaignData} 
+          <InstagramAdContentStep
+            data={campaignData}
             onUpdate={updateCampaignData}
             onBack={prevStep}
+            aiSuggestions={suggestions}
           />
         );
       default:
