@@ -123,10 +123,25 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             <Label>Load Saved Context (Optional)</Label>
             <Select
               value={selectedContextId}
-              onValueChange={setSelectedContextId}
+              onValueChange={(value) => {
+                setSelectedContextId(value);
+                if (value === 'new') {
+                  // Reset form when creating new
+                  setFormData({
+                    industry: '',
+                    businessType: '',
+                    targetCountries: [],
+                    targetCities: '',
+                    campaignGoal: '',
+                    currency: 'USD',
+                    budgetRange: ''
+                  });
+                  setContextName('');
+                }
+              }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Create new or select saved..." />
+                <SelectValue placeholder="Select saved context or create new..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="new">Create New Context</SelectItem>
@@ -214,7 +229,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
                   onFocus={() => setShowCountryDropdown(true)}
                 />
                 {showCountryDropdown && (
-                  <div className="absolute z-50 w-full mt-1 bg-background border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-lg max-h-60 overflow-y-auto">
                     <div className="p-2">
                       <Button
                         variant="ghost"
@@ -225,21 +240,27 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
                           setCountrySearchTerm('');
                         }}
                       >
-                        Close
+                        ✓ Done
                       </Button>
-                      {filteredCountries.map(country => (
-                        <div
-                          key={country}
-                          className="flex items-center space-x-2 p-2 hover:bg-accent rounded cursor-pointer"
-                          onClick={() => toggleCountry(country)}
-                        >
-                          <Checkbox
-                            checked={formData.targetCountries.includes(country)}
-                            onCheckedChange={() => toggleCountry(country)}
-                          />
-                          <span className="text-sm">{country}</span>
+                      {filteredCountries.length === 0 ? (
+                        <div className="p-3 text-sm text-muted-foreground text-center">
+                          No countries found
                         </div>
-                      ))}
+                      ) : (
+                        filteredCountries.map(country => (
+                          <div
+                            key={country}
+                            className="flex items-center space-x-2 p-2 hover:bg-accent rounded cursor-pointer"
+                            onClick={() => toggleCountry(country)}
+                          >
+                            <Checkbox
+                              checked={formData.targetCountries.includes(country)}
+                              onCheckedChange={() => toggleCountry(country)}
+                            />
+                            <span className="text-sm">{country}</span>
+                          </div>
+                        ))
+                      )}
                     </div>
                   </div>
                 )}
@@ -251,7 +272,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
                       {country}
                       <button
                         onClick={() => toggleCountry(country)}
-                        className="hover:bg-primary/20 rounded-full"
+                        className="hover:bg-primary/20 rounded-full w-4 h-4 flex items-center justify-center"
                       >
                         ×
                       </button>
