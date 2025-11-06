@@ -68,8 +68,44 @@ export function GoogleAdCampaignFlow() {
     }
   };
 
+  // Map AI suggestion values to dropdown values
+  const mapAIValueToDropdown = (field: string, aiValue: string): string => {
+    const mappings: Record<string, Record<string, string>> = {
+      objective: {
+        'Awareness': 'awareness',
+        'Brand Awareness': 'awareness',
+        'Traffic': 'traffic',
+        'Website Traffic': 'traffic',
+        'Engagement': 'engagement',
+        'Leads': 'leads',
+        'Lead Generation': 'leads',
+        'App Promotion': 'app_promotion',
+        'App Installs': 'app_promotion',
+        'Sales': 'sales',
+        'Conversions': 'sales'
+      },
+      bidStrategy: {
+        'Lowest Cost': 'lowest_cost',
+        'Cost Cap': 'cost_cap',
+        'Bid Cap': 'bid_cap',
+        'Target Cost': 'target_cost'
+      }
+    };
+
+    const fieldMappings = mappings[field];
+    if (fieldMappings) {
+      if (fieldMappings[aiValue]) return fieldMappings[aiValue];
+      const lowerAiValue = aiValue.toLowerCase();
+      for (const [key, val] of Object.entries(fieldMappings)) {
+        if (key.toLowerCase() === lowerAiValue) return val;
+      }
+    }
+    return aiValue;
+  };
+
   const handleApplyAISuggestion = (field: string, value: any) => {
-    updateCampaignData({ [field]: value });
+    const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
+    updateCampaignData({ [field]: mappedValue });
     toast.success('AI suggestion applied successfully!');
   };
 

@@ -75,9 +75,54 @@ export function FacebookAdCampaignFlow() {
     }
   };
 
+  // Map AI suggestion values to dropdown values
+  const mapAIValueToDropdown = (field: string, aiValue: string): string => {
+    const mappings: Record<string, Record<string, string>> = {
+      objective: {
+        'Awareness': 'awareness',
+        'Brand Awareness': 'awareness',
+        'Traffic': 'traffic',
+        'Website Traffic': 'traffic',
+        'Engagement': 'engagement',
+        'Leads': 'leads',
+        'Lead Generation': 'leads',
+        'App Promotion': 'app_promotion',
+        'App Installs': 'app_promotion',
+        'Sales': 'sales',
+        'Conversions': 'sales'
+      },
+      bidStrategy: {
+        'Lowest Cost': 'lowest_cost',
+        'Cost Cap': 'cost_cap',
+        'Bid Cap': 'bid_cap',
+        'Target Cost': 'target_cost',
+        'Lowest Cost (with a cap if leads are consistently expensive)': 'lowest_cost'
+      }
+    };
+
+    const fieldMappings = mappings[field];
+    if (fieldMappings) {
+      // Try exact match first
+      if (fieldMappings[aiValue]) {
+        return fieldMappings[aiValue];
+      }
+      // Try case-insensitive match
+      const lowerAiValue = aiValue.toLowerCase();
+      for (const [key, val] of Object.entries(fieldMappings)) {
+        if (key.toLowerCase() === lowerAiValue) {
+          return val;
+        }
+      }
+    }
+    
+    return aiValue;
+  };
+
   const handleApplyAISuggestion = (field: string, value: any) => {
     console.log('Applying AI suggestion:', field, value);
-    updateCampaignData({ [field]: value });
+    const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
+    console.log('Mapped value:', field, mappedValue);
+    updateCampaignData({ [field]: mappedValue });
     toast.success('AI suggestion applied successfully!');
   };
 
