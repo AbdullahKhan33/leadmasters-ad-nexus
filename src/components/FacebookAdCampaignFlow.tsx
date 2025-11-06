@@ -47,19 +47,22 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   const { campaigns, saveCampaign, updateCampaign, refetch } = useFacebookCampaigns();
 
   useEffect(() => {
-    if (draftId) {
+    if (draftId && campaigns.length > 0) {
       const draft = campaigns.find(c => c.id === draftId);
       if (draft) {
+        console.log('Loading draft:', draft.campaignData);
         setCampaignData(draft.campaignData);
         setCurrentCampaignId(draftId);
         const step = (draft.campaignData as any)?._currentStep;
         if (step && step >= 1 && step <= 3) {
+          console.log('Restoring step:', step);
           setCurrentStep(step);
         }
         // Restore AI context and suggestions
         const aiContext = (draft.campaignData as any)?._aiContext;
         const aiSuggestions = (draft.campaignData as any)?._aiSuggestions;
         if (aiContext && aiSuggestions) {
+          console.log('Restoring AI suggestions');
           restoreFromDraft(aiContext, aiSuggestions);
           setAiEnabled(true);
         }

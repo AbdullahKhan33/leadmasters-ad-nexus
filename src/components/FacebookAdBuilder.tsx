@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Edit, BarChart3, DollarSign, MousePointer, ArrowLeft, FileText, Trash2 } from "lucide-react";
@@ -15,6 +15,13 @@ export function FacebookAdBuilder() {
 
   const draftCampaigns = campaigns.filter(c => c.status === 'draft');
   
+  // Refresh campaigns list when returning to dashboard
+  useEffect(() => {
+    if (!showCampaignFlow) {
+      refetch();
+    }
+  }, [showCampaignFlow, refetch]);
+  
   const handleEditDraft = (draftId: string) => {
     setSelectedDraftId(draftId);
     setShowCampaignFlow(true);
@@ -29,8 +36,6 @@ export function FacebookAdBuilder() {
   const handleBackToDashboard = () => {
     setShowCampaignFlow(false);
     setSelectedDraftId(null);
-    // Refresh campaigns list when returning to dashboard
-    refetch();
   };
 
   const recentCampaigns = [
@@ -59,7 +64,7 @@ export function FacebookAdBuilder() {
             <span>Back to Dashboard</span>
           </Button>
         </div>
-        <FacebookAdCampaignFlow draftId={selectedDraftId} />
+        <FacebookAdCampaignFlow key={selectedDraftId || 'new'} draftId={selectedDraftId} />
       </div>
     );
   }
