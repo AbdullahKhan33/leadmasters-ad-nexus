@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -29,6 +29,16 @@ export function TargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft
   });
 
   const [locationInput, setLocationInput] = useState("");
+
+  useEffect(() => {
+    setFormData({
+      facebookPage: data.facebookPage || "",
+      targetLocations: data.targetLocations || [],
+      targetGender: data.targetGender || "",
+      ageRange: (data.ageRange || [18, 65]) as [number, number],
+      targetInterests: data.targetInterests || []
+    });
+  }, [data.facebookPage, data.targetLocations, data.targetGender, data.ageRange, data.targetInterests]);
 
   const handleChange = (field: string, value: any) => {
     const newData = { ...formData, [field]: value };

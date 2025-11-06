@@ -98,6 +98,11 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         'Bid Cap': 'bid_cap',
         'Target Cost': 'target_cost',
         'Lowest Cost (with a cap if leads are consistently expensive)': 'lowest_cost'
+      },
+      targetGender: {
+        'Male': 'male',
+        'Female': 'female',
+        'All': 'all'
       }
     };
 
