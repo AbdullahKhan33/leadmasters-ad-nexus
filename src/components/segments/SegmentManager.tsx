@@ -427,9 +427,19 @@ export function SegmentManager() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList>
-          <TabsTrigger value="segments">My Segments ({segments.length})</TabsTrigger>
-          <TabsTrigger value="templates">Templates ({templates.length})</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
+          <TabsTrigger 
+            value="segments"
+            className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
+          >
+            My Segments ({segments.length})
+          </TabsTrigger>
+          <TabsTrigger 
+            value="templates"
+            className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg hover:bg-gradient-to-r hover:from-blue-50/60 hover:via-purple-50/60 hover:to-pink-50/60 hover:shadow-sm hover:text-purple-700 transition-all duration-200 rounded-lg font-semibold"
+          >
+            Templates ({templates.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="segments" className="space-y-4">
