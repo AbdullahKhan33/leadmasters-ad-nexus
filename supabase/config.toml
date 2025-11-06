@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.process-branching-workflows]
 verify_jwt = false
+
+[functions.campaign-ai-assistant]
+verify_jwt = false

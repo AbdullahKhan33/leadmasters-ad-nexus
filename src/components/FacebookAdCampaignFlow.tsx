@@ -2,9 +2,14 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 import { CampaignSetupStep } from "./campaign-flow/CampaignSetupStep";
 import { TargetAudienceStep } from "./campaign-flow/TargetAudienceStep";
 import { AdContentStep } from "./campaign-flow/AdContentStep";
+import { AIContextModal } from "./campaign-flow/AIContextModal";
+import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
+import { useCampaignAI } from "@/hooks/useCampaignAI";
 
 export interface CarouselCard {
   id: string;
@@ -45,9 +50,32 @@ export interface CampaignData {
 export function FacebookAdCampaignFlow() {
   const [currentStep, setCurrentStep] = useState(1);
   const [campaignData, setCampaignData] = useState<CampaignData>({});
+  const [showAIModal, setShowAIModal] = useState(false);
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const { isLoading: aiLoading, suggestions, generateSuggestions } = useCampaignAI();
 
   const updateCampaignData = (data: Partial<CampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
+  };
+
+  const handleAIToggle = () => {
+    if (!aiEnabled) {
+      setShowAIModal(true);
+    } else {
+      setAiEnabled(false);
+    }
+  };
+
+  const handleAISubmit = async (context: any) => {
+    const result = await generateSuggestions(context);
+    if (result) {
+      setAiEnabled(true);
+      setShowAIModal(false);
+    }
+  };
+
+  const handleApplyAISuggestion = (field: string, value: any) => {
+    updateCampaignData({ [field]: value });
   };
 
   const nextStep = () => {
@@ -109,15 +137,25 @@ export function FacebookAdCampaignFlow() {
 
   return (
     <div className="flex-1 p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
-            Create Facebook Campaign
-          </h1>
-          <p className="text-gray-600">
-            Follow these steps to create your Facebook advertising campaign
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
+              Create Facebook Campaign
+            </h1>
+            <p className="text-gray-600">
+              Follow these steps to create your Facebook advertising campaign
+            </p>
+          </div>
+          <Button
+            onClick={handleAIToggle}
+            variant={aiEnabled ? "default" : "outline"}
+            className={aiEnabled ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white" : ""}
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            AI Assistant {aiEnabled ? "ON" : "OFF"}
+          </Button>
         </div>
 
         {/* Progress Bar */}
@@ -147,8 +185,27 @@ export function FacebookAdCampaignFlow() {
         </Card>
 
         {/* Current Step Content */}
-        {renderCurrentStep()}
+        <div className="flex gap-6">
+          <div className="flex-1">
+            {renderCurrentStep()}
+          </div>
+          {aiEnabled && suggestions && (
+            <AIAssistantPanel
+              suggestions={suggestions}
+              step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
+              onApplySuggestion={handleApplyAISuggestion}
+            />
+          )}
+        </div>
       </div>
+
+      <AIContextModal
+        open={showAIModal}
+        onClose={() => setShowAIModal(false)}
+        onSubmit={handleAISubmit}
+        platform="facebook"
+        isLoading={aiLoading}
+      />
     </div>
   );
 }

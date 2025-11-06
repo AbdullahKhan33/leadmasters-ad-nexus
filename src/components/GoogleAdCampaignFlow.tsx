@@ -2,9 +2,14 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 import { GoogleCampaignSetupStep } from "./campaign-flow/GoogleCampaignSetupStep";
 import { GoogleTargetAudienceStep } from "./campaign-flow/GoogleTargetAudienceStep";
 import { GoogleAdContentStep } from "./campaign-flow/GoogleAdContentStep";
+import { AIContextModal } from "./campaign-flow/AIContextModal";
+import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
+import { useCampaignAI } from "@/hooks/useCampaignAI";
 
 export interface GoogleCampaignData {
   // Campaign Setup
@@ -38,9 +43,32 @@ export interface GoogleCampaignData {
 export function GoogleAdCampaignFlow() {
   const [currentStep, setCurrentStep] = useState(1);
   const [campaignData, setCampaignData] = useState<GoogleCampaignData>({});
+  const [showAIModal, setShowAIModal] = useState(false);
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const { isLoading: aiLoading, suggestions, generateSuggestions } = useCampaignAI();
 
   const updateCampaignData = (data: Partial<GoogleCampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
+  };
+
+  const handleAIToggle = () => {
+    if (!aiEnabled) {
+      setShowAIModal(true);
+    } else {
+      setAiEnabled(false);
+    }
+  };
+
+  const handleAISubmit = async (context: any) => {
+    const result = await generateSuggestions(context);
+    if (result) {
+      setAiEnabled(true);
+      setShowAIModal(false);
+    }
+  };
+
+  const handleApplyAISuggestion = (field: string, value: any) => {
+    updateCampaignData({ [field]: value });
   };
 
   const nextStep = () => {
@@ -102,15 +130,25 @@ export function GoogleAdCampaignFlow() {
 
   return (
     <div className="flex-1 p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
-            Create Google Ads Campaign
-          </h1>
-          <p className="text-gray-600">
-            Follow these steps to create your Google Ads campaign
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
+              Create Google Ads Campaign
+            </h1>
+            <p className="text-gray-600">
+              Follow these steps to create your Google Ads campaign
+            </p>
+          </div>
+          <Button
+            onClick={handleAIToggle}
+            variant={aiEnabled ? "default" : "outline"}
+            className={aiEnabled ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white" : ""}
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            AI Assistant {aiEnabled ? "ON" : "OFF"}
+          </Button>
         </div>
 
         {/* Progress Bar */}
@@ -140,8 +178,27 @@ export function GoogleAdCampaignFlow() {
         </Card>
 
         {/* Current Step Content */}
-        {renderCurrentStep()}
+        <div className="flex gap-6">
+          <div className="flex-1">
+            {renderCurrentStep()}
+          </div>
+          {aiEnabled && suggestions && (
+            <AIAssistantPanel
+              suggestions={suggestions}
+              step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
+              onApplySuggestion={handleApplyAISuggestion}
+            />
+          )}
+        </div>
       </div>
+
+      <AIContextModal
+        open={showAIModal}
+        onClose={() => setShowAIModal(false)}
+        onSubmit={handleAISubmit}
+        platform="google"
+        isLoading={aiLoading}
+      />
     </div>
   );
 }
