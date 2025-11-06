@@ -21,7 +21,7 @@ interface AIContextModalProps {
 }
 
 export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }: AIContextModalProps) {
-  const { contexts, saveContext } = useBusinessContexts();
+  const { contexts, saveContext, updateContext } = useBusinessContexts();
   const [saveForFuture, setSaveForFuture] = useState(false);
   const [contextName, setContextName] = useState('');
   const [selectedContextId, setSelectedContextId] = useState<string>('');
@@ -64,19 +64,35 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
       return;
     }
 
-    // Save context if checkbox is checked
+    // Save or update context if checkbox is checked
     if (saveForFuture && contextName.trim()) {
-      await saveContext({
-        name: contextName.trim(),
-        industry: formData.industry,
-        business_type: formData.businessType,
-        target_countries: formData.targetCountries,
-        target_cities: formData.targetCities || null,
-        campaign_goal: formData.campaignGoal,
-        currency: formData.currency,
-        budget_range: formData.budgetRange || null,
-        is_default: false,
-      });
+      // Check if we're updating an existing context or creating a new one
+      if (selectedContextId && selectedContextId !== 'new') {
+        // Update existing context
+        await updateContext(selectedContextId, {
+          name: contextName.trim(),
+          industry: formData.industry,
+          business_type: formData.businessType,
+          target_countries: formData.targetCountries,
+          target_cities: formData.targetCities || null,
+          campaign_goal: formData.campaignGoal,
+          currency: formData.currency,
+          budget_range: formData.budgetRange || null,
+        });
+      } else {
+        // Create new context
+        await saveContext({
+          name: contextName.trim(),
+          industry: formData.industry,
+          business_type: formData.businessType,
+          target_countries: formData.targetCountries,
+          target_cities: formData.targetCities || null,
+          campaign_goal: formData.campaignGoal,
+          currency: formData.currency,
+          budget_range: formData.budgetRange || null,
+          is_default: false,
+        });
+      }
     }
 
     onSubmit({
