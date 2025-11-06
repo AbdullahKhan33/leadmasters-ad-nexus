@@ -18,10 +18,11 @@ interface AdContentStepProps {
   data: CampaignData;
   onUpdate: (data: Partial<CampaignData>) => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
+export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContentStepProps) {
   const [formData, setFormData] = useState({
     primaryText: data.primaryText || "",
     adLinkUrl: data.adLinkUrl || "",
@@ -47,7 +48,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
       adFormat: data.adFormat || "single",
       callToAction: data.callToAction || ""
     });
-  }, [data.primaryText, data.heading, data.description, data.callToAction]);
+  }, [data.primaryText, data.adLinkUrl, data.heading, data.description, data.adFormat, data.callToAction]);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -151,8 +152,10 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
     // TODO: Implement publish functionality
   };
 
-  const saveDraft = () => {
-    console.log("Saving draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (
@@ -508,7 +511,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
               {formData.adFormat === "carousel" && carouselCards.length > 0 ? (
                 // Show current carousel card's details or default
                 <>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                  <div className="text-xs text-gray-500 mb-1">
                     {carouselCards[currentCarouselIndex]?.url || formData.adLinkUrl || "your-website.com"}
                   </div>
                   <div className="font-semibold text-sm text-gray-900">
@@ -522,7 +525,7 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
                 </>
               ) : (
                 <>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">
+                  <div className="text-xs text-gray-500 mb-1">
                     {formData.adLinkUrl || "your-website.com"}
                   </div>
                   <div className="font-semibold text-sm text-gray-900">

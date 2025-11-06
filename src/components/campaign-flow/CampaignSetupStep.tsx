@@ -14,10 +14,11 @@ interface CampaignSetupStepProps {
   data: CampaignData;
   onUpdate: (data: Partial<CampaignData>) => void;
   onNext: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function CampaignSetupStep({ data, onUpdate, onNext }: CampaignSetupStepProps) {
+export function CampaignSetupStep({ data, onUpdate, onNext, onSaveDraft }: CampaignSetupStepProps) {
   const [formData, setFormData] = useState({
     adAccount: data.adAccount || "",
     campaignName: data.campaignName || "",
@@ -39,7 +40,7 @@ export function CampaignSetupStep({ data, onUpdate, onNext }: CampaignSetupStepP
       budgetAmount: data.budgetAmount || 0,
       bidStrategy: data.bidStrategy || ""
     });
-  }, [data]);
+  }, [data.adAccount, data.campaignName, data.specialCategory, data.objective, data.budgetType, data.budgetAmount, data.bidStrategy]);
 
   const handleChange = (field: string, value: string | number) => {
     const newData = { ...formData, [field]: value };
@@ -56,9 +57,10 @@ export function CampaignSetupStep({ data, onUpdate, onNext }: CampaignSetupStepP
            formData.bidStrategy;
   };
 
-  const saveDraft = () => {
-    console.log("Saving draft:", formData);
-    // TODO: Implement save draft functionality
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (

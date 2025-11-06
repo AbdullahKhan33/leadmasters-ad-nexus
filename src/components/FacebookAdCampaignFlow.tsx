@@ -52,6 +52,10 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       if (draft) {
         setCampaignData(draft.campaignData);
         setCurrentCampaignId(draftId);
+        const step = (draft.campaignData as any)?._currentStep;
+        if (step && step >= 1 && step <= 3) {
+          setCurrentStep(step);
+        }
       }
     }
   }, [draftId, campaigns]);
@@ -175,10 +179,11 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   };
 
   const handleSaveDraft = async () => {
+    const metadata = { ...campaignData, _currentStep: currentStep } as CampaignData;
     if (currentCampaignId) {
-      await updateCampaign(currentCampaignId, campaignData);
+      await updateCampaign(currentCampaignId, metadata);
     } else {
-      const id = await saveCampaign(campaignData);
+      const id = await saveCampaign(metadata);
       if (id) {
         setCurrentCampaignId(id);
       }
@@ -218,6 +223,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
             data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
+            onSaveDraft={handleSaveDraft}
             aiSuggestions={suggestions}
           />
         );
@@ -238,6 +244,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
             data={campaignData}
             onUpdate={updateCampaignData}
             onBack={prevStep}
+            onSaveDraft={handleSaveDraft}
             aiSuggestions={suggestions}
           />
         );
