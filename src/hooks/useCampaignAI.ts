@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AIBusinessContext, AICampaignSuggestions } from '@/types/ai-campaign';
 import { toast } from 'sonner';
@@ -42,12 +42,12 @@ export function useCampaignAI() {
     setBusinessContext(null);
   };
 
-  const restoreFromDraft = (context: AIBusinessContext | null, savedSuggestions: AICampaignSuggestions | null) => {
+  const restoreFromDraft = useCallback((context: AIBusinessContext | null, savedSuggestions: AICampaignSuggestions | null) => {
     if (context && savedSuggestions) {
       setBusinessContext(context);
       setSuggestions(savedSuggestions);
     }
-  };
+  }, []);
 
   return {
     isLoading,

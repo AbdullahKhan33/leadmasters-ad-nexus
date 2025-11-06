@@ -11,7 +11,7 @@ import { useFacebookCampaigns } from "@/hooks/useFacebookCampaigns";
 export function FacebookAdBuilder() {
   const [showCampaignFlow, setShowCampaignFlow] = useState(false);
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
-  const { campaigns, isLoading, deleteCampaign } = useFacebookCampaigns();
+  const { campaigns, isLoading, deleteCampaign, refetch } = useFacebookCampaigns();
 
   const draftCampaigns = campaigns.filter(c => c.status === 'draft');
   
@@ -29,6 +29,8 @@ export function FacebookAdBuilder() {
   const handleBackToDashboard = () => {
     setShowCampaignFlow(false);
     setSelectedDraftId(null);
+    // Refresh campaigns list when returning to dashboard
+    refetch();
   };
 
   const recentCampaigns = [

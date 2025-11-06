@@ -44,7 +44,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   const [aiEnabled, setAiEnabled] = useState(false);
   const [currentCampaignId, setCurrentCampaignId] = useState<string | null>(null);
   const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions, restoreFromDraft } = useCampaignAI();
-  const { campaigns, saveCampaign, updateCampaign } = useFacebookCampaigns();
+  const { campaigns, saveCampaign, updateCampaign, refetch } = useFacebookCampaigns();
 
   useEffect(() => {
     if (draftId) {
@@ -215,6 +215,8 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         setCurrentCampaignId(id);
       }
     }
+    // Force refresh campaigns list
+    refetch();
   };
 
   const nextStep = () => {
