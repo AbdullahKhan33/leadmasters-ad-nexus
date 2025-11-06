@@ -211,48 +211,6 @@ export function TargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft
                 <span>65</span>
               </div>
             </div>
-
-            {/* Target Interests */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
-                Target Interests (Optional)
-              </Label>
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder="Enter interest (e.g., AI, Technology)"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addInterest(e.currentTarget.value);
-                      e.currentTarget.value = '';
-                    }
-                  }}
-                />
-              </div>
-              
-              {/* Interest Chips */}
-              {formData.targetInterests.length > 0 && (
-                <div className="flex flex-row flex-wrap gap-2 items-center mt-3">
-                  {formData.targetInterests.map((interest, index) => (
-                    <div 
-                      key={index}
-                      className="inline-flex items-center bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm space-x-2"
-                    >
-                      <span>{interest}</span>
-                      <button 
-                        onClick={() => removeInterest(interest)}
-                        className="text-purple-600 hover:text-purple-800"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <p className="text-xs text-gray-500">Press Enter to add each interest</p>
-            </div>
           </div>
 
           {/* Audience Insights Panel */}
@@ -306,6 +264,50 @@ export function TargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft
                 <p>📍 Consider adding more specific locations if your audience is too broad.</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Target Interests - Full Width Below */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-gray-700">
+              Target Interests (Optional)
+            </Label>
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter interest (e.g., AI, Technology)"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addInterest(e.currentTarget.value);
+                    e.currentTarget.value = '';
+                  }
+                }}
+              />
+            </div>
+            
+            {/* Interest Chips - Full Width */}
+            {formData.targetInterests.length > 0 && (
+              <div className="flex flex-row flex-wrap gap-2 items-center mt-3">
+                {formData.targetInterests.map((interest, index) => (
+                  <div 
+                    key={index}
+                    className="inline-flex items-center bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm space-x-2"
+                  >
+                    <span>{interest}</span>
+                    <button 
+                      onClick={() => removeInterest(interest)}
+                      className="text-purple-600 hover:text-purple-800"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-gray-500">Press Enter to add each interest</p>
           </div>
         </div>
 
