@@ -2,20 +2,24 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Info, ChevronDown, ChevronUp } from 'lucide-react';
-import { AICampaignSuggestions } from '@/types/ai-campaign';
+import { AICampaignSuggestions, AIBusinessContext } from '@/types/ai-campaign';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useState } from 'react';
+import { getCurrencySymbol } from '@/utils/currencyData';
 
 interface AIAssistantPanelProps {
   suggestions: AICampaignSuggestions | null;
   step: 'setup' | 'audience' | 'content';
   onApplySuggestion: (field: string, value: any) => void;
+  businessContext?: AIBusinessContext | null;
 }
 
-export function AIAssistantPanel({ suggestions, step, onApplySuggestion }: AIAssistantPanelProps) {
+export function AIAssistantPanel({ suggestions, step, onApplySuggestion, businessContext }: AIAssistantPanelProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (!suggestions) return null;
+
+  const currencySymbol = businessContext?.currency ? getCurrencySymbol(businessContext.currency) : '$';
 
   const getStepSuggestions = () => {
     switch (step) {
@@ -66,10 +70,10 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion }: AIAss
                 
                 <SuggestionCard
                   title="Recommended Budget"
-                  value={`$${stepData.recommendedBudget.min} - $${stepData.recommendedBudget.max}`}
+                  value={`${currencySymbol}${stepData.recommendedBudget.min} - ${currencySymbol}${stepData.recommendedBudget.max}`}
                   confidence="high"
                   reasoning={stepData.recommendedBudget.reasoning}
-                  onApply={() => onApplySuggestion('budget', stepData.recommendedBudget)}
+                  onApply={() => onApplySuggestion('budgetAmount', stepData.recommendedBudget.min)}
                 />
 
                 <SuggestionCard

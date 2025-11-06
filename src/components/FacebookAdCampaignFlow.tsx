@@ -10,6 +10,7 @@ import { AdContentStep } from "./campaign-flow/AdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
+import { toast } from "sonner";
 
 export interface CarouselCard {
   id: string;
@@ -52,7 +53,7 @@ export function FacebookAdCampaignFlow() {
   const [campaignData, setCampaignData] = useState<CampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const { isLoading: aiLoading, suggestions, generateSuggestions } = useCampaignAI();
+  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions } = useCampaignAI();
 
   const updateCampaignData = (data: Partial<CampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
@@ -75,7 +76,9 @@ export function FacebookAdCampaignFlow() {
   };
 
   const handleApplyAISuggestion = (field: string, value: any) => {
+    console.log('Applying AI suggestion:', field, value);
     updateCampaignData({ [field]: value });
+    toast.success('AI suggestion applied successfully!');
   };
 
   const nextStep = () => {
@@ -197,6 +200,7 @@ export function FacebookAdCampaignFlow() {
               suggestions={suggestions}
               step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
               onApplySuggestion={handleApplyAISuggestion}
+              businessContext={businessContext}
             />
           )}
         </div>

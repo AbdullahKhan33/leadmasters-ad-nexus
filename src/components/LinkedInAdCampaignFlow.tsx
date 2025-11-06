@@ -10,6 +10,7 @@ import { LinkedInAdContentStep } from "./campaign-flow/LinkedInAdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
+import { toast } from "sonner";
 
 export interface LinkedInCampaignData {
   // Campaign Setup
@@ -46,7 +47,7 @@ export function LinkedInAdCampaignFlow() {
   const [campaignData, setCampaignData] = useState<LinkedInCampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const { isLoading: aiLoading, suggestions, generateSuggestions } = useCampaignAI();
+  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions } = useCampaignAI();
 
   const updateCampaignData = (data: Partial<LinkedInCampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
@@ -70,6 +71,7 @@ export function LinkedInAdCampaignFlow() {
 
   const handleApplyAISuggestion = (field: string, value: any) => {
     updateCampaignData({ [field]: value });
+    toast.success('AI suggestion applied successfully!');
   };
 
   const nextStep = () => {
@@ -191,6 +193,7 @@ export function LinkedInAdCampaignFlow() {
               suggestions={suggestions}
               step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
               onApplySuggestion={handleApplyAISuggestion}
+              businessContext={businessContext}
             />
           )}
         </div>

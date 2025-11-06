@@ -10,6 +10,7 @@ import { GoogleAdContentStep } from "./campaign-flow/GoogleAdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
+import { toast } from "sonner";
 
 export interface GoogleCampaignData {
   // Campaign Setup
@@ -45,7 +46,7 @@ export function GoogleAdCampaignFlow() {
   const [campaignData, setCampaignData] = useState<GoogleCampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const { isLoading: aiLoading, suggestions, generateSuggestions } = useCampaignAI();
+  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions } = useCampaignAI();
 
   const updateCampaignData = (data: Partial<GoogleCampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
@@ -69,6 +70,7 @@ export function GoogleAdCampaignFlow() {
 
   const handleApplyAISuggestion = (field: string, value: any) => {
     updateCampaignData({ [field]: value });
+    toast.success('AI suggestion applied successfully!');
   };
 
   const nextStep = () => {
@@ -190,6 +192,7 @@ export function GoogleAdCampaignFlow() {
               suggestions={suggestions}
               step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
               onApplySuggestion={handleApplyAISuggestion}
+              businessContext={businessContext}
             />
           )}
         </div>

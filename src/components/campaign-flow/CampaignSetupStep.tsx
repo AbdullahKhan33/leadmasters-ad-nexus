@@ -28,6 +28,19 @@ export function CampaignSetupStep({ data, onUpdate, onNext }: CampaignSetupStepP
     bidStrategy: data.bidStrategy || ""
   });
 
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      adAccount: data.adAccount || "",
+      campaignName: data.campaignName || "",
+      specialCategory: data.specialCategory || "",
+      objective: data.objective || "",
+      budgetType: data.budgetType || "",
+      budgetAmount: data.budgetAmount || 0,
+      bidStrategy: data.bidStrategy || ""
+    });
+  }, [data]);
+
   const handleChange = (field: string, value: string | number) => {
     const newData = { ...formData, [field]: value };
     setFormData(newData);

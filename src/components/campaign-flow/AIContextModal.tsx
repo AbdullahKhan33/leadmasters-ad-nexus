@@ -335,24 +335,20 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
               </Select>
             </div>
 
-            {/* Budget Range */}
+            {/* Budget Amount */}
             <div className="space-y-2">
-              <Label htmlFor="budgetRange">Budget Range (Optional)</Label>
-              <Select
+              <Label htmlFor="budgetAmount">Campaign Budget (Optional)</Label>
+              <Input
+                id="budgetAmount"
+                type="number"
+                placeholder={`Enter budget amount in ${formData.currency}`}
                 value={formData.budgetRange}
-                onValueChange={(value) => setFormData({ ...formData, budgetRange: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select budget range" />
-                </SelectTrigger>
-                <SelectContent>
-                  {budgetRanges.map(range => (
-                    <SelectItem key={range} value={range}>
-                      {range}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
+                min="0"
+              />
+              <p className="text-xs text-muted-foreground">
+                Enter your total campaign budget in {formData.currency}
+              </p>
             </div>
 
             {/* Save for Future */}
@@ -366,7 +362,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
                 htmlFor="saveForFuture"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
               >
-                ☑️ Save this context for future use
+                Save this context for future use
               </label>
             </div>
           </div>

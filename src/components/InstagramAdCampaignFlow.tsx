@@ -10,6 +10,7 @@ import { InstagramAdContentStep } from "./campaign-flow/InstagramAdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
+import { toast } from "sonner";
 
 export interface InstagramCampaignData {
   // Campaign Setup
@@ -48,7 +49,7 @@ export function InstagramAdCampaignFlow() {
   const [campaignData, setCampaignData] = useState<InstagramCampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const { isLoading: aiLoading, suggestions, generateSuggestions } = useCampaignAI();
+  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions } = useCampaignAI();
 
   const updateCampaignData = (data: Partial<InstagramCampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
@@ -72,6 +73,7 @@ export function InstagramAdCampaignFlow() {
 
   const handleApplyAISuggestion = (field: string, value: any) => {
     updateCampaignData({ [field]: value });
+    toast.success('AI suggestion applied successfully!');
   };
 
   const nextStep = () => {
@@ -193,6 +195,7 @@ export function InstagramAdCampaignFlow() {
               suggestions={suggestions}
               step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
               onApplySuggestion={handleApplyAISuggestion}
+              businessContext={businessContext}
             />
           )}
         </div>
