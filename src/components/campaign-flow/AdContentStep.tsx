@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,18 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+
+  // Sync form with data updates from AI suggestions
+  useEffect(() => {
+    setFormData({
+      primaryText: data.primaryText || "",
+      adLinkUrl: data.adLinkUrl || "",
+      heading: data.heading || "",
+      description: data.description || "",
+      adFormat: data.adFormat || "single",
+      callToAction: data.callToAction || ""
+    });
+  }, [data.primaryText, data.heading, data.description, data.callToAction]);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -213,6 +225,28 @@ export function AdContentStep({ data, onUpdate, onBack }: AdContentStepProps) {
               <div className="text-xs text-gray-500 text-right">
                 {formData.description.length}/150 characters
               </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="space-y-2">
+              <Label htmlFor="callToAction" className="text-sm font-medium text-gray-700">
+                Call to Action
+              </Label>
+              <Select value={formData.callToAction} onValueChange={(value) => handleChange("callToAction", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select call to action" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="learn_more">Learn More</SelectItem>
+                  <SelectItem value="sign_up">Sign Up</SelectItem>
+                  <SelectItem value="get_offer">Get Offer</SelectItem>
+                  <SelectItem value="shop_now">Shop Now</SelectItem>
+                  <SelectItem value="download">Download</SelectItem>
+                  <SelectItem value="contact_us">Contact Us</SelectItem>
+                  <SelectItem value="book_now">Book Now</SelectItem>
+                  <SelectItem value="apply_now">Apply Now</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Ad Format */}

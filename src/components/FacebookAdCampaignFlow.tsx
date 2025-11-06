@@ -87,6 +87,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         'Engagement': 'engagement',
         'Leads': 'leads',
         'Lead Generation': 'leads',
+        'Lead Generation - Lead Ads': 'leads',
         'App Promotion': 'app_promotion',
         'App Installs': 'app_promotion',
         'Sales': 'sales',
@@ -103,6 +104,16 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         'Male': 'male',
         'Female': 'female',
         'All': 'all'
+      },
+      callToAction: {
+        'Learn More': 'learn_more',
+        'Sign Up': 'sign_up',
+        'Get Offer': 'get_offer',
+        'Shop Now': 'shop_now',
+        'Download': 'download',
+        'Contact Us': 'contact_us',
+        'Book Now': 'book_now',
+        'Apply Now': 'apply_now'
       }
     };
 
@@ -116,6 +127,12 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       const lowerAiValue = aiValue.toLowerCase();
       for (const [key, val] of Object.entries(fieldMappings)) {
         if (key.toLowerCase() === lowerAiValue) {
+          return val;
+        }
+      }
+      // Try partial match for compound values like "Lead Generation - Lead Ads"
+      for (const [key, val] of Object.entries(fieldMappings)) {
+        if (aiValue.includes(key) || key.includes(aiValue)) {
           return val;
         }
       }

@@ -172,6 +172,19 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
             {step === 'content' && 'headlines' in stepData && (
               <>
                 <div className="space-y-2">
+                  <p className="text-sm font-semibold">Primary Text Ideas</p>
+                  {stepData.descriptions.slice(0, 2).map((desc, i) => (
+                    <SuggestionCard
+                      key={i}
+                      title={`Option ${i + 1}`}
+                      value={desc.text}
+                      confidence={desc.confidence}
+                      onApply={() => onApplySuggestion('primaryText', desc.text)}
+                    />
+                  ))}
+                </div>
+
+                <div className="space-y-2">
                   <p className="text-sm font-semibold">Headline Ideas</p>
                   {stepData.headlines.slice(0, 3).map((headline, i) => (
                     <SuggestionCard
@@ -179,7 +192,7 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
                       title={`Option ${i + 1}`}
                       value={headline.text}
                       confidence={headline.confidence}
-                      onApply={() => onApplySuggestion('headline', headline.text)}
+                      onApply={() => onApplySuggestion('heading', headline.text)}
                     />
                   ))}
                 </div>
@@ -202,7 +215,7 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
                     <p className="text-xs font-semibold text-pink-900 mb-2">Call to Action</p>
                     <div className="flex flex-wrap gap-1">
                       {stepData.callToAction.map((cta, i) => (
-                        <Badge key={i} variant="secondary" className="text-xs cursor-pointer" onClick={() => onApplySuggestion('cta', cta)}>
+                        <Badge key={i} variant="secondary" className="text-xs cursor-pointer" onClick={() => onApplySuggestion('callToAction', cta)}>
                           {cta}
                         </Badge>
                       ))}
