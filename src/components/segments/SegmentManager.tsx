@@ -13,7 +13,6 @@ import {
   Trash2, 
   Users, 
   TrendingUp,
-  Filter,
   Star,
   Sparkles
 } from 'lucide-react';
@@ -413,7 +412,7 @@ export function SegmentManager() {
         </div>
       </div>
 
-      {/* Search and Filters */}
+      {/* Search */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -424,10 +423,6 @@ export function SegmentManager() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Filter className="w-4 h-4" />
-          Filter
-        </Button>
       </div>
 
       {/* Tabs */}
