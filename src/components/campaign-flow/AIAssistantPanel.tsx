@@ -111,7 +111,7 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
                   title="Gender"
                   value={stepData.demographics.gender}
                   confidence="high"
-                  onApply={() => onApplySuggestion('gender', stepData.demographics.gender)}
+                  onApply={() => onApplySuggestion('targetGender', stepData.demographics.gender)}
                 />
 
                 <div className="space-y-2">
@@ -122,7 +122,7 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
                       title={loc.name}
                       value={loc.reasoning}
                       confidence="high"
-                      onApply={() => onApplySuggestion('location', loc.name)}
+                      onApply={() => onApplySuggestion('targetLocations', loc.name)}
                     />
                   ))}
                 </div>
@@ -132,7 +132,7 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
                     <p className="text-xs font-semibold text-purple-900 mb-2">Interest Targeting</p>
                     <div className="flex flex-wrap gap-1">
                       {stepData.interests.map((interest, i) => (
-                        <Badge key={i} variant="secondary" className="text-xs cursor-pointer" onClick={() => onApplySuggestion('interest', interest)}>
+                        <Badge key={i} variant="secondary" className="text-xs cursor-pointer" onClick={() => onApplySuggestion('targetInterests', interest)}>
                           {interest}
                         </Badge>
                       ))}

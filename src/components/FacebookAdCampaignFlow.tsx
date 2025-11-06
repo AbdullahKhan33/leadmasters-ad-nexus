@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,12 @@ import { AdContentStep } from "./campaign-flow/AdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
+import { useFacebookCampaigns, type CampaignData } from "@/hooks/useFacebookCampaigns";
 import { toast } from "sonner";
+
+interface FacebookAdCampaignFlowProps {
+  draftId?: string | null;
+}
 
 export interface CarouselCard {
   id: string;
@@ -21,39 +26,35 @@ export interface CarouselCard {
   url: string;
 }
 
-export interface CampaignData {
-  // Campaign Setup
-  adAccount?: string;
-  campaignName?: string;
-  specialCategory?: string;
-  objective?: string;
-  budgetType?: string;
-  budgetAmount?: number;
-  bidStrategy?: string;
-  
-  // Target Audience
-  facebookPage?: string;
-  targetLocations?: string[];
-  targetGender?: string;
-  ageRange?: [number, number];
-  
-  // Ad Content
-  primaryText?: string;
-  adLinkUrl?: string;
-  heading?: string;
-  description?: string;
-  adFormat?: string;
-  uploadedImage?: File | null;
-  carouselCards?: CarouselCard[];
-  callToAction?: string;
+export interface CarouselCard {
+  id: string;
+  image: File;
+  imagePreview: string;
+  headline: string;
+  description: string;
+  url: string;
 }
 
-export function FacebookAdCampaignFlow() {
+export type { CampaignData };
+
+export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps = {}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [campaignData, setCampaignData] = useState<CampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
+  const [currentCampaignId, setCurrentCampaignId] = useState<string | null>(null);
   const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions } = useCampaignAI();
+  const { campaigns, saveCampaign, updateCampaign } = useFacebookCampaigns();
+
+  useEffect(() => {
+    if (draftId) {
+      const draft = campaigns.find(c => c.id === draftId);
+      if (draft) {
+        setCampaignData(draft.campaignData);
+        setCurrentCampaignId(draftId);
+      }
+    }
+  }, [draftId, campaigns]);
 
   const updateCampaignData = (data: Partial<CampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
@@ -120,10 +121,46 @@ export function FacebookAdCampaignFlow() {
 
   const handleApplyAISuggestion = (field: string, value: any) => {
     console.log('Applying AI suggestion:', field, value);
+    
+    if (field === 'targetLocations') {
+      const currentLocations = campaignData.targetLocations || [];
+      if (!currentLocations.includes(value)) {
+        const newLocations = [...currentLocations, value];
+        updateCampaignData({ targetLocations: newLocations });
+        toast.success(`Added ${value} to target locations`);
+      } else {
+        toast.info(`${value} is already in target locations`);
+      }
+      return;
+    }
+    
+    if (field === 'targetInterests') {
+      const currentInterests = campaignData.targetInterests || [];
+      if (!currentInterests.includes(value)) {
+        const newInterests = [...currentInterests, value];
+        updateCampaignData({ targetInterests: newInterests });
+        toast.success(`Added "${value}" to interests`);
+      } else {
+        toast.info(`"${value}" is already in interests`);
+      }
+      return;
+    }
+    
     const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
     console.log('Mapped value:', field, mappedValue);
     updateCampaignData({ [field]: mappedValue });
     toast.success('AI suggestion applied successfully!');
+  };
+
+  const handleSaveDraft = async () => {
+    if (currentCampaignId) {
+      await updateCampaign(currentCampaignId, campaignData);
+    } else {
+      const id = await saveCampaign(campaignData);
+      if (id) {
+        setCurrentCampaignId(id);
+      }
+    }
   };
 
   const nextStep = () => {
@@ -169,6 +206,7 @@ export function FacebookAdCampaignFlow() {
             onUpdate={updateCampaignData}
             onNext={nextStep}
             onBack={prevStep}
+            onSaveDraft={handleSaveDraft}
             aiSuggestions={suggestions}
           />
         );

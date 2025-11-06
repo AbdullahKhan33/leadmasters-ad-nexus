@@ -15,15 +15,17 @@ interface TargetAudienceStepProps {
   onUpdate: (data: Partial<CampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function TargetAudienceStep({ data, onUpdate, onNext, onBack }: TargetAudienceStepProps) {
+export function TargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft }: TargetAudienceStepProps) {
   const [formData, setFormData] = useState({
     facebookPage: data.facebookPage || "",
     targetLocations: data.targetLocations || [],
     targetGender: data.targetGender || "",
-    ageRange: data.ageRange || [18, 65] as [number, number]
+    ageRange: data.ageRange || [18, 65] as [number, number],
+    targetInterests: data.targetInterests || []
   });
 
   const [locationInput, setLocationInput] = useState("");
@@ -45,6 +47,18 @@ export function TargetAudienceStep({ data, onUpdate, onNext, onBack }: TargetAud
   const removeLocation = (location: string) => {
     const newLocations = formData.targetLocations.filter(loc => loc !== location);
     handleChange("targetLocations", newLocations);
+  };
+
+  const addInterest = (interest: string) => {
+    if (interest && !formData.targetInterests.includes(interest)) {
+      const newInterests = [...formData.targetInterests, interest];
+      handleChange("targetInterests", newInterests);
+    }
+  };
+
+  const removeInterest = (interest: string) => {
+    const newInterests = formData.targetInterests.filter(int => int !== interest);
+    handleChange("targetInterests", newInterests);
   };
 
   const getAudienceWidth = () => {
@@ -73,8 +87,10 @@ export function TargetAudienceStep({ data, onUpdate, onNext, onBack }: TargetAud
            formData.targetGender;
   };
 
-  const saveDraft = () => {
-    console.log("Saving draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (
@@ -184,6 +200,48 @@ export function TargetAudienceStep({ data, onUpdate, onNext, onBack }: TargetAud
                 <span>18</span>
                 <span>65</span>
               </div>
+            </div>
+
+            {/* Target Interests */}
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-gray-700">
+                Target Interests (Optional)
+              </Label>
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Enter interest (e.g., AI, Technology)"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addInterest(e.currentTarget.value);
+                      e.currentTarget.value = '';
+                    }
+                  }}
+                />
+              </div>
+              
+              {/* Interest Chips */}
+              {formData.targetInterests.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {formData.targetInterests.map((interest, index) => (
+                    <div 
+                      key={index}
+                      className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center space-x-2"
+                    >
+                      <span>{interest}</span>
+                      <button 
+                        onClick={() => removeInterest(interest)}
+                        className="text-purple-600 hover:text-purple-800"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="text-xs text-gray-500">Press Enter to add each interest</p>
             </div>
           </div>
 

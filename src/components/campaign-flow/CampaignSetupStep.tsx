@@ -52,7 +52,7 @@ export function CampaignSetupStep({ data, onUpdate, onNext }: CampaignSetupStepP
            formData.campaignName && 
            formData.objective && 
            formData.budgetType && 
-           formData.budgetAmount > 0 && 
+           Number(formData.budgetAmount) > 0 && 
            formData.bidStrategy;
   };
 

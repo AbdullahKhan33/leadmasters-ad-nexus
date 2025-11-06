@@ -2,13 +2,34 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Edit, Copy, BarChart3, DollarSign, MousePointer, ArrowLeft } from "lucide-react";
+import { Plus, Edit, BarChart3, DollarSign, MousePointer, ArrowLeft, FileText, Trash2 } from "lucide-react";
 import { CampaignCard } from "@/components/CampaignCard";
 import { MetricCard } from "@/components/MetricCard";
 import { FacebookAdCampaignFlow } from "./FacebookAdCampaignFlow";
+import { useFacebookCampaigns } from "@/hooks/useFacebookCampaigns";
 
 export function FacebookAdBuilder() {
   const [showCampaignFlow, setShowCampaignFlow] = useState(false);
+  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const { campaigns, isLoading, deleteCampaign } = useFacebookCampaigns();
+
+  const draftCampaigns = campaigns.filter(c => c.status === 'draft');
+  
+  const handleEditDraft = (draftId: string) => {
+    setSelectedDraftId(draftId);
+    setShowCampaignFlow(true);
+  };
+  
+  const handleDeleteDraft = async (id: string) => {
+    if (confirm('Are you sure you want to delete this draft?')) {
+      await deleteCampaign(id);
+    }
+  };
+
+  const handleBackToDashboard = () => {
+    setShowCampaignFlow(false);
+    setSelectedDraftId(null);
+  };
 
   const recentCampaigns = [
     { id: 1, name: "Summer Sale Campaign", status: "Live", performance: "Good" },
@@ -29,14 +50,14 @@ export function FacebookAdBuilder() {
         <div className="p-3 border-b border-gray-200 bg-white">
           <Button
             variant="ghost"
-            onClick={() => setShowCampaignFlow(false)}
+            onClick={handleBackToDashboard}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dashboard</span>
           </Button>
         </div>
-        <FacebookAdCampaignFlow />
+        <FacebookAdCampaignFlow draftId={selectedDraftId} />
       </div>
     );
   }
@@ -69,6 +90,51 @@ export function FacebookAdBuilder() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Draft Campaigns Section */}
+      {draftCampaigns.length > 0 && (
+        <Card className="border border-amber-200 bg-amber-50/30 shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-amber-600" />
+              Draft Campaigns ({draftCampaigns.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {draftCampaigns.map(campaign => (
+              <div
+                key={campaign.id}
+                className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-200 hover:border-amber-300 transition-colors"
+              >
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900">{campaign.name}</h4>
+                  <p className="text-xs text-gray-500">
+                    Last edited: {new Date(campaign.updated_at).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleEditDraft(campaign.id)}
+                  >
+                    <Edit className="w-4 h-4 mr-1" />
+                    Continue Editing
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleDeleteDraft(campaign.id)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent Campaigns */}
