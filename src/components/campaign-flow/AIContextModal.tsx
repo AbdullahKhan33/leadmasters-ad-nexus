@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
 import { Sparkles, Loader2, Globe } from 'lucide-react';
 import { AIBusinessContext } from '@/types/ai-campaign';
 import { currencies, countries, getBudgetRanges } from '@/utils/currencyData';
@@ -179,15 +180,24 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
               </Select>
             </div>
 
-            {/* Business Type */}
+            {/* Business Description */}
             <div className="space-y-2">
-              <Label htmlFor="businessType">Business Type *</Label>
-              <Input
+              <Label htmlFor="businessType">Describe Your Business *</Label>
+              <Textarea
                 id="businessType"
-                placeholder="e.g., B2B SaaS, Local Restaurant, Online Retailer"
+                placeholder="E.g., We provide AI training courses for software engineers looking to upskill in machine learning and automation"
                 value={formData.businessType}
-                onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
+                onChange={(e) => {
+                  if (e.target.value.length <= 200) {
+                    setFormData({ ...formData, businessType: e.target.value });
+                  }
+                }}
+                className="min-h-[80px] resize-none"
+                maxLength={200}
               />
+              <div className="text-xs text-muted-foreground text-right">
+                {formData.businessType.length}/200 characters
+              </div>
             </div>
 
             {/* Target Countries */}
