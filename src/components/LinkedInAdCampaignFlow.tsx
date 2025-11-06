@@ -1,15 +1,16 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Save } from "lucide-react";
 import { LinkedInCampaignSetupStep } from "./campaign-flow/LinkedInCampaignSetupStep";
 import { LinkedInTargetAudienceStep } from "./campaign-flow/LinkedInTargetAudienceStep";
 import { LinkedInAdContentStep } from "./campaign-flow/LinkedInAdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
+import { useLinkedInCampaigns } from "@/hooks/useLinkedInCampaigns";
 import { toast } from "sonner";
 
 export interface LinkedInCampaignData {
@@ -42,12 +43,71 @@ export interface LinkedInCampaignData {
   companyName?: string;
 }
 
-export function LinkedInAdCampaignFlow() {
+interface LinkedInAdCampaignFlowProps {
+  draftId?: string | null;
+}
+
+export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps = {}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [campaignData, setCampaignData] = useState<LinkedInCampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions } = useCampaignAI();
+  const [currentCampaignId, setCurrentCampaignId] = useState<string | null>(draftId || null);
+  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions, restoreFromDraft } = useCampaignAI();
+  const { campaigns, saveCampaign, updateCampaign, refetch } = useLinkedInCampaigns();
+
+  // Load draft data when draftId is provided
+  useEffect(() => {
+    if (draftId && campaigns.length > 0) {
+      console.log('Loading LinkedIn draft:', draftId);
+      const draft = campaigns.find(c => c.id === draftId);
+      if (draft && draft.campaignData) {
+        console.log('LinkedIn Draft found:', draft);
+        const data = draft.campaignData as any;
+        setCampaignData(data);
+        
+        // Restore step
+        if (data._currentStep) {
+          setCurrentStep(data._currentStep);
+          console.log('Restored step:', data._currentStep);
+        }
+        
+        // Restore AI context and suggestions
+        if (data._aiContext && data._aiSuggestions) {
+          console.log('Restoring AI context and suggestions');
+          restoreFromDraft(data._aiContext, data._aiSuggestions);
+          setAiEnabled(true);
+        }
+      }
+    }
+  }, [draftId, campaigns, restoreFromDraft]);
+
+  const handleSaveDraft = async () => {
+    try {
+      const metadata = {
+        ...campaignData,
+        _currentStep: currentStep,
+        _aiContext: businessContext,
+        _aiSuggestions: suggestions
+      } as any;
+
+      if (currentCampaignId) {
+        await updateCampaign(currentCampaignId, metadata);
+        toast.success('Draft updated successfully!');
+      } else {
+        const campaignName = campaignData.campaignName || `LinkedIn Campaign ${new Date().toLocaleDateString()}`;
+        const savedId = await saveCampaign(metadata, campaignName);
+        if (savedId) {
+          setCurrentCampaignId(savedId);
+        }
+        toast.success('Draft saved successfully!');
+      }
+      await refetch();
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      toast.error('Failed to save draft');
+    }
+  };
 
   const updateCampaignData = (data: Partial<LinkedInCampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
@@ -177,20 +237,30 @@ export function LinkedInAdCampaignFlow() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[#7C3AED] to-[#D946EF] bg-clip-text text-transparent mb-2">
-              Create LinkedIn Campaign
+              {draftId ? 'Edit LinkedIn Campaign' : 'Create LinkedIn Campaign'}
             </h1>
             <p className="text-gray-600">
               Follow these steps to create your LinkedIn advertising campaign
             </p>
           </div>
-          <Button
-            onClick={handleAIToggle}
-            variant={aiEnabled ? "default" : "outline"}
-            className={aiEnabled ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white" : ""}
-          >
-            <Sparkles className="w-4 h-4 mr-2" />
-            AI Assistant {aiEnabled ? "ON" : "OFF"}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={handleSaveDraft}
+              variant="outline"
+              className="text-purple-600 border-purple-300 hover:bg-purple-50"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save Draft
+            </Button>
+            <Button
+              onClick={handleAIToggle}
+              variant={aiEnabled ? "default" : "outline"}
+              className={aiEnabled ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white" : ""}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Assistant {aiEnabled ? "ON" : "OFF"}
+            </Button>
+          </div>
         </div>
 
         {/* Progress Bar */}

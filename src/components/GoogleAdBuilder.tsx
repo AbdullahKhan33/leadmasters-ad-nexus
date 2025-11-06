@@ -1,14 +1,44 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Edit, Copy, BarChart3, DollarSign, MousePointer, Eye, ArrowLeft } from "lucide-react";
+import { Plus, Edit, Copy, BarChart3, DollarSign, MousePointer, Eye, ArrowLeft, Trash2 } from "lucide-react";
 import { CampaignCard } from "@/components/CampaignCard";
 import { MetricCard } from "@/components/MetricCard";
 import { GoogleAdCampaignFlow } from "./GoogleAdCampaignFlow";
+import { useGoogleCampaigns } from "@/hooks/useGoogleCampaigns";
+import { toast } from "sonner";
 
 export function GoogleAdBuilder() {
   const [showCampaignFlow, setShowCampaignFlow] = useState(false);
+  const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
+  const { campaigns, isLoading, deleteCampaign, refetch } = useGoogleCampaigns();
+
+  const draftCampaigns = campaigns.filter(c => c.status === 'draft');
+
+  useEffect(() => {
+    if (!showCampaignFlow) {
+      refetch();
+    }
+  }, [showCampaignFlow, refetch]);
+
+  const handleEditDraft = (campaignId: string) => {
+    setSelectedDraftId(campaignId);
+    setShowCampaignFlow(true);
+  };
+
+  const handleDeleteDraft = async (campaignId: string) => {
+    if (confirm('Are you sure you want to delete this draft?')) {
+      await deleteCampaign(campaignId);
+      toast.success('Draft deleted successfully');
+      refetch();
+    }
+  };
+
+  const handleBackToDashboard = () => {
+    setSelectedDraftId(null);
+    setShowCampaignFlow(false);
+  };
 
   const recentCampaigns = [
     { id: 1, name: "Search Ads Campaign", status: "Live", performance: "Excellent" },
@@ -30,14 +60,14 @@ export function GoogleAdBuilder() {
         <div className="p-4 border-b border-gray-200 bg-white">
           <Button
             variant="ghost"
-            onClick={() => setShowCampaignFlow(false)}
+            onClick={handleBackToDashboard}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dashboard</span>
           </Button>
         </div>
-        <GoogleAdCampaignFlow />
+        <GoogleAdCampaignFlow key={selectedDraftId || 'new'} draftId={selectedDraftId} />
       </div>
     );
   }
@@ -62,7 +92,10 @@ export function GoogleAdBuilder() {
               <Button 
                 size="default" 
                 className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
-                onClick={() => setShowCampaignFlow(true)}
+                onClick={() => {
+                  setSelectedDraftId(null);
+                  setShowCampaignFlow(true);
+                }}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create Campaign
@@ -70,6 +103,48 @@ export function GoogleAdBuilder() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Draft Campaigns */}
+        {draftCampaigns.length > 0 && (
+          <Card className="border-2 border-amber-200 bg-amber-50/30 shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl font-semibold text-amber-900 flex items-center gap-2">
+                <span>📝</span> Draft Campaigns
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {draftCampaigns.map((campaign) => (
+                <div key={campaign.id} className="bg-white p-4 rounded-lg border border-amber-200 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-gray-900">{campaign.name}</h4>
+                      <p className="text-sm text-gray-500">
+                        Last edited: {new Date(campaign.updated_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={() => handleEditDraft(campaign.id)}
+                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                      >
+                        Continue Editing
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDeleteDraft(campaign.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid lg:grid-cols-3 gap-10">
           {/* Recent Campaigns */}
