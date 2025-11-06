@@ -43,7 +43,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
   const [currentCampaignId, setCurrentCampaignId] = useState<string | null>(null);
-  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions } = useCampaignAI();
+  const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions, restoreFromDraft } = useCampaignAI();
   const { campaigns, saveCampaign, updateCampaign } = useFacebookCampaigns();
 
   useEffect(() => {
@@ -56,9 +56,16 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         if (step && step >= 1 && step <= 3) {
           setCurrentStep(step);
         }
+        // Restore AI context and suggestions
+        const aiContext = (draft.campaignData as any)?._aiContext;
+        const aiSuggestions = (draft.campaignData as any)?._aiSuggestions;
+        if (aiContext && aiSuggestions) {
+          restoreFromDraft(aiContext, aiSuggestions);
+          setAiEnabled(true);
+        }
       }
     }
-  }, [draftId, campaigns]);
+  }, [draftId, campaigns, restoreFromDraft]);
 
   const updateCampaignData = (data: Partial<CampaignData>) => {
     setCampaignData(prev => ({ ...prev, ...data }));
@@ -194,7 +201,12 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   };
 
   const handleSaveDraft = async () => {
-    const metadata = { ...campaignData, _currentStep: currentStep } as CampaignData;
+    const metadata = { 
+      ...campaignData, 
+      _currentStep: currentStep,
+      _aiContext: businessContext,
+      _aiSuggestions: suggestions
+    } as CampaignData;
     if (currentCampaignId) {
       await updateCampaign(currentCampaignId, metadata);
     } else {

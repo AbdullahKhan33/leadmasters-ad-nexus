@@ -42,11 +42,19 @@ export function useCampaignAI() {
     setBusinessContext(null);
   };
 
+  const restoreFromDraft = (context: AIBusinessContext | null, savedSuggestions: AICampaignSuggestions | null) => {
+    if (context && savedSuggestions) {
+      setBusinessContext(context);
+      setSuggestions(savedSuggestions);
+    }
+  };
+
   return {
     isLoading,
     suggestions,
     businessContext,
     generateSuggestions,
-    clearSuggestions
+    clearSuggestions,
+    restoreFromDraft
   };
 }
