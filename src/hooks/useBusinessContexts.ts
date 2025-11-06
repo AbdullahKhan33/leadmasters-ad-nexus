@@ -46,6 +46,22 @@ export function useBusinessContexts() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // Check if we already have 3 contexts
+      if (contexts.length >= 3) {
+        // Find the oldest context (by created_at)
+        const oldestContext = contexts.reduce((oldest, current) => {
+          return new Date(current.created_at) < new Date(oldest.created_at) ? current : oldest;
+        });
+        
+        // Delete the oldest context
+        await supabase
+          .from('business_contexts')
+          .delete()
+          .eq('id', oldestContext.id);
+        
+        toast.info(`Removed oldest context "${oldestContext.name}" to make room for the new one`);
+      }
+
       const { data, error } = await supabase
         .from('business_contexts')
         .insert({

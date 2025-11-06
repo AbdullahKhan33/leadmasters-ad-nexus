@@ -6,11 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Sparkles, Loader2, Globe } from 'lucide-react';
 import { AIBusinessContext } from '@/types/ai-campaign';
 import { currencies, countries, getBudgetRanges } from '@/utils/currencyData';
 import { useBusinessContexts } from '@/hooks/useBusinessContexts';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface AIContextModalProps {
   open: boolean;
@@ -21,10 +24,11 @@ interface AIContextModalProps {
 }
 
 export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }: AIContextModalProps) {
-  const { contexts, saveContext, updateContext } = useBusinessContexts();
+  const { contexts, saveContext, updateContext, deleteContext } = useBusinessContexts();
   const [saveForFuture, setSaveForFuture] = useState(false);
   const [contextName, setContextName] = useState('');
   const [selectedContextId, setSelectedContextId] = useState<string>('');
+  const [contextToDelete, setContextToDelete] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     industry: '',
@@ -41,7 +45,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
 
   // Load selected context
   useEffect(() => {
-    if (selectedContextId && selectedContextId !== 'new') {
+    if (selectedContextId) {
       const context = contexts.find(c => c.id === selectedContextId);
       if (context) {
         setFormData({
@@ -58,6 +62,31 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
     }
   }, [selectedContextId, contexts]);
 
+  const loadContext = (contextId: string) => {
+    setSelectedContextId(contextId);
+  };
+
+  const handleDeleteContext = async () => {
+    if (contextToDelete) {
+      await deleteContext(contextToDelete);
+      if (selectedContextId === contextToDelete) {
+        // Clear form if we're deleting the currently selected context
+        setSelectedContextId('');
+        setFormData({
+          industry: '',
+          businessType: '',
+          targetCountries: [],
+          targetCities: '',
+          campaignGoal: '',
+          currency: 'USD',
+          budgetRange: ''
+        });
+        setContextName('');
+      }
+      setContextToDelete(null);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!formData.industry || !formData.businessType || formData.targetCountries.length === 0 || !formData.campaignGoal || !formData.currency) {
       toast.error('Please fill in all required fields');
@@ -67,7 +96,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
     // Save or update context if checkbox is checked
     if (saveForFuture && contextName.trim()) {
       // Check if we're updating an existing context or creating a new one
-      if (selectedContextId && selectedContextId !== 'new') {
+      if (selectedContextId) {
         // Update existing context
         await updateContext(selectedContextId, {
           name: contextName.trim(),
@@ -134,40 +163,44 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          {/* Load Saved Context */}
-          <div className="space-y-2">
-            <Label>Load Saved Context (Optional)</Label>
-            <Select
-              value={selectedContextId}
-              onValueChange={(value) => {
-                setSelectedContextId(value);
-                if (value === 'new') {
-                  // Reset form when creating new
-                  setFormData({
-                    industry: '',
-                    businessType: '',
-                    targetCountries: [],
-                    targetCities: '',
-                    campaignGoal: '',
-                    currency: 'USD',
-                    budgetRange: ''
-                  });
-                  setContextName('');
-                }
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select saved context or create new..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="new">Create New Context</SelectItem>
+          {/* Saved Contexts Badges */}
+          <div className="space-y-2 pb-4 border-b">
+            <Label className="text-sm text-muted-foreground">Saved Contexts</Label>
+            {contexts.length === 0 ? (
+              <div className="text-sm text-muted-foreground italic py-2">
+                No saved contexts yet
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
                 {contexts.map(context => (
-                  <SelectItem key={context.id} value={context.id}>
-                    {context.name}
-                  </SelectItem>
+                  <Badge
+                    key={context.id}
+                    variant={selectedContextId === context.id ? "gradient" : "outline"}
+                    className={cn(
+                      "cursor-pointer transition-all hover:scale-105 pr-1 text-xs",
+                      selectedContextId === context.id && 
+                      "ring-2 ring-primary ring-offset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500"
+                    )}
+                  >
+                    <span 
+                      onClick={() => loadContext(context.id)}
+                      className="pr-2"
+                    >
+                      {context.name}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setContextToDelete(context.id);
+                      }}
+                      className="ml-1 hover:bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-xs font-bold"
+                    >
+                      ×
+                    </button>
+                  </Badge>
                 ))}
-              </SelectContent>
-            </Select>
+              </div>
+            )}
           </div>
 
           {/* Context Name (if saving) */}
@@ -414,6 +447,27 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             )}
           </Button>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={!!contextToDelete} onOpenChange={() => setContextToDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Context?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete this saved context.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleDeleteContext}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </DialogContent>
     </Dialog>
   );
