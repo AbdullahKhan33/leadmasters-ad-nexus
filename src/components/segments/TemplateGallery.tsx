@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Building2, 
   GraduationCap, 
-  Plus, 
+  BookmarkPlus, 
   Star, 
   Target,
   MapPin,
@@ -352,8 +352,8 @@ function TemplateCard({ template, industry, region, onCreateFromTemplate, onCust
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Plus className="w-4 h-4" />
-                Use
+                <BookmarkPlus className="w-4 h-4" />
+                Add to My Segments
               </div>
             )}
           </Button>
