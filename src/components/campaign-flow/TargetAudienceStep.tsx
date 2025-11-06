@@ -234,11 +234,11 @@ export function TargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft
               
               {/* Interest Chips */}
               {formData.targetInterests.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-row flex-wrap gap-2 items-center mt-3">
                   {formData.targetInterests.map((interest, index) => (
                     <div 
                       key={index}
-                      className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm flex items-center space-x-2"
+                      className="inline-flex items-center bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm space-x-2"
                     >
                       <span>{interest}</span>
                       <button 

@@ -146,36 +146,51 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   };
 
   const handleApplyAISuggestion = (field: string, value: any) => {
-    console.log('Applying AI suggestion:', field, value);
+    console.log('AI suggestion apply:', field, value);
     
-    if (field === 'targetLocations') {
+    if (field === 'targetLocations' && Array.isArray(value)) {
+      const currentLocations = campaignData.targetLocations || [];
+      const newLocations = value.filter(loc => !currentLocations.includes(loc));
+      if (newLocations.length > 0) {
+        updateCampaignData({ targetLocations: [...currentLocations, ...newLocations] });
+        toast.success(`Added ${newLocations.length} location(s)`);
+      } else {
+        toast.info('Locations already added');
+      }
+    } else if (field === 'targetLocations') {
       const currentLocations = campaignData.targetLocations || [];
       if (!currentLocations.includes(value)) {
-        const newLocations = [...currentLocations, value];
-        updateCampaignData({ targetLocations: newLocations });
-        toast.success(`Added ${value} to target locations`);
+        updateCampaignData({ targetLocations: [...currentLocations, value] });
+        toast.success(`Added ${value} to locations`);
       } else {
-        toast.info(`${value} is already in target locations`);
+        toast.info('Location already added');
       }
-      return;
-    }
-    
-    if (field === 'targetInterests') {
+    } else if (field === 'targetInterests' && Array.isArray(value)) {
+      const currentInterests = campaignData.targetInterests || [];
+      const newInterests = value.filter(int => !currentInterests.includes(int));
+      if (newInterests.length > 0) {
+        updateCampaignData({ targetInterests: [...currentInterests, ...newInterests] });
+        toast.success(`Added ${newInterests.length} interest(s)`);
+      } else {
+        toast.info('Interests already added');
+      }
+    } else if (field === 'targetInterests') {
       const currentInterests = campaignData.targetInterests || [];
       if (!currentInterests.includes(value)) {
-        const newInterests = [...currentInterests, value];
-        updateCampaignData({ targetInterests: newInterests });
+        updateCampaignData({ targetInterests: [...currentInterests, value] });
         toast.success(`Added "${value}" to interests`);
       } else {
-        toast.info(`"${value}" is already in interests`);
+        toast.info('Interest already added');
       }
-      return;
+    } else if (field === 'ageRange' && Array.isArray(value)) {
+      updateCampaignData({ ageRange: [Number(value[0]), Number(value[1])] as [number, number] });
+      toast.success('Age range updated');
+    } else {
+      const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
+      console.log('Mapped value:', field, mappedValue);
+      updateCampaignData({ [field]: mappedValue });
+      toast.success(`${field.replace(/([A-Z])/g, ' $1').trim()} updated`);
     }
-    
-    const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
-    console.log('Mapped value:', field, mappedValue);
-    updateCampaignData({ [field]: mappedValue });
-    toast.success('AI suggestion applied successfully!');
   };
 
   const handleSaveDraft = async () => {

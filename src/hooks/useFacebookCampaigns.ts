@@ -83,7 +83,10 @@ export function useFacebookCampaigns() {
   const saveCampaign = async (campaignData: CampaignData, campaignName?: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      if (!user) {
+        toast.error('Please log in to save campaigns');
+        return null;
+      }
 
       const name = campaignName || campaignData.campaignName || 'Untitled Campaign';
 
@@ -91,6 +94,7 @@ export function useFacebookCampaigns() {
         .from('campaigns')
         .insert({
           user_id: user.id,
+          created_by: user.id,
           name,
           type: 'facebook_ad',
           status: 'draft',
@@ -100,14 +104,17 @@ export function useFacebookCampaigns() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Save error:', error);
+        throw error;
+      }
 
-      toast.success('Campaign saved as draft');
+      toast.success('Draft saved');
       await fetchCampaigns();
       return data.id;
     } catch (error: any) {
       console.error('Error saving campaign:', error);
-      toast.error('Failed to save campaign');
+      toast.error(error.message || 'Failed to save draft');
       return null;
     }
   };
@@ -122,13 +129,16 @@ export function useFacebookCampaigns() {
         })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Update error:', error);
+        throw error;
+      }
 
-      toast.success('Campaign updated');
+      toast.success('Draft saved');
       await fetchCampaigns();
     } catch (error: any) {
       console.error('Error updating campaign:', error);
-      toast.error('Failed to update campaign');
+      toast.error(error.message || 'Failed to save draft');
     }
   };
 
