@@ -149,7 +149,7 @@ export function ROICalculator() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-primary to-accent rounded-xl p-6 text-white">
+                <div className="gradient-primary rounded-xl p-6 text-white">
                   <p className="text-sm opacity-90 mb-2">Projected Monthly Revenue</p>
                   <p className="text-4xl font-bold">
                     ${results.withPlatform.toLocaleString()}
@@ -175,7 +175,7 @@ export function ROICalculator() {
                 {/* CTA */}
                 <Button 
                   size="lg" 
-                  className="w-full text-lg py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                  className="w-full text-lg py-6 gradient-primary hover:opacity-90"
                   onClick={() => navigate('/auth')}
                 >
                   Start Increasing Revenue Now

@@ -13,7 +13,7 @@ export function SolutionShowcase() {
       title: 'AI Quick Launch',
       subtitle: 'Facebook + Instagram + Google Ads in 120 Seconds',
       metric: '4.2x faster campaign creation',
-      gradient: 'from-primary to-accent',
+      gradient: 'gradient-primary',
       details: [
         'AI analyzes your business & generates campaigns',
         'Automatic audience targeting & budget optimization',
@@ -40,7 +40,7 @@ export function SolutionShowcase() {
       icon: Link2,
       title: 'Portal Integration',
       subtitle: 'Property Finder → Your CRM in 0.3 Seconds',
-      gradient: 'from-blue-500 to-cyan-600',
+      gradient: 'from-secondary to-primary',
       metric: 'Zero manual data entry',
       details: [
         'Real-time sync from Property Finder, Bayut, Dubizzle',
@@ -55,7 +55,7 @@ export function SolutionShowcase() {
       title: 'AI Sales Pipeline',
       subtitle: 'Predict, Prioritize, Close More Deals',
       metric: '3.8x higher conversion rate',
-      gradient: 'from-purple-500 to-pink-600',
+      gradient: 'from-primary to-accent',
       details: [
         'AI scores every lead based on close probability',
         'Automatic task creation & reminders',
@@ -92,7 +92,7 @@ export function SolutionShowcase() {
                   : 'border-border hover:border-primary/30 bg-background'
               }`}
             >
-              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4`}>
+              <div className={`w-12 h-12 rounded-lg ${feature.gradient === 'gradient-primary' ? 'gradient-primary' : `bg-gradient-to-br ${feature.gradient}`} flex items-center justify-center mb-4`}>
                 <feature.icon className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-bold text-foreground mb-1">{feature.title}</h3>
@@ -105,7 +105,7 @@ export function SolutionShowcase() {
         <div className="bg-gradient-to-br from-muted/50 to-background rounded-2xl border-2 border-border p-8 lg:p-12">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${currentFeature.gradient} text-white text-sm font-medium`}>
+              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${currentFeature.gradient === 'gradient-primary' ? 'gradient-primary' : `bg-gradient-to-r ${currentFeature.gradient}`} text-white text-sm font-medium`}>
                 <currentFeature.icon className="w-4 h-4" />
                 {currentFeature.metric}
               </div>
@@ -132,7 +132,7 @@ export function SolutionShowcase() {
 
               <Button 
                 size="lg"
-                className={`bg-gradient-to-r ${currentFeature.gradient} hover:opacity-90`}
+                className="gradient-primary hover:opacity-90"
                 onClick={() => navigate('/auth')}
               >
                 Try This Feature Free

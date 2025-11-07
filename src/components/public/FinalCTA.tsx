@@ -7,7 +7,7 @@ export function FinalCTA() {
   const navigate = useNavigate();
 
   return (
-    <section className="py-24 bg-gradient-to-br from-primary via-accent to-primary relative overflow-hidden">
+    <section className="py-24 gradient-primary relative overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" />

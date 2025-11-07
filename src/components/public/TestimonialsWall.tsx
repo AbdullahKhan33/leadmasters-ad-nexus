@@ -154,7 +154,7 @@ export function TestimonialsWall() {
               { icon: DollarSign, label: 'Revenue Generated', value: '$127M+' }
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center mx-auto mb-3">
                   <stat.icon className="w-6 h-6 text-white" />
                 </div>
                 <p className="text-3xl font-bold text-foreground mb-1">{stat.value}</p>

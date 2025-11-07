@@ -28,7 +28,7 @@ export function EnterpriseHero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-background via-background to-primary/5 overflow-hidden">
+    <section className="relative min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
@@ -46,7 +46,7 @@ export function EnterpriseHero() {
 
             <h1 className="text-5xl lg:text-7xl font-bold text-foreground leading-tight">
               Close More Deals.
-              <span className="block bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mt-2">
+              <span className="block gradient-text mt-2">
                 On Autopilot.
               </span>
             </h1>
@@ -67,7 +67,7 @@ export function EnterpriseHero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg" 
-                className="text-lg px-8 py-6 bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all shadow-lg hover:shadow-xl"
+                className="text-lg px-8 py-6 gradient-primary hover:opacity-90 transition-all shadow-lg hover:shadow-xl"
                 onClick={() => navigate('/auth')}
               >
                 Start Free Trial - No Credit Card
