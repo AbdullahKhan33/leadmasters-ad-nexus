@@ -104,7 +104,7 @@ export function DraftCampaignsSection() {
                 </div>
                 <Button
                   size="sm"
-                  onClick={() => navigate("/", { state: { view: "ad-builder", platform: draft.platform } })}
+                  onClick={() => navigate("/app", { state: { view: "ad-builder", platform: draft.platform }, replace: true })}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground group"
                 >
                   Continue

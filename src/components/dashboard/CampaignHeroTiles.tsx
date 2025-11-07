@@ -7,11 +7,11 @@ export function CampaignHeroTiles() {
   const navigate = useNavigate();
   
   const handleAdPlatformClick = (platform: string) => {
-    navigate("/", { state: { view: "ad-builder", platform } });
+    navigate("/app", { state: { view: "ad-builder", platform }, replace: true });
   };
   
   const handlePostBuilderClick = () => {
-    navigate("/post-builder");
+    navigate("/app", { state: { view: "post-builder" }, replace: true });
   };
 
   return (
@@ -56,7 +56,7 @@ export function CampaignHeroTiles() {
 
           {/* Main CTA */}
           <Button
-            onClick={() => navigate("/", { state: { view: "ad-builder" } })}
+            onClick={() => navigate("/app", { state: { view: "ad-builder" }, replace: true })}
             size="lg"
             className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold group"
           >
@@ -89,8 +89,8 @@ export function CampaignHeroTiles() {
           <div className="flex flex-wrap gap-2">
             {[
               { name: "All Platforms", action: handlePostBuilderClick },
-              { name: "View Published", action: () => navigate("/", { state: { view: "published-posts" } }) },
-              { name: "Scheduler", action: () => navigate("/", { state: { view: "schedule" } }) }
+              { name: "View Published", action: () => navigate("/app", { state: { view: "published-posts" }, replace: true }) },
+              { name: "Scheduler", action: () => navigate("/app", { state: { view: "schedule" }, replace: true }) }
             ].map((item, index) => (
               <Button
                 key={index}
