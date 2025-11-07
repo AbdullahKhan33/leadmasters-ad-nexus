@@ -123,29 +123,47 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   const handleAutoApplyAllSuggestions = async (s?: import('@/types/ai-campaign').AICampaignSuggestions) => {
     const sug = s || suggestions;
 
-    // STEP 1: Campaign Setup (when available)
+    // STEP 1: Campaign Setup - Apply AI suggestions first
     if (sug?.campaignSetup) {
       const { campaignSetup } = sug;
-      if (campaignSetup.objective) handleApplyAISuggestion('objective', campaignSetup.objective);
-      if (campaignSetup.recommendedBudget) {
-        handleApplyAISuggestion('budgetAmount', campaignSetup.recommendedBudget.min);
-        handleApplyAISuggestion('budgetType', 'daily');
+      if (campaignSetup.objective) {
+        handleApplyAISuggestion('objective', campaignSetup.objective);
       }
-      if (campaignSetup.bidStrategy) handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
+      if (campaignSetup.recommendedBudget) {
+        // Apply the exact budget values from AI
+        updateCampaignData({
+          budgetAmount: campaignSetup.recommendedBudget.min,
+          budgetType: 'daily'
+        });
+      }
+      if (campaignSetup.bidStrategy) {
+        handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
+      }
     }
 
-    // STEP 2: Target Audience (when available)
+    // STEP 2: Target Audience - Apply AI suggestions first
     if (sug?.targetAudience) {
       const { targetAudience } = sug;
       if (targetAudience.demographics) {
-        if (targetAudience.demographics.ageRange) handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
-        if (targetAudience.demographics.gender) handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
+        if (targetAudience.demographics.ageRange) {
+          // Apply age range directly as tuple
+          updateCampaignData({ 
+            ageRange: targetAudience.demographics.ageRange 
+          });
+        }
+        if (targetAudience.demographics.gender) {
+          handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
+        }
       }
-      if (targetAudience.locations?.length) handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
-      if (targetAudience.interests?.length) handleApplyAISuggestion('targetInterests', targetAudience.interests);
+      if (targetAudience.locations?.length) {
+        handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
+      }
+      if (targetAudience.interests?.length) {
+        handleApplyAISuggestion('targetInterests', targetAudience.interests);
+      }
     }
 
-    // STEP 3: Ad Content (when available)
+    // STEP 3: Ad Content - Apply AI suggestions first
     if (sug?.adContent) {
       const { adContent } = sug;
       if (adContent.headlines?.length) handleApplyAISuggestion('heading', adContent.headlines[0].text);
@@ -154,10 +172,27 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
 
-    // Fill any remaining required fields with safe defaults (first options)
-    applyDefaultValues();
+    // Fill remaining required fields with defaults ONLY if not already set by AI
+    const currentData = campaignData;
+    updateCampaignData({
+      adAccount: currentData.adAccount || 'account1',
+      campaignName: currentData.campaignName || 'Quick Launch Campaign',
+      objective: currentData.objective || 'awareness',
+      budgetType: currentData.budgetType || 'daily',
+      budgetAmount: currentData.budgetAmount || 100,
+      bidStrategy: currentData.bidStrategy || 'lowest_cost',
+      facebookPage: currentData.facebookPage || 'page1',
+      targetLocations: currentData.targetLocations?.length ? currentData.targetLocations : ['india'],
+      targetGender: currentData.targetGender || 'all',
+      ageRange: currentData.ageRange || [18, 65],
+      adFormat: (currentData as any).adFormat || 'single',
+      callToAction: (currentData as any).callToAction || 'learn_more',
+      adLinkUrl: (currentData as any).adLinkUrl || 'https://example.com',
+      heading: (currentData as any).heading || 'Quick Launch Headline',
+      primaryText: (currentData as any).primaryText || 'This campaign was auto-built. Tweak and launch!'
+    } as any);
 
-    // Jump to step 3 (ensure once now and once on next tick)
+    // Jump to step 3
     setCurrentStep(3);
     setTimeout(() => setCurrentStep(3), 0);
     toast.success('🎉 Campaign auto-built! Review and launch when ready.');
