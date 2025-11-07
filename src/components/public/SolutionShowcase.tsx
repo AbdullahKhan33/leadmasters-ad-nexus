@@ -142,10 +142,8 @@ export function SolutionShowcase() {
 
             {/* Demo visual */}
             <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-muted to-background rounded-xl border-2 border-border flex items-center justify-center overflow-hidden">
-                <div className={`text-6xl opacity-20 bg-gradient-to-br ${currentFeature.gradient} bg-clip-text text-transparent`}>
-                  <currentFeature.icon className="w-32 h-32" />
-                </div>
+              <div className={`aspect-square ${currentFeature.gradient === 'gradient-primary' ? 'gradient-primary' : `bg-gradient-to-br ${currentFeature.gradient}`} rounded-xl border-2 border-primary/20 flex items-center justify-center overflow-hidden shadow-2xl`}>
+                <currentFeature.icon className="w-32 h-32 text-white opacity-40" />
               </div>
               {/* Floating metric cards */}
               <div className="absolute -top-4 -right-4 bg-background border-2 border-border rounded-lg p-4 shadow-xl">
