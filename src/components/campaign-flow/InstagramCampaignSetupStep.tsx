@@ -149,7 +149,7 @@ export function InstagramCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft
           </div>
 
           {/* Bid Strategy */}
-          <div className="space-y-2">
+          <div className="space-y-2 md:col-span-2">
             <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
               Bid Strategy *
             </Label>

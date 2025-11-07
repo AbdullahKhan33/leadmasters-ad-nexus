@@ -216,10 +216,12 @@ export function GoogleTargetAudienceStep({ data, onUpdate, onNext, onBack, onSav
               className="w-full"
             />
           </div>
+        </div>
 
-          {/* Keywords */}
-          <div className="md:col-span-2 space-y-3">
-            <Label className="text-sm font-medium text-gray-700">Keywords</Label>
+        {/* Keywords - Full Width Below */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-gray-700">Keywords (Optional)</Label>
             <div className="flex space-x-2">
               <Input
                 value={keywordInput}
@@ -229,22 +231,27 @@ export function GoogleTargetAudienceStep({ data, onUpdate, onNext, onBack, onSav
               />
               <Button type="button" onClick={addKeyword} variant="outline">Add</Button>
             </div>
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {formData.keywords.map((keyword, index) => (
-                <span
-                  key={index}
-                  className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm flex items-center space-x-1"
-                >
-                  <span>{keyword}</span>
-                  <button
-                    onClick={() => removeKeyword(index)}
-                    className="text-green-600 hover:text-green-800"
+            
+            {/* Keyword Chips - Full Width */}
+            {formData.keywords.length > 0 && (
+              <div className="flex flex-row flex-wrap gap-2 items-center mt-3">
+                {formData.keywords.map((keyword, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm space-x-1"
                   >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
+                    <span>{keyword}</span>
+                    <button
+                      onClick={() => removeKeyword(index)}
+                      className="text-green-600 hover:text-green-800"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-gray-500">Press Enter to add keywords</p>
           </div>
         </div>
 

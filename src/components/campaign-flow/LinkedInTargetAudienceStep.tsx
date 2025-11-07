@@ -210,36 +210,6 @@ export function LinkedInTargetAudienceStep({ data, onUpdate, onNext, onBack, onS
             </div>
           </div>
 
-          {/* Skills */}
-          <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">Skills</Label>
-            <div className="flex space-x-2">
-              <Input
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                placeholder="Enter skill"
-                onKeyPress={(e) => e.key === 'Enter' && addToArray("skills", skillInput, setSkillInput)}
-              />
-              <Button type="button" onClick={() => addToArray("skills", skillInput, setSkillInput)} variant="outline">Add</Button>
-            </div>
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-              {formData.skills.map((skill, index) => (
-                <span
-                  key={index}
-                  className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm flex items-center space-x-1"
-                >
-                  <span>{skill}</span>
-                  <button
-                    onClick={() => removeFromArray("skills", index)}
-                    className="text-indigo-600 hover:text-indigo-800"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-
           {/* Seniority Level */}
           <div className="space-y-2">
             <Label className="text-sm font-medium text-gray-700">Seniority Level</Label>
@@ -314,6 +284,43 @@ export function LinkedInTargetAudienceStep({ data, onUpdate, onNext, onBack, onS
               step={1}
               className="w-full"
             />
+          </div>
+        </div>
+
+        {/* Skills - Full Width Below */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-gray-700">Skills (Optional)</Label>
+            <div className="flex space-x-2">
+              <Input
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                placeholder="Enter skill"
+                onKeyPress={(e) => e.key === 'Enter' && addToArray("skills", skillInput, setSkillInput)}
+              />
+              <Button type="button" onClick={() => addToArray("skills", skillInput, setSkillInput)} variant="outline">Add</Button>
+            </div>
+            
+            {/* Skill Chips - Full Width */}
+            {formData.skills.length > 0 && (
+              <div className="flex flex-row flex-wrap gap-2 items-center mt-3">
+                {formData.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm space-x-1"
+                  >
+                    <span>{skill}</span>
+                    <button
+                      onClick={() => removeFromArray("skills", index)}
+                      className="text-indigo-600 hover:text-indigo-800"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-gray-500">Press Enter to add skills</p>
           </div>
         </div>
 

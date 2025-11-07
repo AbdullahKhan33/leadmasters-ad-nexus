@@ -216,57 +216,6 @@ export function InstagramTargetAudienceStep({ data, onUpdate, onNext, onBack, on
               </div>
             </div>
 
-            {/* Interests */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
-                Interests & Behaviors
-              </Label>
-              <div className="flex space-x-2">
-                <Select value={interestInput} onValueChange={setInterestInput}>
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Add interests" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="fitness">Fitness & Wellness</SelectItem>
-                    <SelectItem value="fashion">Fashion</SelectItem>
-                    <SelectItem value="travel">Travel</SelectItem>
-                    <SelectItem value="food">Food & Cooking</SelectItem>
-                    <SelectItem value="technology">Technology</SelectItem>
-                    <SelectItem value="business">Business</SelectItem>
-                    <SelectItem value="photography">Photography</SelectItem>
-                    <SelectItem value="art">Art & Design</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button 
-                  type="button" 
-                  onClick={() => addInterest(interestInput)}
-                  disabled={!interestInput}
-                  variant="outline"
-                >
-                  Add
-                </Button>
-              </div>
-              
-              {formData.interests.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {formData.interests.map((interest, index) => (
-                    <div 
-                      key={index}
-                      className="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm flex items-center space-x-2"
-                    >
-                      <Heart className="w-3 h-3" />
-                      <span>{interest}</span>
-                      <button 
-                        onClick={() => removeInterest(interest)}
-                        className="text-pink-600 hover:text-pink-800"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Audience Insights Panel */}
@@ -317,6 +266,62 @@ export function InstagramTargetAudienceStep({ data, onUpdate, onNext, onBack, on
                 <p>🎯 Consider adding lifestyle interests for better engagement rates.</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Target Interests - Full Width Below */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-gray-700">
+              Interests & Behaviors (Optional)
+            </Label>
+            <div className="flex space-x-2">
+              <Select value={interestInput} onValueChange={setInterestInput}>
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Add interests" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fitness">Fitness & Wellness</SelectItem>
+                  <SelectItem value="fashion">Fashion</SelectItem>
+                  <SelectItem value="travel">Travel</SelectItem>
+                  <SelectItem value="food">Food & Cooking</SelectItem>
+                  <SelectItem value="technology">Technology</SelectItem>
+                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="photography">Photography</SelectItem>
+                  <SelectItem value="art">Art & Design</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                type="button" 
+                onClick={() => addInterest(interestInput)}
+                disabled={!interestInput}
+                variant="outline"
+              >
+                Add
+              </Button>
+            </div>
+            
+            {/* Interest Chips - Full Width */}
+            {formData.interests.length > 0 && (
+              <div className="flex flex-row flex-wrap gap-2 items-center mt-3">
+                {formData.interests.map((interest, index) => (
+                  <div 
+                    key={index}
+                    className="inline-flex items-center bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm space-x-2"
+                  >
+                    <Heart className="w-3 h-3" />
+                    <span>{interest}</span>
+                    <button 
+                      onClick={() => removeInterest(interest)}
+                      className="text-pink-600 hover:text-pink-800"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="text-xs text-gray-500">Select from dropdown to add interests</p>
           </div>
         </div>
 
