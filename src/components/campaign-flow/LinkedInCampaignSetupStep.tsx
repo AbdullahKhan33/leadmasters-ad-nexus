@@ -146,9 +146,11 @@ export function LinkedInCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft 
               min="1"
             />
           </div>
+        </div>
 
-          {/* Bid Strategy */}
-          <div className="space-y-2 md:col-span-2">
+        {/* Bid Strategy - Full Width Below */}
+        <div className="mt-6">
+          <div className="space-y-2">
             <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
               Bid Strategy *
             </Label>
