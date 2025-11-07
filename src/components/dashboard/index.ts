@@ -10,3 +10,7 @@ export { PipelineKanban } from "./PipelineKanban";
 export { AIAssistantCard } from "./AIAssistantCard";
 export { SmartGridCard } from "./SmartGridCard";
 export { NotificationBar } from "./NotificationBar";
+export { CampaignHeroTiles } from "./CampaignHeroTiles";
+export { DraftCampaignsSection } from "./DraftCampaignsSection";
+export { QuickAccessGrid } from "./QuickAccessGrid";
+export { CampaignAnalyticsOverview } from "./CampaignAnalyticsOverview";
