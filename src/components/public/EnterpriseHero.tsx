@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowRight, PlayCircle, TrendingUp, Users, Zap, Globe, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowRight, PlayCircle, TrendingUp, Users, Zap, Globe, Sparkles, CheckCircle, Brain, Rocket, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
 
 export function EnterpriseHero() {
   const navigate = useNavigate();
   const [whatsappLeads, setWhatsappLeads] = useState(47);
   const [roas, setRoas] = useState(2.3);
   const [growth, setGrowth] = useState(127);
-  const [aiProgress, setAiProgress] = useState(68);
   const [businessCount, setBusinessCount] = useState(100);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   // Animated counters
   useEffect(() => {
@@ -19,11 +22,55 @@ export function EnterpriseHero() {
       setWhatsappLeads(prev => Math.min(prev + 1, 52));
       setRoas(prev => Math.min(prev + 0.1, 2.8));
       setGrowth(prev => Math.min(prev + 2, 135));
-      setAiProgress(prev => (prev >= 100 ? 0 : prev + 8));
       setBusinessCount(prev => Math.min(prev + 1, 120));
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  // Track carousel slide changes
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    carouselApi.on('select', () => {
+      setCurrentSlide(carouselApi.selectedScrollSnap());
+    });
+  }, [carouselApi]);
+
+  // Carousel stages data
+  const carouselStages = [
+    {
+      icon: Brain,
+      iconBg: 'bg-blue-500',
+      title: 'AI analyzes your business',
+      description: 'Understanding your market and audience...',
+      progress: 25,
+      progressColor: 'bg-gradient-to-r from-blue-500 to-blue-600'
+    },
+    {
+      icon: Sparkles,
+      iconBg: 'bg-purple-500',
+      title: 'Creates targeted content',
+      description: 'Generating high-converting ads and posts...',
+      progress: 50,
+      progressColor: 'bg-gradient-to-r from-purple-500 to-pink-500'
+    },
+    {
+      icon: Rocket,
+      iconBg: 'bg-green-500',
+      title: 'Launches campaigns',
+      description: 'Deploying across all platforms...',
+      progress: 75,
+      progressColor: 'bg-gradient-to-r from-green-500 to-emerald-500'
+    },
+    {
+      icon: Target,
+      iconBg: 'bg-blue-500',
+      title: 'AI analyzes your business',
+      description: 'Understanding your market and audience...',
+      progress: 100,
+      progressColor: 'bg-gradient-to-r from-blue-500 to-indigo-600'
+    }
+  ];
 
   return (
     <section className="relative min-h-screen bg-background overflow-hidden">
@@ -146,37 +193,61 @@ export function EnterpriseHero() {
                 </div>
               </div>
 
-              {/* AI Analysis Section */}
-              <div className="bg-muted/50 rounded-xl p-5 space-y-3 border border-border">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-foreground">AI analyzes your business</p>
-                  <p className="text-sm text-muted-foreground">{aiProgress}%</p>
-                </div>
-                
-                <div className="w-full bg-background rounded-full h-2 overflow-hidden">
-                  <div 
-                    className="h-full gradient-primary transition-all duration-1000 ease-out"
-                    style={{ width: `${aiProgress}%` }}
-                  />
-                </div>
-                
-                <p className="text-xs text-muted-foreground">
-                  Understanding your market and audience...
-                </p>
-                
-                <div className="flex gap-2 pt-1">
-                  {[0, 1, 2, 3].map((dot) => (
-                    <div 
-                      key={dot} 
-                      className={`w-2 h-2 rounded-full transition-all ${
-                        dot === Math.floor(aiProgress / 25) % 4 
-                          ? 'bg-primary scale-125' 
-                          : 'bg-muted-foreground/30'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
+              {/* AI Analysis Carousel Section */}
+              <Carousel
+                setApi={setCarouselApi}
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                plugins={[
+                  Autoplay({
+                    delay: 3000,
+                  }),
+                ]}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {carouselStages.map((stage, index) => {
+                    const Icon = stage.icon;
+                    return (
+                      <CarouselItem key={index}>
+                        <div className="bg-muted/50 rounded-xl p-5 space-y-3 border border-border">
+                          <div className="flex items-center gap-3">
+                            <div className={`${stage.iconBg} rounded-xl p-3 shadow-lg`}>
+                              <Icon className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm font-semibold text-foreground">{stage.title}</p>
+                              <p className="text-xs text-muted-foreground">{stage.description}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="w-full bg-background rounded-full h-2 overflow-hidden">
+                            <div 
+                              className={`h-full ${stage.progressColor} transition-all duration-1000 ease-out`}
+                              style={{ width: `${stage.progress}%` }}
+                            />
+                          </div>
+                          
+                          <div className="flex gap-2 pt-1 justify-center">
+                            {[0, 1, 2, 3].map((dot) => (
+                              <div 
+                                key={dot} 
+                                className={`w-2 h-2 rounded-full transition-all ${
+                                  dot === currentSlide 
+                                    ? 'bg-primary scale-125' 
+                                    : 'bg-muted-foreground/30'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+              </Carousel>
 
               {/* Generated Post Preview */}
               <div className="space-y-3">
@@ -207,13 +278,17 @@ export function EnterpriseHero() {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
 
-              {/* Floating Icons */}
-              <div className="absolute -left-4 -bottom-4 w-12 h-12 bg-background rounded-xl shadow-lg border border-border flex items-center justify-center animate-pulse">
+              {/* Floating Icons with Enhanced Animations */}
+              <div className="absolute -left-4 -bottom-4 w-12 h-12 bg-background rounded-xl shadow-lg border border-border flex items-center justify-center animate-bounce" style={{ animationDuration: '3s' }}>
                 <Globe className="w-6 h-6 text-primary" />
               </div>
               
-              <div className="absolute -right-4 -top-4 w-12 h-12 bg-orange-500 rounded-xl shadow-lg flex items-center justify-center animate-pulse" style={{ animationDelay: '1s' }}>
+              <div className="absolute -right-4 -top-4 w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl shadow-lg flex items-center justify-center animate-pulse" style={{ animationDuration: '2s' }}>
                 <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              
+              <div className="absolute -right-4 -bottom-4 w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg flex items-center justify-center animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }}>
+                <Zap className="w-6 h-6 text-white" />
               </div>
             </div>
 
