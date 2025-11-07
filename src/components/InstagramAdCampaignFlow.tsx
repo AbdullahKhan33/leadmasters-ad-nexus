@@ -131,44 +131,101 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
     }
   };
 
-  // Map AI suggestion values to dropdown values
+  // Map AI suggestion values to dropdown values (Instagram-specific)
   const mapAIValueToDropdown = (field: string, aiValue: string): string => {
     const mappings: Record<string, Record<string, string>> = {
       objective: {
-        'Awareness': 'awareness',
-        'Brand Awareness': 'awareness',
-        'Traffic': 'traffic',
-        'Website Traffic': 'traffic',
-        'Engagement': 'engagement',
-        'Leads': 'leads',
-        'Lead Generation': 'leads',
-        'App Promotion': 'app_promotion',
-        'App Installs': 'app_promotion',
-        'Sales': 'sales',
-        'Conversions': 'sales'
+        'awareness': 'awareness',
+        'brand awareness': 'awareness',
+        'traffic': 'traffic',
+        'website traffic': 'traffic',
+        'engagement': 'engagement',
+        'leads': 'leads',
+        'lead generation': 'leads',
+        'app promotion': 'app_promotion',
+        'app installs': 'app_promotion',
+        'sales': 'sales',
+        'conversions': 'sales',
+        'reach': 'reach',
+        'video views': 'video_views'
+      },
+      budgetType: {
+        'daily': 'daily',
+        'daily budget': 'daily',
+        'lifetime': 'lifetime',
+        'total': 'lifetime',
+        'total budget': 'lifetime'
       },
       bidStrategy: {
-        'Lowest Cost': 'lowest_cost',
-        'Cost Cap': 'cost_cap',
-        'Bid Cap': 'bid_cap',
-        'Target Cost': 'target_cost'
+        'lowest cost': 'lowest_cost',
+        'cost cap': 'cost_cap',
+        'bid cap': 'bid_cap',
+        'target cost': 'target_cost'
+      },
+      targetGender: {
+        'all': 'all',
+        'any': 'all',
+        'male': 'male',
+        'female': 'female'
+      },
+      callToAction: {
+        'learn more': 'learn_more',
+        'shop now': 'shop_now',
+        'sign up': 'sign_up',
+        'download': 'download',
+        'get quote': 'get_quote'
+      },
+      adFormat: {
+        'single': 'single',
+        'single image': 'single',
+        'carousel': 'carousel',
+        'video': 'video'
       }
     };
 
+    const lower = aiValue.toLowerCase();
     const fieldMappings = mappings[field];
     if (fieldMappings) {
-      if (fieldMappings[aiValue]) return fieldMappings[aiValue];
-      const lowerAiValue = aiValue.toLowerCase();
-      for (const [key, val] of Object.entries(fieldMappings)) {
-        if (key.toLowerCase() === lowerAiValue) return val;
-      }
+      // direct match or synonym
+      if (fieldMappings[lower]) return fieldMappings[lower];
     }
     return aiValue;
   };
 
+  // Normalize incoming AI field names to our state shape
+  const normalizeField = (field: string): string => {
+    switch (field) {
+      case 'targetInterests':
+        return 'interests';
+      case 'keyword':
+        return 'keywords';
+      default:
+        return field;
+    }
+  };
+
   const handleApplyAISuggestion = (field: string, value: any) => {
-    const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
-    updateCampaignData({ [field]: mappedValue });
+    const normalizedField = normalizeField(field);
+
+    // Map strings to dropdown-safe values
+    let mappedValue: any = typeof value === 'string'
+      ? mapAIValueToDropdown(normalizedField, value)
+      : value;
+
+    // Ensure age range is a tuple of numbers
+    if (normalizedField === 'ageRange' && Array.isArray(mappedValue)) {
+      mappedValue = [Number(mappedValue[0]), Number(mappedValue[1])] as [number, number];
+    }
+
+    // Fields that are arrays: add uniquely instead of replacing
+    const arrayFields = new Set(['targetLocations', 'targetLanguages', 'keywords', 'interests']);
+    if (arrayFields.has(normalizedField)) {
+      const prev = (campaignData as any)[normalizedField] as any[] || [];
+      const next = Array.isArray(mappedValue) ? mappedValue : [...prev, mappedValue];
+      mappedValue = Array.from(new Set(next.filter(Boolean)));
+    }
+
+    updateCampaignData({ [normalizedField]: mappedValue } as Partial<InstagramCampaignData>);
     toast.success('AI suggestion applied successfully!');
   };
 

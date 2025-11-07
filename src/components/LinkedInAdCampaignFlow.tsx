@@ -129,44 +129,97 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
     }
   };
 
-  // Map AI suggestion values to dropdown values
+  // Map AI suggestion values to dropdown values (LinkedIn-specific)
   const mapAIValueToDropdown = (field: string, aiValue: string): string => {
     const mappings: Record<string, Record<string, string>> = {
       objective: {
-        'Awareness': 'awareness',
-        'Brand Awareness': 'awareness',
-        'Traffic': 'traffic',
-        'Website Traffic': 'traffic',
-        'Engagement': 'engagement',
-        'Leads': 'leads',
-        'Lead Generation': 'leads',
-        'App Promotion': 'app_promotion',
-        'App Installs': 'app_promotion',
-        'Sales': 'sales',
-        'Conversions': 'sales'
+        'brand awareness': 'brand_awareness',
+        'awareness': 'brand_awareness',
+        'website visits': 'website_visits',
+        'traffic': 'website_visits',
+        'engagement': 'engagement',
+        'video views': 'video_views',
+        'lead generation': 'lead_generation',
+        'leads': 'lead_generation',
+        'website conversions': 'website_conversions',
+        'conversions': 'website_conversions',
+        'job applicants': 'job_applicants'
+      },
+      budgetType: {
+        'daily': 'daily',
+        'daily budget': 'daily',
+        'total': 'total',
+        'lifetime': 'total',
+        'total budget': 'total'
       },
       bidStrategy: {
-        'Lowest Cost': 'lowest_cost',
-        'Cost Cap': 'cost_cap',
-        'Bid Cap': 'bid_cap',
-        'Target Cost': 'target_cost'
+        'automated bidding': 'automated_bid',
+        'maximum delivery': 'maximum_delivery',
+        'cost cap': 'cost_cap',
+        'manual bidding': 'manual_bid'
+      },
+      targetGender: {
+        'all': 'all',
+        'any': 'all',
+        'male': 'male',
+        'female': 'female'
+      },
+      adFormat: {
+        'single image': 'single_image',
+        'carousel': 'carousel',
+        'video': 'video',
+        'message': 'message',
+        'conversation': 'conversation',
+        'text': 'text',
+        'spotlight': 'spotlight'
+      },
+      callToAction: {
+        'learn more': 'learn_more',
+        'sign up': 'sign_up',
+        'download': 'download',
+        'visit website': 'visit_website',
+        'contact us': 'contact_us',
+        'apply now': 'apply_now',
+        'register': 'register',
+        'get quote': 'get_quote'
       }
     };
-
+    const lower = aiValue.toLowerCase();
     const fieldMappings = mappings[field];
-    if (fieldMappings) {
-      if (fieldMappings[aiValue]) return fieldMappings[aiValue];
-      const lowerAiValue = aiValue.toLowerCase();
-      for (const [key, val] of Object.entries(fieldMappings)) {
-        if (key.toLowerCase() === lowerAiValue) return val;
-      }
-    }
+    if (fieldMappings && fieldMappings[lower]) return fieldMappings[lower];
     return aiValue;
   };
 
+  // Normalize incoming AI field names to our state shape
+  const normalizeField = (field: string): string => {
+    switch (field) {
+      case 'targetInterests':
+        return 'skills'; // best-effort mapping for interests -> skills on LinkedIn
+      case 'keyword':
+        return 'skills';
+      case 'jobTitle':
+        return 'jobTitles';
+      default:
+        return field;
+    }
+  };
+
   const handleApplyAISuggestion = (field: string, value: any) => {
-    const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
-    updateCampaignData({ [field]: mappedValue });
+    const normalizedField = normalizeField(field);
+    let mappedValue: any = typeof value === 'string' ? mapAIValueToDropdown(normalizedField, value) : value;
+
+    if (normalizedField === 'ageRange' && Array.isArray(mappedValue)) {
+      mappedValue = [Number(mappedValue[0]), Number(mappedValue[1])] as [number, number];
+    }
+
+    const arrayFields = new Set(['targetLocations', 'jobTitles', 'companies', 'industries', 'skills', 'seniority', 'companySize']);
+    if (arrayFields.has(normalizedField)) {
+      const prev = (campaignData as any)[normalizedField] as any[] || [];
+      const next = Array.isArray(mappedValue) ? mappedValue : [...prev, mappedValue];
+      mappedValue = Array.from(new Set(next.filter(Boolean)));
+    }
+
+    updateCampaignData({ [normalizedField]: mappedValue } as Partial<LinkedInCampaignData>);
     toast.success('AI suggestion applied successfully!');
   };
 
