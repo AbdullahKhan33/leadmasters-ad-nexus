@@ -193,7 +193,7 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
       const { targetAudience } = sug;
       if (targetAudience.demographics) {
         if (targetAudience.demographics.ageRange) {
-          updateCampaignData({ ageRange: targetAudience.demographics.ageRange });
+          handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
         }
         if (targetAudience.demographics.gender) {
           handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);

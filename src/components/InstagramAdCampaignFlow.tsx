@@ -200,7 +200,9 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
     if (targetAudience) {
       if (targetAudience.demographics) {
         if (targetAudience.demographics.ageRange) {
-          aiAppliedData.ageRange = targetAudience.demographics.ageRange;
+          const min = Math.max(18, Math.min(65, Number(targetAudience.demographics.ageRange[0])));
+          const max = Math.max(18, Math.min(65, Number(targetAudience.demographics.ageRange[1])));
+          aiAppliedData.ageRange = [Math.min(min, max), Math.max(min, max)] as [number, number];
         }
         if (targetAudience.demographics.gender) {
           const mappedGender = mapAIValueToDropdown('targetGender', targetAudience.demographics.gender);
