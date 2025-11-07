@@ -8,7 +8,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Sparkles, Loader2, Globe } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sparkles, Loader2, Globe, Zap, Settings } from 'lucide-react';
 import { AIBusinessContext } from '@/types/ai-campaign';
 import { currencies, countries, getBudgetRanges } from '@/utils/currencyData';
 import { useBusinessContexts } from '@/hooks/useBusinessContexts';
@@ -269,62 +270,23 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             AI Campaign Assistant
           </DialogTitle>
           <DialogDescription>
-            Tell us about your business to generate personalized campaign suggestions.
+            Choose how you want to create your campaign: fully automated or guided setup.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Auto-Build Campaign Section - Prominent CTA */}
-        <div className="border-b pb-6 mb-4">
-          <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 rounded-lg p-6 space-y-4">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold mb-1">One-Click Campaign Builder</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Let AI automatically build your entire campaign in seconds. Fill the required fields below, then click to auto-build.
-                </p>
-                
-                {/* Progress Bar (only visible during auto-build) */}
-                {isAutoBuilding && (
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-purple-600 dark:text-purple-400">{buildStage}</span>
-                      <span className="text-muted-foreground">{buildProgress}%</span>
-                    </div>
-                    <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 transition-all duration-500 ease-out"
-                        style={{ width: `${buildProgress}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-                
-                <Button
-                  onClick={handleAutoBuild}
-                  disabled={isAutoBuilding || isLoading || !canAutoBuild()}
-                  className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:opacity-90 text-white font-semibold py-6 text-base"
-                >
-                  {isAutoBuilding ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Building Your Campaign...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5 mr-2" />
-                      🚀 Auto-Build Complete Campaign with AI
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Tabs defaultValue="quick" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="quick" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:via-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white">
+              <Zap className="w-4 h-4" />
+              Quick Launch
+            </TabsTrigger>
+            <TabsTrigger value="guided" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Settings className="w-4 h-4" />
+              Guided Setup
+            </TabsTrigger>
+          </TabsList>
 
-        <div className="space-y-4 py-4">
+          <TabsContent value="quick" className="space-y-4 mt-0">
           {/* Saved Contexts Badges */}
           <div className="space-y-2 pb-4 border-b">
             <Label className="text-sm text-muted-foreground">Saved Contexts</Label>
@@ -577,39 +539,333 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
               </label>
             </div>
           </div>
-        </div>
 
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={onClose} className="flex-1" disabled={isLoading || isAutoBuilding}>
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:opacity-90"
-            disabled={
-              !formData.industry || 
-              !formData.businessType || 
-              formData.targetCountries.length === 0 || 
-              !formData.campaignGoal || 
-              !formData.currency ||
-              (saveForFuture && !contextName.trim()) ||
-              isLoading ||
-              isAutoBuilding
-            }
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Generate Suggestions Only
-              </>
+            {/* Progress Bar (only visible during auto-build) */}
+            {isAutoBuilding && (
+              <div className="space-y-2 mb-4 p-4 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 rounded-lg">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-purple-600 dark:text-purple-400">{buildStage}</span>
+                  <span className="text-muted-foreground">{buildProgress}%</span>
+                </div>
+                <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 transition-all duration-500 ease-out"
+                    style={{ width: `${buildProgress}%` }}
+                  />
+                </div>
+              </div>
             )}
-          </Button>
-        </div>
+
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={onClose} className="flex-1" disabled={isLoading || isAutoBuilding}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAutoBuild}
+                disabled={isAutoBuilding || isLoading || !canAutoBuild()}
+                className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:opacity-90 text-white font-semibold"
+              >
+                {isAutoBuilding ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Building Campaign...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-5 h-5 mr-2" />
+                    Auto-Build Complete Campaign
+                  </>
+                )}
+              </Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="guided" className="space-y-4 mt-0">
+            {/* Saved Contexts Badges */}
+            <div className="space-y-2 pb-4 border-b">
+              <Label className="text-sm text-muted-foreground">Saved Contexts</Label>
+              {contexts.length === 0 ? (
+                <div className="text-sm text-muted-foreground italic py-2">
+                  No saved contexts yet
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {contexts.map(context => (
+                    <Badge
+                      key={context.id}
+                      variant={selectedContextId === context.id ? "gradient" : "outline"}
+                      className={cn(
+                        "cursor-pointer transition-all hover:scale-105 pr-1 text-xs",
+                        selectedContextId === context.id && 
+                        "ring-2 ring-primary ring-offset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500"
+                      )}
+                    >
+                      <span 
+                        onClick={() => loadContext(context.id)}
+                        className="pr-2"
+                      >
+                        {context.name}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setContextToDelete(context.id);
+                        }}
+                        className="ml-1 hover:bg-white/20 rounded-full w-4 h-4 flex items-center justify-center text-xs font-bold"
+                      >
+                        ×
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Context Name (if saving) */}
+            {saveForFuture && (
+              <div className="space-y-2">
+                <Label htmlFor="contextName">Context Name *</Label>
+                <Input
+                  id="contextName"
+                  placeholder="e.g., Real Estate Mumbai Campaign"
+                  value={contextName}
+                  onChange={(e) => setContextName(e.target.value)}
+                />
+              </div>
+            )}
+
+            <div className="border-t pt-4 space-y-4">
+              {/* Industry */}
+              <div className="space-y-2">
+                <Label htmlFor="industry">Industry *</Label>
+                <Select
+                  value={formData.industry}
+                  onValueChange={(value) => setFormData({ ...formData, industry: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your industry" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Real Estate">Real Estate</SelectItem>
+                    <SelectItem value="E-commerce">E-commerce</SelectItem>
+                    <SelectItem value="SaaS">SaaS</SelectItem>
+                    <SelectItem value="Education">Education</SelectItem>
+                    <SelectItem value="Healthcare">Healthcare</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
+                    <SelectItem value="Travel & Hospitality">Travel & Hospitality</SelectItem>
+                    <SelectItem value="Professional Services">Professional Services</SelectItem>
+                    <SelectItem value="Automotive">Automotive</SelectItem>
+                    <SelectItem value="Retail">Retail</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Business Description */}
+              <div className="space-y-2">
+                <Label htmlFor="businessType">Describe Your Business *</Label>
+                <Textarea
+                  id="businessType"
+                  placeholder="E.g., We provide AI training courses for software engineers looking to upskill in machine learning and automation"
+                  value={formData.businessType}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 200) {
+                      setFormData({ ...formData, businessType: e.target.value });
+                    }
+                  }}
+                  className="min-h-[80px] resize-none"
+                  maxLength={200}
+                />
+                <div className="text-xs text-muted-foreground text-right">
+                  {formData.businessType.length}/200 characters
+                </div>
+              </div>
+
+              {/* Target Countries */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Globe className="w-4 h-4" />
+                  Target Countries *
+                </Label>
+                <div className="relative">
+                  <Input
+                    placeholder="Search and select countries..."
+                    value={countrySearchTerm}
+                    onChange={(e) => setCountrySearchTerm(e.target.value)}
+                    onFocus={() => setShowCountryDropdown(true)}
+                  />
+                  {showCountryDropdown && (
+                    <div className="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                      <div className="p-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-xs mb-2"
+                          onClick={() => {
+                            setShowCountryDropdown(false);
+                            setCountrySearchTerm('');
+                          }}
+                        >
+                          ✓ Done
+                        </Button>
+                        {filteredCountries.length === 0 ? (
+                          <div className="p-3 text-sm text-muted-foreground text-center">
+                            No countries found
+                          </div>
+                        ) : (
+                          filteredCountries.map(country => (
+                            <div
+                              key={country}
+                              className="flex items-center space-x-2 p-2 hover:bg-accent rounded cursor-pointer"
+                              onClick={() => toggleCountry(country)}
+                            >
+                              <Checkbox
+                                checked={formData.targetCountries.includes(country)}
+                                onCheckedChange={() => toggleCountry(country)}
+                              />
+                              <span className="text-sm">{country}</span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {formData.targetCountries.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.targetCountries.map(country => (
+                      <div key={country} className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                        {country}
+                        <button
+                          onClick={() => toggleCountry(country)}
+                          className="hover:bg-primary/20 rounded-full w-4 h-4 flex items-center justify-center"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Target Cities */}
+              <div className="space-y-2">
+                <Label htmlFor="targetCities">Cities/Regions (Optional)</Label>
+                <Input
+                  id="targetCities"
+                  placeholder="e.g., Mumbai, Dubai, New York"
+                  value={formData.targetCities}
+                  onChange={(e) => setFormData({ ...formData, targetCities: e.target.value })}
+                />
+              </div>
+
+              {/* Campaign Goal */}
+              <div className="space-y-2">
+                <Label htmlFor="campaignGoal">Campaign Goal *</Label>
+                <Select
+                  value={formData.campaignGoal}
+                  onValueChange={(value) => setFormData({ ...formData, campaignGoal: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your goal" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Brand Awareness">Brand Awareness</SelectItem>
+                    <SelectItem value="Lead Generation">Lead Generation</SelectItem>
+                    <SelectItem value="Website Traffic">Website Traffic</SelectItem>
+                    <SelectItem value="Conversions">Conversions</SelectItem>
+                    <SelectItem value="App Installs">App Installs</SelectItem>
+                    <SelectItem value="Engagement">Engagement</SelectItem>
+                    <SelectItem value="Store Visits">Store Visits</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Currency */}
+              <div className="space-y-2">
+                <Label htmlFor="currency">Currency *</Label>
+                <Select
+                  value={formData.currency}
+                  onValueChange={(value) => setFormData({ ...formData, currency: value, budgetRange: '' })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencies.map(curr => (
+                      <SelectItem key={curr.code} value={curr.code}>
+                        {curr.symbol} {curr.name} ({curr.code})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Budget Amount */}
+              <div className="space-y-2">
+                <Label htmlFor="budgetAmount">Campaign Budget (Optional)</Label>
+                <Input
+                  id="budgetAmount"
+                  type="number"
+                  placeholder={`Enter budget amount in ${formData.currency}`}
+                  value={formData.budgetRange}
+                  onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
+                  min="0"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Enter your total campaign budget in {formData.currency}
+                </p>
+              </div>
+
+              {/* Save for Future */}
+              <div className="flex items-center space-x-2 pt-2">
+                <Checkbox
+                  id="saveForFuture"
+                  checked={saveForFuture}
+                  onCheckedChange={(checked) => setSaveForFuture(checked as boolean)}
+                />
+                <label
+                  htmlFor="saveForFuture"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                >
+                  Save this context for future use
+                </label>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={onClose} className="flex-1" disabled={isLoading}>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                className="flex-1 bg-primary hover:bg-primary/90"
+                disabled={
+                  !formData.industry || 
+                  !formData.businessType || 
+                  formData.targetCountries.length === 0 || 
+                  !formData.campaignGoal || 
+                  !formData.currency ||
+                  (saveForFuture && !contextName.trim()) ||
+                  isLoading
+                }
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Generate AI Suggestions
+                  </>
+                )}
+              </Button>
+            </div>
+          </TabsContent>
+        </Tabs>
 
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={!!contextToDelete} onOpenChange={() => setContextToDelete(null)}>
