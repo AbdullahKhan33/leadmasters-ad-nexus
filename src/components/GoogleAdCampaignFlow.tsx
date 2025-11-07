@@ -163,34 +163,37 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
     const sug = s || suggestions;
     if (!sug) return;
 
-    // STEP 1: Campaign Setup - Apply AI suggestions first
-    const { campaignSetup } = sug;
-    if (campaignSetup) {
-      if (campaignSetup.objective) {
-        // Google uses campaignType instead of objective
-        handleApplyAISuggestion('campaignType', campaignSetup.objective);
-      }
-      if (campaignSetup.recommendedBudget) {
-        // Apply the exact budget values from AI
-        updateCampaignData({
-          budgetAmount: campaignSetup.recommendedBudget.min,
-          budgetType: 'daily'
-        });
-      }
-      if (campaignSetup.bidStrategy) {
-        handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
-      }
+    // STEP 1: Campaign Setup - Apply USER inputs directly
+    if (businessContext?.campaignGoal) {
+      const goalToTypeMap: Record<string, string> = {
+        'Brand Awareness': 'display',
+        'Lead Generation': 'search',
+        'Website Traffic': 'search',
+        'Conversions': 'search',
+        'App Installs': 'app',
+        'Engagement': 'video',
+        'Store Visits': 'performance_max'
+      };
+      updateCampaignData({ campaignType: goalToTypeMap[businessContext.campaignGoal] || 'search' });
+    }
+    
+    if (businessContext?.budgetRange) {
+      updateCampaignData({
+        budgetAmount: parseInt(businessContext.budgetRange),
+        budgetType: 'daily'
+      });
+    }
+    
+    if (businessContext?.websiteUrl) {
+      updateCampaignData({ finalUrl: businessContext.websiteUrl });
     }
 
-    // STEP 2: Target Audience - Apply AI suggestions first
-    const { targetAudience } = sug;
-    if (targetAudience) {
+    // STEP 2: Target Audience - Apply AI suggestions
+    if (sug.targetAudience) {
+      const { targetAudience } = sug;
       if (targetAudience.demographics) {
         if (targetAudience.demographics.ageRange) {
-          // Apply age range directly as tuple
-          updateCampaignData({ 
-            ageRange: targetAudience.demographics.ageRange 
-          });
+          updateCampaignData({ ageRange: targetAudience.demographics.ageRange });
         }
         if (targetAudience.demographics.gender) {
           handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
@@ -204,35 +207,30 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
       }
     }
 
-    // STEP 3: Ad Content - Apply AI suggestions first
-    const { adContent } = sug;
-    if (adContent) {
+    // STEP 3: Ad Content - Apply AI suggestions
+    if (sug.adContent) {
+      const { adContent } = sug;
       if (adContent.headlines?.length) handleApplyAISuggestion('headline1', adContent.headlines[0].text);
       if (adContent.descriptions?.length) handleApplyAISuggestion('description1', adContent.descriptions[0].text);
       if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
 
-    // Apply website URL from business context
-    if (businessContext?.websiteUrl) {
-      updateCampaignData({ finalUrl: businessContext.websiteUrl });
-    }
-
-    // Fill remaining required fields with defaults ONLY if not already set by AI
+    // Fill remaining required fields with defaults ONLY if not already set
     const currentData = campaignData;
     updateCampaignData({
       adAccount: currentData.adAccount || 'account1',
-      campaignName: currentData.campaignName || 'Quick Launch Campaign',
+      campaignName: currentData.campaignName || `${businessContext?.campaignGoal || 'Quick Launch'} Campaign`,
       campaignType: currentData.campaignType || 'search',
       budgetType: currentData.budgetType || 'daily',
       budgetAmount: currentData.budgetAmount || 100,
       bidStrategy: currentData.bidStrategy || 'maximize_clicks',
-      targetLocations: currentData.targetLocations?.length ? currentData.targetLocations : ['india'],
+      targetLocations: currentData.targetLocations?.length ? currentData.targetLocations : (businessContext?.targetCountries || ['india']),
       targetLanguages: currentData.targetLanguages?.length ? currentData.targetLanguages : ['english'],
       keywords: (currentData as any).keywords?.length ? (currentData as any).keywords : ['marketing'],
       audienceType: currentData.audienceType || 'search_terms',
       headline1: (currentData as any).headline1 || 'Quick Launch Headline',
       description1: (currentData as any).description1 || 'Auto-built campaign. Adjust and launch!',
-      finalUrl: currentData.finalUrl || 'https://example.com',
+      finalUrl: currentData.finalUrl || businessContext?.websiteUrl || 'https://example.com',
       adFormat: (currentData as any).adFormat || 'text',
       callToAction: (currentData as any).callToAction || 'learn_more'
     } as any);

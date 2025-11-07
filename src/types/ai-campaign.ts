@@ -11,12 +11,6 @@ export interface AIBusinessContext {
 }
 
 export interface AICampaignSuggestions {
-  campaignSetup: {
-    objective: string;
-    recommendedBudget: { min: number; max: number; reasoning: string };
-    bidStrategy: string;
-    tips: string[];
-  };
   targetAudience: {
     demographics: {
       ageRange: [number, number];

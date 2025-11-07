@@ -11,37 +11,35 @@ serve(async (req) => {
   }
 
   try {
-    const { industry, businessType, targetCountries, targetCities, campaignGoal, budgetRange, currency, platform } = await req.json();
+    const { industry, businessType, targetCountries, targetCities, campaignGoal, platform } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are an expert digital advertising strategist. Generate comprehensive campaign suggestions based on the user's business context. Return ONLY valid JSON without any markdown formatting or code blocks.`;
+    const systemPrompt = `You are an expert digital advertising strategist specializing in ad copywriting and audience targeting. Generate compelling ad content and precise audience targeting suggestions. Return ONLY valid JSON without any markdown formatting or code blocks.`;
 
-    const userPrompt = `Generate campaign suggestions for:
+    const userPrompt = `Generate ad copy and targeting suggestions for:
 Industry: ${industry}
 Business Type: ${businessType}
 Target Countries: ${Array.isArray(targetCountries) ? targetCountries.join(', ') : targetCountries}
 Target Cities: ${targetCities || 'Not specified'}
 Campaign Goal: ${campaignGoal}
-Currency: ${currency}
-Budget Range: ${budgetRange || 'Not specified'}
 Platform: ${platform}
 
-Provide country-specific insights and budget recommendations in ${currency}.
-Consider local market conditions, cultural nuances, and platform popularity in the target countries.
-Generate specific location targeting recommendations for ${Array.isArray(targetCountries) ? targetCountries.join(', ') : targetCountries}.
+Focus on:
+1. Creating compelling, conversion-focused ad copy (headlines, descriptions, primary text, CTAs)
+2. Identifying precise target audience demographics (age, gender with reasoning)
+3. Suggesting specific location targeting within the given countries/cities
+4. ${platform === 'linkedin' ? 'Recommending relevant job titles and industries' : ''}
+${platform === 'google' ? 'Providing high-intent search keywords' : ''}
+${platform === 'facebook' || platform === 'instagram' ? 'Suggesting relevant audience interests' : ''}
+
+Consider local market conditions, cultural nuances, and platform best practices for ${Array.isArray(targetCountries) ? targetCountries.join(', ') : targetCountries}.
 
 Return suggestions in this exact JSON structure:
 {
-  "campaignSetup": {
-    "objective": "string",
-    "recommendedBudget": { "min": number, "max": number, "reasoning": "string" },
-    "bidStrategy": "string",
-    "tips": ["string"]
-  },
   "targetAudience": {
     "demographics": {
       "ageRange": [number, number],

@@ -123,33 +123,37 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   const handleAutoApplyAllSuggestions = async (s?: import('@/types/ai-campaign').AICampaignSuggestions) => {
     const sug = s || suggestions;
 
-    // STEP 1: Campaign Setup - Apply AI suggestions first
-    if (sug?.campaignSetup) {
-      const { campaignSetup } = sug;
-      if (campaignSetup.objective) {
-        handleApplyAISuggestion('objective', campaignSetup.objective);
-      }
-      if (campaignSetup.recommendedBudget) {
-        // Apply the exact budget values from AI
-        updateCampaignData({
-          budgetAmount: campaignSetup.recommendedBudget.min,
-          budgetType: 'daily'
-        });
-      }
-      if (campaignSetup.bidStrategy) {
-        handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
-      }
+    // STEP 1: Campaign Setup - Apply USER inputs directly
+    if (businessContext?.campaignGoal) {
+      const goalToObjectiveMap: Record<string, string> = {
+        'Brand Awareness': 'awareness',
+        'Lead Generation': 'leads',
+        'Website Traffic': 'traffic',
+        'Conversions': 'sales',
+        'App Installs': 'app_promotion',
+        'Engagement': 'engagement',
+        'Store Visits': 'reach'
+      };
+      updateCampaignData({ objective: goalToObjectiveMap[businessContext.campaignGoal] || 'awareness' });
+    }
+    
+    if (businessContext?.budgetRange) {
+      updateCampaignData({
+        budgetAmount: parseInt(businessContext.budgetRange),
+        budgetType: 'daily'
+      });
+    }
+    
+    if (businessContext?.websiteUrl) {
+      updateCampaignData({ adLinkUrl: businessContext.websiteUrl });
     }
 
-    // STEP 2: Target Audience - Apply AI suggestions first
+    // STEP 2: Target Audience - Apply AI suggestions
     if (sug?.targetAudience) {
       const { targetAudience } = sug;
       if (targetAudience.demographics) {
         if (targetAudience.demographics.ageRange) {
-          // Apply age range directly as tuple
-          updateCampaignData({ 
-            ageRange: targetAudience.demographics.ageRange 
-          });
+          updateCampaignData({ ageRange: targetAudience.demographics.ageRange });
         }
         if (targetAudience.demographics.gender) {
           handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
@@ -159,11 +163,11 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
       }
       if (targetAudience.interests?.length) {
-        handleApplyAISuggestion('targetInterests', targetAudience.interests);
+        handleApplyAISuggestion('interests', targetAudience.interests);
       }
     }
 
-    // STEP 3: Ad Content - Apply AI suggestions first
+    // STEP 3: Ad Content - Apply AI suggestions
     if (sug?.adContent) {
       const { adContent } = sug;
       if (adContent.headlines?.length) handleApplyAISuggestion('heading', adContent.headlines[0].text);
@@ -171,28 +175,23 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       if (adContent.primaryText?.length) handleApplyAISuggestion('primaryText', adContent.primaryText[0]);
       if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
-
-    // Apply website URL from business context
-    if (businessContext?.websiteUrl) {
-      updateCampaignData({ adLinkUrl: businessContext.websiteUrl });
-    }
-
-    // Fill remaining required fields with defaults ONLY if not already set by AI
+    
+    // Fill remaining required fields with defaults ONLY if not already set
     const currentData = campaignData;
     updateCampaignData({
       adAccount: currentData.adAccount || 'account1',
-      campaignName: currentData.campaignName || 'Quick Launch Campaign',
+      campaignName: currentData.campaignName || `${businessContext?.campaignGoal || 'Quick Launch'} Campaign`,
       objective: currentData.objective || 'awareness',
       budgetType: currentData.budgetType || 'daily',
       budgetAmount: currentData.budgetAmount || 100,
       bidStrategy: currentData.bidStrategy || 'lowest_cost',
       facebookPage: currentData.facebookPage || 'page1',
-      targetLocations: currentData.targetLocations?.length ? currentData.targetLocations : ['india'],
+      targetLocations: currentData.targetLocations?.length ? currentData.targetLocations : (businessContext?.targetCountries || ['india']),
       targetGender: currentData.targetGender || 'all',
       ageRange: currentData.ageRange || [18, 65],
       adFormat: (currentData as any).adFormat || 'single',
       callToAction: (currentData as any).callToAction || 'learn_more',
-      adLinkUrl: currentData.adLinkUrl || 'https://example.com',
+      adLinkUrl: currentData.adLinkUrl || businessContext?.websiteUrl || 'https://example.com',
       heading: (currentData as any).heading || 'Quick Launch Headline',
       primaryText: (currentData as any).primaryText || 'This campaign was auto-built. Tweak and launch!'
     } as any);

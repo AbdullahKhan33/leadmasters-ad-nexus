@@ -24,7 +24,8 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
   const getStepSuggestions = () => {
     switch (step) {
       case 'setup':
-        return suggestions.campaignSetup;
+        // No AI suggestions for setup - user provides these directly
+        return null;
       case 'audience':
         return suggestions.targetAudience;
       case 'content':
@@ -58,46 +59,18 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
 
         {!isCollapsed && (
           <div className="space-y-3">
-            {/* Campaign Setup Step */}
-            {step === 'setup' && 'objective' in stepData && (
-              <>
-                <SuggestionCard
-                  title="Campaign Objective"
-                  value={stepData.objective}
-                  confidence="high"
-                  onApply={() => onApplySuggestion('objective', stepData.objective)}
-                />
-                
-                <SuggestionCard
-                  title="Recommended Budget"
-                  value={`${currencySymbol}${stepData.recommendedBudget.min} - ${currencySymbol}${stepData.recommendedBudget.max}`}
-                  confidence="high"
-                  reasoning={stepData.recommendedBudget.reasoning}
-                  onApply={() => onApplySuggestion('budgetAmount', stepData.recommendedBudget.min)}
-                />
-
-                <SuggestionCard
-                  title="Bid Strategy"
-                  value={stepData.bidStrategy}
-                  confidence="high"
-                  onApply={() => onApplySuggestion('bidStrategy', stepData.bidStrategy)}
-                />
-
-                {stepData.tips.length > 0 && (
-                  <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-xs font-semibold text-blue-900 mb-2">💡 Pro Tips</p>
-                    <ul className="text-xs text-blue-800 space-y-1">
-                      {stepData.tips.map((tip, i) => (
-                        <li key={i}>• {tip}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </>
+            {/* Setup Step - Show message that user provides these */}
+            {step === 'setup' && (
+              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-xs font-semibold text-blue-900 mb-1">✓ Using Your Inputs</p>
+                <p className="text-xs text-blue-800">
+                  Campaign objective, budget, and URL are taken directly from your inputs in the first step.
+                </p>
+              </div>
             )}
 
             {/* Target Audience Step */}
-            {step === 'audience' && 'demographics' in stepData && (
+            {step === 'audience' && stepData && 'demographics' in stepData && (
               <>
                 <SuggestionCard
                   title="Age Range"

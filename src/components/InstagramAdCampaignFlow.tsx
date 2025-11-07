@@ -163,29 +163,39 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
 
   const handleAutoApplyAllSuggestions = async (s?: import('@/types/ai-campaign').AICampaignSuggestions) => {
     const sug = s || suggestions;
-    if (!sug) return;
+    if (!sug || !businessContext) return;
 
-    // Build the new campaign data with AI suggestions applied
+    // Build campaign data with user inputs directly applied
     const aiAppliedData: any = { ...campaignData };
 
-    // STEP 1: Campaign Setup - Apply AI suggestions
-    const { campaignSetup } = sug;
-    if (campaignSetup) {
-      if (campaignSetup.objective) {
-        const mappedObjective = mapAIValueToDropdown('objective', campaignSetup.objective);
-        aiAppliedData.objective = mappedObjective;
-      }
-      if (campaignSetup.recommendedBudget) {
-        aiAppliedData.budgetAmount = campaignSetup.recommendedBudget.min;
-        aiAppliedData.budgetType = 'daily';
-      }
-      if (campaignSetup.bidStrategy) {
-        const mappedBidStrategy = mapAIValueToDropdown('bidStrategy', campaignSetup.bidStrategy);
-        aiAppliedData.bidStrategy = mappedBidStrategy;
-      }
+    // STEP 1: Campaign Setup - Apply USER inputs directly
+    if (businessContext.campaignGoal) {
+      // Map campaign goal to objective
+      const goalToObjectiveMap: Record<string, string> = {
+        'Brand Awareness': 'awareness',
+        'Lead Generation': 'leads',
+        'Website Traffic': 'traffic',
+        'Conversions': 'sales',
+        'App Installs': 'app_promotion',
+        'Engagement': 'engagement',
+        'Store Visits': 'reach'
+      };
+      aiAppliedData.objective = goalToObjectiveMap[businessContext.campaignGoal] || 'awareness';
+    }
+    
+    // Apply user's budget directly
+    if (businessContext.budgetRange) {
+      aiAppliedData.budgetAmount = parseInt(businessContext.budgetRange);
+      aiAppliedData.budgetType = 'daily';
+    }
+    
+    // Apply user's website URL directly
+    if (businessContext.websiteUrl) {
+      aiAppliedData.adLinkUrl = businessContext.websiteUrl;
+      aiAppliedData.websiteUrl = businessContext.websiteUrl;
     }
 
-    // STEP 2: Target Audience
+    // STEP 2: Target Audience - Apply AI suggestions
     const { targetAudience } = sug;
     if (targetAudience) {
       if (targetAudience.demographics) {
@@ -205,7 +215,7 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
       }
     }
 
-    // STEP 3: Ad Content
+    // STEP 3: Ad Content - Apply AI suggestions
     const { adContent } = sug;
     if (adContent) {
       if (adContent.headlines?.length) aiAppliedData.heading = adContent.headlines[0].text;
@@ -217,29 +227,23 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
       }
     }
 
-    // Apply website URL from business context
-    if (businessContext?.websiteUrl) {
-      aiAppliedData.adLinkUrl = businessContext.websiteUrl;
-      aiAppliedData.websiteUrl = businessContext.websiteUrl;
-    }
-
-    // Fill remaining required fields with defaults ONLY if not already set by AI
+    // Fill remaining required fields with defaults ONLY if not already set
     updateCampaignData({
       adAccount: aiAppliedData.adAccount || 'account1',
-      campaignName: aiAppliedData.campaignName || 'Quick Launch Campaign',
+      campaignName: aiAppliedData.campaignName || `${businessContext.campaignGoal} Campaign`,
       objective: aiAppliedData.objective || 'awareness',
       budgetType: aiAppliedData.budgetType || 'daily',
       budgetAmount: aiAppliedData.budgetAmount || 100,
       bidStrategy: aiAppliedData.bidStrategy || 'lowest_cost',
       instagramAccount: aiAppliedData.instagramAccount || 'account1',
-      targetLocations: aiAppliedData.targetLocations?.length ? aiAppliedData.targetLocations : ['india'],
+      targetLocations: aiAppliedData.targetLocations?.length ? aiAppliedData.targetLocations : businessContext.targetCountries,
       targetGender: aiAppliedData.targetGender || 'all',
       ageRange: aiAppliedData.ageRange || [18, 65],
       adFormat: aiAppliedData.adFormat || 'single',
       callToAction: aiAppliedData.callToAction || 'learn_more',
       selectedChannel: aiAppliedData.selectedChannel || 'website',
-      websiteUrl: aiAppliedData.websiteUrl || 'https://example.com',
-      adLinkUrl: aiAppliedData.adLinkUrl || 'https://example.com',
+      websiteUrl: aiAppliedData.websiteUrl || businessContext.websiteUrl || 'https://example.com',
+      adLinkUrl: aiAppliedData.adLinkUrl || businessContext.websiteUrl || 'https://example.com',
       heading: aiAppliedData.heading || 'Quick Launch Headline',
       primaryText: aiAppliedData.primaryText || 'This campaign was auto-built. Tweak and launch!'
     } as any);
