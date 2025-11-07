@@ -16,11 +16,11 @@ const platformIcons = {
   google: Zap,
 };
 
-const platformGradients = {
-  facebook: "from-blue-500 to-blue-600",
-  instagram: "from-pink-500 via-purple-500 to-orange-500",
-  linkedin: "from-blue-600 to-blue-700",
-  google: "from-green-500 via-yellow-500 to-red-500",
+const platformColors = {
+  facebook: "bg-blue-50 text-blue-600 border-blue-100",
+  instagram: "bg-pink-50 text-pink-600 border-pink-100",
+  linkedin: "bg-blue-50 text-blue-700 border-blue-100",
+  google: "bg-green-50 text-green-600 border-green-100",
 };
 
 export function DraftCampaignsSection() {
@@ -44,10 +44,10 @@ export function DraftCampaignsSection() {
 
   if (isLoading) {
     return (
-      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-amber-500/10 via-orange-400/5 to-background shadow-xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 via-orange-400/20 to-amber-400/20 rounded-lg opacity-30 animate-pulse" />
+      <Card className="border border-amber-200 bg-amber-50/50">
         <CardHeader>
-          <CardTitle className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+          <CardTitle className="text-lg font-semibold text-amber-900 flex items-center gap-2">
+            <FileText className="w-5 h-5" />
             Draft Campaigns
           </CardTitle>
         </CardHeader>
@@ -63,64 +63,52 @@ export function DraftCampaignsSection() {
   }
 
   return (
-    <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-amber-500/10 via-orange-400/5 to-background shadow-2xl">
-      {/* Premium gradient border effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-amber-400/30 via-orange-400/30 to-amber-400/30 rounded-xl opacity-40" />
-      
-      {/* Animated gradient orb */}
-      <div className="absolute -top-20 right-1/3 w-60 h-60 bg-gradient-to-br from-amber-500/30 to-orange-500/30 rounded-full blur-3xl animate-pulse-slow" />
-      
-      <CardHeader className="relative pb-4 border-b border-border/50">
+    <Card className="border border-amber-200 bg-amber-50/50">
+      <CardHeader className="border-b border-amber-200/50 pb-4">
         <CardTitle className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-xl">
-            <FileText className="w-6 h-6" />
+          <div className="p-2 rounded-lg bg-amber-100">
+            <FileText className="w-5 h-5 text-amber-700" />
           </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 bg-clip-text text-transparent">
+          <span className="text-xl font-bold text-amber-900">
             Draft Campaigns
           </span>
-          <Badge variant="secondary" className="ml-auto bg-gradient-to-r from-amber-100 to-orange-100 text-amber-900 border-2 border-amber-300 font-bold px-3 py-1">
+          <Badge variant="secondary" className="ml-auto bg-amber-100 text-amber-900 border border-amber-200">
             {allDrafts.length} {allDrafts.length === 1 ? 'Draft' : 'Drafts'}
           </Badge>
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative space-y-4 pt-6">
+      <CardContent className="space-y-3 pt-4">
         {displayedDrafts.map((draft) => {
           const Icon = platformIcons[draft.platform];
-          const gradient = platformGradients[draft.platform];
+          const colorClass = platformColors[draft.platform];
           
           return (
             <div
               key={`${draft.platform}-${draft.id}`}
-              className="group relative bg-background/80 backdrop-blur-sm p-5 rounded-2xl border-2 border-border/50 hover:border-primary/50 hover:shadow-xl transition-all duration-500"
+              className="group bg-background p-4 rounded-xl border border-border hover:border-primary/50 hover:shadow-md transition-all duration-300"
             >
-              {/* Hover glow effect */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-500`} />
-              
-              {/* Shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl" />
-              
-              <div className="relative flex items-start justify-between gap-4">
+              <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className={`p-2.5 rounded-xl bg-gradient-to-br ${gradient} border-2 border-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className="w-5 h-5 text-white" />
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`p-1.5 rounded ${colorClass} border`}>
+                      <Icon className="w-4 h-4" />
                     </div>
-                    <h4 className="font-bold text-lg text-foreground truncate group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
+                    <h4 className="font-semibold text-foreground truncate">
                       {draft.name}
                     </h4>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="w-4 h-4" />
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Clock className="w-3.5 h-3.5" />
                     <span>Last edited: {new Date(draft.updated_at).toLocaleDateString()}</span>
                   </div>
                 </div>
                 <Button
-                  size="lg"
+                  size="sm"
                   onClick={() => navigate("/", { state: { view: "ad-builder", platform: draft.platform } })}
-                  className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 px-6 group"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground group"
                 >
                   Continue
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
                 </Button>
               </div>
             </div>
@@ -130,9 +118,9 @@ export function DraftCampaignsSection() {
         {allDrafts.length > 3 && (
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={() => setExpandedView(!expandedView)}
-            className="w-full border-2 border-amber-300 hover:border-amber-400 text-amber-700 hover:text-amber-800 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 transition-all duration-300 font-semibold"
+            className="w-full border-amber-200 text-amber-700 hover:bg-amber-50"
           >
             {expandedView ? 'Show Less' : `View All ${allDrafts.length} Drafts`}
           </Button>
