@@ -86,15 +86,18 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
     const result = await generateSuggestions(context);
     if (result) {
       setAiEnabled(true);
-      setShowAIModal(false);
       
       if (autoBuild) {
-        handleAutoApplyAllSuggestions();
+        // Apply all suggestions and navigate to step 3 before closing modal
+        await handleAutoApplyAllSuggestions();
+        setShowAIModal(false);
+      } else {
+        setShowAIModal(false);
       }
     }
   };
 
-  const handleAutoApplyAllSuggestions = () => {
+  const handleAutoApplyAllSuggestions = async () => {
     if (!suggestions) return;
 
     // STEP 1: Campaign Setup
@@ -148,10 +151,14 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       }
     }
 
-    setTimeout(() => {
-      setCurrentStep(3);
-      toast.success('🎉 Campaign auto-built! Review and launch when ready.');
-    }, 500);
+    // Navigate to step 3 immediately
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setCurrentStep(3);
+        toast.success('🎉 Campaign auto-built! Review and launch when ready.');
+        resolve();
+      }, 300);
+    });
   };
 
   // Map AI suggestion values to dropdown values
