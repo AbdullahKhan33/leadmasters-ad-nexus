@@ -263,6 +263,7 @@ export type Database = {
           target_countries: string[]
           updated_at: string | null
           user_id: string
+          website_url: string | null
         }
         Insert: {
           budget_range?: string | null
@@ -278,6 +279,7 @@ export type Database = {
           target_countries: string[]
           updated_at?: string | null
           user_id: string
+          website_url?: string | null
         }
         Update: {
           budget_range?: string | null
@@ -293,6 +295,7 @@ export type Database = {
           target_countries?: string[]
           updated_at?: string | null
           user_id?: string
+          website_url?: string | null
         }
         Relationships: []
       }

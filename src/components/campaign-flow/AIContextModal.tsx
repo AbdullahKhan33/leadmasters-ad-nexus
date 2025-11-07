@@ -63,7 +63,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
           campaignGoal: context.campaign_goal,
           currency: context.currency,
           budgetRange: context.budget_range || '',
-          websiteUrl: (context as any).website_url || ''
+          websiteUrl: context.website_url || ''
         });
         setContextName(context.name);
       }

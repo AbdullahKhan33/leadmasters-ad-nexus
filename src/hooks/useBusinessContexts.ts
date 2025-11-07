@@ -13,6 +13,7 @@ export interface BusinessContext {
   campaign_goal: string;
   currency: string;
   budget_range: string | null;
+  website_url: string | null;
   is_default: boolean;
   created_at: string;
   updated_at: string;
