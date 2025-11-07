@@ -117,6 +117,24 @@ export function InstagramCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft
             </Select>
           </div>
 
+          {/* Bid Strategy */}
+          <div className="space-y-2">
+            <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
+              Bid Strategy *
+            </Label>
+            <Select value={formData.bidStrategy} onValueChange={(value) => handleChange("bidStrategy", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select bid strategy" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="lowest_cost">Lowest Cost</SelectItem>
+                <SelectItem value="cost_cap">Cost Cap</SelectItem>
+                <SelectItem value="bid_cap">Bid Cap</SelectItem>
+                <SelectItem value="target_cost">Target Cost</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Budget Type */}
           <div className="space-y-2">
             <Label htmlFor="budgetType" className="text-sm font-medium text-gray-700">
@@ -146,24 +164,6 @@ export function InstagramCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft
               placeholder="Enter amount"
               min="1"
             />
-          </div>
-
-          {/* Bid Strategy */}
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
-              Bid Strategy *
-            </Label>
-            <Select value={formData.bidStrategy} onValueChange={(value) => handleChange("bidStrategy", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select bid strategy" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="lowest_cost">Lowest Cost</SelectItem>
-                <SelectItem value="cost_cap">Cost Cap</SelectItem>
-                <SelectItem value="bid_cap">Bid Cap</SelectItem>
-                <SelectItem value="target_cost">Target Cost</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 
