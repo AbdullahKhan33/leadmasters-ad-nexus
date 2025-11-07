@@ -4,8 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowRight, PlayCircle, TrendingUp, Users, Zap, Globe, Sparkles, CheckCircle, Brain, Rocket, Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
 
 export function EnterpriseHero() {
   const navigate = useNavigate();
@@ -13,8 +11,7 @@ export function EnterpriseHero() {
   const [roas, setRoas] = useState(2.3);
   const [growth, setGrowth] = useState(127);
   const [businessCount, setBusinessCount] = useState(100);
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentStage, setCurrentStage] = useState(0);
 
   // Animated counters
   useEffect(() => {
@@ -27,17 +24,16 @@ export function EnterpriseHero() {
     return () => clearInterval(interval);
   }, []);
 
-  // Track carousel slide changes
+  // Auto-rotate stages
   useEffect(() => {
-    if (!carouselApi) return;
+    const interval = setInterval(() => {
+      setCurrentStage((prev) => (prev + 1) % 4);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-    carouselApi.on('select', () => {
-      setCurrentSlide(carouselApi.selectedScrollSnap());
-    });
-  }, [carouselApi]);
-
-  // Carousel stages data
-  const carouselStages = [
+  // Animation stages data
+  const stages = [
     {
       icon: Brain,
       iconBg: 'bg-blue-500',
@@ -64,13 +60,16 @@ export function EnterpriseHero() {
     },
     {
       icon: Target,
-      iconBg: 'bg-blue-500',
-      title: 'AI analyzes your business',
-      description: 'Understanding your market and audience...',
+      iconBg: 'bg-orange-500',
+      title: 'Optimizes performance',
+      description: 'Maximizing ROI with AI insights...',
       progress: 100,
-      progressColor: 'bg-gradient-to-r from-blue-500 to-indigo-600'
+      progressColor: 'bg-gradient-to-r from-orange-500 to-red-500'
     }
   ];
+
+  const currentStageData = stages[currentStage];
+  const Icon = currentStageData.icon;
 
   return (
     <section className="relative min-h-screen bg-background overflow-hidden">
@@ -193,61 +192,43 @@ export function EnterpriseHero() {
                 </div>
               </div>
 
-              {/* AI Analysis Carousel Section */}
-              <Carousel
-                setApi={setCarouselApi}
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-                plugins={[
-                  Autoplay({
-                    delay: 3000,
-                  }),
-                ]}
-                className="w-full"
-              >
-                <CarouselContent>
-                  {carouselStages.map((stage, index) => {
-                    const Icon = stage.icon;
-                    return (
-                      <CarouselItem key={index}>
-                        <div className="bg-muted/50 rounded-xl p-5 space-y-3 border border-border">
-                          <div className="flex items-center gap-3">
-                            <div className={`${stage.iconBg} rounded-xl p-3 shadow-lg`}>
-                              <Icon className="w-5 h-5 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-sm font-semibold text-foreground">{stage.title}</p>
-                              <p className="text-xs text-muted-foreground">{stage.description}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="w-full bg-background rounded-full h-2 overflow-hidden">
-                            <div 
-                              className={`h-full ${stage.progressColor} transition-all duration-1000 ease-out`}
-                              style={{ width: `${stage.progress}%` }}
-                            />
-                          </div>
-                          
-                          <div className="flex gap-2 pt-1 justify-center">
-                            {[0, 1, 2, 3].map((dot) => (
-                              <div 
-                                key={dot} 
-                                className={`w-2 h-2 rounded-full transition-all ${
-                                  dot === currentSlide 
-                                    ? 'bg-primary scale-125' 
-                                    : 'bg-muted-foreground/30'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </CarouselItem>
-                    );
-                  })}
-                </CarouselContent>
-              </Carousel>
+              {/* AI Analysis Animated Section */}
+              <div className="bg-muted/50 rounded-xl p-5 space-y-3 border border-border">
+                <div 
+                  key={currentStage}
+                  className="animate-fade-in"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`${currentStageData.iconBg} rounded-xl p-3 shadow-lg transition-all duration-500`}>
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-foreground">{currentStageData.title}</p>
+                      <p className="text-xs text-muted-foreground">{currentStageData.description}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="w-full bg-background rounded-full h-2 overflow-hidden">
+                  <div 
+                    className={`h-full ${currentStageData.progressColor} transition-all duration-1000 ease-out`}
+                    style={{ width: `${currentStageData.progress}%` }}
+                  />
+                </div>
+                
+                <div className="flex gap-2 pt-1 justify-center">
+                  {[0, 1, 2, 3].map((dot) => (
+                    <div 
+                      key={dot} 
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        dot === currentStage 
+                          ? 'bg-primary scale-125' 
+                          : 'bg-muted-foreground/30'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
 
               {/* Generated Post Preview */}
               <div className="space-y-3">
