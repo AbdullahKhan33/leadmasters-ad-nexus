@@ -7,3 +7,6 @@ export { WhatsAppEmptyState } from "./WhatsAppEmptyState";
 export { DashboardMetricsBar } from "./DashboardMetricsBar";
 export { ConversionFunnelCard } from "./ConversionFunnelCard";
 export { PipelineKanban } from "./PipelineKanban";
+export { AIAssistantCard } from "./AIAssistantCard";
+export { SmartGridCard } from "./SmartGridCard";
+export { NotificationBar } from "./NotificationBar";
