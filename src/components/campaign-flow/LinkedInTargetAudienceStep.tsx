@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,10 +16,11 @@ interface LinkedInTargetAudienceStepProps {
   onUpdate: (data: Partial<LinkedInCampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function LinkedInTargetAudienceStep({ data, onUpdate, onNext, onBack }: LinkedInTargetAudienceStepProps) {
+export function LinkedInTargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft }: LinkedInTargetAudienceStepProps) {
   const [formData, setFormData] = useState({
     targetLocations: data.targetLocations || [],
     jobTitles: data.jobTitles || [],
@@ -37,6 +38,21 @@ export function LinkedInTargetAudienceStep({ data, onUpdate, onNext, onBack }: L
   const [companyInput, setCompanyInput] = useState("");
   const [industryInput, setIndustryInput] = useState("");
   const [skillInput, setSkillInput] = useState("");
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      targetLocations: data.targetLocations || [],
+      jobTitles: data.jobTitles || [],
+      companies: data.companies || [],
+      industries: data.industries || [],
+      skills: data.skills || [],
+      seniority: data.seniority || [],
+      companySize: data.companySize || [],
+      targetGender: data.targetGender || "",
+      ageRange: data.ageRange || [25, 55] as [number, number]
+    });
+  }, [data.targetLocations, data.jobTitles, data.companies, data.industries, data.skills, data.seniority, data.companySize, data.targetGender, data.ageRange]);
 
   const handleChange = (field: string, value: any) => {
     const newData = { ...formData, [field]: value };
@@ -64,8 +80,10 @@ export function LinkedInTargetAudienceStep({ data, onUpdate, onNext, onBack }: L
            (formData.jobTitles.length > 0 || formData.companies.length > 0 || formData.industries.length > 0);
   };
 
-  const saveDraft = () => {
-    console.log("Saving LinkedIn audience draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (

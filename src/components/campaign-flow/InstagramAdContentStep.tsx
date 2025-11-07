@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,10 +16,11 @@ interface InstagramAdContentStepProps {
   data: InstagramCampaignData;
   onUpdate: (data: Partial<InstagramCampaignData>) => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdContentStepProps) {
+export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: InstagramAdContentStepProps) {
   const [formData, setFormData] = useState({
     primaryText: data.primaryText || "",
     heading: data.heading || "",
@@ -32,6 +33,21 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
     instagramHandle: data.instagramHandle || ""
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      primaryText: data.primaryText || "",
+      heading: data.heading || "",
+      description: data.description || "",
+      adFormat: data.adFormat || "single",
+      callToAction: data.callToAction || "",
+      selectedChannel: data.selectedChannel || "website",
+      websiteUrl: data.websiteUrl || "",
+      whatsappNumber: data.whatsappNumber || "",
+      instagramHandle: data.instagramHandle || ""
+    });
+  }, [data.primaryText, data.heading, data.description, data.adFormat, data.callToAction, data.selectedChannel, data.websiteUrl, data.whatsappNumber, data.instagramHandle]);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -74,8 +90,10 @@ export function InstagramAdContentStep({ data, onUpdate, onBack }: InstagramAdCo
     console.log("Publishing Instagram ad:", { ...data, ...formData });
   };
 
-  const saveDraft = () => {
-    console.log("Saving Instagram draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   const getChannelInfo = () => {

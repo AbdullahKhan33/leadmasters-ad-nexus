@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,10 +15,11 @@ interface LinkedInAdContentStepProps {
   data: LinkedInCampaignData;
   onUpdate: (data: Partial<LinkedInCampaignData>) => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function LinkedInAdContentStep({ data, onUpdate, onBack }: LinkedInAdContentStepProps) {
+export function LinkedInAdContentStep({ data, onUpdate, onBack, onSaveDraft }: LinkedInAdContentStepProps) {
   const [formData, setFormData] = useState({
     adFormat: data.adFormat || "",
     headline: data.headline || "",
@@ -28,6 +29,19 @@ export function LinkedInAdContentStep({ data, onUpdate, onBack }: LinkedInAdCont
     uploadedImage: data.uploadedImage || null,
     companyName: data.companyName || ""
   });
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      adFormat: data.adFormat || "",
+      headline: data.headline || "",
+      description: data.description || "",
+      callToAction: data.callToAction || "",
+      destinationUrl: data.destinationUrl || "",
+      uploadedImage: data.uploadedImage || null,
+      companyName: data.companyName || ""
+    });
+  }, [data.adFormat, data.headline, data.description, data.callToAction, data.destinationUrl, data.uploadedImage, data.companyName]);
 
   const handleChange = (field: string, value: string | File | null) => {
     const newData = { ...formData, [field]: value };
@@ -48,8 +62,10 @@ export function LinkedInAdContentStep({ data, onUpdate, onBack }: LinkedInAdCont
            formData.callToAction;
   };
 
-  const saveDraft = () => {
-    console.log("Saving LinkedIn content draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   const publishCampaign = () => {

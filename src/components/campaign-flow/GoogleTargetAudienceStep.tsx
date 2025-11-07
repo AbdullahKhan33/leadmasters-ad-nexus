@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,10 +17,11 @@ interface GoogleTargetAudienceStepProps {
   onUpdate: (data: Partial<GoogleCampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function GoogleTargetAudienceStep({ data, onUpdate, onNext, onBack }: GoogleTargetAudienceStepProps) {
+export function GoogleTargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft }: GoogleTargetAudienceStepProps) {
   const [formData, setFormData] = useState({
     targetLocations: data.targetLocations || [],
     targetLanguages: data.targetLanguages || [],
@@ -33,6 +34,18 @@ export function GoogleTargetAudienceStep({ data, onUpdate, onNext, onBack }: Goo
   const [locationInput, setLocationInput] = useState("");
   const [languageInput, setLanguageInput] = useState("");
   const [keywordInput, setKeywordInput] = useState("");
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      targetLocations: data.targetLocations || [],
+      targetLanguages: data.targetLanguages || [],
+      targetGender: data.targetGender || "",
+      ageRange: data.ageRange || [18, 65] as [number, number],
+      keywords: data.keywords || [],
+      audienceType: data.audienceType || ""
+    });
+  }, [data.targetLocations, data.targetLanguages, data.targetGender, data.ageRange, data.keywords, data.audienceType]);
 
   const handleChange = (field: string, value: any) => {
     const newData = { ...formData, [field]: value };
@@ -86,8 +99,10 @@ export function GoogleTargetAudienceStep({ data, onUpdate, onNext, onBack }: Goo
            formData.audienceType;
   };
 
-  const saveDraft = () => {
-    console.log("Saving Google Ads audience draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (

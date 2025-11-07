@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,10 +14,11 @@ interface GoogleCampaignSetupStepProps {
   data: GoogleCampaignData;
   onUpdate: (data: Partial<GoogleCampaignData>) => void;
   onNext: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function GoogleCampaignSetupStep({ data, onUpdate, onNext }: GoogleCampaignSetupStepProps) {
+export function GoogleCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft }: GoogleCampaignSetupStepProps) {
   const [formData, setFormData] = useState({
     adAccount: data.adAccount || "",
     campaignName: data.campaignName || "",
@@ -26,6 +27,18 @@ export function GoogleCampaignSetupStep({ data, onUpdate, onNext }: GoogleCampai
     budgetAmount: data.budgetAmount || 0,
     bidStrategy: data.bidStrategy || ""
   });
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      adAccount: data.adAccount || "",
+      campaignName: data.campaignName || "",
+      campaignType: data.campaignType || "",
+      budgetType: data.budgetType || "",
+      budgetAmount: data.budgetAmount || 0,
+      bidStrategy: data.bidStrategy || ""
+    });
+  }, [data.adAccount, data.campaignName, data.campaignType, data.budgetType, data.budgetAmount, data.bidStrategy]);
 
   const handleChange = (field: string, value: string | number) => {
     const newData = { ...formData, [field]: value };
@@ -42,8 +55,10 @@ export function GoogleCampaignSetupStep({ data, onUpdate, onNext }: GoogleCampai
            formData.bidStrategy;
   };
 
-  const saveDraft = () => {
-    console.log("Saving Google Ads draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (

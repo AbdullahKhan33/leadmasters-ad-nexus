@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -16,10 +16,11 @@ interface InstagramTargetAudienceStepProps {
   onUpdate: (data: Partial<InstagramCampaignData>) => void;
   onNext: () => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function InstagramTargetAudienceStep({ data, onUpdate, onNext, onBack }: InstagramTargetAudienceStepProps) {
+export function InstagramTargetAudienceStep({ data, onUpdate, onNext, onBack, onSaveDraft }: InstagramTargetAudienceStepProps) {
   const [formData, setFormData] = useState({
     instagramAccount: data.instagramAccount || "",
     targetLocations: data.targetLocations || [],
@@ -30,6 +31,17 @@ export function InstagramTargetAudienceStep({ data, onUpdate, onNext, onBack }: 
 
   const [locationInput, setLocationInput] = useState("");
   const [interestInput, setInterestInput] = useState("");
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      instagramAccount: data.instagramAccount || "",
+      targetLocations: data.targetLocations || [],
+      targetGender: data.targetGender || "",
+      ageRange: data.ageRange || [18, 65] as [number, number],
+      interests: data.interests || []
+    });
+  }, [data.instagramAccount, data.targetLocations, data.targetGender, data.ageRange, data.interests]);
 
   const handleChange = (field: string, value: any) => {
     const newData = { ...formData, [field]: value };
@@ -90,8 +102,10 @@ export function InstagramTargetAudienceStep({ data, onUpdate, onNext, onBack }: 
            formData.targetGender;
   };
 
-  const saveDraft = () => {
-    console.log("Saving Instagram draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (

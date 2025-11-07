@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,10 +15,11 @@ interface GoogleAdContentStepProps {
   data: GoogleCampaignData;
   onUpdate: (data: Partial<GoogleCampaignData>) => void;
   onBack: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function GoogleAdContentStep({ data, onUpdate, onBack }: GoogleAdContentStepProps) {
+export function GoogleAdContentStep({ data, onUpdate, onBack, onSaveDraft }: GoogleAdContentStepProps) {
   const [formData, setFormData] = useState({
     headline1: data.headline1 || "",
     headline2: data.headline2 || "",
@@ -30,6 +31,21 @@ export function GoogleAdContentStep({ data, onUpdate, onBack }: GoogleAdContentS
     adFormat: data.adFormat || "",
     callToAction: data.callToAction || ""
   });
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      headline1: data.headline1 || "",
+      headline2: data.headline2 || "",
+      headline3: data.headline3 || "",
+      description1: data.description1 || "",
+      description2: data.description2 || "",
+      finalUrl: data.finalUrl || "",
+      displayUrl: data.displayUrl || "",
+      adFormat: data.adFormat || "",
+      callToAction: data.callToAction || ""
+    });
+  }, [data.headline1, data.headline2, data.headline3, data.description1, data.description2, data.finalUrl, data.displayUrl, data.adFormat, data.callToAction]);
 
   const handleChange = (field: string, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -44,8 +60,10 @@ export function GoogleAdContentStep({ data, onUpdate, onBack }: GoogleAdContentS
            formData.adFormat;
   };
 
-  const saveDraft = () => {
-    console.log("Saving Google Ads content draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   const publishCampaign = () => {

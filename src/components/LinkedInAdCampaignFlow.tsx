@@ -203,6 +203,7 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
             data={campaignData}
             onUpdate={updateCampaignData}
             onNext={nextStep}
+            onSaveDraft={handleSaveDraft}
             aiSuggestions={suggestions}
           />
         );
@@ -213,6 +214,7 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
             onUpdate={updateCampaignData}
             onNext={nextStep}
             onBack={prevStep}
+            onSaveDraft={handleSaveDraft}
             aiSuggestions={suggestions}
           />
         );
@@ -222,6 +224,7 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
             data={campaignData}
             onUpdate={updateCampaignData}
             onBack={prevStep}
+            onSaveDraft={handleSaveDraft}
             aiSuggestions={suggestions}
           />
         );
@@ -243,24 +246,14 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
               Follow these steps to create your LinkedIn advertising campaign
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button
-              onClick={handleSaveDraft}
-              variant="outline"
-              className="text-purple-600 border-purple-300 hover:bg-purple-50"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Save Draft
-            </Button>
-            <Button
-              onClick={handleAIToggle}
-              variant={aiEnabled ? "default" : "outline"}
-              className={aiEnabled ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white" : ""}
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              AI Assistant {aiEnabled ? "ON" : "OFF"}
-            </Button>
-          </div>
+          <Button
+            onClick={handleAIToggle}
+            variant={aiEnabled ? "default" : "outline"}
+            className={aiEnabled ? "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 text-white" : ""}
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            AI Assistant {aiEnabled ? "ON" : "OFF"}
+          </Button>
         </div>
 
         {/* Progress Bar */}

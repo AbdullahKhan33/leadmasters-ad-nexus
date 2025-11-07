@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,10 +14,11 @@ interface InstagramCampaignSetupStepProps {
   data: InstagramCampaignData;
   onUpdate: (data: Partial<InstagramCampaignData>) => void;
   onNext: () => void;
+  onSaveDraft?: () => Promise<void>;
   aiSuggestions?: AICampaignSuggestions | null;
 }
 
-export function InstagramCampaignSetupStep({ data, onUpdate, onNext }: InstagramCampaignSetupStepProps) {
+export function InstagramCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft }: InstagramCampaignSetupStepProps) {
   const [formData, setFormData] = useState({
     adAccount: data.adAccount || "",
     campaignName: data.campaignName || "",
@@ -26,6 +27,18 @@ export function InstagramCampaignSetupStep({ data, onUpdate, onNext }: Instagram
     budgetAmount: data.budgetAmount || 0,
     bidStrategy: data.bidStrategy || ""
   });
+
+  // Update formData when data prop changes (from AI suggestions)
+  useEffect(() => {
+    setFormData({
+      adAccount: data.adAccount || "",
+      campaignName: data.campaignName || "",
+      objective: data.objective || "",
+      budgetType: data.budgetType || "",
+      budgetAmount: data.budgetAmount || 0,
+      bidStrategy: data.bidStrategy || ""
+    });
+  }, [data.adAccount, data.campaignName, data.objective, data.budgetType, data.budgetAmount, data.bidStrategy]);
 
   const handleChange = (field: string, value: string | number) => {
     const newData = { ...formData, [field]: value };
@@ -42,8 +55,10 @@ export function InstagramCampaignSetupStep({ data, onUpdate, onNext }: Instagram
            formData.bidStrategy;
   };
 
-  const saveDraft = () => {
-    console.log("Saving Instagram draft:", formData);
+  const saveDraft = async () => {
+    if (onSaveDraft) {
+      await onSaveDraft();
+    }
   };
 
   return (
