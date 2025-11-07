@@ -11,6 +11,7 @@ import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
 import { useGoogleCampaigns } from "@/hooks/useGoogleCampaigns";
+import { AICampaignSuggestions } from "@/types/ai-campaign";
 import { toast } from "sonner";
 
 export interface GoogleCampaignData {
@@ -124,10 +125,8 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
     const result = await generateSuggestions(context);
     if (result) {
       setAiEnabled(true);
-      
       if (autoBuild) {
-        // Apply all suggestions and navigate to step 3 before closing modal
-        await handleAutoApplyAllSuggestions();
+        await handleAutoApplyAllSuggestions(result);
         setShowAIModal(false);
       } else {
         setShowAIModal(false);
@@ -135,65 +134,69 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
     }
   };
 
-  const handleAutoApplyAllSuggestions = async () => {
-    if (!suggestions) return;
+  // Apply sensible defaults when AI doesn't provide a value
+  const applyDefaultValues = () => {
+    updateCampaignData({
+      adAccount: campaignData.adAccount || 'account1',
+      campaignName: campaignData.campaignName || 'Quick Launch Campaign',
+      campaignType: campaignData.campaignType || 'search',
+      budgetType: campaignData.budgetType || 'daily',
+      budgetAmount: campaignData.budgetAmount || 100,
+      bidStrategy: campaignData.bidStrategy || 'maximize_clicks',
+      targetLocations: campaignData.targetLocations?.length ? campaignData.targetLocations : ['India'],
+      targetLanguages: campaignData.targetLanguages?.length ? campaignData.targetLanguages : ['English'],
+      targetGender: campaignData.targetGender || 'all',
+      ageRange: campaignData.ageRange || [18, 65],
+      audienceType: campaignData.audienceType || 'search_terms',
+      headline1: (campaignData as any).headline1 || 'Quick Launch Headline',
+      description1: (campaignData as any).description1 || 'Auto-built campaign. Adjust and launch!',
+      finalUrl: (campaignData as any).finalUrl || 'https://example.com',
+      adFormat: (campaignData as any).adFormat || 'text',
+      callToAction: (campaignData as any).callToAction || 'learn_more'
+    } as any);
+  };
+
+  const handleAutoApplyAllSuggestions = async (s?: import('@/types/ai-campaign').AICampaignSuggestions) => {
+    const sug = s || suggestions;
+    if (!sug) return;
 
     // STEP 1: Campaign Setup
-    const { campaignSetup } = suggestions;
+    const { campaignSetup } = sug;
     if (campaignSetup) {
-      if (campaignSetup.objective) {
-        handleApplyAISuggestion('objective', campaignSetup.objective);
-      }
+      if (campaignSetup.objective) handleApplyAISuggestion('objective', campaignSetup.objective);
       if (campaignSetup.recommendedBudget) {
         handleApplyAISuggestion('budgetAmount', campaignSetup.recommendedBudget.min);
         handleApplyAISuggestion('budgetType', 'daily');
       }
-      if (campaignSetup.bidStrategy) {
-        handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
-      }
+      if (campaignSetup.bidStrategy) handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
     }
 
     // STEP 2: Target Audience
-    const { targetAudience } = suggestions;
+    const { targetAudience } = sug;
     if (targetAudience) {
       if (targetAudience.demographics) {
-        if (targetAudience.demographics.ageRange) {
-          handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
-        }
-        if (targetAudience.demographics.gender) {
-          handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
-        }
+        if (targetAudience.demographics.ageRange) handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
+        if (targetAudience.demographics.gender) handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
       }
-      if (targetAudience.locations && targetAudience.locations.length > 0) {
-        handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
-      }
-      if (targetAudience.keywords && targetAudience.keywords.length > 0) {
-        handleApplyAISuggestion('keywords', targetAudience.keywords);
-      }
+      if (targetAudience.locations?.length) handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
+      if (targetAudience.keywords?.length) handleApplyAISuggestion('keywords', targetAudience.keywords);
     }
 
     // STEP 3: Ad Content
-    const { adContent } = suggestions;
+    const { adContent } = sug;
     if (adContent) {
-      if (adContent.headlines && adContent.headlines.length > 0) {
-        handleApplyAISuggestion('headline1', adContent.headlines[0].text);
-      }
-      if (adContent.descriptions && adContent.descriptions.length > 0) {
-        handleApplyAISuggestion('description1', adContent.descriptions[0].text);
-      }
-      if (adContent.callToAction && adContent.callToAction.length > 0) {
-        handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
-      }
+      if (adContent.headlines?.length) handleApplyAISuggestion('headline1', adContent.headlines[0].text);
+      if (adContent.descriptions?.length) handleApplyAISuggestion('description1', adContent.descriptions[0].text);
+      if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
 
-    // Navigate to step 3 immediately
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setCurrentStep(3);
-        toast.success('🎉 Campaign auto-built! Review and launch when ready.');
-        resolve();
-      }, 300);
-    });
+    // Fill any remaining required fields with defaults
+    applyDefaultValues();
+
+    // Jump to step 3 (ensure once now and once on next tick)
+    setCurrentStep(3);
+    setTimeout(() => setCurrentStep(3), 0);
+    toast.success('🎉 Campaign auto-built! Review and launch when ready.');
   };
 
   // Map AI suggestion values to dropdown values (Google-specific)

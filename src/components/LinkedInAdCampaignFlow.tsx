@@ -11,6 +11,7 @@ import { AIContextModal } from "./campaign-flow/AIContextModal";
 import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
 import { useLinkedInCampaigns } from "@/hooks/useLinkedInCampaigns";
+import { AICampaignSuggestions } from "@/types/ai-campaign";
 import { toast } from "sonner";
 
 export interface LinkedInCampaignData {
@@ -125,10 +126,8 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
     const result = await generateSuggestions(context);
     if (result) {
       setAiEnabled(true);
-      
       if (autoBuild) {
-        // Apply all suggestions and navigate to step 3 before closing modal
-        await handleAutoApplyAllSuggestions();
+        await handleAutoApplyAllSuggestions(result);
         setShowAIModal(false);
       } else {
         setShowAIModal(false);
@@ -136,68 +135,68 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
     }
   };
 
-  const handleAutoApplyAllSuggestions = async () => {
-    if (!suggestions) return;
+  // Apply sensible defaults when AI doesn't provide a value
+  const applyDefaultValues = () => {
+    updateCampaignData({
+      adAccount: (campaignData as any).adAccount || 'account1',
+      campaignName: campaignData.campaignName || 'Quick Launch Campaign',
+      objective: campaignData.objective || 'website_visits',
+      budgetType: campaignData.budgetType || 'daily',
+      budgetAmount: campaignData.budgetAmount || 100,
+      bidStrategy: campaignData.bidStrategy || 'automated_bid',
+      targetLocations: campaignData.targetLocations?.length ? campaignData.targetLocations : ['India'],
+      targetGender: campaignData.targetGender || 'all',
+      ageRange: campaignData.ageRange || [25, 54],
+      adFormat: (campaignData as any).adFormat || 'single_image',
+      callToAction: (campaignData as any).callToAction || 'learn_more',
+      headline: (campaignData as any).headline || 'Quick Launch Headline',
+      description: (campaignData as any).description || 'Auto-built LinkedIn campaign. Review and launch.',
+      destinationUrl: (campaignData as any).destinationUrl || 'https://example.com'
+    } as any);
+  };
+
+  const handleAutoApplyAllSuggestions = async (s?: import('@/types/ai-campaign').AICampaignSuggestions) => {
+    const sug = s || suggestions;
+    if (!sug) return;
 
     // STEP 1: Campaign Setup
-    const { campaignSetup } = suggestions;
+    const { campaignSetup } = sug;
     if (campaignSetup) {
-      if (campaignSetup.objective) {
-        handleApplyAISuggestion('objective', campaignSetup.objective);
-      }
+      if (campaignSetup.objective) handleApplyAISuggestion('objective', campaignSetup.objective);
       if (campaignSetup.recommendedBudget) {
         handleApplyAISuggestion('budgetAmount', campaignSetup.recommendedBudget.min);
         handleApplyAISuggestion('budgetType', 'daily');
       }
-      if (campaignSetup.bidStrategy) {
-        handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
-      }
+      if (campaignSetup.bidStrategy) handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
     }
 
     // STEP 2: Target Audience
-    const { targetAudience } = suggestions;
+    const { targetAudience } = sug;
     if (targetAudience) {
       if (targetAudience.demographics) {
-        if (targetAudience.demographics.ageRange) {
-          handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
-        }
-        if (targetAudience.demographics.gender) {
-          handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
-        }
+        if (targetAudience.demographics.ageRange) handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
+        if (targetAudience.demographics.gender) handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
       }
-      if (targetAudience.locations && targetAudience.locations.length > 0) {
-        handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
-      }
-      if (targetAudience.jobTitles && targetAudience.jobTitles.length > 0) {
-        handleApplyAISuggestion('jobTitles', targetAudience.jobTitles);
-      }
-      if (targetAudience.industries && targetAudience.industries.length > 0) {
-        handleApplyAISuggestion('industries', targetAudience.industries);
-      }
+      if (targetAudience.locations?.length) handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
+      if (targetAudience.jobTitles?.length) handleApplyAISuggestion('jobTitles', targetAudience.jobTitles);
+      if (targetAudience.industries?.length) handleApplyAISuggestion('industries', targetAudience.industries);
     }
 
     // STEP 3: Ad Content
-    const { adContent } = suggestions;
+    const { adContent } = sug;
     if (adContent) {
-      if (adContent.headlines && adContent.headlines.length > 0) {
-        handleApplyAISuggestion('headline', adContent.headlines[0].text);
-      }
-      if (adContent.descriptions && adContent.descriptions.length > 0) {
-        handleApplyAISuggestion('description', adContent.descriptions[0].text);
-      }
-      if (adContent.callToAction && adContent.callToAction.length > 0) {
-        handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
-      }
+      if (adContent.headlines?.length) handleApplyAISuggestion('headline', adContent.headlines[0].text);
+      if (adContent.descriptions?.length) handleApplyAISuggestion('description', adContent.descriptions[0].text);
+      if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
 
-    // Navigate to step 3 immediately
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setCurrentStep(3);
-        toast.success('🎉 Campaign auto-built! Review and launch when ready.');
-        resolve();
-      }, 300);
-    });
+    // Fill any remaining required fields with defaults
+    applyDefaultValues();
+
+    // Jump to step 3 (ensure once now and once on next tick)
+    setCurrentStep(3);
+    setTimeout(() => setCurrentStep(3), 0);
+    toast.success('🎉 Campaign auto-built! Review and launch when ready.');
   };
 
   // Map AI suggestion values to dropdown values (LinkedIn-specific)
