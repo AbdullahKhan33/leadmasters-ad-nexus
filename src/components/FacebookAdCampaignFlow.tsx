@@ -153,7 +153,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       const { targetAudience } = sug;
       if (targetAudience.demographics) {
         if (targetAudience.demographics.ageRange) {
-          updateCampaignData({ ageRange: targetAudience.demographics.ageRange });
+          handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
         }
         if (targetAudience.demographics.gender) {
           handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
@@ -163,7 +163,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
       }
       if (targetAudience.interests?.length) {
-        handleApplyAISuggestion('interests', targetAudience.interests);
+        handleApplyAISuggestion('targetInterests', targetAudience.interests);
       }
     }
 
