@@ -95,6 +95,26 @@ export function GoogleCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft }:
             />
           </div>
 
+          {/* Campaign Type */}
+          <div className="space-y-2">
+            <Label htmlFor="campaignType" className="text-sm font-medium text-gray-700">
+              Campaign Type *
+            </Label>
+            <Select value={formData.campaignType} onValueChange={(value) => handleChange("campaignType", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select campaign type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="search">Search</SelectItem>
+                <SelectItem value="display">Display</SelectItem>
+                <SelectItem value="shopping">Shopping</SelectItem>
+                <SelectItem value="video">Video</SelectItem>
+                <SelectItem value="app">App</SelectItem>
+                <SelectItem value="performance_max">Performance Max</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Budget Type */}
           <div className="space-y-2">
             <Label htmlFor="budgetType" className="text-sm font-medium text-gray-700">
@@ -126,45 +146,8 @@ export function GoogleCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft }:
             />
           </div>
 
-          {/* Campaign Type */}
-          <div className="space-y-2">
-            <Label htmlFor="campaignType" className="text-sm font-medium text-gray-700">
-              Campaign Type *
-            </Label>
-            <Select value={formData.campaignType} onValueChange={(value) => handleChange("campaignType", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select campaign type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="search">Search</SelectItem>
-                <SelectItem value="display">Display</SelectItem>
-                <SelectItem value="shopping">Shopping</SelectItem>
-                <SelectItem value="video">Video</SelectItem>
-                <SelectItem value="app">App</SelectItem>
-                <SelectItem value="performance_max">Performance Max</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Bid Strategy (Full width) */}
+          {/* Bid Strategy */}
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
-              Bid Strategy *
-            </Label>
-            <Select value={formData.bidStrategy} onValueChange={(value) => handleChange("bidStrategy", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select bid strategy" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="maximize_clicks">Maximize Clicks</SelectItem>
-                <SelectItem value="maximize_conversions">Maximize Conversions</SelectItem>
-                <SelectItem value="target_cpa">Target CPA</SelectItem>
-                <SelectItem value="target_roas">Target ROAS</SelectItem>
-                <SelectItem value="manual_cpc">Manual CPC</SelectItem>
-                <SelectItem value="enhanced_cpc">Enhanced CPC</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
             <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
               Bid Strategy *
             </Label>

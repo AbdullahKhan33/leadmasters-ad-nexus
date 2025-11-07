@@ -148,7 +148,7 @@ export function InstagramCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft
             />
           </div>
 
-          {/* Bid Strategy (Full width) */}
+          {/* Bid Strategy */}
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
               Bid Strategy *
@@ -164,7 +164,6 @@ export function InstagramCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft
                 <SelectItem value="target_cost">Target Cost</SelectItem>
               </SelectContent>
             </Select>
-          </div>
           </div>
         </div>
 

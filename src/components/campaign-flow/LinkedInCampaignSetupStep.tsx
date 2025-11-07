@@ -95,6 +95,27 @@ export function LinkedInCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft 
             />
           </div>
 
+          {/* Campaign Objective */}
+          <div className="space-y-2">
+            <Label htmlFor="objective" className="text-sm font-medium text-gray-700">
+              Campaign Objective *
+            </Label>
+            <Select value={formData.objective} onValueChange={(value) => handleChange("objective", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select objective" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="brand_awareness">Brand Awareness</SelectItem>
+                <SelectItem value="website_visits">Website Visits</SelectItem>
+                <SelectItem value="engagement">Engagement</SelectItem>
+                <SelectItem value="video_views">Video Views</SelectItem>
+                <SelectItem value="lead_generation">Lead Generation</SelectItem>
+                <SelectItem value="website_conversions">Website Conversions</SelectItem>
+                <SelectItem value="job_applicants">Job Applicants</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Budget Type */}
           <div className="space-y-2">
             <Label htmlFor="budgetType" className="text-sm font-medium text-gray-700">
@@ -126,44 +147,8 @@ export function LinkedInCampaignSetupStep({ data, onUpdate, onNext, onSaveDraft 
             />
           </div>
 
-          {/* Campaign Objective */}
-          <div className="space-y-2">
-            <Label htmlFor="objective" className="text-sm font-medium text-gray-700">
-              Campaign Objective *
-            </Label>
-            <Select value={formData.objective} onValueChange={(value) => handleChange("objective", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select objective" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="brand_awareness">Brand Awareness</SelectItem>
-                <SelectItem value="website_visits">Website Visits</SelectItem>
-                <SelectItem value="engagement">Engagement</SelectItem>
-                <SelectItem value="video_views">Video Views</SelectItem>
-                <SelectItem value="lead_generation">Lead Generation</SelectItem>
-                <SelectItem value="website_conversions">Website Conversions</SelectItem>
-                <SelectItem value="job_applicants">Job Applicants</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Bid Strategy (Full width) */}
+          {/* Bid Strategy */}
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
-              Bid Strategy *
-            </Label>
-            <Select value={formData.bidStrategy} onValueChange={(value) => handleChange("bidStrategy", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select bid strategy" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="automated_bid">Automated Bidding</SelectItem>
-                <SelectItem value="maximum_delivery">Maximum Delivery</SelectItem>
-                <SelectItem value="cost_cap">Cost Cap</SelectItem>
-                <SelectItem value="manual_bid">Manual Bidding</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
             <Label htmlFor="bidStrategy" className="text-sm font-medium text-gray-700">
               Bid Strategy *
             </Label>
