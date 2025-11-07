@@ -153,7 +153,7 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
       audienceType: campaignData.audienceType || 'search_terms',
       headline1: (campaignData as any).headline1 || 'Quick Launch Headline',
       description1: (campaignData as any).description1 || 'Auto-built campaign. Adjust and launch!',
-      finalUrl: (campaignData as any).finalUrl || 'https://example.com',
+      finalUrl: (campaignData as any).finalUrl || (businessContext?.websiteUrl || 'https://example.com'),
       adFormat: (campaignData as any).adFormat || 'text',
       callToAction: (campaignData as any).callToAction || 'learn_more'
     } as any);
@@ -166,23 +166,26 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
     // STEP 1: Campaign Setup - Apply USER inputs directly
     if (businessContext?.campaignGoal) {
       const goalToTypeMap: Record<string, string> = {
-        'Brand Awareness': 'display',
-        'Lead Generation': 'search',
-        'Website Traffic': 'search',
-        'Conversions': 'search',
-        'App Installs': 'app',
-        'Engagement': 'video',
-        'Store Visits': 'performance_max'
+        'brand awareness': 'display',
+        'lead generation': 'search',
+        'website traffic': 'search',
+        'conversions': 'search',
+        'app installs': 'app',
+        'engagement': 'video',
+        'store visits': 'performance_max'
       };
-      updateCampaignData({ campaignType: goalToTypeMap[businessContext.campaignGoal] || 'search' });
+      const goalLc = businessContext.campaignGoal.toLowerCase();
+      updateCampaignData({ campaignType: goalToTypeMap[goalLc] || 'search' });
     }
     
-    if (businessContext?.budgetRange) {
-      updateCampaignData({
-        budgetAmount: parseInt(businessContext.budgetRange),
-        budgetType: 'daily'
-      });
-    }
+      if (businessContext?.budgetRange) {
+        const match = businessContext.budgetRange.match(/[\d,.]+/);
+        const amount = match ? Number(match[0].replace(/,/g, '')) : undefined;
+        updateCampaignData({
+          budgetAmount: amount && !isNaN(amount) ? amount : (campaignData.budgetAmount || 100),
+          budgetType: 'daily'
+        });
+      }
     
     if (businessContext?.websiteUrl) {
       updateCampaignData({ finalUrl: businessContext.websiteUrl });
@@ -204,6 +207,8 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
       }
       if (targetAudience.keywords?.length) {
         handleApplyAISuggestion('keywords', targetAudience.keywords);
+      } else if (targetAudience.interests?.length) {
+        handleApplyAISuggestion('keywords', targetAudience.interests);
       }
     }
 
