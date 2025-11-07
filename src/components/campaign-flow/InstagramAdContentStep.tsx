@@ -119,11 +119,10 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      {/* Form Section - Takes 2/3 of the space */}
-      <div className="lg:col-span-2">
-        <Card className="border border-gray-200 shadow-sm bg-white">
-          <CardContent className="p-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Form Section */}
+      <Card className="border border-gray-200 shadow-sm bg-white">
+        <CardContent className="p-8">
           <div className="space-y-6">
             {/* Primary Text */}
             <div className="space-y-2">
@@ -144,51 +143,35 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
             </div>
 
             {/* Channel Selection */}
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
-                Choose Channel
+            <div className="space-y-2">
+              <Label htmlFor="channelSelect" className="text-sm font-medium text-gray-700">
+                Choose Channel *
               </Label>
-              <div className="flex space-x-3">
-                <Button
-                  type="button"
-                  variant={formData.selectedChannel === 'website' ? 'default' : 'outline'}
-                  onClick={() => handleChannelChange('website')}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 h-12 ${
-                    formData.selectedChannel === 'website' 
-                      ? 'bg-blue-500 hover:bg-blue-600 text-white border-blue-500' 
-                      : 'border-gray-300 text-gray-700 hover:border-blue-400'
-                  }`}
-                >
-                  <Globe className="w-5 h-5" />
-                  <span>Website</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant={formData.selectedChannel === 'whatsapp' ? 'default' : 'outline'}
-                  onClick={() => handleChannelChange('whatsapp')}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 h-12 ${
-                    formData.selectedChannel === 'whatsapp' 
-                      ? 'bg-green-500 hover:bg-green-600 text-white border-green-500' 
-                      : 'border-gray-300 text-gray-700 hover:border-green-400'
-                  }`}
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span>WhatsApp</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant={formData.selectedChannel === 'instagram' ? 'default' : 'outline'}
-                  onClick={() => handleChannelChange('instagram')}
-                  className={`flex-1 flex items-center justify-center space-x-2 py-3 h-12 ${
-                    formData.selectedChannel === 'instagram' 
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-purple-500' 
-                      : 'border-gray-300 text-gray-700 hover:border-purple-400'
-                  }`}
-                >
-                  <Instagram className="w-5 h-5" />
-                  <span>Instagram</span>
-                </Button>
-              </div>
+              <Select value={formData.selectedChannel} onValueChange={(value: 'website' | 'whatsapp' | 'instagram') => handleChannelChange(value)}>
+                <SelectTrigger id="channelSelect">
+                  <SelectValue placeholder="Select destination channel" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  <SelectItem value="website">
+                    <div className="flex items-center space-x-2">
+                      <Globe className="w-4 h-4" />
+                      <span>Website</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="whatsapp">
+                    <div className="flex items-center space-x-2">
+                      <MessageCircle className="w-4 h-4" />
+                      <span>WhatsApp</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="instagram">
+                    <div className="flex items-center space-x-2">
+                      <Instagram className="w-4 h-4" />
+                      <span>Instagram Profile</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
               
               {/* Channel-specific input */}
               {formData.selectedChannel === 'website' && (
@@ -357,11 +340,9 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
           </div>
         </CardContent>
       </Card>
-      </div>
 
       {/* Live Preview Panel */}
-      <div className="lg:col-span-1">
-        <Card className="border border-gray-200 shadow-sm bg-white">
+      <Card className="border border-gray-200 shadow-sm bg-white">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
@@ -441,11 +422,10 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
             </p>
           </div>
         </CardContent>
-        </Card>
-      </div>
+      </Card>
 
       {/* Fixed Bottom Actions - Full width */}
-      <div className="lg:col-span-3 mt-8">
+      <div className="lg:col-span-2 mt-8">
         <Card className="border border-gray-200 shadow-sm bg-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
