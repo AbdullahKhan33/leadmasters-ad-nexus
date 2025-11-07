@@ -1,29 +1,25 @@
 
 import React from 'react';
 import { PublicHeader } from './public/PublicHeader';
-import { EnterpriseHero } from './public/EnterpriseHero';
-import { ProblemSection } from './public/ProblemSection';
-import { SolutionShowcase } from './public/SolutionShowcase';
-import { ROICalculator } from './public/ROICalculator';
-import { TestimonialsWall } from './public/TestimonialsWall';
-import { IntegrationShowcase } from './public/IntegrationShowcase';
+import { HeroSection } from './public/HeroSection';
+import { FeaturesSection } from './public/FeaturesSection';
+import { SocialProofSection } from './public/SocialProofSection';
+import { AboutSection } from './public/AboutSection';
 import { PricingSection } from './public/PricingSection';
-import { FinalCTA } from './public/FinalCTA';
+import { ContactSection } from './public/ContactSection';
 import { PublicFooter } from './public/PublicFooter';
 
 export function PublicWebsite() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       <PublicHeader />
       <main>
-        <EnterpriseHero />
-        <ProblemSection />
-        <SolutionShowcase />
-        <ROICalculator />
-        <TestimonialsWall />
-        <IntegrationShowcase />
+        <HeroSection />
+        <FeaturesSection />
+        <SocialProofSection />
+        <AboutSection />
         <PricingSection />
-        <FinalCTA />
+        <ContactSection />
       </main>
       <PublicFooter />
     </div>
