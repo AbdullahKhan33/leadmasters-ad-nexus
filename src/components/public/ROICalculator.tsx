@@ -8,9 +8,9 @@ import { useNavigate } from 'react-router-dom';
 
 export function ROICalculator() {
   const navigate = useNavigate();
-  const [adSpend, setAdSpend] = useState(5000);
+  const [adSpend, setAdSpend] = useState(50000);
   const [closeRate, setCloseRate] = useState(15);
-  const [dealValue, setDealValue] = useState(10000);
+  const [dealValue, setDealValue] = useState(100000);
   const [results, setResults] = useState({
     currentRevenue: 0,
     withPlatform: 0,
@@ -20,7 +20,7 @@ export function ROICalculator() {
 
   useEffect(() => {
     // Current scenario
-    const leadsPerMonth = (adSpend / 50); // Assume $50 per lead
+    const leadsPerMonth = (adSpend / 500); // Assume ₹500 per lead
     const currentClosedDeals = leadsPerMonth * (closeRate / 100);
     const currentRevenue = currentClosedDeals * dealValue;
 
@@ -66,14 +66,14 @@ export function ROICalculator() {
                       Monthly Ad Spend
                     </Label>
                     <span className="text-2xl font-bold text-primary">
-                      ${adSpend.toLocaleString()}
+                      ₹{adSpend.toLocaleString('en-IN')}
                     </span>
                   </div>
                   <Slider
                     id="adSpend"
-                    min={1000}
-                    max={50000}
-                    step={1000}
+                    min={2000}
+                    max={500000}
+                    step={5000}
                     value={[adSpend]}
                     onValueChange={(value) => setAdSpend(value[0])}
                     className="w-full"
@@ -106,14 +106,14 @@ export function ROICalculator() {
                       Average Deal Value
                     </Label>
                     <span className="text-2xl font-bold text-primary">
-                      ${dealValue.toLocaleString()}
+                      ₹{dealValue.toLocaleString('en-IN')}
                     </span>
                   </div>
                   <Slider
                     id="dealValue"
-                    min={1000}
-                    max={100000}
-                    step={1000}
+                    min={2000}
+                    max={1000000}
+                    step={10000}
                     value={[dealValue]}
                     onValueChange={(value) => setDealValue(value[0])}
                     className="w-full"
@@ -139,7 +139,7 @@ export function ROICalculator() {
                 <div className="bg-background/80 backdrop-blur rounded-xl p-6">
                   <p className="text-sm text-muted-foreground mb-2">Current Monthly Revenue</p>
                   <p className="text-3xl font-bold text-foreground">
-                    ${results.currentRevenue.toLocaleString()}
+                    ₹{results.currentRevenue.toLocaleString('en-IN')}
                   </p>
                 </div>
 
@@ -152,7 +152,7 @@ export function ROICalculator() {
                 <div className="gradient-primary rounded-xl p-6 text-white">
                   <p className="text-sm opacity-90 mb-2">Projected Monthly Revenue</p>
                   <p className="text-4xl font-bold">
-                    ${results.withPlatform.toLocaleString()}
+                    ₹{results.withPlatform.toLocaleString('en-IN')}
                   </p>
                 </div>
 
@@ -167,7 +167,7 @@ export function ROICalculator() {
                   <div className="flex items-center gap-2 text-green-500">
                     <DollarSign className="w-5 h-5" />
                     <span className="text-xl font-bold">
-                      +${results.monthlyGain.toLocaleString()}/month
+                      +₹{results.monthlyGain.toLocaleString('en-IN')}/month
                     </span>
                   </div>
                 </div>
