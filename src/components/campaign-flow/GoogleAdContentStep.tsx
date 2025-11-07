@@ -71,7 +71,7 @@ export function GoogleAdContentStep({ data, onUpdate, onBack, onSaveDraft }: Goo
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Form Section */}
       <Card className="border border-gray-200 shadow-sm bg-white">
         <CardContent className="p-8">
@@ -262,7 +262,7 @@ export function GoogleAdContentStep({ data, onUpdate, onBack, onSaveDraft }: Goo
       </Card>
 
       {/* Bottom Actions - Full width */}
-      <div className="lg:col-span-3 mt-2">
+      <div className="lg:col-span-2 mt-8">
         <Card className="border border-gray-200 shadow-sm bg-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">

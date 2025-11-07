@@ -124,14 +124,17 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
 
   const handleAISubmit = async (context: any, autoBuild: boolean = false) => {
     const result = await generateSuggestions(context);
-    if (result) {
-      setAiEnabled(true);
-      if (autoBuild) {
-        await handleAutoApplyAllSuggestions(result);
-        setShowAIModal(false);
-      } else {
-        setShowAIModal(false);
-      }
+    if (!result) {
+      toast.error('Failed to generate AI suggestions. Please try again.');
+      return;
+    }
+    
+    setAiEnabled(true);
+    if (autoBuild) {
+      await handleAutoApplyAllSuggestions(result);
+      setShowAIModal(false);
+    } else {
+      setShowAIModal(false);
     }
   };
 
