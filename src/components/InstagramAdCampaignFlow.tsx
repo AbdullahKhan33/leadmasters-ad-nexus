@@ -165,21 +165,23 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
     const sug = s || suggestions;
     if (!sug) return;
 
-    // STEP 1: Campaign Setup - Apply AI suggestions first
+    // Build the new campaign data with AI suggestions applied
+    const aiAppliedData: any = { ...campaignData };
+
+    // STEP 1: Campaign Setup - Apply AI suggestions
     const { campaignSetup } = sug;
     if (campaignSetup) {
       if (campaignSetup.objective) {
-        handleApplyAISuggestion('objective', campaignSetup.objective);
+        const mappedObjective = mapAIValueToDropdown('objective', campaignSetup.objective);
+        aiAppliedData.objective = mappedObjective;
       }
       if (campaignSetup.recommendedBudget) {
-        // Apply the exact budget values from AI
-        updateCampaignData({
-          budgetAmount: campaignSetup.recommendedBudget.min,
-          budgetType: 'daily'
-        });
+        aiAppliedData.budgetAmount = campaignSetup.recommendedBudget.min;
+        aiAppliedData.budgetType = 'daily';
       }
       if (campaignSetup.bidStrategy) {
-        handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
+        const mappedBidStrategy = mapAIValueToDropdown('bidStrategy', campaignSetup.bidStrategy);
+        aiAppliedData.bidStrategy = mappedBidStrategy;
       }
     }
 
@@ -188,51 +190,58 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
     if (targetAudience) {
       if (targetAudience.demographics) {
         if (targetAudience.demographics.ageRange) {
-          // Apply age range directly as tuple
-          updateCampaignData({ 
-            ageRange: targetAudience.demographics.ageRange 
-          });
+          aiAppliedData.ageRange = targetAudience.demographics.ageRange;
         }
         if (targetAudience.demographics.gender) {
-          handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
+          const mappedGender = mapAIValueToDropdown('targetGender', targetAudience.demographics.gender);
+          aiAppliedData.targetGender = mappedGender;
         }
       }
       if (targetAudience.locations?.length) {
-        handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
+        aiAppliedData.targetLocations = targetAudience.locations.map(loc => loc.name);
       }
       if (targetAudience.interests?.length) {
-        handleApplyAISuggestion('interests', targetAudience.interests);
+        aiAppliedData.interests = targetAudience.interests;
       }
     }
 
     // STEP 3: Ad Content
     const { adContent } = sug;
     if (adContent) {
-      if (adContent.headlines?.length) handleApplyAISuggestion('heading', adContent.headlines[0].text);
-      if (adContent.descriptions?.length) handleApplyAISuggestion('description', adContent.descriptions[0].text);
-      if (adContent.primaryText?.length) handleApplyAISuggestion('primaryText', adContent.primaryText[0]);
-      if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
+      if (adContent.headlines?.length) aiAppliedData.heading = adContent.headlines[0].text;
+      if (adContent.descriptions?.length) aiAppliedData.description = adContent.descriptions[0].text;
+      if (adContent.primaryText?.length) aiAppliedData.primaryText = adContent.primaryText[0];
+      if (adContent.callToAction?.length) {
+        const mappedCTA = mapAIValueToDropdown('callToAction', adContent.callToAction[0]);
+        aiAppliedData.callToAction = mappedCTA;
+      }
+    }
+
+    // Apply website URL from business context
+    if (businessContext?.websiteUrl) {
+      aiAppliedData.adLinkUrl = businessContext.websiteUrl;
+      aiAppliedData.websiteUrl = businessContext.websiteUrl;
     }
 
     // Fill remaining required fields with defaults ONLY if not already set by AI
-    const currentData = campaignData;
     updateCampaignData({
-      adAccount: currentData.adAccount || 'account1',
-      campaignName: currentData.campaignName || 'Quick Launch Campaign',
-      objective: currentData.objective || 'awareness',
-      budgetType: currentData.budgetType || 'daily',
-      budgetAmount: currentData.budgetAmount || 100,
-      bidStrategy: currentData.bidStrategy || 'lowest_cost',
-      instagramAccount: currentData.instagramAccount || 'account1',
-      targetLocations: currentData.targetLocations?.length ? currentData.targetLocations : ['india'],
-      targetGender: currentData.targetGender || 'all',
-      ageRange: currentData.ageRange || [18, 65],
-      adFormat: (currentData as any).adFormat || 'single',
-      callToAction: (currentData as any).callToAction || 'learn_more',
-      selectedChannel: (currentData as any).selectedChannel || 'website',
-      websiteUrl: (currentData as any).websiteUrl || 'https://example.com',
-      heading: (currentData as any).heading || 'Quick Launch Headline',
-      primaryText: (currentData as any).primaryText || 'This campaign was auto-built. Tweak and launch!'
+      adAccount: aiAppliedData.adAccount || 'account1',
+      campaignName: aiAppliedData.campaignName || 'Quick Launch Campaign',
+      objective: aiAppliedData.objective || 'awareness',
+      budgetType: aiAppliedData.budgetType || 'daily',
+      budgetAmount: aiAppliedData.budgetAmount || 100,
+      bidStrategy: aiAppliedData.bidStrategy || 'lowest_cost',
+      instagramAccount: aiAppliedData.instagramAccount || 'account1',
+      targetLocations: aiAppliedData.targetLocations?.length ? aiAppliedData.targetLocations : ['india'],
+      targetGender: aiAppliedData.targetGender || 'all',
+      ageRange: aiAppliedData.ageRange || [18, 65],
+      adFormat: aiAppliedData.adFormat || 'single',
+      callToAction: aiAppliedData.callToAction || 'learn_more',
+      selectedChannel: aiAppliedData.selectedChannel || 'website',
+      websiteUrl: aiAppliedData.websiteUrl || 'https://example.com',
+      adLinkUrl: aiAppliedData.adLinkUrl || 'https://example.com',
+      heading: aiAppliedData.heading || 'Quick Launch Headline',
+      primaryText: aiAppliedData.primaryText || 'This campaign was auto-built. Tweak and launch!'
     } as any);
 
     // Jump to step 3

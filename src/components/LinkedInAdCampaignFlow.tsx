@@ -213,6 +213,11 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
       if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
 
+    // Apply website URL from business context
+    if (businessContext?.websiteUrl) {
+      updateCampaignData({ destinationUrl: businessContext.websiteUrl });
+    }
+
     // Fill remaining required fields with defaults ONLY if not already set by AI
     const currentData = campaignData;
     updateCampaignData({
@@ -228,7 +233,7 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
       callToAction: (currentData as any).callToAction || 'learn_more',
       headline: (currentData as any).headline || 'Quick Launch Headline',
       description: (currentData as any).description || 'Auto-built LinkedIn campaign. Review and launch.',
-      destinationUrl: (currentData as any).destinationUrl || 'https://example.com'
+      destinationUrl: currentData.destinationUrl || 'https://example.com'
     } as any);
 
     // Jump to step 3

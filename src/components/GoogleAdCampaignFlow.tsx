@@ -212,6 +212,11 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
       if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
 
+    // Apply website URL from business context
+    if (businessContext?.websiteUrl) {
+      updateCampaignData({ finalUrl: businessContext.websiteUrl });
+    }
+
     // Fill remaining required fields with defaults ONLY if not already set by AI
     const currentData = campaignData;
     updateCampaignData({
@@ -227,7 +232,7 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
       audienceType: currentData.audienceType || 'search_terms',
       headline1: (currentData as any).headline1 || 'Quick Launch Headline',
       description1: (currentData as any).description1 || 'Auto-built campaign. Adjust and launch!',
-      finalUrl: (currentData as any).finalUrl || 'https://example.com',
+      finalUrl: currentData.finalUrl || 'https://example.com',
       adFormat: (currentData as any).adFormat || 'text',
       callToAction: (currentData as any).callToAction || 'learn_more'
     } as any);

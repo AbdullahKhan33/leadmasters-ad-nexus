@@ -172,6 +172,11 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
 
+    // Apply website URL from business context
+    if (businessContext?.websiteUrl) {
+      updateCampaignData({ adLinkUrl: businessContext.websiteUrl });
+    }
+
     // Fill remaining required fields with defaults ONLY if not already set by AI
     const currentData = campaignData;
     updateCampaignData({
@@ -187,7 +192,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       ageRange: currentData.ageRange || [18, 65],
       adFormat: (currentData as any).adFormat || 'single',
       callToAction: (currentData as any).callToAction || 'learn_more',
-      adLinkUrl: (currentData as any).adLinkUrl || 'https://example.com',
+      adLinkUrl: currentData.adLinkUrl || 'https://example.com',
       heading: (currentData as any).heading || 'Quick Launch Headline',
       primaryText: (currentData as any).primaryText || 'This campaign was auto-built. Tweak and launch!'
     } as any);

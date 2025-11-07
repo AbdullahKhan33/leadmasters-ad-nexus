@@ -43,7 +43,8 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
     targetCities: '',
     campaignGoal: '',
     currency: 'USD',
-    budgetRange: ''
+    budgetRange: '',
+    websiteUrl: ''
   });
 
   const [countrySearchTerm, setCountrySearchTerm] = useState('');
@@ -61,7 +62,8 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
           targetCities: context.target_cities || '',
           campaignGoal: context.campaign_goal,
           currency: context.currency,
-          budgetRange: context.budget_range || ''
+          budgetRange: context.budget_range || '',
+          websiteUrl: (context as any).website_url || ''
         });
         setContextName(context.name);
       }
@@ -85,7 +87,8 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
           targetCities: '',
           campaignGoal: '',
           currency: 'USD',
-          budgetRange: ''
+          budgetRange: '',
+          websiteUrl: ''
         });
         setContextName('');
       }
@@ -99,7 +102,8 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
       formData.businessType &&
       formData.targetCountries.length > 0 &&
       formData.campaignGoal &&
-      formData.currency
+      formData.currency &&
+      formData.websiteUrl
     );
   };
 
@@ -135,7 +139,8 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             campaign_goal: formData.campaignGoal,
             currency: formData.currency,
             budget_range: formData.budgetRange || null,
-          });
+            website_url: formData.websiteUrl || null,
+          } as any);
         } else {
           await saveContext({
             name: contextName.trim(),
@@ -146,8 +151,9 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             campaign_goal: formData.campaignGoal,
             currency: formData.currency,
             budget_range: formData.budgetRange || null,
+            website_url: formData.websiteUrl || null,
             is_default: false,
-          });
+          } as any);
         }
       }
       
@@ -157,6 +163,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
         ...formData,
         targetCities: formData.targetCities || undefined,
         budgetRange: formData.budgetRange || undefined,
+        websiteUrl: formData.websiteUrl || undefined,
         platform
       }, true); // autoBuild = true
       
@@ -205,7 +212,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
   };
 
   const handleSubmit = async () => {
-    if (!formData.industry || !formData.businessType || formData.targetCountries.length === 0 || !formData.campaignGoal || !formData.currency) {
+    if (!formData.industry || !formData.businessType || formData.targetCountries.length === 0 || !formData.campaignGoal || !formData.currency || !formData.websiteUrl) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -224,7 +231,8 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
           campaign_goal: formData.campaignGoal,
           currency: formData.currency,
           budget_range: formData.budgetRange || null,
-        });
+          website_url: formData.websiteUrl || null,
+        } as any);
       } else {
         // Create new context
         await saveContext({
@@ -236,8 +244,9 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
           campaign_goal: formData.campaignGoal,
           currency: formData.currency,
           budget_range: formData.budgetRange || null,
+          website_url: formData.websiteUrl || null,
           is_default: false,
-        });
+        } as any);
       }
     }
 
@@ -245,6 +254,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
       ...formData,
       targetCities: formData.targetCities || undefined,
       budgetRange: formData.budgetRange || undefined,
+      websiteUrl: formData.websiteUrl || undefined,
       platform
     }, false); // Generate suggestions only, no auto-build
     
@@ -496,6 +506,21 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
                   <SelectItem value="Store Visits">Store Visits</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Website URL */}
+            <div className="space-y-2">
+              <Label htmlFor="websiteUrl">Landing Page / Website URL *</Label>
+              <Input
+                id="websiteUrl"
+                type="url"
+                placeholder="https://example.com"
+                value={formData.websiteUrl}
+                onChange={(e) => setFormData({ ...formData, websiteUrl: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">
+                Where do you want to send users when they click your ad?
+              </p>
             </div>
 
             {/* Currency */}

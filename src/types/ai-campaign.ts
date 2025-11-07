@@ -7,6 +7,7 @@ export interface AIBusinessContext {
   budgetRange?: string;
   currency: string;
   platform: 'facebook' | 'instagram' | 'google' | 'linkedin';
+  websiteUrl?: string;
 }
 
 export interface AICampaignSuggestions {
