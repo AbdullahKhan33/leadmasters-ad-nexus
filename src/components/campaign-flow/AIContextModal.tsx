@@ -29,7 +29,11 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
   const [contextName, setContextName] = useState('');
   const [selectedContextId, setSelectedContextId] = useState<string>('');
   const [contextToDelete, setContextToDelete] = useState<string | null>(null);
-  const [autoBuild, setAutoBuild] = useState(false);
+  
+  // Auto-build progress states
+  const [isAutoBuilding, setIsAutoBuilding] = useState(false);
+  const [buildProgress, setBuildProgress] = useState(0);
+  const [buildStage, setBuildStage] = useState('');
   
   const [formData, setFormData] = useState({
     industry: '',
@@ -88,6 +92,112 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
     }
   };
 
+  const canAutoBuild = () => {
+    return (
+      formData.industry &&
+      formData.businessType &&
+      formData.targetCountries.length > 0 &&
+      formData.campaignGoal &&
+      formData.currency
+    );
+  };
+
+  const handleAutoBuild = async () => {
+    if (!canAutoBuild()) {
+      toast.error('Please fill in all required fields before auto-building');
+      return;
+    }
+
+    setIsAutoBuilding(true);
+    
+    try {
+      // Stage 1: Analyzing context (0-20%)
+      setBuildStage('🔍 Analyzing your business context...');
+      setBuildProgress(10);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setBuildProgress(20);
+      
+      // Stage 2: Calling AI (20-40%)
+      setBuildStage('🤖 Generating AI suggestions...');
+      setBuildProgress(30);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Save context if needed before making AI call
+      if (saveForFuture && contextName.trim()) {
+        if (selectedContextId) {
+          await updateContext(selectedContextId, {
+            name: contextName.trim(),
+            industry: formData.industry,
+            business_type: formData.businessType,
+            target_countries: formData.targetCountries,
+            target_cities: formData.targetCities || null,
+            campaign_goal: formData.campaignGoal,
+            currency: formData.currency,
+            budget_range: formData.budgetRange || null,
+          });
+        } else {
+          await saveContext({
+            name: contextName.trim(),
+            industry: formData.industry,
+            business_type: formData.businessType,
+            target_countries: formData.targetCountries,
+            target_cities: formData.targetCities || null,
+            campaign_goal: formData.campaignGoal,
+            currency: formData.currency,
+            budget_range: formData.budgetRange || null,
+            is_default: false,
+          });
+        }
+      }
+      
+      // Make the actual AI call
+      setBuildProgress(40);
+      await onSubmit({
+        ...formData,
+        targetCities: formData.targetCities || undefined,
+        budgetRange: formData.budgetRange || undefined,
+        platform
+      }, true); // autoBuild = true
+      
+      // Stage 3: Applying campaign setup (40-60%)
+      setBuildStage('⚙️ Configuring campaign settings...');
+      setBuildProgress(50);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setBuildProgress(60);
+      
+      // Stage 4: Setting up audience (60-80%)
+      setBuildStage('🎯 Setting up target audience...');
+      setBuildProgress(70);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setBuildProgress(80);
+      
+      // Stage 5: Creating ad content (80-95%)
+      setBuildStage('✨ Creating ad content...');
+      setBuildProgress(90);
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setBuildProgress(95);
+      
+      // Stage 6: Finalizing (95-100%)
+      setBuildStage('🎉 Finalizing your campaign...');
+      setBuildProgress(100);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Success - modal will close automatically
+      toast.success('🎉 Campaign auto-built successfully!');
+      
+    } catch (error) {
+      console.error('Auto-build error:', error);
+      toast.error('Failed to auto-build campaign. Please try again.');
+    } finally {
+      // Reset states
+      setTimeout(() => {
+        setIsAutoBuilding(false);
+        setBuildProgress(0);
+        setBuildStage('');
+      }, 500);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!formData.industry || !formData.businessType || formData.targetCountries.length === 0 || !formData.campaignGoal || !formData.currency) {
       toast.error('Please fill in all required fields');
@@ -130,7 +240,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
       targetCities: formData.targetCities || undefined,
       budgetRange: formData.budgetRange || undefined,
       platform
-    }, autoBuild);
+    }, false); // Generate suggestions only, no auto-build
   };
 
   const toggleCountry = (country: string) => {
@@ -162,6 +272,57 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             Tell us about your business to generate personalized campaign suggestions.
           </DialogDescription>
         </DialogHeader>
+
+        {/* Auto-Build Campaign Section - Prominent CTA */}
+        <div className="border-b pb-6 mb-4">
+          <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 dark:from-blue-950/20 dark:via-purple-950/20 dark:to-pink-950/20 rounded-lg p-6 space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold mb-1">One-Click Campaign Builder</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Let AI automatically build your entire campaign in seconds. Fill the required fields below, then click to auto-build.
+                </p>
+                
+                {/* Progress Bar (only visible during auto-build) */}
+                {isAutoBuilding && (
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium text-purple-600 dark:text-purple-400">{buildStage}</span>
+                      <span className="text-muted-foreground">{buildProgress}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 transition-all duration-500 ease-out"
+                        style={{ width: `${buildProgress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                <Button
+                  onClick={handleAutoBuild}
+                  disabled={isAutoBuilding || isLoading || !canAutoBuild()}
+                  className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:opacity-90 text-white font-semibold py-6 text-base"
+                >
+                  {isAutoBuilding ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Building Your Campaign...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 mr-2" />
+                      🚀 Auto-Build Complete Campaign with AI
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className="space-y-4 py-4">
           {/* Saved Contexts Badges */}
@@ -415,26 +576,11 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
                 Save this context for future use
               </label>
             </div>
-
-            {/* Auto-Build Option */}
-            <div className="flex items-center space-x-2 pt-2 pb-2 border-t">
-              <Checkbox
-                id="autoBuild"
-                checked={autoBuild}
-                onCheckedChange={(checked) => setAutoBuild(checked as boolean)}
-              />
-              <label
-                htmlFor="autoBuild"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                🚀 Auto-fill all fields and jump to final screen
-              </label>
-            </div>
           </div>
         </div>
 
         <div className="flex gap-3">
-          <Button variant="outline" onClick={onClose} className="flex-1" disabled={isLoading}>
+          <Button variant="outline" onClick={onClose} className="flex-1" disabled={isLoading || isAutoBuilding}>
             Cancel
           </Button>
           <Button
@@ -447,18 +593,19 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
               !formData.campaignGoal || 
               !formData.currency ||
               (saveForFuture && !contextName.trim()) ||
-              isLoading
+              isLoading ||
+              isAutoBuilding
             }
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {autoBuild ? 'Building Campaign...' : 'Generating...'}
+                Generating...
               </>
             ) : (
               <>
                 <Sparkles className="w-4 h-4 mr-2" />
-                {autoBuild ? '🚀 Auto-Build Campaign' : 'Generate Suggestions'}
+                Generate Suggestions Only
               </>
             )}
           </Button>
