@@ -123,11 +123,10 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
     }
   };
 
-  const handleAISubmit = async (context: any, autoBuild: boolean = false) => {
+  const handleAISubmit = async (context: any, autoBuild: boolean = false): Promise<boolean> => {
     const result = await generateSuggestions(context);
     if (!result) {
-      toast.error('Failed to generate AI suggestions. Please try again.');
-      return;
+      return false;
     }
     
     setAiEnabled(true);
@@ -137,6 +136,7 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
     } else {
       setShowAIModal(false);
     }
+    return true;
   };
 
   // Apply sensible defaults when AI doesn't provide a value

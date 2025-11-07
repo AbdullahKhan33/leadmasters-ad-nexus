@@ -19,7 +19,7 @@ import { cn } from '@/lib/utils';
 interface AIContextModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (context: AIBusinessContext, autoBuild?: boolean) => void;
+  onSubmit: (context: AIBusinessContext, autoBuild?: boolean) => Promise<boolean | void>;
   platform: 'facebook' | 'instagram' | 'google' | 'linkedin';
   isLoading?: boolean;
 }
@@ -153,12 +153,17 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
       
       // Make the actual AI call
       setBuildProgress(40);
-      await onSubmit({
+      const aiSuccess = await onSubmit({
         ...formData,
         targetCities: formData.targetCities || undefined,
         budgetRange: formData.budgetRange || undefined,
         platform
       }, true); // autoBuild = true
+      
+      // If AI generation failed, stop the process
+      if (aiSuccess === false) {
+        throw new Error('AI generation failed');
+      }
       
       // Stage 3: Applying campaign setup (40-60%)
       setBuildStage('⚙️ Configuring campaign settings...');
@@ -236,12 +241,17 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
       }
     }
 
-    onSubmit({
+    const success = await onSubmit({
       ...formData,
       targetCities: formData.targetCities || undefined,
       budgetRange: formData.budgetRange || undefined,
       platform
     }, false); // Generate suggestions only, no auto-build
+    
+    // Only close modal if AI generation was successful
+    if (success !== false) {
+      onClose();
+    }
   };
 
   const toggleCountry = (country: string) => {
