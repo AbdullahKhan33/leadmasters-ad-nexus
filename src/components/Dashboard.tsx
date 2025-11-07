@@ -17,13 +17,15 @@ export function Dashboard() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto bg-background">
-      <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="flex-1 overflow-y-auto bg-gradient-to-br from-background via-primary/5 to-secondary/5">
+      <div className="p-4 lg:p-8 space-y-8 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">Campaign Launchpad</h1>
-          <p className="text-muted-foreground">
-            Create, manage, and optimize your marketing campaigns all in one place
+        <div className="space-y-3">
+          <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-primary via-primary/90 to-secondary bg-clip-text text-transparent">
+            Campaign Launchpad
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Create, manage, and optimize your marketing campaigns with AI-powered tools
           </p>
         </div>
 

@@ -32,9 +32,7 @@ export function QuickAccessGrid() {
       description: "Manage your customer relationships",
       icon: Users,
       stat: `${totalLeads} leads`,
-      color: "from-blue-500/10 to-blue-500/5",
-      iconColor: "text-blue-600",
-      borderColor: "border-blue-200 hover:border-blue-300",
+      gradient: "from-blue-500 via-blue-600 to-blue-700",
       onClick: () => navigate("/", { state: { view: "crm" } }),
     },
     {
@@ -42,9 +40,7 @@ export function QuickAccessGrid() {
       description: "Create and manage email campaigns",
       icon: Mail,
       stat: `${emailCampaigns.length} campaigns`,
-      color: "from-purple-500/10 to-purple-500/5",
-      iconColor: "text-purple-600",
-      borderColor: "border-purple-200 hover:border-purple-300",
+      gradient: "from-purple-500 via-purple-600 to-purple-700",
       onClick: () => navigate("/app/campaigns/create"),
     },
     {
@@ -52,9 +48,7 @@ export function QuickAccessGrid() {
       description: "Engage leads via WhatsApp",
       icon: MessageSquare,
       stat: `${whatsappCampaigns.length} campaigns`,
-      color: "from-green-500/10 to-green-500/5",
-      iconColor: "text-green-600",
-      borderColor: "border-green-200 hover:border-green-300",
+      gradient: "from-green-500 via-green-600 to-green-700",
       onClick: () => navigate("/", { state: { view: "ad-builder", platform: "whatsapp" } }),
     },
     {
@@ -62,9 +56,7 @@ export function QuickAccessGrid() {
       description: "Schedule social media posts",
       icon: Calendar,
       stat: "View calendar",
-      color: "from-orange-500/10 to-orange-500/5",
-      iconColor: "text-orange-600",
-      borderColor: "border-orange-200 hover:border-orange-300",
+      gradient: "from-orange-500 via-orange-600 to-orange-700",
       onClick: () => navigate("/", { state: { view: "schedule" } }),
     },
     {
@@ -72,9 +64,7 @@ export function QuickAccessGrid() {
       description: "View your published content",
       icon: BarChart3,
       stat: "See performance",
-      color: "from-pink-500/10 to-pink-500/5",
-      iconColor: "text-pink-600",
-      borderColor: "border-pink-200 hover:border-pink-300",
+      gradient: "from-pink-500 via-pink-600 to-pink-700",
       onClick: () => navigate("/", { state: { view: "published-posts" } }),
     },
     {
@@ -82,9 +72,7 @@ export function QuickAccessGrid() {
       description: "Track campaign performance",
       icon: BarChart3,
       stat: `${activeCampaigns} active`,
-      color: "from-cyan-500/10 to-cyan-500/5",
-      iconColor: "text-cyan-600",
-      borderColor: "border-cyan-200 hover:border-cyan-300",
+      gradient: "from-cyan-500 via-cyan-600 to-cyan-700",
       onClick: () => navigate("/", { state: { view: "analytics" } }),
     },
   ];
@@ -96,20 +84,32 @@ export function QuickAccessGrid() {
         return (
           <Card
             key={card.title}
-            className={`border-2 ${card.borderColor} bg-gradient-to-br ${card.color} cursor-pointer transition-all duration-200 hover:shadow-md group`}
+            className="relative overflow-hidden border-0 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-xl group bg-gradient-to-br from-background via-background to-muted/20"
             onClick={card.onClick}
           >
-            <CardContent className="p-5">
-              <div className="flex items-start justify-between mb-3">
-                <div className={`p-2.5 rounded-lg bg-background/60 ${card.iconColor}`}>
-                  <Icon className="w-5 h-5" />
+            {/* Gradient accent bar */}
+            <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient}`} />
+            
+            {/* Hover glow effect */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity`} />
+            
+            <CardContent className="relative p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className={`p-3 rounded-xl bg-gradient-to-br ${card.gradient} shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300`}>
+                  <Icon className="w-6 h-6 text-white" />
                 </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
               </div>
               
-              <h3 className="font-semibold text-foreground mb-1">{card.title}</h3>
-              <p className="text-xs text-muted-foreground mb-2">{card.description}</p>
-              <p className="text-sm font-medium text-foreground/70">{card.stat}</p>
+              <h3 className="font-bold text-foreground mb-2 text-lg group-hover:text-primary transition-colors">
+                {card.title}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
+                {card.description}
+              </p>
+              <p className={`text-base font-semibold bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent`}>
+                {card.stat}
+              </p>
             </CardContent>
           </Card>
         );
