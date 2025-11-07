@@ -212,9 +212,13 @@ export function InstagramAdCampaignFlow({ draftId }: InstagramAdCampaignFlowProp
       ? mapAIValueToDropdown(normalizedField, value)
       : value;
 
-    // Ensure age range is a tuple of numbers
+    // Ensure age range is a tuple of numbers and clamp to allowed bounds (18-65)
     if (normalizedField === 'ageRange' && Array.isArray(mappedValue)) {
-      mappedValue = [Number(mappedValue[0]), Number(mappedValue[1])] as [number, number];
+      const min = 18;
+      const max = 65;
+      const a = Math.max(min, Math.min(max, Number(mappedValue[0])));
+      const b = Math.max(min, Math.min(max, Number(mappedValue[1])));
+      mappedValue = [Math.min(a, b), Math.max(a, b)] as [number, number];
     }
 
     // Fields that are arrays: add uniquely instead of replacing

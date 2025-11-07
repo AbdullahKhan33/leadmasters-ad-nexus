@@ -208,8 +208,13 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
     const normalizedField = normalizeField(field);
     let mappedValue: any = typeof value === 'string' ? mapAIValueToDropdown(normalizedField, value) : value;
 
+    // Ensure age range is numeric and clamp to allowed bounds (18-65)
     if (normalizedField === 'ageRange' && Array.isArray(mappedValue)) {
-      mappedValue = [Number(mappedValue[0]), Number(mappedValue[1])] as [number, number];
+      const min = 18;
+      const max = 65;
+      const a = Math.max(min, Math.min(max, Number(mappedValue[0])));
+      const b = Math.max(min, Math.min(max, Number(mappedValue[1])));
+      mappedValue = [Math.min(a, b), Math.max(a, b)] as [number, number];
     }
 
     const arrayFields = new Set(['targetLocations', 'jobTitles', 'companies', 'industries', 'skills', 'seniority', 'companySize']);

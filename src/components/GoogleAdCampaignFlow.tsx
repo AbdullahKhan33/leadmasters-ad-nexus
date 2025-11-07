@@ -132,12 +132,27 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
   const mapAIValueToDropdown = (field: string, aiValue: string): string => {
     const mappings: Record<string, Record<string, string>> = {
       campaignType: {
+        // Native campaign types
         'search': 'search',
         'display': 'display',
         'shopping': 'shopping',
         'video': 'video',
         'app': 'app',
-        'performance max': 'performance_max'
+        'performance max': 'performance_max',
+        // Map common objectives to best-fit campaign types
+        'brand awareness': 'display',
+        'awareness': 'display',
+        'reach': 'display',
+        'traffic': 'search',
+        'website traffic': 'search',
+        'leads': 'performance_max',
+        'lead generation': 'performance_max',
+        'conversions': 'performance_max',
+        'sales': 'performance_max',
+        'app installs': 'app',
+        'app promotion': 'app',
+        'video views': 'video',
+        'engagement': 'display'
       },
       budgetType: {
         'daily': 'daily',
@@ -192,6 +207,8 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
   // Normalize incoming AI field names to our state shape
   const normalizeField = (field: string): string => {
     switch (field) {
+      case 'objective':
+        return 'campaignType'; // Map generic objective to Google campaignType
       case 'targetInterests':
         return 'keywords'; // For Google, AI 'interests/keywords' map to keywords list
       case 'keyword':
@@ -200,13 +217,17 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
         return field;
     }
   };
-
   const handleApplyAISuggestion = (field: string, value: any) => {
     const normalizedField = normalizeField(field);
     let mappedValue: any = typeof value === 'string' ? mapAIValueToDropdown(normalizedField, value) : value;
 
+    // Ensure age range is numeric and clamp to allowed bounds (18-75)
     if (normalizedField === 'ageRange' && Array.isArray(mappedValue)) {
-      mappedValue = [Number(mappedValue[0]), Number(mappedValue[1])] as [number, number];
+      const min = 18;
+      const max = 75;
+      const a = Math.max(min, Math.min(max, Number(mappedValue[0])));
+      const b = Math.max(min, Math.min(max, Number(mappedValue[1])));
+      mappedValue = [Math.min(a, b), Math.max(a, b)] as [number, number];
     }
 
     const arrayFields = new Set(['targetLocations', 'targetLanguages', 'keywords']);
