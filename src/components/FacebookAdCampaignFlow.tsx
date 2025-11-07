@@ -142,7 +142,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       ageRange: campaignData.ageRange || [18, 65],
       adFormat: (campaignData as any).adFormat || 'single',
       callToAction: (campaignData as any).callToAction || 'learn_more',
-      adLinkUrl: (campaignData as any).adLinkUrl || 'https://example.com',
+      adLinkUrl: (campaignData as any).adLinkUrl || (businessContext?.websiteUrl || ''),
       heading: (campaignData as any).heading || 'Quick Launch Headline',
       primaryText: (campaignData as any).primaryText || 'This campaign was auto-built. Tweak and launch!'
     } as any);
@@ -207,25 +207,18 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       if (adContent.callToAction?.length) handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
     }
     
-    // Fill remaining required fields with defaults ONLY if not already set
-    const currentData = campaignData;
-    updateCampaignData({
-      adAccount: currentData.adAccount || 'account1',
-      campaignName: currentData.campaignName || `${businessContext?.campaignGoal || 'Quick Launch'} Campaign`,
-      objective: currentData.objective || 'awareness',
-      budgetType: currentData.budgetType || 'daily',
-      budgetAmount: currentData.budgetAmount || 100,
-      bidStrategy: currentData.bidStrategy || 'lowest_cost',
-      facebookPage: currentData.facebookPage || 'page1',
-      targetLocations: currentData.targetLocations?.length ? currentData.targetLocations : (businessContext?.targetCountries || ['india']),
-      targetGender: currentData.targetGender || 'all',
-      ageRange: currentData.ageRange || [18, 65],
-      adFormat: (currentData as any).adFormat || 'single',
-      callToAction: (currentData as any).callToAction || 'learn_more',
-      adLinkUrl: currentData.adLinkUrl || businessContext?.websiteUrl || 'https://example.com',
-      heading: (currentData as any).heading || 'Quick Launch Headline',
-      primaryText: (currentData as any).primaryText || 'This campaign was auto-built. Tweak and launch!'
-    } as any);
+    // Fill remaining required fields with defaults without overriding previously applied values
+    setCampaignData(prev => ({
+      ...prev,
+      adAccount: prev.adAccount || 'account1',
+      campaignName: prev.campaignName || `${businessContext?.campaignGoal || 'Quick Launch'} Campaign`,
+      bidStrategy: prev.bidStrategy || 'lowest_cost',
+      facebookPage: prev.facebookPage || 'page1',
+      adFormat: (prev as any).adFormat || 'single',
+      callToAction: (prev as any).callToAction || 'learn_more',
+      heading: (prev as any).heading || 'Quick Launch Headline',
+      primaryText: (prev as any).primaryText || 'This campaign was auto-built. Tweak and launch!'
+    } as any));
 
     // Jump to step 3
     setCurrentStep(3);
@@ -341,6 +334,10 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       if (Array.isArray(value)) {
         min = Number(value[0]);
         max = Number(value[1]);
+      } else if (typeof value === 'object' && value) {
+        const v: any = value;
+        min = Number(v.min ?? v.from ?? v.start);
+        max = Number(v.max ?? v.to ?? v.end);
       } else if (typeof value === 'string') {
         const m = value.match(/(\d{1,2})\D+(\d{1,2})/);
         if (m) {
@@ -348,7 +345,7 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
           max = Number(m[2]);
         }
       }
-      if (typeof min === 'number' && typeof max === 'number') {
+      if (typeof min === 'number' && !isNaN(min) && typeof max === 'number' && !isNaN(max)) {
         const clamped: [number, number] = [
           Math.max(18, Math.min(65, Math.min(min, max))),
           Math.max(18, Math.min(65, Math.max(min, max)))
