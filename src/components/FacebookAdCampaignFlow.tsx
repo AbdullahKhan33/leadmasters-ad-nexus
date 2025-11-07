@@ -89,6 +89,34 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       return false;
     }
     
+    // Immediately apply user's inputs for objective, budget and URL
+    const goalToObjectiveMap: Record<string, string> = {
+      'brand awareness': 'awareness',
+      'lead generation': 'leads',
+      'website traffic': 'traffic',
+      'conversions': 'sales',
+      'app installs': 'app_promotion',
+      'engagement': 'engagement',
+      'store visits': 'reach'
+    };
+    const goalLc = (context.campaignGoal || context.campaign_goal || '').toLowerCase();
+    if (goalLc) {
+      updateCampaignData({ objective: goalToObjectiveMap[goalLc] || 'awareness' });
+    }
+    const budgetRaw = context.budgetRange || context.budget_range || context.budget;
+    if (budgetRaw) {
+      const match = String(budgetRaw).match(/[\d,.]+/);
+      const amount = match ? Number(match[0].replace(/,/g, '')) : undefined;
+      updateCampaignData({
+        budgetAmount: amount && !isNaN(amount) ? amount : (campaignData.budgetAmount || 100),
+        budgetType: 'daily'
+      });
+    }
+    const url = context.websiteUrl || context.website_url;
+    if (url) {
+      updateCampaignData({ adLinkUrl: url });
+    }
+    
     setAiEnabled(true);
     if (autoBuild) {
       await handleAutoApplyAllSuggestions(result);
@@ -126,20 +154,23 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
     // STEP 1: Campaign Setup - Apply USER inputs directly
     if (businessContext?.campaignGoal) {
       const goalToObjectiveMap: Record<string, string> = {
-        'Brand Awareness': 'awareness',
-        'Lead Generation': 'leads',
-        'Website Traffic': 'traffic',
-        'Conversions': 'sales',
-        'App Installs': 'app_promotion',
-        'Engagement': 'engagement',
-        'Store Visits': 'reach'
+        'brand awareness': 'awareness',
+        'lead generation': 'leads',
+        'website traffic': 'traffic',
+        'conversions': 'sales',
+        'app installs': 'app_promotion',
+        'engagement': 'engagement',
+        'store visits': 'reach'
       };
-      updateCampaignData({ objective: goalToObjectiveMap[businessContext.campaignGoal] || 'awareness' });
+      const goalLc = (businessContext.campaignGoal || '').toLowerCase();
+      updateCampaignData({ objective: goalToObjectiveMap[goalLc] || 'awareness' });
     }
     
     if (businessContext?.budgetRange) {
+      const match = businessContext.budgetRange.match(/[\d,.]+/);
+      const amount = match ? Number(match[0].replace(/,/g, '')) : undefined;
       updateCampaignData({
-        budgetAmount: parseInt(businessContext.budgetRange),
+        budgetAmount: amount && !isNaN(amount) ? amount : (campaignData.budgetAmount || 100),
         budgetType: 'daily'
       });
     }
@@ -304,9 +335,29 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
       } else {
         toast.info('Interest already added');
       }
-    } else if (field === 'ageRange' && Array.isArray(value)) {
-      updateCampaignData({ ageRange: [Number(value[0]), Number(value[1])] as [number, number] });
-      toast.success('Age range updated');
+    } else if (field === 'ageRange') {
+      let min: number | undefined;
+      let max: number | undefined;
+      if (Array.isArray(value)) {
+        min = Number(value[0]);
+        max = Number(value[1]);
+      } else if (typeof value === 'string') {
+        const m = value.match(/(\d{1,2})\D+(\d{1,2})/);
+        if (m) {
+          min = Number(m[1]);
+          max = Number(m[2]);
+        }
+      }
+      if (typeof min === 'number' && typeof max === 'number') {
+        const clamped: [number, number] = [
+          Math.max(18, Math.min(65, Math.min(min, max))),
+          Math.max(18, Math.min(65, Math.max(min, max)))
+        ];
+        updateCampaignData({ ageRange: clamped });
+        toast.success('Age range updated');
+      } else {
+        console.warn('Invalid ageRange suggestion:', value);
+      }
     } else {
       const mappedValue = typeof value === 'string' ? mapAIValueToDropdown(field, value) : value;
       console.log('Mapped value:', field, mappedValue);
