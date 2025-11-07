@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 interface AIContextModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (context: AIBusinessContext) => void;
+  onSubmit: (context: AIBusinessContext, autoBuild?: boolean) => void;
   platform: 'facebook' | 'instagram' | 'google' | 'linkedin';
   isLoading?: boolean;
 }
@@ -29,6 +29,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
   const [contextName, setContextName] = useState('');
   const [selectedContextId, setSelectedContextId] = useState<string>('');
   const [contextToDelete, setContextToDelete] = useState<string | null>(null);
+  const [autoBuild, setAutoBuild] = useState(false);
   
   const [formData, setFormData] = useState({
     industry: '',
@@ -129,7 +130,7 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
       targetCities: formData.targetCities || undefined,
       budgetRange: formData.budgetRange || undefined,
       platform
-    });
+    }, autoBuild);
   };
 
   const toggleCountry = (country: string) => {
@@ -414,6 +415,21 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
                 Save this context for future use
               </label>
             </div>
+
+            {/* Auto-Build Option */}
+            <div className="flex items-center space-x-2 pt-2 pb-2 border-t">
+              <Checkbox
+                id="autoBuild"
+                checked={autoBuild}
+                onCheckedChange={(checked) => setAutoBuild(checked as boolean)}
+              />
+              <label
+                htmlFor="autoBuild"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              >
+                🚀 Auto-fill all fields and jump to final screen
+              </label>
+            </div>
           </div>
         </div>
 
@@ -437,12 +453,12 @@ export function AIContextModal({ open, onClose, onSubmit, platform, isLoading }:
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
+                {autoBuild ? 'Building Campaign...' : 'Generating...'}
               </>
             ) : (
               <>
                 <Sparkles className="w-4 h-4 mr-2" />
-                Generate Suggestions
+                {autoBuild ? '🚀 Auto-Build Campaign' : 'Generate Suggestions'}
               </>
             )}
           </Button>

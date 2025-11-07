@@ -120,12 +120,73 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
     }
   };
 
-  const handleAISubmit = async (context: any) => {
+  const handleAISubmit = async (context: any, autoBuild: boolean = false) => {
     const result = await generateSuggestions(context);
     if (result) {
       setAiEnabled(true);
       setShowAIModal(false);
+      
+      if (autoBuild) {
+        handleAutoApplyAllSuggestions();
+      }
     }
+  };
+
+  const handleAutoApplyAllSuggestions = () => {
+    if (!suggestions) return;
+
+    // STEP 1: Campaign Setup
+    const { campaignSetup } = suggestions;
+    if (campaignSetup) {
+      if (campaignSetup.objective) {
+        handleApplyAISuggestion('objective', campaignSetup.objective);
+      }
+      if (campaignSetup.recommendedBudget) {
+        handleApplyAISuggestion('budgetAmount', campaignSetup.recommendedBudget.min);
+        handleApplyAISuggestion('budgetType', 'daily');
+      }
+      if (campaignSetup.bidStrategy) {
+        handleApplyAISuggestion('bidStrategy', campaignSetup.bidStrategy);
+      }
+    }
+
+    // STEP 2: Target Audience
+    const { targetAudience } = suggestions;
+    if (targetAudience) {
+      if (targetAudience.demographics) {
+        if (targetAudience.demographics.ageRange) {
+          handleApplyAISuggestion('ageRange', targetAudience.demographics.ageRange);
+        }
+        if (targetAudience.demographics.gender) {
+          handleApplyAISuggestion('targetGender', targetAudience.demographics.gender);
+        }
+      }
+      if (targetAudience.locations && targetAudience.locations.length > 0) {
+        handleApplyAISuggestion('targetLocations', targetAudience.locations.map(loc => loc.name));
+      }
+      if (targetAudience.keywords && targetAudience.keywords.length > 0) {
+        handleApplyAISuggestion('keywords', targetAudience.keywords);
+      }
+    }
+
+    // STEP 3: Ad Content
+    const { adContent } = suggestions;
+    if (adContent) {
+      if (adContent.headlines && adContent.headlines.length > 0) {
+        handleApplyAISuggestion('headline1', adContent.headlines[0].text);
+      }
+      if (adContent.descriptions && adContent.descriptions.length > 0) {
+        handleApplyAISuggestion('description1', adContent.descriptions[0].text);
+      }
+      if (adContent.callToAction && adContent.callToAction.length > 0) {
+        handleApplyAISuggestion('callToAction', adContent.callToAction[0]);
+      }
+    }
+
+    setTimeout(() => {
+      setCurrentStep(3);
+      toast.success('🎉 Campaign auto-built! Review and launch when ready.');
+    }, 500);
   };
 
   // Map AI suggestion values to dropdown values (Google-specific)
