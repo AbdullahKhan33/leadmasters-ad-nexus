@@ -4,3 +4,6 @@ export { HybridQuickActions } from "./HybridQuickActions";
 export { WhatsAppPipelineChart } from "./WhatsAppPipelineChart";
 export { AIAutomationStatusCard } from "./AIAutomationStatusCard";
 export { WhatsAppEmptyState } from "./WhatsAppEmptyState";
+export { DashboardMetricsBar } from "./DashboardMetricsBar";
+export { ConversionFunnelCard } from "./ConversionFunnelCard";
+export { PipelineKanban } from "./PipelineKanban";
