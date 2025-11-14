@@ -7,10 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, ArrowLeft, Upload, Eye, Instagram, Globe, MessageCircle } from "lucide-react";
 import { InstagramCampaignData } from "../InstagramAdCampaignFlow";
-import { AICreativeSelector } from "./AICreativeSelector";
+import { ImageSelectionModal } from "./ImageSelectionModal";
 
 import { AICampaignSuggestions } from "@/types/ai-campaign";
 
@@ -36,6 +35,7 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedAICreative, setSelectedAICreative] = useState<string | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   // Update formData when data prop changes (from AI suggestions)
   useEffect(() => {
@@ -309,40 +309,18 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
               <Label className="text-sm font-medium text-gray-700">
                 Upload Image/Video
               </Label>
-              <Tabs defaultValue="ai-creatives" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="ai-creatives">My Creatives</TabsTrigger>
-                  <TabsTrigger value="upload">Upload from Computer</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="ai-creatives" className="mt-4">
-                  <AICreativeSelector 
-                    onSelect={handleAICreativeSelect}
-                    selectedImageUrl={selectedAICreative}
-                  />
-                </TabsContent>
-                
-                <TabsContent value="upload" className="mt-4">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
-                    <input
-                      type="file"
-                      id="imageUpload"
-                      accept="image/*,video/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                    <label htmlFor="imageUpload" className="cursor-pointer">
-                      <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                      <p className="text-sm text-gray-600">
-                        Click to upload or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        PNG, JPG, MP4 up to 10MB
-                      </p>
-                    </label>
-                  </div>
-                </TabsContent>
-              </Tabs>
+              <div 
+                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors cursor-pointer"
+                onClick={() => setIsImageModalOpen(true)}
+              >
+                <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-600">
+                  Click to upload or drag and drop
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  PNG, JPG, MP4 up to 10MB
+                </p>
+              </div>
               {(data.uploadedImage || selectedAICreative) && (
                 <div className="mt-2 text-sm text-green-600">
                   ✓ Media selected: {selectedAICreative ? 'AI Creative' : data.uploadedImage?.name}

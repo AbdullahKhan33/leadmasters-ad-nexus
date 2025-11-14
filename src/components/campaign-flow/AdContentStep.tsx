@@ -626,6 +626,18 @@ export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContent
         onClose={() => setIsGalleryOpen(false)}
         onSelectImages={handleGalleryImagesSelect}
       />
+
+      {/* Image Selection Modal */}
+      <ImageSelectionModal
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        onFileUpload={handleImageUpload}
+        onAICreativeSelect={handleAICreativeSelect}
+        selectedAICreative={selectedAICreative}
+        acceptFileTypes="image/*"
+        uploadLabel="Click to upload or drag and drop"
+        uploadDescription="PNG, JPG up to 10MB"
+      />
     </div>
   );
 }
