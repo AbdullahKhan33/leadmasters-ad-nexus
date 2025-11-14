@@ -86,6 +86,12 @@ export interface SegmentFilter {
 export const SEGMENT_FILTERS: SegmentFilter[] = [
   // Date & Time Filters
   {
+    field: 'date',
+    label: 'Date',
+    type: 'date',
+    placeholder: 'Select date or range'
+  },
+  {
     field: 'created_at',
     label: 'Lead Created Date',
     type: 'daterange',
