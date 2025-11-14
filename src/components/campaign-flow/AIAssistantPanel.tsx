@@ -12,10 +12,9 @@ interface AIAssistantPanelProps {
   step: 'setup' | 'audience' | 'content';
   onApplySuggestion: (field: string, value: any) => void;
   businessContext?: AIBusinessContext | null;
-  isInDrawer?: boolean;
 }
 
-export function AIAssistantPanel({ suggestions, step, onApplySuggestion, businessContext, isInDrawer = false }: AIAssistantPanelProps) {
+export function AIAssistantPanel({ suggestions, step, onApplySuggestion, businessContext }: AIAssistantPanelProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (!suggestions) return null;
@@ -25,8 +24,8 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
   const getStepSuggestions = () => {
     switch (step) {
       case 'setup':
-        // Return a placeholder for setup step
-        return { type: 'setup' };
+        // No AI suggestions for setup - user provides these directly
+        return null;
       case 'audience':
         return suggestions.targetAudience;
       case 'content':
@@ -37,13 +36,11 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
   };
 
   const stepData = getStepSuggestions();
-  
-  // Don't return null - we want to show something even if no specific suggestions
-  console.log('AIAssistantPanel - step:', step, 'stepData:', stepData, 'suggestions:', suggestions);
+  if (!stepData) return null;
 
   return (
-    <div className={isInDrawer ? "w-full space-y-4" : "w-full lg:w-[400px] space-y-4"}>
-      <Card className={isInDrawer ? "border-0 shadow-none bg-transparent p-0" : "border-2 border-transparent bg-gradient-to-r from-blue-50/50 via-purple-50/50 to-pink-50/50 p-4"}>
+    <div className="w-full lg:w-[400px] space-y-4">
+      <Card className="border-2 border-transparent bg-gradient-to-r from-blue-50/50 via-purple-50/50 to-pink-50/50 p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center">
@@ -144,18 +141,8 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
               </>
             )}
 
-            {/* Fallback for audience step with no suggestions */}
-            {step === 'audience' && stepData && !('demographics' in stepData) && (
-              <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <p className="text-xs font-semibold text-yellow-900 mb-1">⚠️ Generating Suggestions...</p>
-                <p className="text-xs text-yellow-800">
-                  AI is analyzing your business context to generate audience targeting suggestions. Please wait a moment.
-                </p>
-              </div>
-            )}
-
             {/* Ad Content Step */}
-            {step === 'content' && stepData && 'headlines' in stepData && (
+            {step === 'content' && 'headlines' in stepData && (
               <>
                 <div className="space-y-2">
                   <p className="text-sm font-semibold">Primary Text Ideas</p>
@@ -220,16 +207,6 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
                   </div>
                 )}
               </>
-            )}
-
-            {/* Fallback for content step with no suggestions */}
-            {step === 'content' && stepData && !('headlines' in stepData) && (
-              <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <p className="text-xs font-semibold text-yellow-900 mb-1">⚠️ Generating Content Suggestions...</p>
-                <p className="text-xs text-yellow-800">
-                  AI is crafting headlines, descriptions, and ad copy suggestions for you. Please wait a moment.
-                </p>
-              </div>
             )}
           </div>
         )}

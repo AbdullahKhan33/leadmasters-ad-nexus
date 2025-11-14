@@ -8,7 +8,7 @@ import { GoogleCampaignSetupStep } from "./campaign-flow/GoogleCampaignSetupStep
 import { GoogleTargetAudienceStep } from "./campaign-flow/GoogleTargetAudienceStep";
 import { GoogleAdContentStep } from "./campaign-flow/GoogleAdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
-import { FloatingAIDrawer } from "./campaign-flow/FloatingAIDrawer";
+import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
 import { useGoogleCampaigns } from "@/hooks/useGoogleCampaigns";
 import { AICampaignSuggestions } from "@/types/ai-campaign";
@@ -52,7 +52,6 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
   const [campaignData, setCampaignData] = useState<GoogleCampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [currentCampaignId, setCurrentCampaignId] = useState<string | null>(draftId || null);
   const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions, restoreFromDraft } = useCampaignAI();
   const { campaigns, saveCampaign, updateCampaign, refetch } = useGoogleCampaigns();
@@ -372,22 +371,6 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
     }
   };
 
-  const calculateSuggestionCount = () => {
-    if (!suggestions) return 0;
-    let count = 0;
-    
-    if (currentStep === 2 && suggestions.targetAudience) {
-      if (suggestions.targetAudience.demographics) count += 2;
-      if (suggestions.targetAudience.locations) count += suggestions.targetAudience.locations.length;
-      if (suggestions.targetAudience.keywords) count += suggestions.targetAudience.keywords.length;
-    } else if (currentStep === 3 && suggestions.adContent) {
-      if (suggestions.adContent.headlines) count += suggestions.adContent.headlines.length;
-      if (suggestions.adContent.descriptions) count += suggestions.adContent.descriptions.length;
-    }
-    
-    return Math.min(count, 9);
-  };
-
   const getStepTitle = () => {
     switch (currentStep) {
       case 1: return "Campaign Setup";
@@ -489,22 +472,20 @@ export function GoogleAdCampaignFlow({ draftId }: GoogleAdCampaignFlowProps = {}
         </Card>
 
         {/* Current Step Content */}
-        <div className="w-full">
-          {renderCurrentStep()}
+        <div className="flex gap-6">
+          <div className="flex-1">
+            {renderCurrentStep()}
+          </div>
+          {aiEnabled && suggestions && (
+            <AIAssistantPanel
+              suggestions={suggestions}
+              step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
+              onApplySuggestion={handleApplyAISuggestion}
+              businessContext={businessContext}
+            />
+          )}
         </div>
       </div>
-
-      {aiEnabled && suggestions && (
-        <FloatingAIDrawer
-          isOpen={isAIDrawerOpen}
-          onOpenChange={setIsAIDrawerOpen}
-          suggestions={suggestions}
-          currentStep={currentStep}
-          onApplySuggestion={handleApplyAISuggestion}
-          businessContext={businessContext}
-          suggestionCount={calculateSuggestionCount()}
-        />
-      )}
 
       <AIContextModal
         open={showAIModal}

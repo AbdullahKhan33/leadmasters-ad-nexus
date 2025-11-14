@@ -8,7 +8,7 @@ import { LinkedInCampaignSetupStep } from "./campaign-flow/LinkedInCampaignSetup
 import { LinkedInTargetAudienceStep } from "./campaign-flow/LinkedInTargetAudienceStep";
 import { LinkedInAdContentStep } from "./campaign-flow/LinkedInAdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
-import { FloatingAIDrawer } from "./campaign-flow/FloatingAIDrawer";
+import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
 import { useLinkedInCampaigns } from "@/hooks/useLinkedInCampaigns";
 import { AICampaignSuggestions } from "@/types/ai-campaign";
@@ -53,7 +53,6 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
   const [campaignData, setCampaignData] = useState<LinkedInCampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [currentCampaignId, setCurrentCampaignId] = useState<string | null>(draftId || null);
   const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions, restoreFromDraft } = useCampaignAI();
   const { campaigns, saveCampaign, updateCampaign, refetch } = useLinkedInCampaigns();
@@ -353,24 +352,6 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
     }
   };
 
-  const calculateSuggestionCount = () => {
-    if (!suggestions) return 0;
-    let count = 0;
-    
-    if (currentStep === 2 && suggestions.targetAudience) {
-      if (suggestions.targetAudience.demographics) count += 2;
-      if (suggestions.targetAudience.locations) count += suggestions.targetAudience.locations.length;
-      if (suggestions.targetAudience.jobTitles) count += suggestions.targetAudience.jobTitles.length;
-      if (suggestions.targetAudience.industries) count += suggestions.targetAudience.industries.length;
-    } else if (currentStep === 3 && suggestions.adContent) {
-      if (suggestions.adContent.headlines) count += suggestions.adContent.headlines.length;
-      if (suggestions.adContent.descriptions) count += suggestions.adContent.descriptions.length;
-      if (suggestions.adContent.callToAction) count += suggestions.adContent.callToAction.length;
-    }
-    
-    return Math.min(count, 9);
-  };
-
   const getStepTitle = () => {
     switch (currentStep) {
       case 1: return "Campaign Setup";
@@ -472,22 +453,20 @@ export function LinkedInAdCampaignFlow({ draftId }: LinkedInAdCampaignFlowProps 
         </Card>
 
         {/* Current Step Content */}
-        <div className="w-full">
-          {renderCurrentStep()}
+        <div className="flex gap-6">
+          <div className="flex-1">
+            {renderCurrentStep()}
+          </div>
+          {aiEnabled && suggestions && (
+            <AIAssistantPanel
+              suggestions={suggestions}
+              step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
+              onApplySuggestion={handleApplyAISuggestion}
+              businessContext={businessContext}
+            />
+          )}
         </div>
       </div>
-
-      {aiEnabled && suggestions && (
-        <FloatingAIDrawer
-          isOpen={isAIDrawerOpen}
-          onOpenChange={setIsAIDrawerOpen}
-          suggestions={suggestions}
-          currentStep={currentStep}
-          onApplySuggestion={handleApplyAISuggestion}
-          businessContext={businessContext}
-          suggestionCount={calculateSuggestionCount()}
-        />
-      )}
 
       <AIContextModal
         open={showAIModal}

@@ -8,7 +8,7 @@ import { CampaignSetupStep } from "./campaign-flow/CampaignSetupStep";
 import { TargetAudienceStep } from "./campaign-flow/TargetAudienceStep";
 import { AdContentStep } from "./campaign-flow/AdContentStep";
 import { AIContextModal } from "./campaign-flow/AIContextModal";
-import { FloatingAIDrawer } from "./campaign-flow/FloatingAIDrawer";
+import { AIAssistantPanel } from "./campaign-flow/AIAssistantPanel";
 import { useCampaignAI } from "@/hooks/useCampaignAI";
 import { useFacebookCampaigns, type CampaignData } from "@/hooks/useFacebookCampaigns";
 import { AICampaignSuggestions } from "@/types/ai-campaign";
@@ -43,7 +43,6 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
   const [campaignData, setCampaignData] = useState<CampaignData>({});
   const [showAIModal, setShowAIModal] = useState(false);
   const [aiEnabled, setAiEnabled] = useState(false);
-  const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [currentCampaignId, setCurrentCampaignId] = useState<string | null>(null);
   const { isLoading: aiLoading, suggestions, businessContext, generateSuggestions, restoreFromDraft } = useCampaignAI();
   const { campaigns, saveCampaign, updateCampaign, refetch } = useFacebookCampaigns();
@@ -395,26 +394,6 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
     }
   };
 
-  const calculateSuggestionCount = () => {
-    if (!suggestions) return 0;
-    let count = 0;
-    
-    if (currentStep === 2 && suggestions.targetAudience) {
-      // Count audience suggestions
-      if (suggestions.targetAudience.demographics) count += 2; // age + gender
-      if (suggestions.targetAudience.locations) count += suggestions.targetAudience.locations.length;
-      if (suggestions.targetAudience.interests) count += suggestions.targetAudience.interests.length;
-    } else if (currentStep === 3 && suggestions.adContent) {
-      // Count content suggestions
-      if (suggestions.adContent.headlines) count += suggestions.adContent.headlines.length;
-      if (suggestions.adContent.descriptions) count += suggestions.adContent.descriptions.length;
-      if (suggestions.adContent.primaryText) count += suggestions.adContent.primaryText.length;
-      if (suggestions.adContent.callToAction) count += suggestions.adContent.callToAction.length;
-    }
-    
-    return Math.min(count, 9); // Cap at 9 for display
-  };
-
   const getStepTitle = () => {
     switch (currentStep) {
       case 1: return "Campaign Setup";
@@ -516,22 +495,20 @@ export function FacebookAdCampaignFlow({ draftId }: FacebookAdCampaignFlowProps 
         </Card>
 
         {/* Current Step Content */}
-        <div className="w-full">
-          {renderCurrentStep()}
+        <div className="flex gap-6">
+          <div className="flex-1">
+            {renderCurrentStep()}
+          </div>
+          {aiEnabled && suggestions && (
+            <AIAssistantPanel
+              suggestions={suggestions}
+              step={currentStep === 1 ? 'setup' : currentStep === 2 ? 'audience' : 'content'}
+              onApplySuggestion={handleApplyAISuggestion}
+              businessContext={businessContext}
+            />
+          )}
         </div>
       </div>
-
-      {aiEnabled && suggestions && (
-        <FloatingAIDrawer
-          isOpen={isAIDrawerOpen}
-          onOpenChange={setIsAIDrawerOpen}
-          suggestions={suggestions}
-          currentStep={currentStep}
-          onApplySuggestion={handleApplyAISuggestion}
-          businessContext={businessContext}
-          suggestionCount={calculateSuggestionCount()}
-        />
-      )}
 
       <AIContextModal
         open={showAIModal}
