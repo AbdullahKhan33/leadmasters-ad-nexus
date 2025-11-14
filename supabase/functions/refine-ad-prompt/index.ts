@@ -93,9 +93,17 @@ Return ONLY a JSON array with 3 strings, nothing else. No explanations, no markd
     }
 
     // Parse the JSON array from the response
+    // Remove markdown code blocks if present
+    let cleanContent = content.trim();
+    if (cleanContent.startsWith('```json')) {
+      cleanContent = cleanContent.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (cleanContent.startsWith('```')) {
+      cleanContent = cleanContent.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
     let refinedPrompts;
     try {
-      refinedPrompts = JSON.parse(content);
+      refinedPrompts = JSON.parse(cleanContent);
       if (!Array.isArray(refinedPrompts) || refinedPrompts.length !== 3) {
         throw new Error('Invalid format');
       }
