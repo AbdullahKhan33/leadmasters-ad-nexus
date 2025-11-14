@@ -7,12 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, ArrowLeft, Upload, Eye, Edit2, Trash2, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { CampaignData, CarouselCard } from "../FacebookAdCampaignFlow";
 import { CarouselCardEditModal } from "./CarouselCardEditModal";
 import { FacebookAdGallery } from "./FacebookAdGallery";
-import { AICreativeSelector } from "./AICreativeSelector";
+import { ImageSelectionModal } from "./ImageSelectionModal";
 
 import { AICampaignSuggestions } from "@/types/ai-campaign";
 
@@ -40,6 +39,7 @@ export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContent
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [selectedAICreative, setSelectedAICreative] = useState<string | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   // Sync form with data updates from AI suggestions
   useEffect(() => {
@@ -318,40 +318,18 @@ export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContent
                   </Button>
                 </div>
               ) : (
-                <Tabs defaultValue="ai-creatives" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="ai-creatives">My Creatives</TabsTrigger>
-                    <TabsTrigger value="upload">Upload from Computer</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="ai-creatives" className="mt-4">
-                    <AICreativeSelector 
-                      onSelect={handleAICreativeSelect}
-                      selectedImageUrl={selectedAICreative}
-                    />
-                  </TabsContent>
-                  
-                  <TabsContent value="upload" className="mt-4">
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
-                      <input
-                        type="file"
-                        id="imageUpload"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                      />
-                      <label htmlFor="imageUpload" className="cursor-pointer">
-                        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                        <p className="text-sm text-gray-600">
-                          Click to upload or drag and drop
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          PNG, JPG up to 10MB
-                        </p>
-                      </label>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                <div 
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors cursor-pointer"
+                  onClick={() => setIsImageModalOpen(true)}
+                >
+                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    PNG, JPG up to 10MB
+                  </p>
+                </div>
               )}
               
               {/* Single Image Upload Status */}
