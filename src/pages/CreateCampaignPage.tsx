@@ -205,6 +205,7 @@ function CreateCampaignPageContent() {
           onServicesClick={() => {}}
           onPublishedPostsClick={() => {}}
           onAISalesAutomationClick={() => {}}
+          onAICreativeHubClick={() => {}}
           currentView="crm"
         />
         

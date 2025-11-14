@@ -134,6 +134,51 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_creatives: {
+        Row: {
+          created_at: string
+          generation_metadata: Json | null
+          id: string
+          image_url: string
+          original_prompt: string
+          other_refined_prompts: Json | null
+          refined_prompt: string
+          thumbnail_url: string | null
+          updated_at: string
+          used_in_campaigns: Json | null
+          user_id: string
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          generation_metadata?: Json | null
+          id?: string
+          image_url: string
+          original_prompt: string
+          other_refined_prompts?: Json | null
+          refined_prompt: string
+          thumbnail_url?: string | null
+          updated_at?: string
+          used_in_campaigns?: Json | null
+          user_id: string
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          generation_metadata?: Json | null
+          id?: string
+          image_url?: string
+          original_prompt?: string
+          other_refined_prompts?: Json | null
+          refined_prompt?: string
+          thumbnail_url?: string | null
+          updated_at?: string
+          used_in_campaigns?: Json | null
+          user_id?: string
+          workspace_id?: string | null
+        }
+        Relationships: []
+      }
       auto_assignment_rules: {
         Row: {
           agent_filters: Json

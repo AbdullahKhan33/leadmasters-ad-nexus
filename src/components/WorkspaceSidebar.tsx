@@ -42,6 +42,7 @@ import {
   Archive,
   Briefcase,
   Bot,
+  Sparkles,
 } from "lucide-react";
 
 export function WorkspaceSidebar({ 
@@ -62,6 +63,7 @@ export function WorkspaceSidebar({
   onServicesClick,
   onPublishedPostsClick,
   onAISalesAutomationClick,
+  onAICreativeHubClick,
   currentView
 }: { 
   onPostBuilderClick: () => void;
@@ -81,7 +83,8 @@ export function WorkspaceSidebar({
   onServicesClick: () => void;
   onPublishedPostsClick: () => void;
   onAISalesAutomationClick: () => void;
-  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
+  onAICreativeHubClick: () => void;
+  currentView: 'ad-builder' | 'post-builder' | 'social-logins' | 'dashboard' | 'analytics' | 'schedule' | 'smart-automations' | 'workspaces' | 'user-settings' | 'crm' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation' | 'ai-creative-hub';
 }) {
   const [isCRMSubmenuOpen, setIsCRMSubmenuOpen] = React.useState(false);
   const { state } = useSidebar();
@@ -294,6 +297,28 @@ export function WorkspaceSidebar({
                   <div className="flex items-center space-x-3">
                     <Bot className={`w-5 h-5 ${getIconStyles(currentView === 'ai-sales-automation')} group-hover:scale-110 transition-transform duration-200`} />
                     <span className="font-semibold">AI Sales Automation</span>
+                  </div>
+                )}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ) : null}
+
+          {/* AI Creative Hub - Admin only */}
+          {userRole === 'admin' ? (
+            <SidebarMenuItem>
+              <SidebarMenuButton 
+                onClick={onAICreativeHubClick}
+                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 group ${getMenuItemStyles(currentView === 'ai-creative-hub')}`}
+              >
+                {isCollapsed ? (
+                  <div className="flex flex-col items-center space-y-1">
+                    <Sparkles className={`w-5 h-5 ${getIconStyles(currentView === 'ai-creative-hub')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="text-xs font-medium">AI Hub</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-3">
+                    <Sparkles className={`w-5 h-5 ${getIconStyles(currentView === 'ai-creative-hub')} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className="font-semibold">AI Creative Hub</span>
                   </div>
                 )}
               </SidebarMenuButton>
