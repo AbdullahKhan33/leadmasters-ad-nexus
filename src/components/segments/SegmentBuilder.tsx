@@ -426,7 +426,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
               <Button
                 variant="outline"
                 className={cn(
-                  "w-[200px] justify-start text-left font-normal",
+                  "h-10 w-[200px] justify-start text-left font-normal",
                   !dateValue && "text-muted-foreground"
                 )}
               >
@@ -486,7 +486,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-[140px] justify-start text-left font-normal",
+                    "h-10 w-[140px] justify-start text-left font-normal",
                     !dateValue.min && "text-muted-foreground"
                   )}
                 >
@@ -517,7 +517,7 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-[140px] justify-start text-left font-normal",
+                    "h-10 w-[140px] justify-start text-left font-normal",
                     !dateValue.max && "text-muted-foreground"
                   )}
                 >
