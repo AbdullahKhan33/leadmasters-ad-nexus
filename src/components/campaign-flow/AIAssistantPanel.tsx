@@ -12,9 +12,10 @@ interface AIAssistantPanelProps {
   step: 'setup' | 'audience' | 'content';
   onApplySuggestion: (field: string, value: any) => void;
   businessContext?: AIBusinessContext | null;
+  isInDrawer?: boolean;
 }
 
-export function AIAssistantPanel({ suggestions, step, onApplySuggestion, businessContext }: AIAssistantPanelProps) {
+export function AIAssistantPanel({ suggestions, step, onApplySuggestion, businessContext, isInDrawer = false }: AIAssistantPanelProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (!suggestions) return null;
@@ -39,8 +40,8 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
   if (!stepData) return null;
 
   return (
-    <div className="w-full lg:w-[400px] space-y-4">
-      <Card className="border-2 border-transparent bg-gradient-to-r from-blue-50/50 via-purple-50/50 to-pink-50/50 p-4">
+    <div className={isInDrawer ? "w-full space-y-4" : "w-full lg:w-[400px] space-y-4"}>
+      <Card className={isInDrawer ? "border-0 shadow-none bg-transparent p-0" : "border-2 border-transparent bg-gradient-to-r from-blue-50/50 via-purple-50/50 to-pink-50/50 p-4"}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center">
