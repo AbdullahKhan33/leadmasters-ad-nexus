@@ -200,24 +200,47 @@ export function LinkedInAdContentStep({ data, onUpdate, onBack, onSaveDraft }: L
               <Label className="text-sm font-medium text-gray-700">
                 Upload Image
               </Label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => setIsImageModalOpen(true)}
-                  className="w-full h-full flex flex-col items-center space-y-2 border-none hover:bg-transparent"
-                >
-                  <Upload className="w-8 h-8 text-gray-400" />
-                  <div>
+              <Tabs defaultValue="ai-creatives" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="ai-creatives">My Creatives</TabsTrigger>
+                  <TabsTrigger value="upload">Upload from Computer</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="ai-creatives" className="mt-4">
+                  <AICreativeSelector 
+                    onSelect={handleAICreativeSelect}
+                    selectedImageUrl={selectedAICreative}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="upload" className="mt-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                     <p className="text-sm text-gray-600 mb-2">
-                      Upload Image
+                      Upload your ad image (Recommended: 1200x627px)
                     </p>
-                    <p className="text-xs text-gray-500">
-                      Choose from My Creatives or upload from computer
-                    </p>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      id="image-upload"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => document.getElementById('image-upload')?.click()}
+                    >
+                      Choose File
+                    </Button>
+                    {formData.uploadedImage && (
+                      <p className="text-sm text-green-600 mt-2">
+                        ✓ {formData.uploadedImage.name} uploaded
+                      </p>
+                    )}
                   </div>
-                </Button>
-              </div>
+                </TabsContent>
+              </Tabs>
               {(formData.uploadedImage || selectedAICreative) && (
                 <div className="mt-2 text-sm text-green-600">
                   ✓ Image selected: {selectedAICreative ? 'AI Creative' : formData.uploadedImage?.name}
