@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, ArrowLeft, Upload, Eye, Edit2, Trash2, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { CampaignData, CarouselCard } from "../FacebookAdCampaignFlow";
 import { CarouselCardEditModal } from "./CarouselCardEditModal";
 import { FacebookAdGallery } from "./FacebookAdGallery";
+import { AICreativeSelector } from "./AICreativeSelector";
 
 import { AICampaignSuggestions } from "@/types/ai-campaign";
 
@@ -37,6 +39,7 @@ export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContent
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [selectedAICreative, setSelectedAICreative] = useState<string | null>(null);
 
   // Sync form with data updates from AI suggestions
   useEffect(() => {
@@ -64,6 +67,7 @@ export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContent
       const file = files[0];
       if (file) {
         onUpdate({ uploadedImage: file });
+        setSelectedAICreative(null); // Clear AI creative selection
         
         // Create preview URL for the uploaded image
         const reader = new FileReader();
@@ -98,6 +102,21 @@ export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContent
     
     // Reset the input
     event.target.value = '';
+  };
+
+  const handleAICreativeSelect = async (imageUrl: string) => {
+    setSelectedAICreative(imageUrl);
+    setImagePreview(imageUrl);
+    
+    // Fetch the image and convert to File object
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], "ai-creative.png", { type: "image/png" });
+      onUpdate({ uploadedImage: file });
+    } catch (error) {
+      console.error('Error loading AI creative:', error);
+    }
   };
 
   const handleCarouselCardEdit = (card: CarouselCard) => {
@@ -299,30 +318,46 @@ export function AdContentStep({ data, onUpdate, onBack, onSaveDraft }: AdContent
                   </Button>
                 </div>
               ) : (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
-                  <input
-                    type="file"
-                    id="imageUpload"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                  <label htmlFor="imageUpload" className="cursor-pointer">
-                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      PNG, JPG up to 10MB
-                    </p>
-                  </label>
-                </div>
+                <Tabs defaultValue="ai-creatives" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="ai-creatives">My Creatives</TabsTrigger>
+                    <TabsTrigger value="upload">Upload from Computer</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="ai-creatives" className="mt-4">
+                    <AICreativeSelector 
+                      onSelect={handleAICreativeSelect}
+                      selectedImageUrl={selectedAICreative}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="upload" className="mt-4">
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                      <input
+                        type="file"
+                        id="imageUpload"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                      <label htmlFor="imageUpload" className="cursor-pointer">
+                        <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                        <p className="text-sm text-gray-600">
+                          Click to upload or drag and drop
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          PNG, JPG up to 10MB
+                        </p>
+                      </label>
+                    </div>
+                  </TabsContent>
+                </Tabs>
               )}
               
               {/* Single Image Upload Status */}
-              {formData.adFormat === "single" && data.uploadedImage && (
+              {formData.adFormat === "single" && (data.uploadedImage || selectedAICreative) && (
                 <div className="mt-2 text-sm text-green-600">
-                  ✓ Image uploaded: {data.uploadedImage.name}
+                  ✓ Image selected: {selectedAICreative ? 'AI Creative' : data.uploadedImage?.name}
                 </div>
               )}
 

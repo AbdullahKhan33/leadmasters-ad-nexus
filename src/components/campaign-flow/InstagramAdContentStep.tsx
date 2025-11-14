@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, ArrowLeft, Upload, Eye, Instagram, Globe, MessageCircle } from "lucide-react";
 import { InstagramCampaignData } from "../InstagramAdCampaignFlow";
+import { AICreativeSelector } from "./AICreativeSelector";
 
 import { AICampaignSuggestions } from "@/types/ai-campaign";
 
@@ -33,6 +35,7 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
     instagramHandle: data.instagramHandle || ""
   });
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedAICreative, setSelectedAICreative] = useState<string | null>(null);
 
   // Update formData when data prop changes (from AI suggestions)
   useEffect(() => {
@@ -65,12 +68,27 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
     const file = event.target.files?.[0];
     if (file) {
       onUpdate({ uploadedImage: file });
+      setSelectedAICreative(null);
       
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAICreativeSelect = async (imageUrl: string) => {
+    setSelectedAICreative(imageUrl);
+    setImagePreview(imageUrl);
+    
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], "ai-creative.png", { type: "image/png" });
+      onUpdate({ uploadedImage: file });
+    } catch (error) {
+      console.error('Error loading AI creative:', error);
     }
   };
 
@@ -291,27 +309,43 @@ export function InstagramAdContentStep({ data, onUpdate, onBack, onSaveDraft }: 
               <Label className="text-sm font-medium text-gray-700">
                 Upload Image/Video
               </Label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
-                <input
-                  type="file"
-                  id="imageUpload"
-                  accept="image/*,video/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-                <label htmlFor="imageUpload" className="cursor-pointer">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">
-                    Click to upload or drag and drop
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG, MP4 up to 10MB
-                  </p>
-                </label>
-              </div>
-              {data.uploadedImage && (
+              <Tabs defaultValue="ai-creatives" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="ai-creatives">My Creatives</TabsTrigger>
+                  <TabsTrigger value="upload">Upload from Computer</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="ai-creatives" className="mt-4">
+                  <AICreativeSelector 
+                    onSelect={handleAICreativeSelect}
+                    selectedImageUrl={selectedAICreative}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="upload" className="mt-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                    <input
+                      type="file"
+                      id="imageUpload"
+                      accept="image/*,video/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                    <label htmlFor="imageUpload" className="cursor-pointer">
+                      <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        PNG, JPG, MP4 up to 10MB
+                      </p>
+                    </label>
+                  </div>
+                </TabsContent>
+              </Tabs>
+              {(data.uploadedImage || selectedAICreative) && (
                 <div className="mt-2 text-sm text-green-600">
-                  ✓ Media uploaded: {data.uploadedImage.name}
+                  ✓ Media selected: {selectedAICreative ? 'AI Creative' : data.uploadedImage?.name}
                 </div>
               )}
             </div>
