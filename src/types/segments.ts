@@ -91,24 +91,6 @@ export const SEGMENT_FILTERS: SegmentFilter[] = [
     type: 'date',
     placeholder: 'Select date or range'
   },
-  {
-    field: 'created_at',
-    label: 'Lead Created Date',
-    type: 'daterange',
-    placeholder: 'Select date'
-  },
-  {
-    field: 'last_interaction_at',
-    label: 'Last Interaction Date',
-    type: 'daterange',
-    placeholder: 'Select date'
-  },
-  {
-    field: 'reminder_date',
-    label: 'Follow-up Due Date',
-    type: 'daterange',
-    placeholder: 'Select date'
-  },
   
   // Lead Quality & Scoring
   {
