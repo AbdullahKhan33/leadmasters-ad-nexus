@@ -25,8 +25,8 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
   const getStepSuggestions = () => {
     switch (step) {
       case 'setup':
-        // No AI suggestions for setup - user provides these directly
-        return null;
+        // Return a placeholder for setup step
+        return { type: 'setup' };
       case 'audience':
         return suggestions.targetAudience;
       case 'content':
@@ -37,7 +37,9 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
   };
 
   const stepData = getStepSuggestions();
-  if (!stepData) return null;
+  
+  // Don't return null - we want to show something even if no specific suggestions
+  console.log('AIAssistantPanel - step:', step, 'stepData:', stepData, 'suggestions:', suggestions);
 
   return (
     <div className={isInDrawer ? "w-full space-y-4" : "w-full lg:w-[400px] space-y-4"}>
@@ -142,8 +144,18 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
               </>
             )}
 
+            {/* Fallback for audience step with no suggestions */}
+            {step === 'audience' && stepData && !('demographics' in stepData) && (
+              <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <p className="text-xs font-semibold text-yellow-900 mb-1">⚠️ Generating Suggestions...</p>
+                <p className="text-xs text-yellow-800">
+                  AI is analyzing your business context to generate audience targeting suggestions. Please wait a moment.
+                </p>
+              </div>
+            )}
+
             {/* Ad Content Step */}
-            {step === 'content' && 'headlines' in stepData && (
+            {step === 'content' && stepData && 'headlines' in stepData && (
               <>
                 <div className="space-y-2">
                   <p className="text-sm font-semibold">Primary Text Ideas</p>
@@ -208,6 +220,16 @@ export function AIAssistantPanel({ suggestions, step, onApplySuggestion, busines
                   </div>
                 )}
               </>
+            )}
+
+            {/* Fallback for content step with no suggestions */}
+            {step === 'content' && stepData && !('headlines' in stepData) && (
+              <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <p className="text-xs font-semibold text-yellow-900 mb-1">⚠️ Generating Content Suggestions...</p>
+                <p className="text-xs text-yellow-800">
+                  AI is crafting headlines, descriptions, and ad copy suggestions for you. Please wait a moment.
+                </p>
+              </div>
             )}
           </div>
         )}
