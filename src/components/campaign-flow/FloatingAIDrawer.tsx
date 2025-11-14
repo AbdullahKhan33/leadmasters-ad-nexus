@@ -48,7 +48,7 @@ export function FloatingAIDrawer({
       {/* Floating Trigger Button */}
       <Button
         onClick={() => onOpenChange(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 z-50 animate-pulse"
+        className="fixed bottom-24 right-6 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:from-blue-700 hover:via-purple-700 hover:to-pink-600 z-[100] animate-pulse"
         size="icon"
       >
         <Sparkles className="h-5 w-5 text-white" />
