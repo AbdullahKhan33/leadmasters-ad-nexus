@@ -23,3 +23,9 @@ verify_jwt = false
 
 [functions.campaign-ai-assistant]
 verify_jwt = false
+
+[functions.refine-ad-prompt]
+verify_jwt = false
+
+[functions.generate-ad-creative]
+verify_jwt = true

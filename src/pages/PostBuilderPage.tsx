@@ -101,6 +101,7 @@ function PostBuilderPage() {
             onServicesClick={handleServicesClick}
             onPublishedPostsClick={handlePublishedPostsClick}
             onAISalesAutomationClick={() => {}}
+            onAICreativeHubClick={() => {}}
             currentView="post-builder"
           />
         ) : (
@@ -121,6 +122,7 @@ function PostBuilderPage() {
             onServicesClick={handleServicesClick}
             onPublishedPostsClick={handlePublishedPostsClick}
             onAISalesAutomationClick={() => {}}
+            onAICreativeHubClick={() => {}}
             currentView="post-builder"
           />
         )}
@@ -230,6 +232,7 @@ function AdBuilderPage() {
             onServicesClick={handleServicesClick}
             onPublishedPostsClick={handlePublishedPostsClick}
             onAISalesAutomationClick={() => {}}
+            onAICreativeHubClick={() => {}}
             currentView="ad-builder"
           />
         ) : (
@@ -250,6 +253,7 @@ function AdBuilderPage() {
             onServicesClick={handleServicesClick}
             onPublishedPostsClick={handlePublishedPostsClick}
             onAISalesAutomationClick={() => {}}
+            onAICreativeHubClick={() => {}}
             currentView="ad-builder"
           />
         )}

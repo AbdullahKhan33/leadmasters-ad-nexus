@@ -22,6 +22,7 @@ import { Templates } from "@/components/Templates";
 import { Services } from "@/components/Services";
 import { PublishedPosts } from "@/components/PublishedPosts";
 import { AISalesAutomation } from "@/components/AISalesAutomation";
+import { AICreativeHub } from "@/components/ai-creative-hub/AICreativeHub";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { WorkspaceProvider, useWorkspace } from "@/contexts/WorkspaceContext";
 import { PremiumProvider, usePremium } from "@/contexts/PremiumContext";
@@ -32,9 +33,9 @@ import { useChatbotVisibility } from "@/hooks/useChatbotVisibility";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
 import { CreateCampaignInline } from "@/pages/CreateCampaignPage";
 
-type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
-type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation';
-type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'published-posts' | 'campaign-create' | 'ai-sales-automation';
+type AppSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'analytics' | 'schedule' | 'workspaces' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation' | 'ai-creative-hub';
+type WorkspaceSidebarView = 'dashboard' | 'ad-builder' | 'post-builder' | 'social-logins' | 'analytics' | 'schedule' | 'workspaces' | 'user-settings' | 'crm' | 'templates' | 'agents' | 'services' | 'published-posts' | 'ai-sales-automation' | 'ai-creative-hub';
+type AllViews = AppSidebarView | 'workspace-settings' | 'user-settings' | 'insights-summary' | 'insights-whatsapp' | 'domain-setup' | 'crm-automations' | 'templates' | 'agents' | 'services' | 'support' | 'published-posts' | 'campaign-create' | 'ai-sales-automation' | 'ai-creative-hub';
 
 function IndexContent() {
   const { user } = useAuth();
@@ -244,6 +245,13 @@ function IndexContent() {
     });
   };
 
+  const handleAICreativeHubClick = () => {
+    handleNavigationClick('ai-creative-hub', () => {
+      console.log('AI Creative Hub clicked');
+      setCurrentView('ai-creative-hub');
+    });
+  };
+
   const handleWorkspaceSettingsClick = (workspace: any) => {
     setSelectedWorkspaceForSettings(workspace);
     setCurrentView('workspace-settings');
@@ -308,6 +316,7 @@ function IndexContent() {
             onServicesClick={handleServicesClick}
             onPublishedPostsClick={handlePublishedPostsClick}
             onAISalesAutomationClick={handleAISalesAutomationClick}
+            onAICreativeHubClick={handleAICreativeHubClick}
             currentView={currentView as WorkspaceSidebarView}
           />
         ) : (
@@ -328,6 +337,7 @@ function IndexContent() {
             onServicesClick={handleServicesClick}
             onPublishedPostsClick={handlePublishedPostsClick}
             onAISalesAutomationClick={handleAISalesAutomationClick}
+            onAICreativeHubClick={handleAICreativeHubClick}
             currentView={currentView as AppSidebarView}
           />
         )}
@@ -374,6 +384,8 @@ function IndexContent() {
               <CreateCampaignInline />
             ) : currentView === 'ai-sales-automation' ? (
               <AISalesAutomation />
+            ) : currentView === 'ai-creative-hub' ? (
+              <AICreativeHub />
             ) : (
               <AdBuilder initialPlatform={adBuilderPlatform} />
             )}
