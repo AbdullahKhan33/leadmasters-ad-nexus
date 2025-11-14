@@ -6,10 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Save, Eye, Upload } from "lucide-react";
 import { LinkedInCampaignData } from "../LinkedInAdCampaignFlow";
-import { AICreativeSelector } from "./AICreativeSelector";
+import { ImageSelectionModal } from "./ImageSelectionModal";
 
 import { AICampaignSuggestions } from "@/types/ai-campaign";
 
@@ -32,6 +31,7 @@ export function LinkedInAdContentStep({ data, onUpdate, onBack, onSaveDraft }: L
     companyName: data.companyName || ""
   });
   const [selectedAICreative, setSelectedAICreative] = useState<string | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   // Update formData when data prop changes (from AI suggestions)
   useEffect(() => {
