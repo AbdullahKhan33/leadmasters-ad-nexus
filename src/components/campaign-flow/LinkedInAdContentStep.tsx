@@ -6,10 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Save, Eye, Upload } from "lucide-react";
 import { LinkedInCampaignData } from "../LinkedInAdCampaignFlow";
-import { AICreativeSelector } from "./AICreativeSelector";
+import { ImageSelectionModal } from "./ImageSelectionModal";
 
 import { AICampaignSuggestions } from "@/types/ai-campaign";
 
@@ -32,6 +31,7 @@ export function LinkedInAdContentStep({ data, onUpdate, onBack, onSaveDraft }: L
     companyName: data.companyName || ""
   });
   const [selectedAICreative, setSelectedAICreative] = useState<string | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   // Update formData when data prop changes (from AI suggestions)
   useEffect(() => {
@@ -317,6 +317,18 @@ export function LinkedInAdContentStep({ data, onUpdate, onBack, onSaveDraft }: L
       </Card>
 
       {/* Bottom Actions - Full width */}
+      {/* Image Selection Modal */}
+      <ImageSelectionModal
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        onImageSelect={(file) => {
+          setSelectedAICreative(null);
+          handleChange("uploadedImage", file);
+        }}
+        onAICreativeSelect={handleAICreativeSelect}
+        selectedAICreative={selectedAICreative}
+      />
+
       <div className="lg:col-span-2 mt-8">
         <Card className="border border-gray-200 shadow-sm bg-white">
           <CardContent className="p-6">
