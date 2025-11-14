@@ -364,6 +364,14 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
   const getOperatorOptions = () => {
     if (!selectedFilter) return [];
     
+    // Special handling for generic 'date' field - only specific date or date range
+    if (criteria.field === 'date') {
+      return [
+        { value: 'equals', label: 'on specific date' },
+        { value: 'between', label: 'in date range' }
+      ];
+    }
+    
     const baseOptions = [
       { value: 'equals', label: 'is' },
       { value: 'not_equals', label: 'is not' }
@@ -406,6 +414,44 @@ function CriteriaRow({ criteria, index, onUpdate, onRemove }: CriteriaRowProps) 
     
     // Date/Daterange type with date picker
     if (selectedFilter.type === 'date' || selectedFilter.type === 'daterange') {
+      // For generic 'date' field with 'equals', show single date picker
+      if (criteria.field === 'date' && criteria.operator === 'equals') {
+        const dateValue = typeof criteria.value === 'string' 
+          ? criteria.value 
+          : new Date().toISOString().split('T')[0];
+        
+        return (
+          <Popover open={isSingleDateOpen} onOpenChange={setIsSingleDateOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-[200px] justify-start text-left font-normal",
+                  !dateValue && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dateValue ? format(new Date(dateValue), "PP") : "Select date"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={dateValue ? new Date(dateValue) : undefined}
+                onSelect={(date) => {
+                  if (date) {
+                    onUpdate(index, { value: date.toISOString().split('T')[0] });
+                    setIsSingleDateOpen(false);
+                  }
+                }}
+                initialFocus
+                className="pointer-events-auto"
+              />
+            </PopoverContent>
+          </Popover>
+        );
+      }
+      
       // For "in_last_days" or "in_next_days" operators, show number input
       if (criteria.operator === 'in_last_days' || criteria.operator === 'in_next_days') {
         const daysValue = typeof criteria.value === 'object' && 'days' in criteria.value 
