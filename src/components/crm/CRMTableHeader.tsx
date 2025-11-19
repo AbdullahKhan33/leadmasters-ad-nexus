@@ -8,6 +8,7 @@ interface ColumnVisibility {
   email: boolean;
   source: boolean;
   status: boolean;
+  assignedAgent: boolean;
   lastMessage: boolean;
   aiScore: boolean;
   aiNextAction: boolean;
@@ -29,6 +30,7 @@ export function CRMTableHeader({ canShowAIScore, canShowAIActions, visibleColumn
         {visibleColumns.email && <TableHead className="w-[200px] px-4 py-4">Email</TableHead>}
         {visibleColumns.source && <TableHead className="w-[120px] px-4 py-4">Source</TableHead>}
         {visibleColumns.status && <TableHead className="w-[140px] px-4 py-4">Status</TableHead>}
+        {visibleColumns.assignedAgent && <TableHead className="w-[160px] px-4 py-4">Assigned Agent</TableHead>}
         {visibleColumns.lastMessage && <TableHead className="w-[250px] px-4 py-4">Last Message</TableHead>}
         {visibleColumns.aiScore && (
           <TableHead className="w-[180px] px-4 py-4">

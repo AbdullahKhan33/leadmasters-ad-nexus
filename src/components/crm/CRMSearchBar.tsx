@@ -14,6 +14,7 @@ interface ColumnVisibility {
   email: boolean;
   source: boolean;
   status: boolean;
+  assignedAgent: boolean;
   lastMessage: boolean;
   aiScore: boolean;
   aiNextAction: boolean;
@@ -44,6 +45,7 @@ export function CRMSearchBar({
     email: "Email",
     source: "Source", 
     status: "Status",
+    assignedAgent: "Assigned Agent",
     lastMessage: "Last Message",
     aiScore: "AI Score",
     aiNextAction: "AI Next Action",

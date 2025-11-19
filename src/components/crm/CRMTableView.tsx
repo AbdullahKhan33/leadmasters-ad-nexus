@@ -31,6 +31,7 @@ interface Lead {
   reminderNote?: string;
   aiScore?: number;
   aiNextAction?: string;
+  assignedAgentName?: string;
   source_metadata?: {
     company?: string;
     title?: string;
@@ -77,6 +78,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
     email: true,
     source: true,
     status: true,
+    assignedAgent: true,
     lastMessage: true,
     aiScore: true,
     aiNextAction: true,
@@ -118,6 +120,8 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
 
       const convertedLeads: Lead[] = (data || []).map((dbLead: any) => {
         const ts = dbLead.last_interaction_at || dbLead.source_metadata?.last_interaction_at || dbLead.created_at || dbLead.timestamp;
+        const agentName = dbLead.agents?.profiles?.display_name || dbLead.agents?.profiles?.email || null;
+        
         return {
           id: dbLead.id,
           name: dbLead.name,
@@ -134,6 +138,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
           reminderNote: dbLead.reminder_note || '',
           aiScore: dbLead.ai_score,
           aiNextAction: dbLead.ai_next_action || '',
+          assignedAgentName: agentName,
           source_metadata: dbLead.source_metadata || {}
         };
       });
