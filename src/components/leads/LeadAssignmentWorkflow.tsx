@@ -331,7 +331,7 @@ export function LeadAssignmentWorkflow() {
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-[100] bg-background" align="start" side="bottom" sideOffset={5}>
+                  <PopoverContent className="w-auto p-0 z-[100] bg-background" align="end" side="top" sideOffset={8}>
                     <Calendar
                       mode="range"
                       selected={customDateRange.from ? { from: customDateRange.from, to: customDateRange.to } : undefined}
