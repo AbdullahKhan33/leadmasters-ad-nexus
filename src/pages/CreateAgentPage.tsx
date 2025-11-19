@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, ArrowLeft, Shuffle, X, UserPlus, Users, Award } from "lucide-react";
+import { Loader2, ArrowLeft, X, UserPlus, Users, Award } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 
@@ -43,17 +43,10 @@ export function CreateAgentPage() {
     email: "",
     displayName: "",
     phone: "",
-    agentCode: "",
-    status: "pending_invite",
     permissions: {} as Record<string, boolean>,
     workspaceIds: [] as string[]
   });
   const { toast } = useToast();
-
-  const generateAgentCode = () => {
-    const code = 'AG' + Math.random().toString(36).substr(2, 6).toUpperCase();
-    setFormData(prev => ({ ...prev, agentCode: code }));
-  };
 
   const togglePermission = (key: string) => {
     setFormData(prev => ({
@@ -78,11 +71,10 @@ export function CreateAgentPage() {
     e.preventDefault();
     console.log('Form submission started with data:', formData);
     
-    if (!formData.email || !formData.displayName || !formData.agentCode) {
+    if (!formData.email || !formData.displayName) {
       console.log('Validation failed - missing required fields:', {
         email: formData.email,
-        displayName: formData.displayName,
-        agentCode: formData.agentCode
+        displayName: formData.displayName
       });
       toast({
         title: "Error",
@@ -106,13 +98,16 @@ export function CreateAgentPage() {
 
     setIsLoading(true);
     try {
+      // Generate agent code on the server side
+      const agentCode = 'AG' + Math.random().toString(36).substr(2, 6).toUpperCase();
+      
       console.log('Calling edge function with payload:', {
         email: formData.email,
         displayName: formData.displayName,
         phone: formData.phone,
-        agentCode: formData.agentCode,
+        agentCode: agentCode,
         workspaceIds: formData.workspaceIds,
-        status: formData.status,
+        status: 'pending_invite',
         permissions: formData.permissions,
       });
 
@@ -122,9 +117,9 @@ export function CreateAgentPage() {
           email: formData.email,
           displayName: formData.displayName,
           phone: formData.phone,
-          agentCode: formData.agentCode,
+          agentCode: agentCode,
           workspaceIds: formData.workspaceIds,
-          status: formData.status,
+          status: 'pending_invite',
           permissions: formData.permissions,
         },
       });
@@ -232,46 +227,14 @@ export function CreateAgentPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    value={formData.phone}
-                    onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="agentCode">Agent Code *</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="agentCode"
-                      value={formData.agentCode}
-                      onChange={(e) => setFormData(prev => ({ ...prev, agentCode: e.target.value.toUpperCase() }))}
-                      placeholder="AG123456"
-                      required
-                    />
-                    <Button type="button" variant="outline" onClick={generateAgentCode}>
-                      <Shuffle className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
               <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select value={formData.status} onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pending_invite">Pending Invite</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="+1 (555) 123-4567"
+                />
               </div>
             </CardContent>
           </Card>
