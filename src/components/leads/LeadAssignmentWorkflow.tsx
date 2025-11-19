@@ -7,12 +7,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Search, UserCheck, Filter, RotateCcw, Calendar as CalendarIcon } from "lucide-react";
+import { Search, UserCheck, Filter, RotateCcw, Calendar as CalendarIcon, Info } from "lucide-react";
 import { LeadAssignmentModal } from "./LeadAssignmentModal";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 interface Lead {
   id: string;
@@ -199,6 +201,19 @@ export function LeadAssignmentWorkflow() {
         </div>
       </div>
 
+      {/* Navigation Alert */}
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertTitle>View Assigned Leads</AlertTitle>
+        <AlertDescription>
+          After assigning leads, view them in{" "}
+          <Link to="/crm" className="font-medium underline underline-offset-4 hover:text-primary">
+            CRM Contacts
+          </Link>
+          {" "}using the Assignment Status filter to see which agent is handling each lead.
+        </AlertDescription>
+      </Alert>
+
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
@@ -295,7 +310,7 @@ export function LeadAssignmentWorkflow() {
                 >
                   Last 30 Days
                 </Button>
-                <Popover>
+                <Popover modal={true}>
                   <PopoverTrigger asChild>
                     <Button 
                       variant={dateFilter === "custom" ? "default" : "outline"}
@@ -316,7 +331,7 @@ export function LeadAssignmentWorkflow() {
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start" side="bottom" sideOffset={5}>
+                  <PopoverContent className="w-auto p-0 z-[100] bg-background" align="start" side="bottom" sideOffset={5}>
                     <Calendar
                       mode="range"
                       selected={customDateRange.from ? { from: customDateRange.from, to: customDateRange.to } : undefined}
