@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +36,7 @@ export function LeadAssignmentWorkflow() {
   const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days" | "custom">("all");
   const [customDateRange, setCustomDateRange] = useState<{from: Date | undefined, to: Date | undefined}>({from: undefined, to: undefined});
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
+  const [showDatePickerDialog, setShowDatePickerDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { userRole } = useAuth();
   const { toast } = useToast();
@@ -310,8 +311,8 @@ export function LeadAssignmentWorkflow() {
                 >
                   Last 30 Days
                 </Button>
-                <Popover modal={true}>
-                  <PopoverTrigger asChild>
+                <Dialog open={showDatePickerDialog} onOpenChange={setShowDatePickerDialog}>
+                  <DialogTrigger asChild>
                     <Button 
                       variant={dateFilter === "custom" ? "default" : "outline"}
                       size="sm"
@@ -330,23 +331,30 @@ export function LeadAssignmentWorkflow() {
                         "Custom Range"
                       )}
                     </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-[100]" align="end" side="top" sideOffset={8}>
-                    <Calendar
-                      mode="range"
-                      selected={customDateRange.from ? { from: customDateRange.from, to: customDateRange.to } : undefined}
-                      onSelect={(range) => {
-                        setCustomDateRange({ from: range?.from, to: range?.to });
-                        if (range?.from) {
-                          setDateFilter("custom");
-                        }
-                      }}
-                      initialFocus
-                      numberOfMonths={2}
-                      className="pointer-events-auto"
-                    />
-                  </PopoverContent>
-                </Popover>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[900px]">
+                    <DialogHeader>
+                      <DialogTitle>Select Date Range</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex justify-center py-4">
+                      <Calendar
+                        mode="range"
+                        selected={customDateRange.from ? { from: customDateRange.from, to: customDateRange.to } : undefined}
+                        onSelect={(range) => {
+                          setCustomDateRange({ from: range?.from, to: range?.to });
+                          if (range?.from) {
+                            setDateFilter("custom");
+                          }
+                          if (range?.from && range?.to) {
+                            setShowDatePickerDialog(false);
+                          }
+                        }}
+                        numberOfMonths={2}
+                        className="pointer-events-auto"
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
