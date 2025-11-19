@@ -110,24 +110,6 @@ export function LeadAssignmentModal({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Selected Leads Summary */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="font-medium mb-2">Selected Leads ({selectedLeadsCount})</h4>
-            <div className="max-h-32 overflow-y-auto space-y-1">
-              {leads.map(lead => (
-                <div key={lead.id} className="text-sm text-gray-600 flex items-center gap-2">
-                  <User className="w-3 h-3" />
-                  {lead.name} - {lead.phone}
-                  {lead.ai_score && (
-                    <Badge variant="outline" className="text-xs">
-                      Score: {lead.ai_score}/10
-                    </Badge>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Agent Selection */}
           <div className="space-y-3">
             <Label htmlFor="agent-select">Select Agent</Label>
