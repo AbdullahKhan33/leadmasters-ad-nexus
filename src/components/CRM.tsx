@@ -1182,9 +1182,9 @@ export function CRM() {
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6 shadow-sm">
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex flex-col h-full">
+          {/* Navigation Tabs */}
+          <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6 shadow-sm">
             <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-gray-50/80 via-blue-50/40 to-purple-50/40 rounded-xl p-1.5 shadow-inner border border-gray-200/30">
               <TabsTrigger 
                 value="campaigns" 
@@ -1208,12 +1208,10 @@ export function CRM() {
                 <span>Segments</span>
               </TabsTrigger>
             </TabsList>
-          </Tabs>
-        </div>
+          </div>
 
-        {/* Content Area */}
-        <div className="flex-1">
-          <Tabs value={activeTab}>
+          {/* Content Area */}
+          <div className="flex-1">
             <TabsContent value="campaigns" className="h-full m-0">
               <CampaignDashboard />
             </TabsContent>
@@ -1229,8 +1227,8 @@ export function CRM() {
                 <SegmentManager />
               </div>
             </TabsContent>
-          </Tabs>
-        </div>
+          </div>
+        </Tabs>
 
         <PremiumUpgradeModal
           isOpen={upgradeModal.isOpen}
