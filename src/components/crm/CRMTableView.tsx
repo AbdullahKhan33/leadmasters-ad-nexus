@@ -95,14 +95,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
     try {
       let query = supabase
         .from('leads')
-        .select(`
-          *,
-          agents!leads_assigned_agent_id_fkey(
-            id,
-            user_id,
-            profiles(display_name, email)
-          )
-        `)
+        .select('*')
         .neq('lead_source_type', 'ai_automation');
       
       // Apply assignment filter
@@ -114,13 +107,34 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
         query = query.eq('assigned_agent_id', assignmentFilter);
       }
       
-      const { data, error } = await query.order('created_at', { ascending: false });
+      const { data: leadsData, error: leadsError } = await query.order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (leadsError) throw leadsError;
 
-      const convertedLeads: Lead[] = (data || []).map((dbLead: any) => {
+      // Fetch agent names separately for assigned leads
+      const agentIds = [...new Set(leadsData?.map(l => l.assigned_agent_id).filter(Boolean))];
+      let agentNames: Record<string, string> = {};
+      
+      if (agentIds.length > 0) {
+        const { data: agentsData } = await supabase
+          .from('agents')
+          .select(`
+            id,
+            user_id,
+            profiles!inner(display_name, email)
+          `)
+          .in('id', agentIds);
+        
+        if (agentsData) {
+          agentsData.forEach((agent: any) => {
+            agentNames[agent.id] = agent.profiles?.display_name || agent.profiles?.email || 'Unknown Agent';
+          });
+        }
+      }
+
+      const convertedLeads: Lead[] = (leadsData || []).map((dbLead: any) => {
         const ts = dbLead.last_interaction_at || dbLead.source_metadata?.last_interaction_at || dbLead.created_at || dbLead.timestamp;
-        const agentName = dbLead.agents?.profiles?.display_name || dbLead.agents?.profiles?.email || 'Unknown Agent';
+        const agentName = dbLead.assigned_agent_id ? (agentNames[dbLead.assigned_agent_id] || 'Unknown Agent') : undefined;
         
         return {
           id: dbLead.id,
@@ -138,7 +152,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
           reminderNote: dbLead.reminder_note || '',
           aiScore: dbLead.ai_score,
           aiNextAction: dbLead.ai_next_action || '',
-          assignedAgentName: dbLead.assigned_agent_id ? agentName : undefined,
+          assignedAgentName: agentName,
           source_metadata: dbLead.source_metadata || {}
         };
       });
