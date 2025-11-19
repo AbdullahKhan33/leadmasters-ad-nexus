@@ -5,11 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Search, UserCheck, Filter, RotateCcw, Calendar } from "lucide-react";
+import { Search, UserCheck, Filter, RotateCcw, Calendar as CalendarIcon } from "lucide-react";
 import { LeadAssignmentModal } from "./LeadAssignmentModal";
+import { format } from "date-fns";
 
 interface Lead {
   id: string;
@@ -28,7 +31,8 @@ export function LeadAssignmentWorkflow() {
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days" | "last_90_days">("all");
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days" | "custom">("all");
+  const [customDateRange, setCustomDateRange] = useState<{from: Date | undefined, to: Date | undefined}>({from: undefined, to: undefined});
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { userRole } = useAuth();
@@ -68,6 +72,20 @@ export function LeadAssignmentWorkflow() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     
+    if (dateFilter === 'custom') {
+      if (!customDateRange.from) return true;
+      const from = new Date(customDateRange.from);
+      from.setHours(0, 0, 0, 0);
+      
+      if (!customDateRange.to) {
+        return leadDate >= from;
+      }
+      
+      const to = new Date(customDateRange.to);
+      to.setHours(23, 59, 59, 999);
+      return leadDate >= from && leadDate <= to;
+    }
+    
     switch (dateFilter) {
       case 'today':
         const today = new Date();
@@ -81,10 +99,6 @@ export function LeadAssignmentWorkflow() {
         const thirtyDaysAgo = new Date(now);
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         return leadDate >= thirtyDaysAgo;
-      case 'last_90_days':
-        const ninetyDaysAgo = new Date(now);
-        ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-        return leadDate >= ninetyDaysAgo;
       default:
         return true;
     }
@@ -281,13 +295,43 @@ export function LeadAssignmentWorkflow() {
                 >
                   Last 30 Days
                 </Button>
-                <Button 
-                  variant={dateFilter === "last_90_days" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setDateFilter("last_90_days")}
-                >
-                  Last 90 Days
-                </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      variant={dateFilter === "custom" ? "default" : "outline"}
+                      size="sm"
+                      className="gap-2"
+                    >
+                      <CalendarIcon className="w-4 h-4" />
+                      {dateFilter === "custom" && customDateRange.from ? (
+                        customDateRange.to ? (
+                          <>
+                            {format(customDateRange.from, "MMM d")} - {format(customDateRange.to, "MMM d")}
+                          </>
+                        ) : (
+                          format(customDateRange.from, "MMM d, yyyy")
+                        )
+                      ) : (
+                        "Custom Range"
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="range"
+                      selected={customDateRange.from ? { from: customDateRange.from, to: customDateRange.to } : undefined}
+                      onSelect={(range) => {
+                        setCustomDateRange({ from: range?.from, to: range?.to });
+                        if (range?.from) {
+                          setDateFilter("custom");
+                        }
+                      }}
+                      initialFocus
+                      numberOfMonths={2}
+                      className="pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 

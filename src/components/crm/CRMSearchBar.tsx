@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, Filter } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Filter, UserCheck } from "lucide-react";
+import { useAgents } from "@/hooks/useAgents";
 
 interface ColumnVisibility {
   lead: boolean;
@@ -23,9 +25,19 @@ interface CRMSearchBarProps {
   onSearchChange: (query: string) => void;
   visibleColumns: ColumnVisibility;
   onColumnVisibilityChange: (columns: ColumnVisibility) => void;
+  assignmentFilter: string;
+  onAssignmentFilterChange: (filter: string) => void;
 }
 
-export function CRMSearchBar({ searchQuery, onSearchChange, visibleColumns, onColumnVisibilityChange }: CRMSearchBarProps) {
+export function CRMSearchBar({ 
+  searchQuery, 
+  onSearchChange, 
+  visibleColumns, 
+  onColumnVisibilityChange,
+  assignmentFilter,
+  onAssignmentFilterChange
+}: CRMSearchBarProps) {
+  const { agents } = useAgents();
   const columnLabels = {
     lead: "Lead",
     contact: "Contact",
@@ -66,6 +78,24 @@ export function CRMSearchBar({ searchQuery, onSearchChange, visibleColumns, onCo
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
+      
+      <Select value={assignmentFilter} onValueChange={onAssignmentFilterChange}>
+        <SelectTrigger className="w-[200px]">
+          <UserCheck className="w-4 h-4 mr-2" />
+          <SelectValue placeholder="Assignment Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Leads</SelectItem>
+          <SelectItem value="assigned">Assigned</SelectItem>
+          <SelectItem value="unassigned">Unassigned</SelectItem>
+          {agents.map(agent => (
+            <SelectItem key={agent.id} value={agent.id}>
+              Assigned to {agent.display_name || agent.email || 'Agent'}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline" size="sm">
