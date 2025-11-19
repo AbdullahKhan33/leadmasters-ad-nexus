@@ -6,12 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Search, UserCheck, Filter, RotateCcw, Info } from "lucide-react";
+import { Search, UserCheck, Filter, RotateCcw, Info, Calendar as CalendarIcon } from "lucide-react";
 import { LeadAssignmentModal } from "./LeadAssignmentModal";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 interface Lead {
   id: string;
@@ -30,7 +33,9 @@ export function LeadAssignmentWorkflow() {
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days">("all");
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days" | "custom">("all");
+  const [customDateRange, setCustomDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({ from: undefined, to: undefined });
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { userRole } = useAuth();
@@ -69,6 +74,20 @@ export function LeadAssignmentWorkflow() {
     const leadDate = new Date(lead.created_at);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
+    
+    if (dateFilter === 'custom') {
+      if (!customDateRange.from) return true;
+      const from = new Date(customDateRange.from);
+      from.setHours(0, 0, 0, 0);
+      
+      if (!customDateRange.to) {
+        return leadDate >= from;
+      }
+      
+      const to = new Date(customDateRange.to);
+      to.setHours(23, 59, 59, 999);
+      return leadDate >= from && leadDate <= to;
+    }
     
     switch (dateFilter) {
       case 'today':
@@ -292,6 +311,50 @@ export function LeadAssignmentWorkflow() {
                 >
                   Last 30 Days
                 </Button>
+                
+                <Dialog open={showDatePicker} onOpenChange={setShowDatePicker}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant={dateFilter === "custom" ? "default" : "outline"}
+                      size="sm"
+                      className="gap-2"
+                    >
+                      <CalendarIcon className="w-4 h-4" />
+                      {dateFilter === "custom" && customDateRange.from ? (
+                        customDateRange.to ? (
+                          <span>
+                            {format(customDateRange.from, "MMM d")} - {format(customDateRange.to, "MMM d")}
+                          </span>
+                        ) : (
+                          <span>{format(customDateRange.from, "MMM d, yyyy")}</span>
+                        )
+                      ) : (
+                        "Custom Range"
+                      )}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[900px]">
+                    <DialogHeader>
+                      <DialogTitle>Select Date Range</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex justify-center py-4">
+                      <Calendar
+                        mode="range"
+                        selected={customDateRange.from ? { from: customDateRange.from, to: customDateRange.to } : undefined}
+                        onSelect={(range) => {
+                          setCustomDateRange({ from: range?.from, to: range?.to });
+                          if (range?.from) {
+                            setDateFilter("custom");
+                          }
+                          if (range?.from && range?.to) {
+                            setShowDatePicker(false);
+                          }
+                        }}
+                        numberOfMonths={2}
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
