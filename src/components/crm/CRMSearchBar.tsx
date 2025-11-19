@@ -82,9 +82,9 @@ export function CRMSearchBar({
       </div>
       
       <Select value={assignmentFilter} onValueChange={onAssignmentFilterChange}>
-        <SelectTrigger className="w-[200px]">
-          <UserCheck className="w-4 h-4 mr-2" />
-          <SelectValue placeholder="Assignment Status" />
+        <SelectTrigger className="w-[280px]">
+          <UserCheck className="w-4 h-4 mr-2 flex-shrink-0" />
+          <SelectValue placeholder="Assignment Status" className="truncate" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Leads</SelectItem>
