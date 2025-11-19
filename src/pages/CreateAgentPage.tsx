@@ -292,7 +292,7 @@ export function CreateAgentPage() {
                 {/* Column 1 - Other features */}
                 <div className="space-y-4">
                   {FEATURE_PERMISSIONS.filter(p => p.key !== 'crm').map(permission => (
-                    <div key={permission.key} className="group border border-border/50 rounded-lg p-4 hover:border-primary/30 hover:bg-accent/20 transition-all duration-200">
+                    <div key={permission.key} className="group border border-border/50 rounded-lg p-4 hover:border-border hover:bg-muted/30 transition-all duration-200">
                       <div className="flex items-start space-x-3">
                         <input
                           type="checkbox"
@@ -302,7 +302,7 @@ export function CreateAgentPage() {
                           className="mt-1 w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
                         />
                         <div className="flex-1 space-y-1">
-                          <label htmlFor={permission.key} className="text-sm font-semibold cursor-pointer group-hover:text-primary transition-colors">
+                          <label htmlFor={permission.key} className="text-sm font-semibold cursor-pointer group-hover:text-foreground transition-colors">
                             {permission.label}
                           </label>
                           <p className="text-xs text-muted-foreground leading-relaxed">{permission.description}</p>
@@ -315,7 +315,7 @@ export function CreateAgentPage() {
                 {/* Column 2 - CRM with sub-permissions */}
                 <div className="space-y-4">
                   {FEATURE_PERMISSIONS.filter(p => p.key === 'crm').map(permission => (
-                    <div key={permission.key} className="group border border-border/50 rounded-lg p-4 hover:border-primary/30 hover:bg-accent/20 transition-all duration-200">
+                    <div key={permission.key} className="group border border-border/50 rounded-lg p-4 hover:border-border hover:bg-muted/30 transition-all duration-200">
                       <div className="flex items-start space-x-3">
                         <input
                           type="checkbox"
@@ -325,7 +325,7 @@ export function CreateAgentPage() {
                           className="mt-1 w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
                         />
                         <div className="flex-1 space-y-1">
-                          <label htmlFor={permission.key} className="text-sm font-semibold cursor-pointer group-hover:text-primary transition-colors">
+                          <label htmlFor={permission.key} className="text-sm font-semibold cursor-pointer group-hover:text-foreground transition-colors">
                             {permission.label}
                           </label>
                           <p className="text-xs text-muted-foreground leading-relaxed">{permission.description}</p>
@@ -337,7 +337,7 @@ export function CreateAgentPage() {
                           <p className="text-xs font-semibold text-primary">CRM Access:</p>
                           <div className="space-y-2">
                             {permission.subPermissions.map(subPermission => (
-                              <div key={subPermission.key} className="flex items-start space-x-2 p-2 border border-border/30 rounded hover:bg-accent/30 hover:border-primary/20 transition-all duration-200">
+                              <div key={subPermission.key} className="flex items-start space-x-2 p-2 border border-border/30 rounded hover:bg-muted/20 hover:border-border transition-all duration-200">
                                 <input
                                   type="checkbox"
                                   id={subPermission.key}
