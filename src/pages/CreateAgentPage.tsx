@@ -195,19 +195,19 @@ export function CreateAgentPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Basic Information */}
-            <Card className="shadow-lg border-0 bg-gradient-to-b from-card to-card/95 backdrop-blur-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <UserPlus className="w-4 h-4 text-primary" />
-                  </div>
-                  Basic Information
-                </CardTitle>
-                <CardDescription className="text-base">Essential details for the agent</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
+          {/* Basic Information */}
+          <Card className="shadow-lg border-0 bg-gradient-to-b from-card to-card/95 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <UserPlus className="w-4 h-4 text-primary" />
+                </div>
+                Basic Information
+              </CardTitle>
+              <CardDescription className="text-base">Essential details for the agent</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address *</Label>
                   <Input
@@ -230,7 +230,9 @@ export function CreateAgentPage() {
                     required
                   />
                 </div>
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
                   <Input
@@ -240,21 +242,7 @@ export function CreateAgentPage() {
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* Account Settings */}
-            <Card className="shadow-lg border-0 bg-gradient-to-b from-card to-card/95 backdrop-blur-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="w-8 h-8 rounded-lg bg-secondary/20 flex items-center justify-center">
-                    <Shuffle className="w-4 h-4 text-secondary-foreground" />
-                  </div>
-                  Account Settings
-                </CardTitle>
-                <CardDescription className="text-base">Agent codes, passwords and status</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="agentCode">Agent Code *</Label>
                   <div className="flex gap-2">
@@ -270,33 +258,23 @@ export function CreateAgentPage() {
                     </Button>
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label>Temporary Password</Label>
-                  <div className="p-4 bg-gradient-to-r from-muted/50 to-muted/30 rounded-lg border border-border/50">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      A secure temporary password will be automatically generated and sent to the agent via email. 
-                      The agent will be required to change this password on their first login.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
-                  <Select value={formData.status} onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending_invite">Pending Invite</SelectItem>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="status">Status</Label>
+                <Select value={formData.status} onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending_invite">Pending Invite</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Feature Permissions */}
           <Card className="shadow-lg border-0 bg-gradient-to-b from-card to-card/95 backdrop-blur-sm">
