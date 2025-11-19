@@ -116,18 +116,40 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
       let agentNames: Record<string, string> = {};
       
       if (agentIds.length > 0) {
-        const { data: agentsData } = await supabase
+        // First fetch agents
+        const { data: agentsData, error: agentsError } = await supabase
           .from('agents')
-          .select(`
-            id,
-            user_id,
-            profiles!inner(display_name, email)
-          `)
+          .select('id, user_id')
           .in('id', agentIds);
         
-        if (agentsData) {
+        if (agentsError) {
+          console.error('Error fetching agents:', agentsError);
+        }
+        
+        if (agentsData && agentsData.length > 0) {
+          // Then fetch profiles for those agents
+          const userIds = agentsData.map(a => a.user_id).filter(Boolean);
+          const { data: profilesData, error: profilesError } = await supabase
+            .from('profiles')
+            .select('user_id, display_name, email')
+            .in('user_id', userIds);
+          
+          if (profilesError) {
+            console.error('Error fetching profiles:', profilesError);
+          }
+          
+          // Map profiles by user_id for easy lookup
+          const profilesByUserId: Record<string, any> = {};
+          if (profilesData) {
+            profilesData.forEach(profile => {
+              profilesByUserId[profile.user_id] = profile;
+            });
+          }
+          
+          // Build agentNames mapping
           agentsData.forEach((agent: any) => {
-            agentNames[agent.id] = agent.profiles?.display_name || agent.profiles?.email || 'Unknown Agent';
+            const profile = profilesByUserId[agent.user_id];
+            agentNames[agent.id] = profile?.display_name || profile?.email || 'Unknown Agent';
           });
         }
       }
