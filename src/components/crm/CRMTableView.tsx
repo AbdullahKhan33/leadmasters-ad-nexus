@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Upload, Loader2, UserPlus } from "lucide-react";
+import { Upload, Loader2, UserPlus, ChevronDown } from "lucide-react";
 import { usePremium } from "@/contexts/PremiumContext";
 import { CRMSearchBar } from "./CRMSearchBar";
 import { CRMAIFeaturesBanner } from "./CRMAIFeaturesBanner";
@@ -14,6 +14,7 @@ import { AddLeadModal } from "./AddLeadModal";
 import { EditLeadModal } from "./EditLeadModal";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface Lead {
   id: string;
@@ -297,23 +298,27 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
             </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <Button 
-              size="sm" 
-              className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              <UserPlus className="w-4 h-4 mr-2" />
-              Add New Lead
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="shadow-sm hover:shadow-md transition-all duration-200 border-gray-200/80 hover:border-blue-200 hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-blue-50/50 hover:text-blue-700"
-              onClick={onImportClick}
-            >
-              <Upload className="w-4 h-4 mr-2" />
-              Import from CSV
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  size="sm" 
+                  className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
+                >
+                  Actions
+                  <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={() => setIsAddModalOpen(true)}>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Add New Lead
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onImportClick}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Import from CSV
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <CRMSearchBar 
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
