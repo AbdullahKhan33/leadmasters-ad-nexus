@@ -24,6 +24,7 @@ interface Lead {
   reminderNote?: string;
   aiScore?: number;
   aiNextAction?: string;
+  assignedAgentName?: string;
 }
 
 interface ColumnVisibility {
@@ -32,6 +33,7 @@ interface ColumnVisibility {
   email: boolean;
   source: boolean;
   status: boolean;
+  assignedAgent: boolean;
   lastMessage: boolean;
   aiScore: boolean;
   aiNextAction: boolean;
@@ -144,6 +146,17 @@ export function CRMTableRow({ lead, canShowAIScore, canShowAIActions, onUpgradeC
       {visibleColumns.status && (
         <TableCell className="px-4 py-4">
           {getStatusBadge(lead.status)}
+        </TableCell>
+      )}
+      {visibleColumns.assignedAgent && (
+        <TableCell className="px-4 py-4">
+          {lead.assignedAgentName ? (
+            <Badge variant="secondary" className="text-xs whitespace-nowrap">
+              {lead.assignedAgentName}
+            </Badge>
+          ) : (
+            <span className="text-xs text-muted-foreground">Unassigned</span>
+          )}
         </TableCell>
       )}
       {visibleColumns.lastMessage && (
