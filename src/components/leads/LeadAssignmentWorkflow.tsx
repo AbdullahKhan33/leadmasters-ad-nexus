@@ -343,6 +343,7 @@ export function LeadAssignmentWorkflow() {
                         }
                       }}
                       numberOfMonths={2}
+                      className="pointer-events-auto"
                     />
                   </PopoverContent>
                 </Popover>
