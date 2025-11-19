@@ -243,26 +243,28 @@ export function AppSidebar({
           {/* AI Sales Automation - LOCKED */}
           <SidebarMenuItem>
             <LockedFeatureTooltip message="AI Sales Automation is coming soon">
-              <SidebarMenuButton 
-                disabled
-                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 opacity-50 cursor-not-allowed`}
-              >
-                {isCollapsed ? (
-                  <div className="flex flex-col items-center space-y-1">
-                    <Bot className="w-5 h-5 text-gray-400" />
-                    <span className="text-xs font-medium">AI Sales</span>
-                    <Lock className="w-3 h-3 text-gray-400" />
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center space-x-3">
+              <div className="pointer-events-none">
+                <SidebarMenuButton 
+                  disabled
+                  className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 opacity-50 cursor-not-allowed`}
+                >
+                  {isCollapsed ? (
+                    <div className="flex flex-col items-center space-y-1">
                       <Bot className="w-5 h-5 text-gray-400" />
-                      <span className="font-semibold">AI Sales Automation</span>
+                      <span className="text-xs font-medium">AI Sales</span>
+                      <Lock className="w-3 h-3 text-gray-400" />
                     </div>
-                    <Lock className="w-4 h-4 text-gray-400" />
-                  </div>
-                )}
-              </SidebarMenuButton>
+                  ) : (
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center space-x-3">
+                        <Bot className="w-5 h-5 text-gray-400" />
+                        <span className="font-semibold">AI Sales Automation</span>
+                      </div>
+                      <Lock className="w-4 h-4 text-gray-400" />
+                    </div>
+                  )}
+                </SidebarMenuButton>
+              </div>
             </LockedFeatureTooltip>
           </SidebarMenuItem>
 
@@ -333,18 +335,20 @@ export function AppSidebar({
                   </SidebarMenuButton>
                   
                   <LockedFeatureTooltip message="Automations feature is coming soon">
-                    <SidebarMenuButton 
-                      disabled
-                      className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 opacity-50 cursor-not-allowed"
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex items-center space-x-3">
-                          <Zap className="w-4 h-4 text-gray-400" />
-                          <span className="text-sm font-medium">Automations</span>
+                    <div className="pointer-events-none">
+                      <SidebarMenuButton 
+                        disabled
+                        className="w-full justify-start text-left h-10 px-4 rounded-lg transition-all duration-200 opacity-50 cursor-not-allowed"
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center space-x-3">
+                            <Zap className="w-4 h-4 text-gray-400" />
+                            <span className="text-sm font-medium">Automations</span>
+                          </div>
+                          <Lock className="w-3 h-3 text-gray-400" />
                         </div>
-                        <Lock className="w-3 h-3 text-gray-400" />
-                      </div>
-                    </SidebarMenuButton>
+                      </SidebarMenuButton>
+                    </div>
                   </LockedFeatureTooltip>
 
                   <SidebarMenuButton 
@@ -392,26 +396,28 @@ export function AppSidebar({
 
           <SidebarMenuItem>
             <LockedFeatureTooltip message="Schedule feature is coming soon">
-              <SidebarMenuButton 
-                disabled
-                className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 opacity-50 cursor-not-allowed`}
-              >
-                {isCollapsed ? (
-                  <div className="flex flex-col items-center space-y-1">
-                    <Calendar className="w-5 h-5 text-gray-400" />
-                    <span className="text-xs font-medium">Schedule</span>
-                    <Lock className="w-3 h-3 text-gray-400" />
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center space-x-3">
+              <div className="pointer-events-none">
+                <SidebarMenuButton 
+                  disabled
+                  className={`w-full justify-start text-left ${isCollapsed ? 'h-16 px-2 flex-col' : 'h-12 px-4'} rounded-xl transition-all duration-200 opacity-50 cursor-not-allowed`}
+                >
+                  {isCollapsed ? (
+                    <div className="flex flex-col items-center space-y-1">
                       <Calendar className="w-5 h-5 text-gray-400" />
-                      <span className="font-semibold">Schedule</span>
+                      <span className="text-xs font-medium">Schedule</span>
+                      <Lock className="w-3 h-3 text-gray-400" />
                     </div>
-                    <Lock className="w-4 h-4 text-gray-400" />
-                  </div>
-                )}
-              </SidebarMenuButton>
+                  ) : (
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center space-x-3">
+                        <Calendar className="w-5 h-5 text-gray-400" />
+                        <span className="font-semibold">Schedule</span>
+                      </div>
+                      <Lock className="w-4 h-4 text-gray-400" />
+                    </div>
+                  )}
+                </SidebarMenuButton>
+              </div>
             </LockedFeatureTooltip>
           </SidebarMenuItem>
 
