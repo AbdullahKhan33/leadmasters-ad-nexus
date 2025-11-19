@@ -65,6 +65,7 @@ interface CRMTableViewProps {
 export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }: CRMTableViewProps) {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
+  const [assignmentFilter, setAssignmentFilter] = useState("all");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -90,11 +91,28 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
   const fetchLeads = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('leads')
-        .select('*')
-        .neq('lead_source_type', 'ai_automation')
-        .order('created_at', { ascending: false });
+        .select(`
+          *,
+          agents!leads_assigned_agent_id_fkey(
+            id,
+            user_id,
+            profiles!inner(display_name, email)
+          )
+        `)
+        .neq('lead_source_type', 'ai_automation');
+      
+      // Apply assignment filter
+      if (assignmentFilter === 'assigned') {
+        query = query.not('assigned_agent_id', 'is', null);
+      } else if (assignmentFilter === 'unassigned') {
+        query = query.is('assigned_agent_id', null);
+      } else if (assignmentFilter !== 'all') {
+        query = query.eq('assigned_agent_id', assignmentFilter);
+      }
+      
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) throw error;
 
@@ -135,7 +153,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
 
   useEffect(() => {
     fetchLeads();
-  }, []);
+  }, [assignmentFilter]);
 
   const handleDeleteLead = async (leadId: string) => {
     try {
@@ -263,6 +281,8 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
               onSearchChange={setSearchQuery}
               visibleColumns={visibleColumns}
               onColumnVisibilityChange={setVisibleColumns}
+              assignmentFilter={assignmentFilter}
+              onAssignmentFilterChange={setAssignmentFilter}
             />
           </div>
         </div>
