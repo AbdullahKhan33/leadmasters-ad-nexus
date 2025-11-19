@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useToast } from "@/hooks/use-toast";
 import { useAgents } from "@/hooks/useAgents";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   UserPlus, 
   Search, 
@@ -18,7 +19,10 @@ import {
   Users, 
   TrendingUp, 
   Award,
-  Activity
+  Activity,
+  Database,
+  Key,
+  Settings
 } from "lucide-react";
 import { DeleteAgentDialog } from "./DeleteAgentDialog";
 import { AgentStatsCards } from "./AgentStatsCards";
@@ -27,6 +31,8 @@ export function AgentManagement() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [deleteAgent, setDeleteAgent] = useState<{ id: string; name: string } | null>(null);
+  const [isSeeding, setIsSeeding] = useState(false);
+  const [isResettingPasswords, setIsResettingPasswords] = useState(false);
   const { agents, isLoading, deleteAgent: performDeleteAgent } = useAgents();
   const { userRole } = useAuth();
   const { toast } = useToast();
@@ -38,6 +44,66 @@ export function AgentManagement() {
   );
 
   const [isDeletingAgent, setIsDeletingAgent] = useState(false);
+
+  const handleSeedDummyLeads = async () => {
+    setIsSeeding(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+
+      const { data, error } = await supabase.functions.invoke('seed-dummy-leads', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: data.message || "Successfully created 100 dummy leads",
+      });
+    } catch (error: any) {
+      console.error('Seed leads error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to seed dummy leads",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSeeding(false);
+    }
+  };
+
+  const handleResetAgentPasswords = async () => {
+    setIsResettingPasswords(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+
+      const { data, error } = await supabase.functions.invoke('reset-agent-passwords', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: data.message || "Successfully reset agent passwords",
+      });
+    } catch (error: any) {
+      console.error('Reset passwords error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to reset passwords",
+        variant: "destructive"
+      });
+    } finally {
+      setIsResettingPasswords(false);
+    }
+  };
 
   const handleDeleteAgent = async () => {
     if (!deleteAgent || isDeletingAgent) return;
@@ -93,10 +159,38 @@ export function AgentManagement() {
           <h1 className="text-2xl font-bold text-gray-900">Agent Management</h1>
           <p className="text-gray-600">Manage your sales agents and their performance</p>
         </div>
-        <Button onClick={() => navigate("/app/agents/create")} className="flex items-center gap-2">
-          <UserPlus className="w-4 h-4" />
-          Add Agent
-        </Button>
+        <div className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                Admin Tools
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem 
+                onClick={handleSeedDummyLeads}
+                disabled={isSeeding}
+                className="flex items-center gap-2"
+              >
+                <Database className="w-4 h-4" />
+                {isSeeding ? "Seeding..." : "Seed 100 Dummy Leads"}
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={handleResetAgentPasswords}
+                disabled={isResettingPasswords}
+                className="flex items-center gap-2"
+              >
+                <Key className="w-4 h-4" />
+                {isResettingPasswords ? "Resetting..." : "Reset Agent Passwords"}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button onClick={() => navigate("/app/agents/create")} className="flex items-center gap-2">
+            <UserPlus className="w-4 h-4" />
+            Add Agent
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
