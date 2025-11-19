@@ -31,20 +31,24 @@ export function Agents() {
       <Tabs defaultValue="management" className="p-6">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="management">Agent Management</TabsTrigger>
-          <TabsTrigger value="analytics">Performance Analytics</TabsTrigger>
           <TabsTrigger value="assignment" className="flex items-center gap-2">
             <UserCog className="w-4 h-4" />
             Lead Assignment
+          </TabsTrigger>
+          <TabsTrigger value="analytics" disabled className="opacity-50 cursor-not-allowed">
+            Performance Analytics 🔒
           </TabsTrigger>
         </TabsList>
         <TabsContent value="management">
           <AgentManagement />
         </TabsContent>
-        <TabsContent value="analytics">
-          <AgentAnalytics />
-        </TabsContent>
         <TabsContent value="assignment">
           <LeadAssignment />
+        </TabsContent>
+        <TabsContent value="analytics">
+          <div className="flex items-center justify-center h-64">
+            <p className="text-muted-foreground">Performance Analytics coming soon</p>
+          </div>
         </TabsContent>
       </Tabs>
     );

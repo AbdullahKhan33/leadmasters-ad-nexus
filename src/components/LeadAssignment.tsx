@@ -28,9 +28,9 @@ export function LeadAssignment() {
             <UserCheck className="w-4 h-4" />
             Manual Assignment
           </TabsTrigger>
-          <TabsTrigger value="rules" className="flex items-center gap-2">
+          <TabsTrigger value="rules" disabled className="flex items-center gap-2 opacity-50 cursor-not-allowed">
             <Settings className="w-4 h-4" />
-            Auto-Assignment Rules
+            Auto-Assignment Rules 🔒
           </TabsTrigger>
         </TabsList>
         
@@ -39,7 +39,9 @@ export function LeadAssignment() {
         </TabsContent>
         
         <TabsContent value="rules" className="mt-6">
-          <AutoAssignmentRules />
+          <div className="flex items-center justify-center h-64">
+            <p className="text-muted-foreground">Auto-Assignment Rules coming soon</p>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
