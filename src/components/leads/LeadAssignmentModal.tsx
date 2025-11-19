@@ -135,46 +135,6 @@ export function LeadAssignmentModal({
             </Select>
           </div>
 
-          {/* Agent Workload Overview */}
-          {activeAgents.length > 0 && (
-            <div className="space-y-3">
-              <Label>Agent Workload Overview</Label>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Agent</TableHead>
-                      <TableHead>Current Leads</TableHead>
-                      <TableHead>Workload</TableHead>
-                      <TableHead>Specialization</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {activeAgents.map(agent => (
-                      <TableRow key={agent.id}>
-                        <TableCell className="font-medium">{agent.display_name}</TableCell>
-                        <TableCell>{getAgentWorkload(agent.id)}</TableCell>
-                        <TableCell>{getWorkloadBadge(getAgentWorkload(agent.id))}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {agent.permissions && Object.entries(agent.permissions)
-                              .filter(([_, enabled]) => enabled)
-                              .slice(0, 2)
-                              .map(([permission, _]) => (
-                                <Badge key={permission} variant="outline" className="text-xs">
-                                  {permission.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                </Badge>
-                              ))
-                            }
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          )}
 
           {/* Assignment Notes */}
           <div className="space-y-3">
