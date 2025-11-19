@@ -7,7 +7,9 @@ import { AgentDashboard } from "./agents/AgentDashboard";
 import { AgentAnalytics } from "./agents/AgentAnalytics";
 import { CreateAgentPage } from "@/pages/CreateAgentPage";
 import { EditAgentPage } from "@/pages/EditAgentPage";
+import { LeadAssignment } from "./LeadAssignment";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserCog } from "lucide-react";
 
 export function Agents() {
   const { userRole } = useAuth();
@@ -27,15 +29,22 @@ export function Agents() {
   if (userRole === 'admin') {
     return (
       <Tabs defaultValue="management" className="p-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="management">Agent Management</TabsTrigger>
           <TabsTrigger value="analytics">Performance Analytics</TabsTrigger>
+          <TabsTrigger value="assignment" className="flex items-center gap-2">
+            <UserCog className="w-4 h-4" />
+            Lead Assignment
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="management">
           <AgentManagement />
         </TabsContent>
         <TabsContent value="analytics">
           <AgentAnalytics />
+        </TabsContent>
+        <TabsContent value="assignment">
+          <LeadAssignment />
         </TabsContent>
       </Tabs>
     );
