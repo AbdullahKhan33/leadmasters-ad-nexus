@@ -289,17 +289,14 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
     <div className="h-full bg-gradient-to-br from-gray-50/50 via-blue-50/20 to-purple-50/20 p-4 flex flex-col">
       <div className="w-full flex flex-col h-full space-y-4 max-w-none">
         {/* Header */}
-        <div className="flex items-center justify-between flex-shrink-0">
-          <div>
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold text-gray-900">All Leads</h2>
-              <div className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-semibold rounded-full shadow-md">
-                Total Records: {leads.length.toLocaleString()}
-              </div>
+        <div className="flex items-center justify-between flex-shrink-0 gap-4">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-gray-900">All Leads</h2>
+            <div className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-semibold rounded-full shadow-md">
+              {leads.length.toLocaleString()}
             </div>
-            <p className="text-gray-600 mt-1">Complete overview of your lead pipeline</p>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button 
               size="sm" 
               className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
