@@ -5,15 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Search, UserCheck, Filter, RotateCcw, Calendar as CalendarIcon, Info } from "lucide-react";
+import { Search, UserCheck, Filter, RotateCcw, Info } from "lucide-react";
 import { LeadAssignmentModal } from "./LeadAssignmentModal";
-import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
 interface Lead {
@@ -33,10 +30,8 @@ export function LeadAssignmentWorkflow() {
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days" | "custom">("all");
-  const [customDateRange, setCustomDateRange] = useState<{from: Date | undefined, to: Date | undefined}>({from: undefined, to: undefined});
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days">("all");
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
-  const [showDatePickerDialog, setShowDatePickerDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { userRole } = useAuth();
   const { toast } = useToast();
@@ -74,20 +69,6 @@ export function LeadAssignmentWorkflow() {
     const leadDate = new Date(lead.created_at);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    
-    if (dateFilter === 'custom') {
-      if (!customDateRange.from) return true;
-      const from = new Date(customDateRange.from);
-      from.setHours(0, 0, 0, 0);
-      
-      if (!customDateRange.to) {
-        return leadDate >= from;
-      }
-      
-      const to = new Date(customDateRange.to);
-      to.setHours(23, 59, 59, 999);
-      return leadDate >= from && leadDate <= to;
-    }
     
     switch (dateFilter) {
       case 'today':
@@ -279,7 +260,7 @@ export function LeadAssignmentWorkflow() {
             {/* Date Filter */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <Filter className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm font-medium">Date Range</span>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -311,50 +292,6 @@ export function LeadAssignmentWorkflow() {
                 >
                   Last 30 Days
                 </Button>
-                <Dialog open={showDatePickerDialog} onOpenChange={setShowDatePickerDialog}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      variant={dateFilter === "custom" ? "default" : "outline"}
-                      size="sm"
-                      className="gap-2"
-                    >
-                      <CalendarIcon className="w-4 h-4" />
-                      {dateFilter === "custom" && customDateRange.from ? (
-                        customDateRange.to ? (
-                          <>
-                            {format(customDateRange.from, "MMM d")} - {format(customDateRange.to, "MMM d")}
-                          </>
-                        ) : (
-                          format(customDateRange.from, "MMM d, yyyy")
-                        )
-                      ) : (
-                        "Custom Range"
-                      )}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[900px]">
-                    <DialogHeader>
-                      <DialogTitle>Select Date Range</DialogTitle>
-                    </DialogHeader>
-                    <div className="flex justify-center py-4">
-                      <Calendar
-                        mode="range"
-                        selected={customDateRange.from ? { from: customDateRange.from, to: customDateRange.to } : undefined}
-                        onSelect={(range) => {
-                          setCustomDateRange({ from: range?.from, to: range?.to });
-                          if (range?.from) {
-                            setDateFilter("custom");
-                          }
-                          if (range?.from && range?.to) {
-                            setShowDatePickerDialog(false);
-                          }
-                        }}
-                        numberOfMonths={2}
-                        className="pointer-events-auto"
-                      />
-                    </div>
-                  </DialogContent>
-                </Dialog>
               </div>
             </div>
 
