@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.generate-ad-creative]
 verify_jwt = true
+
+[functions.seed-dummy-leads]
+verify_jwt = true
+
+[functions.reset-agent-passwords]
+verify_jwt = true

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Search, UserCheck, Filter, RotateCcw } from "lucide-react";
+import { Search, UserCheck, Filter, RotateCcw, Calendar } from "lucide-react";
 import { LeadAssignmentModal } from "./LeadAssignmentModal";
 
 interface Lead {
@@ -28,49 +28,67 @@ export function LeadAssignmentWorkflow() {
   const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "last_7_days" | "last_30_days" | "last_90_days">("all");
   const [showAssignmentModal, setShowAssignmentModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { userRole } = useAuth();
   const { toast } = useToast();
 
-  // Mock data for demonstration
-  const mockLeads: Lead[] = [
-    {
-      id: "1",
-      name: "John Smith",
-      email: "john@example.com",
-      phone: "+1-555-0123",
-      status: "New",
-      source: "Website",
-      created_at: new Date().toISOString(),
-      ai_score: 8
-    },
-    {
-      id: "2", 
-      name: "Sarah Johnson",
-      email: "sarah@example.com",
-      phone: "+1-555-0124",
-      status: "New",
-      source: "Facebook Ad",
-      created_at: new Date().toISOString(),
-      ai_score: 6
-    },
-    {
-      id: "3",
-      name: "Mike Davis",
-      phone: "+1-555-0125",
-      status: "Contacted",
-      source: "Referral",
-      assigned_agent_id: "agent-1",
-      created_at: new Date().toISOString(),
-      ai_score: 9
-    }
-  ];
+  // Fetch unassigned leads from database
+  useEffect(() => {
+    fetchLeads();
+  }, []);
 
-  useState(() => {
-    setLeads(mockLeads);
-    setIsLoading(false);
-  });
+  const fetchLeads = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .is('assigned_agent_id', null)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setLeads(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filterByDate = (lead: Lead) => {
+    if (dateFilter === 'all') return true;
+    
+    const leadDate = new Date(lead.created_at);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    
+    switch (dateFilter) {
+      case 'today':
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return leadDate >= today;
+      case 'last_7_days':
+        const sevenDaysAgo = new Date(now);
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        return leadDate >= sevenDaysAgo;
+      case 'last_30_days':
+        const thirtyDaysAgo = new Date(now);
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        return leadDate >= thirtyDaysAgo;
+      case 'last_90_days':
+        const ninetyDaysAgo = new Date(now);
+        ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+        return leadDate >= ninetyDaysAgo;
+      default:
+        return true;
+    }
+  };
 
   const unassignedLeads = leads.filter(lead => !lead.assigned_agent_id);
   const filteredLeads = unassignedLeads.filter(lead => {
@@ -79,8 +97,9 @@ export function LeadAssignmentWorkflow() {
                          (lead.email && lead.email.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesStatus = statusFilter === "all" || lead.status === statusFilter;
+    const matchesDate = filterByDate(lead);
     
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
   const handleSelectLead = (leadId: string) => {
@@ -100,7 +119,8 @@ export function LeadAssignmentWorkflow() {
   };
 
   const handleAssignmentComplete = () => {
-    // Refresh leads data
+    // Refresh leads data from database
+    fetchLeads();
     setSelectedLeads([]);
     toast({
       title: "Success",
@@ -213,40 +233,100 @@ export function LeadAssignmentWorkflow() {
           <CardTitle className="text-lg">Filters & Search</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <div className="space-y-4">
+            {/* Search */}
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-muted-foreground" />
+              <div className="relative flex-1">
                 <Input
-                  placeholder="Search leads..."
+                  placeholder="Search by name, email, or phone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
                 />
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant={statusFilter === "all" ? "default" : "outline"}
-                onClick={() => setStatusFilter("all")}
-                size="sm"
-              >
-                All
-              </Button>
-              <Button
-                variant={statusFilter === "New" ? "default" : "outline"}
-                onClick={() => setStatusFilter("New")}
-                size="sm"
-              >
-                New
-              </Button>
-              <Button
-                variant={statusFilter === "Contacted" ? "default" : "outline"}
-                onClick={() => setStatusFilter("Contacted")}
-                size="sm"
-              >
-                Contacted
-              </Button>
+
+            {/* Date Filter */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Date Range</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button 
+                  variant={dateFilter === "all" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setDateFilter("all")}
+                >
+                  All Time
+                </Button>
+                <Button 
+                  variant={dateFilter === "today" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setDateFilter("today")}
+                >
+                  Today
+                </Button>
+                <Button 
+                  variant={dateFilter === "last_7_days" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setDateFilter("last_7_days")}
+                >
+                  Last 7 Days
+                </Button>
+                <Button 
+                  variant={dateFilter === "last_30_days" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setDateFilter("last_30_days")}
+                >
+                  Last 30 Days
+                </Button>
+                <Button 
+                  variant={dateFilter === "last_90_days" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setDateFilter("last_90_days")}
+                >
+                  Last 90 Days
+                </Button>
+              </div>
+            </div>
+
+            {/* Status Filter */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Status</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant={statusFilter === "all" ? "default" : "outline"}
+                  onClick={() => setStatusFilter("all")}
+                  size="sm"
+                >
+                  All
+                </Button>
+                <Button
+                  variant={statusFilter === "New" ? "default" : "outline"}
+                  onClick={() => setStatusFilter("New")}
+                  size="sm"
+                >
+                  New
+                </Button>
+                <Button
+                  variant={statusFilter === "Contacted" ? "default" : "outline"}
+                  onClick={() => setStatusFilter("Contacted")}
+                  size="sm"
+                >
+                  Contacted
+                </Button>
+                <Button
+                  variant={statusFilter === "Qualified" ? "default" : "outline"}
+                  onClick={() => setStatusFilter("Qualified")}
+                  size="sm"
+                >
+                  Qualified
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
