@@ -100,7 +100,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
           agents!leads_assigned_agent_id_fkey(
             id,
             user_id,
-            profiles!inner(display_name, email)
+            profiles(display_name, email)
           )
         `)
         .neq('lead_source_type', 'ai_automation');
@@ -120,7 +120,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
 
       const convertedLeads: Lead[] = (data || []).map((dbLead: any) => {
         const ts = dbLead.last_interaction_at || dbLead.source_metadata?.last_interaction_at || dbLead.created_at || dbLead.timestamp;
-        const agentName = dbLead.agents?.profiles?.display_name || dbLead.agents?.profiles?.email || null;
+        const agentName = dbLead.agents?.profiles?.display_name || dbLead.agents?.profiles?.email || 'Unknown Agent';
         
         return {
           id: dbLead.id,
@@ -138,7 +138,7 @@ export function CRMTableView({ onUpgradeClick, onImportClick, highlightLeadId }:
           reminderNote: dbLead.reminder_note || '',
           aiScore: dbLead.ai_score,
           aiNextAction: dbLead.ai_next_action || '',
-          assignedAgentName: agentName,
+          assignedAgentName: dbLead.assigned_agent_id ? agentName : undefined,
           source_metadata: dbLead.source_metadata || {}
         };
       });
