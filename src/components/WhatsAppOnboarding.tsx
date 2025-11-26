@@ -21,6 +21,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface WhatsAppOnboardingProps {
   open: boolean;
@@ -44,6 +45,7 @@ export function WhatsAppOnboarding({
 }: WhatsAppOnboardingProps) {
   const { user } = useAuth();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   
@@ -123,6 +125,9 @@ export function WhatsAppOnboarding({
         .insert(dummyAccounts);
 
       if (error) throw error;
+
+      // Invalidate the query to refresh the connection state
+      await queryClient.invalidateQueries({ queryKey: ["whatsapp-accounts", user.id] });
 
       toast({
         title: "WhatsApp Connected!",
