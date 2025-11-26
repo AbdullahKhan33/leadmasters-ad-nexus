@@ -938,6 +938,51 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_business_accounts: {
+        Row: {
+          account_id: string
+          business_name: string
+          connected_at: string
+          created_at: string
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          metadata: Json | null
+          phone_display_name: string
+          phone_number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          business_name: string
+          connected_at?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          metadata?: Json | null
+          phone_display_name: string
+          phone_number: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          business_name?: string
+          connected_at?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          metadata?: Json | null
+          phone_display_name?: string
+          phone_number?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       workflow_executions: {
         Row: {
           completed_at: string | null

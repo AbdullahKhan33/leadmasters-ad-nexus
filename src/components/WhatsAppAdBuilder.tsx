@@ -14,6 +14,9 @@ import { WhatsAppOnboarding } from "./WhatsAppOnboarding";
 import { WhatsAppCampaignBuilder } from "./WhatsAppCampaignBuilder";
 import { CampaignManager } from "./campaign/CampaignManager";
 import { WhatsAppAnalytics } from "./WhatsAppAnalytics";
+import { WhatsAppConnectedTile } from "./WhatsAppConnectedTile";
+import { useWhatsAppConnection } from "@/hooks/useWhatsAppConnection";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 
 interface OptionCardProps {
@@ -62,6 +65,8 @@ function OptionCard({ title, description, icon: Icon, accent = false, onClick, c
 }
 
 export function WhatsAppAdBuilder() {
+  const { user } = useAuth();
+  const { isConnected, disconnectAccount, activeAccount } = useWhatsAppConnection(user?.id);
   const [currentView, setCurrentView] = useState<'dashboard' | 'onboarding' | 'campaign' | 'campaign-manager' | 'analytics'>('dashboard');
 
   const mainOptions = [
@@ -108,6 +113,12 @@ export function WhatsAppAdBuilder() {
     }
   ];
 
+  const handleDisconnect = () => {
+    if (activeAccount) {
+      disconnectAccount(activeAccount.id);
+    }
+  };
+
   // Render different views based on current state
   if (currentView === 'campaign') {
     return <WhatsAppCampaignBuilder onBack={() => setCurrentView('dashboard')} />;
@@ -133,31 +144,38 @@ export function WhatsAppAdBuilder() {
           </p>
         </div>
 
-        {/* Quick Start Section */}
-        <Card className="border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 bg-white cursor-pointer">
-          <CardContent className="p-8 text-center" onClick={() => setCurrentView('onboarding')}>
-            <div className="max-w-md mx-auto">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="w-8 h-8 text-green-600" />
+        {/* Quick Start / Connection Section */}
+        {isConnected ? (
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Connected Account</h2>
+            <WhatsAppConnectedTile onManageConnection={() => setCurrentView('onboarding')} />
+          </div>
+        ) : (
+          <Card className="border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200 bg-white cursor-pointer">
+            <CardContent className="p-8 text-center" onClick={() => setCurrentView('onboarding')}>
+              <div className="max-w-md mx-auto">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MessageCircle className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Get Started with WhatsApp</h3>
+                <p className="text-gray-600 mb-6">
+                  Begin your WhatsApp Business journey and start engaging with customers through direct messaging
+                </p>
+                <Button 
+                  size="default" 
+                  className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentView('onboarding');
+                  }}
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Start Setup
+                </Button>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Get Started with WhatsApp</h3>
-              <p className="text-gray-600 mb-6">
-                Begin your WhatsApp Business journey and start engaging with customers through direct messaging
-              </p>
-              <Button 
-                size="default" 
-                className="bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl px-6 py-2.5"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentView('onboarding');
-                }}
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Start Setup
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Main Features Grid */}
         <div>
@@ -218,7 +236,9 @@ export function WhatsAppAdBuilder() {
       {/* WhatsApp Onboarding Dialog */}
       <WhatsAppOnboarding 
         open={currentView === 'onboarding'} 
-        onOpenChange={(open) => setCurrentView(open ? 'onboarding' : 'dashboard')} 
+        onOpenChange={(open) => setCurrentView(open ? 'onboarding' : 'dashboard')}
+        isConnected={isConnected}
+        onDisconnect={handleDisconnect}
       />
     </div>
   );
