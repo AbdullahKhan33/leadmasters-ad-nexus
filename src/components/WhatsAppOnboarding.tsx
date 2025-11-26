@@ -18,6 +18,9 @@ import {
   Phone,
   Key
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface WhatsAppOnboardingProps {
   open: boolean;
@@ -39,7 +42,10 @@ export function WhatsAppOnboarding({
   isConnected = false,
   onDisconnect 
 }: WhatsAppOnboardingProps) {
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   
   const steps: OnboardingStep[] = [
     {
@@ -73,9 +79,67 @@ export function WhatsAppOnboarding({
     }
   };
 
-  const handleAuthenticate = () => {
-    console.log("Starting WhatsApp Business authentication...");
-    // In a real app, this would trigger the authentication flow
+  const handleAuthenticate = async () => {
+    if (!user?.id) return;
+    
+    setIsAuthenticating(true);
+    try {
+      // Insert dummy WhatsApp Business accounts
+      const dummyAccounts = [
+        {
+          user_id: user.id,
+          business_name: "LeadMasters Marketing",
+          account_id: "WBA001",
+          phone_number: "+1234567890",
+          phone_display_name: "Main Business Line",
+          is_verified: true,
+          is_active: true,
+          metadata: { api_version: "v1.0" }
+        },
+        {
+          user_id: user.id,
+          business_name: "LeadMasters Marketing",
+          account_id: "WBA002",
+          phone_number: "+1234567891",
+          phone_display_name: "Sales Team Line",
+          is_verified: true,
+          is_active: false,
+          metadata: { api_version: "v1.0" }
+        },
+        {
+          user_id: user.id,
+          business_name: "Global Ventures Inc",
+          account_id: "WBA003",
+          phone_number: "+1987654321",
+          phone_display_name: "Customer Support",
+          is_verified: true,
+          is_active: false,
+          metadata: { api_version: "v1.0" }
+        }
+      ];
+
+      const { error } = await supabase
+        .from("whatsapp_business_accounts")
+        .insert(dummyAccounts);
+
+      if (error) throw error;
+
+      toast({
+        title: "WhatsApp Connected!",
+        description: "Your WhatsApp Business accounts have been connected successfully.",
+      });
+
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Authentication error:", error);
+      toast({
+        title: "Connection Failed",
+        description: "Failed to connect WhatsApp Business. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAuthenticating(false);
+    }
   };
 
   const handleDisconnect = () => {
@@ -221,10 +285,11 @@ export function WhatsAppOnboarding({
                 <div className="space-y-4">
                   <Button 
                     onClick={handleAuthenticate}
+                    disabled={isAuthenticating}
                     className="w-full bg-gradient-to-r from-[#7C3AED] to-[#D946EF] hover:from-purple-700 hover:to-pink-600 text-white transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Authenticate WhatsApp
+                    {isAuthenticating ? "Connecting..." : "Authenticate WhatsApp"}
                   </Button>
                   
                   {/* How it works link */}
