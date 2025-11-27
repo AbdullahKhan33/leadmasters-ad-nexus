@@ -78,68 +78,73 @@ function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange, o
 }
 
 const FacebookInsights = () => {
-  const metrics = [
+  // Engagement & Views Metrics
+  const engagementMetrics = [
     { 
-      label: "Total Reach", 
-      value: "128,543", 
-      change: "+15.2%",
-      changeValue: "+16.5K",
+      label: "Total Engagements", 
+      value: "0", 
+      change: "+0%",
+      changeValue: "+0",
       period: "vs last 7 days",
       trend: [45, 52, 48, 65, 59, 80, 81],
-      progress: 78,
-      icon: Eye,
-      color: "text-blue-600"
-    },
-    { 
-      label: "Engagement Rate", 
-      value: "8.42", 
-      suffix: "%",
-      change: "+2.3%",
-      changeValue: "+0.19%",
-      period: "vs last 7 days",
-      trend: [3.2, 4.1, 3.8, 5.2, 6.1, 7.8, 8.42],
-      progress: 65,
+      progress: 0,
       icon: Heart,
       color: "text-rose-600"
     },
     { 
-      label: "Total Followers", 
-      value: "45,289", 
-      change: "+12.1%",
-      changeValue: "+4,892",
-      period: "vs last 30 days",
+      label: "Page Views", 
+      value: "0", 
+      change: "+0%",
+      changeValue: "+0",
+      period: "vs last 7 days",
+      trend: [180, 190, 195, 210, 215, 225, 235],
+      progress: 0,
+      icon: Eye,
+      color: "text-blue-600"
+    },
+    { 
+      label: "Total Actions", 
+      value: "0", 
+      change: "+0%",
+      changeValue: "+0",
+      period: "vs last 7 days",
       trend: [38, 39, 40, 41, 42, 44, 45],
-      progress: 92,
-      icon: Users,
+      progress: 0,
+      icon: MousePointer,
       color: "text-purple-600"
     },
     { 
-      label: "Post Impressions", 
-      value: "234,567", 
-      change: "+23.4%",
-      changeValue: "+44.5K",
+      label: "Video Views", 
+      value: "0", 
+      change: "+0%",
+      changeValue: "+0",
       period: "vs last 7 days",
-      trend: [180, 190, 195, 210, 215, 225, 235],
-      progress: 87,
-      icon: BarChart3,
+      trend: [3.2, 4.1, 3.8, 5.2, 6.1, 7.8, 8.42],
+      progress: 0,
+      icon: Eye,
       color: "text-emerald-600"
     }
   ];
 
-  const detailedMetrics = [
-    { label: "Post Reach", value: "12,543", change: "+15.2%", trend: "up", sparkline: [8, 12, 10, 15, 13, 18, 19] },
-    { label: "Post Engagement", value: "892", change: "+8.4%", trend: "up", sparkline: [5, 7, 6, 9, 8, 12, 14] },
-    { label: "Page Likes", value: "156", change: "+23.1%", trend: "up", sparkline: [3, 4, 5, 6, 8, 10, 12] },
-    { label: "Page Followers", value: "89", change: "+12.8%", trend: "up", sparkline: [4, 5, 6, 7, 8, 10, 11] },
-    { label: "Comments", value: "387", change: "+12.3%", trend: "up", sparkline: [6, 7, 8, 9, 10, 11, 13] },
-    { label: "Shares", value: "156", change: "+7.8%", trend: "up", sparkline: [5, 6, 7, 8, 9, 10, 11] },
-    { label: "Photo Views", value: "3,421", change: "+25.4%", trend: "up", sparkline: [10, 12, 15, 18, 20, 25, 28] },
-    { label: "Link Clicks", value: "234", change: "+45.2%", trend: "up", sparkline: [3, 4, 6, 8, 10, 15, 18] }
+  // Video Performance Metrics
+  const videoPerformanceMetrics = [
+    { label: "30s Complete Views", value: "0", change: "+0%", trend: "neutral", sparkline: [8, 12, 10, 15, 13, 18, 19], icon: BarChart3 },
+    { label: "Organic Views", value: "0", change: "+0%", trend: "neutral", sparkline: [5, 7, 6, 9, 8, 12, 14], icon: Users },
+    { label: "Paid Views", value: "0", change: "+0%", trend: "neutral", sparkline: [3, 4, 5, 6, 8, 10, 12], icon: Share2 },
+    { label: "Autoplayed Views", value: "0", change: "+0%", trend: "neutral", sparkline: [4, 5, 6, 7, 8, 10, 11], icon: Eye }
+  ];
+
+  // Video Engagement Details
+  const videoEngagementMetrics = [
+    { label: "Video Clicks", value: "0", change: "+0%", trend: "neutral", sparkline: [6, 7, 8, 9, 10, 11, 13], icon: MousePointer },
+    { label: "Video Engagement", value: "0", change: "+0%", trend: "neutral", sparkline: [5, 6, 7, 8, 9, 10, 11], icon: BarChart3 },
+    { label: "Video Watch Time", value: "0s", change: "+0%", trend: "neutral", sparkline: [10, 12, 15, 18, 20, 25, 28], icon: Eye },
+    { label: "Video Reactions", value: "0", change: "+0%", trend: "neutral", sparkline: [3, 4, 6, 8, 10, 15, 18], icon: Users }
   ];
 
   return (
     <div className="min-h-screen bg-white p-8">
-      <div className="max-w-[1600px] mx-auto space-y-6">
+      <div className="max-w-[1600px] mx-auto space-y-8">
         {/* Header */}
         <div className="border-b border-gray-200 pb-6">
           <div className="flex items-center justify-between">
@@ -147,216 +152,210 @@ const FacebookInsights = () => {
               <h1 className="text-3xl font-bold text-gray-900 mb-1">Facebook Analytics</h1>
               <p className="text-sm text-gray-600">Real-time performance metrics</p>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-emerald-700">Live</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 border border-gray-200">
+              <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+              <span className="text-sm font-medium text-gray-600">No Data</span>
             </div>
           </div>
         </div>
 
-        {/* Main Metrics Grid with Radial Progress */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          {metrics.map((metric, index) => {
-            const Icon = metric.icon;
-            const maxValue = Math.max(...metric.trend);
-            const normalizedTrend = metric.trend.map(v => (v / maxValue) * 100);
-            
-            return (
-              <Card key={index} className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300 group">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center group-hover:bg-gray-100 transition-colors`}>
-                        <Icon className={`w-5 h-5 ${metric.color}`} />
+        {/* Engagement & Views Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-gradient-to-b from-rose-500 to-purple-500 rounded"></div>
+            <h2 className="text-xl font-semibold text-gray-900">Engagement & Views</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            {engagementMetrics.map((metric, index) => {
+              const Icon = metric.icon;
+              const maxValue = Math.max(...metric.trend);
+              const normalizedTrend = metric.trend.map(v => (v / maxValue) * 100);
+              
+              return (
+                <Card key={index} className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300 group">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center group-hover:bg-gray-100 transition-colors`}>
+                          <Icon className={`w-5 h-5 ${metric.color}`} />
+                        </div>
+                        <div>
+                          <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{metric.label}</p>
+                          <div className="flex items-baseline gap-1 mt-1">
+                            <span className="text-3xl font-bold text-gray-900 font-mono">{metric.value}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{metric.label}</p>
-                        <div className="flex items-baseline gap-1 mt-1">
-                          <span className="text-3xl font-bold text-gray-900 font-mono">{metric.value}</span>
-                          {metric.suffix && <span className="text-lg font-semibold text-gray-600 font-mono">{metric.suffix}</span>}
+                      
+                      {/* Radial Progress */}
+                      <div className="relative w-16 h-16">
+                        <svg className="w-16 h-16 transform -rotate-90">
+                          <circle
+                            cx="32"
+                            cy="32"
+                            r="28"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                            className="text-gray-100"
+                          />
+                          <circle
+                            cx="32"
+                            cy="32"
+                            r="28"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                            strokeDasharray={`${2 * Math.PI * 28}`}
+                            strokeDashoffset={`${2 * Math.PI * 28 * (1 - metric.progress / 100)}`}
+                            className={metric.color}
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-xs font-bold text-gray-700 font-mono">{metric.progress}%</span>
                         </div>
                       </div>
                     </div>
-                    
-                    {/* Radial Progress */}
-                    <div className="relative w-16 h-16">
-                      <svg className="w-16 h-16 transform -rotate-90">
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          className="text-gray-100"
-                        />
-                        <circle
-                          cx="32"
-                          cy="32"
-                          r="28"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                          strokeDasharray={`${2 * Math.PI * 28}`}
-                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - metric.progress / 100)}`}
-                          className={metric.color}
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xs font-bold text-gray-700 font-mono">{metric.progress}%</span>
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Inline Sparkline */}
-                  <div className="mb-3 h-12 flex items-end gap-1">
-                    {normalizedTrend.map((value, i) => (
-                      <div
-                        key={i}
-                        className={`flex-1 rounded-t transition-all duration-300 ${metric.color.replace('text-', 'bg-')} opacity-60 hover:opacity-100`}
-                        style={{ height: `${value}%` }}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Change Indicator */}
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">
-                        <TrendingUp className="w-3 h-3" />
-                        <span className="text-xs font-semibold font-mono">{metric.change}</span>
-                      </div>
-                      <span className="text-xs text-gray-500 font-mono">{metric.changeValue}</span>
+                    {/* Inline Sparkline */}
+                    <div className="mb-3 h-12 flex items-end gap-1">
+                      {normalizedTrend.map((value, i) => (
+                        <div
+                          key={i}
+                          className={`flex-1 rounded-t transition-all duration-300 bg-gray-200 hover:opacity-100`}
+                          style={{ height: `${Math.max(value, 5)}%` }}
+                        />
+                      ))}
                     </div>
-                    <span className="text-xs text-gray-400">{metric.period}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+
+                    {/* Change Indicator */}
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-gray-100 text-gray-600">
+                          <span className="text-xs font-semibold font-mono">{metric.change}</span>
+                        </div>
+                        <span className="text-xs text-gray-500 font-mono">{metric.changeValue}</span>
+                      </div>
+                      <span className="text-xs text-gray-400">{metric.period}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Detailed Metrics Table */}
-        <Card className="border border-gray-200 shadow-sm">
-          <CardHeader className="border-b border-gray-100 bg-gray-50">
-            <CardTitle className="text-lg font-semibold text-gray-900">Detailed Metrics</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y divide-gray-100">
-              {detailedMetrics.map((metric, index) => {
-                const maxValue = Math.max(...metric.sparkline);
-                const normalizedSparkline = metric.sparkline.map(v => (v / maxValue) * 100);
-                
-                return (
-                  <div key={index} className="grid grid-cols-12 gap-4 items-center p-4 hover:bg-gray-50 transition-colors group">
-                    {/* Label */}
-                    <div className="col-span-3">
-                      <p className="text-sm font-medium text-gray-900">{metric.label}</p>
-                    </div>
-                    
-                    {/* Value */}
-                    <div className="col-span-2">
-                      <p className="text-xl font-bold text-gray-900 font-mono">{metric.value}</p>
-                    </div>
-                    
-                    {/* Sparkline */}
-                    <div className="col-span-4">
-                      <div className="h-8 flex items-end gap-0.5">
-                        {normalizedSparkline.map((value, i) => (
-                          <div
-                            key={i}
-                            className="flex-1 rounded-t bg-gray-300 group-hover:bg-blue-500 transition-all duration-200"
-                            style={{ height: `${value}%` }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Change */}
-                    <div className="col-span-2">
-                      <div className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-50 text-emerald-700 w-fit">
-                        <TrendingUp className="w-3 h-3" />
-                        <span className="text-sm font-semibold font-mono">{metric.change}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Period */}
-                    <div className="col-span-1 text-right">
-                      <span className="text-xs text-gray-400">7d</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Engagement Breakdown with Heat Map */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Video Performance Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-cyan-500 rounded"></div>
+            <h2 className="text-xl font-semibold text-gray-900">Video Performance</h2>
+          </div>
+          
           <Card className="border border-gray-200 shadow-sm">
-            <CardHeader className="border-b border-gray-100">
-              <CardTitle className="text-lg font-semibold text-gray-900">Engagement Breakdown</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                {[
-                  { type: "Reactions", count: "4,234", percentage: 68, color: "bg-rose-500" },
-                  { type: "Comments", count: "1,892", percentage: 30, color: "bg-blue-500" },
-                  { type: "Shares", count: "892", percentage: 14, color: "bg-purple-500" }
-                ].map((item, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">{item.type}</span>
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg font-bold text-gray-900 font-mono">{item.count}</span>
-                        <span className="text-sm text-gray-500 font-mono w-12 text-right">{item.percentage}%</span>
+            <CardContent className="p-0">
+              <div className="divide-y divide-gray-100">
+                {videoPerformanceMetrics.map((metric, index) => {
+                  const Icon = metric.icon;
+                  const maxValue = Math.max(...metric.sparkline);
+                  const normalizedSparkline = metric.sparkline.map(v => (v / maxValue) * 100);
+                  
+                  return (
+                    <div key={index} className="grid grid-cols-12 gap-4 items-center p-4 hover:bg-gray-50 transition-colors group">
+                      {/* Icon & Label */}
+                      <div className="col-span-4 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center">
+                          <Icon className="w-5 h-5 text-gray-600" />
+                        </div>
+                        <p className="text-sm font-medium text-gray-900">{metric.label}</p>
+                      </div>
+                      
+                      {/* Value */}
+                      <div className="col-span-2">
+                        <p className="text-xl font-bold text-gray-900 font-mono">{metric.value}</p>
+                      </div>
+                      
+                      {/* Sparkline */}
+                      <div className="col-span-4">
+                        <div className="h-8 flex items-end gap-0.5">
+                          {normalizedSparkline.map((value, i) => (
+                            <div
+                              key={i}
+                              className="flex-1 rounded-t bg-gray-200 group-hover:bg-gray-300 transition-all duration-200"
+                              style={{ height: `${Math.max(value, 10)}%` }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Change */}
+                      <div className="col-span-2 text-right">
+                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-600">
+                          <span className="text-sm font-semibold font-mono">{metric.change}</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${item.color} transition-all duration-500`}
-                        style={{ width: `${item.percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
+        </div>
 
+        {/* Video Engagement Details Section */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded"></div>
+            <h2 className="text-xl font-semibold text-gray-900">Video Engagement Details</h2>
+          </div>
+          
           <Card className="border border-gray-200 shadow-sm">
-            <CardHeader className="border-b border-gray-100">
-              <CardTitle className="text-lg font-semibold text-gray-900">Top Posts Performance</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                {[
-                  { title: "Summer Launch", engagement: "2.4K", score: 95 },
-                  { title: "Behind the Scenes", engagement: "1.8K", score: 82 },
-                  { title: "Customer Story", engagement: "1.2K", score: 68 }
-                ].map((post, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center">
-                        <span className="text-sm font-bold text-gray-700 font-mono">#{index + 1}</span>
+            <CardContent className="p-0">
+              <div className="divide-y divide-gray-100">
+                {videoEngagementMetrics.map((metric, index) => {
+                  const Icon = metric.icon;
+                  const maxValue = Math.max(...metric.sparkline);
+                  const normalizedSparkline = metric.sparkline.map(v => (v / maxValue) * 100);
+                  
+                  return (
+                    <div key={index} className="grid grid-cols-12 gap-4 items-center p-4 hover:bg-gray-50 transition-colors group">
+                      {/* Icon & Label */}
+                      <div className="col-span-4 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center">
+                          <Icon className="w-5 h-5 text-gray-600" />
+                        </div>
+                        <p className="text-sm font-medium text-gray-900">{metric.label}</p>
                       </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900">{post.title}</p>
-                        <p className="text-xs text-gray-500 font-mono">{post.engagement} engagements</p>
+                      
+                      {/* Value */}
+                      <div className="col-span-2">
+                        <p className="text-xl font-bold text-gray-900 font-mono">{metric.value}</p>
+                      </div>
+                      
+                      {/* Sparkline */}
+                      <div className="col-span-4">
+                        <div className="h-8 flex items-end gap-0.5">
+                          {normalizedSparkline.map((value, i) => (
+                            <div
+                              key={i}
+                              className="flex-1 rounded-t bg-gray-200 group-hover:bg-gray-300 transition-all duration-200"
+                              style={{ height: `${Math.max(value, 10)}%` }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Change */}
+                      <div className="col-span-2 text-right">
+                        <div className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-600">
+                          <span className="text-sm font-semibold font-mono">{metric.change}</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
-                          style={{ width: `${post.score}%` }}
-                        />
-                      </div>
-                      <span className="text-sm font-bold text-gray-900 font-mono w-8">{post.score}</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
