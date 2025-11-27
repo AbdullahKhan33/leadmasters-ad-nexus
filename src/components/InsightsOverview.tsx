@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PremiumLockCard } from "@/components/premium/PremiumLockCard";
 import { usePremium } from "@/contexts/PremiumContext";
 import { PremiumUpgradeModal } from "@/components/premium/PremiumUpgradeModal";
-import { Facebook, Instagram, Twitter, Linkedin, ChevronDown, Users, MessageSquare, Heart, Eye, MousePointer, BarChart3, UserCheck, Lock } from "lucide-react";
+import { Facebook, Instagram, Twitter, Linkedin, ChevronDown, Users, MessageSquare, Heart, Eye, MousePointer, BarChart3, UserCheck, Lock, TrendingUp, Share2, ThumbsUp, Activity } from "lucide-react";
 
 // Platform Navigation Component (matching AdPlatformMenu style)
 const platforms = [
@@ -78,343 +78,201 @@ function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange, o
 }
 
 const FacebookInsights = () => {
-  const [selectedPage, setSelectedPage] = useState("lead-masters-ai");
-
-  const pages = [
-    { id: "lead-masters-ai", name: "Lead Masters AI", followers: "1,175", engagement: "3.2%" },
-    { id: "secondary-page", name: "Secondary Business Page", followers: "892", engagement: "2.8%" },
-    { id: "test-page", name: "Test Page", followers: "245", engagement: "1.9%" }
-  ];
-
-  const currentPage = pages.find(p => p.id === selectedPage) || pages[0];
-
-  const discoveryMetrics = [
-    { 
-      title: "Post Reach", 
-      value: "12,543", 
-      change: "+15.2%", 
-      trend: "up",
-      icon: Users, 
-      color: "from-blue-500/20 to-purple-500/20",
-      iconColor: "from-blue-400 to-purple-500",
-      progress: 78
-    },
-    { 
-      title: "Post Engagement", 
-      value: "892", 
-      change: "+8.4%", 
-      trend: "up",
-      icon: Heart, 
-      color: "from-purple-500/20 to-pink-500/20",
-      iconColor: "from-purple-400 to-pink-500",
-      progress: 65
-    },
-    { 
-      title: "New Page Likes", 
-      value: "156", 
-      change: "+23.1%", 
-      trend: "up",
-      icon: Heart, 
-      color: "from-pink-500/20 to-rose-500/20",
-      iconColor: "from-pink-400 to-rose-500",
-      progress: 45
-    },
-    { 
-      title: "New Page Followers", 
-      value: "89", 
-      change: "+12.8%", 
-      trend: "up",
-      icon: Users, 
-      color: "from-indigo-500/20 to-blue-500/20",
-      iconColor: "from-indigo-400 to-blue-500",
-      progress: 56
-    }
-  ];
-
-  const interactionMetrics = [
-    { 
-      title: "Reactions", 
-      value: "1,234", 
-      change: "+18.5%", 
-      trend: "up",
-      icon: Heart, 
-      color: "from-pink-500/20 to-rose-500/20",
-      iconColor: "from-pink-400 to-rose-500",
-      breakdown: [
-        { type: "Love", count: 567, percentage: 46 },
-        { type: "Like", count: 445, percentage: 36 },
-        { type: "Wow", count: 222, percentage: 18 }
-      ]
-    },
-    { 
-      title: "Comments", 
-      value: "387", 
-      change: "+12.3%", 
-      trend: "up",
-      icon: MessageSquare, 
-      color: "from-blue-500/20 to-cyan-500/20",
-      iconColor: "from-blue-400 to-cyan-500"
-    },
-    { 
-      title: "Shares", 
-      value: "156", 
-      change: "+7.8%", 
-      trend: "up",
-      icon: Users, 
-      color: "from-purple-500/20 to-indigo-500/20",
-      iconColor: "from-purple-400 to-indigo-500"
-    },
-    { 
-      title: "Photo Views", 
-      value: "3,421", 
-      change: "+25.4%", 
-      trend: "up",
-      icon: Eye, 
-      color: "from-indigo-500/20 to-blue-500/20",
-      iconColor: "from-indigo-400 to-blue-500"
-    },
-    { 
-      title: "Link Clicks", 
-      value: "234", 
-      change: "+45.2%", 
-      trend: "up",
-      icon: MousePointer, 
-      color: "from-cyan-500/20 to-teal-500/20",
-      iconColor: "from-cyan-400 to-teal-500"
-    }
-  ];
-
   return (
-    <div className="relative p-8 max-w-7xl mx-auto space-y-8 min-h-screen font-inter overflow-hidden">
-      {/* Animated Mesh Gradient Background */}
-      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-        <div className="absolute top-0 -left-4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-        <div className="absolute top-0 -right-4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '4s' }}></div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-stone-50 to-neutral-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-semibold text-gray-900 mb-2">Facebook Insights</h1>
+          <p className="text-gray-600">Your performance at a glance</p>
+        </div>
 
-      {/* Clean, Modern Header Section */}
-      <Card className="border-white/20 shadow-xl transition-all duration-500 bg-white/40 backdrop-blur-xl hover:bg-white/50 animate-fade-in">
-        <div className="p-8">
-          <div className="flex items-start justify-between mb-8">
-            <div className="flex items-center space-x-6">
-              <div className="relative">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-400/20 to-purple-400/20 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/30 shadow-lg transition-transform duration-300 hover:scale-105">
-                  <img 
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
-                    alt="Profile" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                </div>
-              </div>
-              
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-12 gap-4 auto-rows-[140px]">
+          {/* Large Hero Card - Total Followers */}
+          <Card className="col-span-12 md:col-span-6 lg:col-span-4 row-span-2 bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-8 h-full flex flex-col justify-between relative z-10">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter tracking-tight">Facebook Performance</h1>
-                <p className="text-base font-medium text-gray-700 mb-3 font-inter">{currentPage.name}</p>
-                <div className="flex items-center space-x-6">
-                  <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/40 backdrop-blur-sm rounded-full border border-white/30 transition-all duration-200 hover:bg-white/60">
-                    <Users className="w-4 h-4 text-blue-500" />
-                    <span className="text-gray-700 text-sm font-medium font-inter">{currentPage.followers} followers</span>
-                  </div>
-                  <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/40 backdrop-blur-sm rounded-full border border-white/30 transition-all duration-200 hover:bg-white/60">
-                    <Heart className="w-4 h-4 text-pink-500" />
-                    <span className="text-gray-700 text-sm font-medium font-inter">{currentPage.engagement} engagement</span>
+                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-blue-100 text-sm font-medium mb-2">Total Followers</p>
+              </div>
+              <div>
+                <h2 className="text-5xl font-bold text-white mb-2">45.2K</h2>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium">
+                    <TrendingUp className="w-3 h-3" />
+                    +12% this month
                   </div>
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Page Selector */}
-            <div className="bg-white/30 backdrop-blur-md rounded-xl p-4 border border-white/40 transition-all duration-300 hover:bg-white/40">
-              <Select value={selectedPage} onValueChange={setSelectedPage}>
-                <SelectTrigger className="w-64 bg-white/60 backdrop-blur-sm border-white/50 text-gray-900 font-inter transition-all duration-200 hover:bg-white/80">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-white">
-                  {pages.map((page) => (
-                    <SelectItem key={page.id} value={page.id} className="font-inter">
-                      <div className="flex items-center justify-between w-full">
-                        <span>{page.name}</span>
-                        <span className="text-gray-500 text-sm ml-4">{page.followers}</span>
+          {/* Medium Card - Engagement Rate */}
+          <Card className="col-span-6 md:col-span-3 lg:col-span-4 row-span-2 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02] group">
+            <CardContent className="p-6 h-full flex flex-col justify-between">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <Heart className="w-5 h-5 text-rose-500" />
+                </div>
+                <p className="text-gray-600 text-sm font-medium mb-1">Engagement Rate</p>
+              </div>
+              <div>
+                <h3 className="text-4xl font-bold text-gray-900 mb-2">8.4%</h3>
+                <p className="text-sm text-emerald-600 font-medium">+2.3% vs last week</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tall Card - Reach */}
+          <Card className="col-span-6 md:col-span-3 lg:col-span-4 row-span-2 bg-gradient-to-br from-purple-500 to-purple-600 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 h-full flex flex-col justify-between relative z-10">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <p className="text-purple-100 text-sm font-medium mb-1">Total Reach</p>
+              </div>
+              <div>
+                <h3 className="text-4xl font-bold text-white mb-2">128K</h3>
+                <div className="flex items-center gap-2">
+                  <div className="px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium">
+                    +18% growth
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Small Cards Row */}
+          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                  <Eye className="w-4 h-4 text-amber-600" />
+                </div>
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+              </div>
+              <p className="text-gray-600 text-xs font-medium mb-1">Page Views</p>
+              <h4 className="text-2xl font-bold text-gray-900">23.5K</h4>
+            </CardContent>
+          </Card>
+
+          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
+                  <MessageSquare className="w-4 h-4 text-emerald-600" />
+                </div>
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+              </div>
+              <p className="text-gray-600 text-xs font-medium mb-1">Comments</p>
+              <h4 className="text-2xl font-bold text-gray-900">1,234</h4>
+            </CardContent>
+          </Card>
+
+          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
+                  <Share2 className="w-4 h-4 text-blue-600" />
+                </div>
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+              </div>
+              <p className="text-gray-600 text-xs font-medium mb-1">Shares</p>
+              <h4 className="text-2xl font-bold text-gray-900">892</h4>
+            </CardContent>
+          </Card>
+
+          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
+                  <ThumbsUp className="w-4 h-4 text-violet-600" />
+                </div>
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+              </div>
+              <p className="text-gray-600 text-xs font-medium mb-1">Reactions</p>
+              <h4 className="text-2xl font-bold text-gray-900">4.2K</h4>
+            </CardContent>
+          </Card>
+
+          {/* Wide Card - Top Posts */}
+          <Card className="col-span-12 lg:col-span-8 row-span-2 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Top Performing Posts</CardTitle>
+                  <p className="text-sm text-gray-500 mt-1">Your best content this week</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-blue-600" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {[
+                { title: "Summer Product Launch Post", engagement: "1.2K", comments: "234", type: "Photo" },
+                { title: "Behind the Scenes Video", engagement: "980", comments: "156", type: "Video" },
+                { title: "Customer Success Story", engagement: "756", comments: "89", type: "Link" }
+              ].map((post, i) => (
+                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-stone-50 hover:from-gray-100 hover:to-stone-100 transition-all duration-300 border border-gray-100">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                      #{i + 1}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900 mb-1">{post.title}</p>
+                      <div className="flex items-center gap-4 text-xs text-gray-600">
+                        <span className="flex items-center gap-1">
+                          <Heart className="w-3 h-3" />
+                          {post.engagement}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MessageSquare className="w-3 h-3" />
+                          {post.comments}
+                        </span>
                       </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Key Stats Grid with Proper Icons */}
-          <div className="grid grid-cols-5 gap-6">
-            {[
-              { 
-                label: "Followers", 
-                value: "1,175", 
-                sublabel: "Total audience", 
-                icon: Users,
-                color: "from-blue-500/20 to-purple-500/20",
-                iconColor: "from-blue-500 to-purple-500"
-              },
-              { 
-                label: "Page Likes", 
-                value: "1,089", 
-                sublabel: "Total page likes", 
-                icon: Heart,
-                color: "from-purple-500/20 to-pink-500/20",
-                iconColor: "from-purple-500 to-pink-500"
-              },
-              { 
-                label: "Posts", 
-                value: "87", 
-                sublabel: "This month", 
-                icon: MessageSquare,
-                color: "from-pink-500/20 to-rose-500/20",
-                iconColor: "from-pink-500 to-rose-500"
-              },
-              { 
-                label: "Impressions", 
-                value: "45.2K", 
-                sublabel: "Monthly reach", 
-                icon: Eye,
-                color: "from-indigo-500/20 to-blue-500/20",
-                iconColor: "from-indigo-500 to-blue-500"
-              },
-              { 
-                label: "Engagement Rate", 
-                value: "3.2%", 
-                sublabel: "Average interaction", 
-                icon: Heart,
-                color: "from-cyan-500/20 to-teal-500/20",
-                iconColor: "from-cyan-500 to-teal-500"
-              }
-            ].map((stat, index) => (
-              <div key={index} className="bg-white/40 backdrop-blur-xl rounded-2xl p-6 border border-white/30 hover:bg-white/50 hover:border-white/40 transition-all duration-500 hover:scale-[1.05] hover:-translate-y-2 group animate-fade-in shadow-lg" style={{ animationDelay: `${index * 100}ms` }}>
-                <div className="text-center">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} backdrop-blur-sm mx-auto mb-4 flex items-center justify-center shadow-md group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 border border-white/30`}>
-                    <div className={`w-6 h-6 bg-gradient-to-br ${stat.iconColor}`}>
-                      <stat.icon className="w-full h-full text-white drop-shadow-sm" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold text-gray-900 mb-1 font-inter tracking-tight">{stat.value}</div>
-                  <div className="text-sm text-gray-800 font-semibold mb-1 font-inter">{stat.label}</div>
-                  <div className="text-xs text-gray-600 font-inter">{stat.sublabel}</div>
+                  <div className="px-3 py-1 rounded-full bg-gradient-to-r from-gray-100 to-stone-100 text-gray-700 text-xs font-medium">
+                    {post.type}
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Medium Card - Audience Growth */}
+          <Card className="col-span-12 md:col-span-6 lg:col-span-4 row-span-2 bg-gradient-to-br from-emerald-500 to-teal-600 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 h-full flex flex-col justify-between relative z-10">
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Activity className="w-5 h-5 text-white" />
+                </div>
+                <p className="text-emerald-100 text-sm font-medium mb-2">Audience Growth</p>
+                <p className="text-emerald-50/80 text-xs">Past 30 days</p>
+              </div>
+              <div>
+                <h3 className="text-4xl font-bold text-white mb-2">+5,420</h3>
+                <p className="text-sm text-white/90 font-medium">New followers</p>
+                <div className="mt-4 pt-4 border-t border-white/20">
+                  <div className="flex items-center justify-between text-xs text-white/80">
+                    <span>Daily avg: +180</span>
+                    <span className="flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      +24%
+                    </span>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </Card>
-
-      {/* Performance Analytics Section Header */}
-      <div className="flex items-center justify-between animate-fade-in" style={{ animationDelay: '300ms' }}>
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 font-inter tracking-tight">Performance Analytics</h2>
-          <p className="text-gray-700 mt-1 font-inter text-sm">Detailed insights for the last 28 days</p>
-        </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-700 font-inter bg-white/40 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/40 shadow-sm">
-          <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse shadow-sm"></div>
-          <span>Live data • Updated 5 minutes ago</span>
-        </div>
-      </div>
-
-      {/* Discovery Section */}
-      <div className="space-y-6 animate-fade-in" style={{ animationDelay: '400ms' }}>
-        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter tracking-tight">
-          <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded mr-3 shadow-md"></div>
-          Discovery & Reach
-        </h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {discoveryMetrics.map((metric, index) => (
-            <Card key={metric.title} className="group border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-[1.05] hover:-translate-y-2 hover:border-white/50" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${metric.color} backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 border border-white/40`}>
-                    <div className={`w-6 h-6 bg-gradient-to-br ${metric.iconColor}`}>
-                      <metric.icon className="w-full h-full text-white drop-shadow-md transition-transform duration-300 group-hover:scale-110" />
-                    </div>
-                  </div>
-                  <div className={`px-3 py-1.5 rounded-full text-xs font-semibold font-inter transition-all duration-300 backdrop-blur-sm ${
-                    metric.trend === 'up' ? 'bg-emerald-400/30 text-emerald-700 border border-emerald-300/50' : 'bg-rose-400/30 text-rose-700 border border-rose-300/50'
-                  }`}>
-                    {metric.change}
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-2xl font-bold text-gray-900 font-inter tracking-tight">{metric.value}</p>
-                    <p className="text-sm text-gray-700 font-medium font-inter mt-1">{metric.title}</p>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="space-y-2 pt-1">
-                    <div className="flex justify-between text-xs font-inter">
-                      <span className="text-gray-600">Progress</span>
-                      <span className="text-gray-800 font-semibold">{metric.progress}%</span>
-                    </div>
-                    <div className="w-full bg-white/50 backdrop-blur-sm rounded-full h-2.5 overflow-hidden border border-white/30">
-                      <div 
-                        className={`h-2.5 rounded-full bg-gradient-to-r ${metric.iconColor} transition-all duration-1000 ease-out shadow-md`}
-                        style={{ width: `${metric.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Interactions Section */}
-      <div className="space-y-6 animate-fade-in" style={{ animationDelay: '500ms' }}>
-        <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter tracking-tight">
-          <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-purple-500 rounded mr-3 shadow-md"></div>
-          Engagement & Interactions
-        </h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          {interactionMetrics.map((metric, index) => (
-            <Card key={metric.title} className="group border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-[1.05] hover:-translate-y-2 hover:border-white/50" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${metric.color} backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 border border-white/40`}>
-                    <div className={`w-5 h-5 bg-gradient-to-br ${metric.iconColor}`}>
-                      <metric.icon className="w-full h-full text-white drop-shadow-md transition-transform duration-300 group-hover:scale-110" />
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className={`px-2.5 py-1 rounded-full text-xs font-semibold font-inter transition-all duration-300 backdrop-blur-sm ${
-                      metric.trend === 'up' ? 'bg-emerald-400/30 text-emerald-700 border border-emerald-300/50' : 'bg-rose-400/30 text-rose-700 border border-rose-300/50'
-                    }`}>
-                      {metric.change}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <p className="text-2xl font-bold text-gray-900 font-inter tracking-tight">{metric.value}</p>
-                  <p className="text-sm text-gray-700 font-medium font-inter">{metric.title}</p>
-                  
-                  {/* Special breakdown for Reactions */}
-                  {metric.breakdown && (
-                    <div className="mt-3 pt-3 space-y-1.5 border-t border-white/30">
-                      {metric.breakdown.map((item, idx) => (
-                        <div key={idx} className="flex justify-between text-xs font-inter group/item">
-                          <span className="text-gray-600 group-hover/item:text-gray-800 transition-colors duration-200">{item.type}</span>
-                          <span className="text-gray-800 font-semibold group-hover/item:text-gray-900 transition-colors duration-200">{item.count}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
