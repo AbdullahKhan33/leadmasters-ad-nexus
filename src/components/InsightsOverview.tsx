@@ -95,8 +95,8 @@ const FacebookInsights = () => {
       change: "+15.2%", 
       trend: "up",
       icon: Users, 
-      color: "from-violet-100 to-purple-100",
-      iconColor: "from-violet-400 to-purple-400",
+      color: "from-blue-500/20 to-purple-500/20",
+      iconColor: "from-blue-400 to-purple-500",
       progress: 78
     },
     { 
@@ -105,8 +105,8 @@ const FacebookInsights = () => {
       change: "+8.4%", 
       trend: "up",
       icon: Heart, 
-      color: "from-purple-100 to-indigo-100",
-      iconColor: "from-purple-400 to-indigo-400",
+      color: "from-purple-500/20 to-pink-500/20",
+      iconColor: "from-purple-400 to-pink-500",
       progress: 65
     },
     { 
@@ -115,8 +115,8 @@ const FacebookInsights = () => {
       change: "+23.1%", 
       trend: "up",
       icon: Heart, 
-      color: "from-indigo-100 to-violet-100",
-      iconColor: "from-indigo-400 to-violet-400",
+      color: "from-pink-500/20 to-rose-500/20",
+      iconColor: "from-pink-400 to-rose-500",
       progress: 45
     },
     { 
@@ -125,8 +125,8 @@ const FacebookInsights = () => {
       change: "+12.8%", 
       trend: "up",
       icon: Users, 
-      color: "from-violet-100 to-purple-100",
-      iconColor: "from-violet-400 to-purple-400",
+      color: "from-indigo-500/20 to-blue-500/20",
+      iconColor: "from-indigo-400 to-blue-500",
       progress: 56
     }
   ];
@@ -138,8 +138,8 @@ const FacebookInsights = () => {
       change: "+18.5%", 
       trend: "up",
       icon: Heart, 
-      color: "from-violet-100 to-purple-100",
-      iconColor: "from-violet-400 to-purple-400",
+      color: "from-pink-500/20 to-rose-500/20",
+      iconColor: "from-pink-400 to-rose-500",
       breakdown: [
         { type: "Love", count: 567, percentage: 46 },
         { type: "Like", count: 445, percentage: 36 },
@@ -152,8 +152,8 @@ const FacebookInsights = () => {
       change: "+12.3%", 
       trend: "up",
       icon: MessageSquare, 
-      color: "from-purple-100 to-indigo-100",
-      iconColor: "from-purple-400 to-indigo-400"
+      color: "from-blue-500/20 to-cyan-500/20",
+      iconColor: "from-blue-400 to-cyan-500"
     },
     { 
       title: "Shares", 
@@ -161,8 +161,8 @@ const FacebookInsights = () => {
       change: "+7.8%", 
       trend: "up",
       icon: Users, 
-      color: "from-indigo-100 to-violet-100",
-      iconColor: "from-indigo-400 to-violet-400"
+      color: "from-purple-500/20 to-indigo-500/20",
+      iconColor: "from-purple-400 to-indigo-500"
     },
     { 
       title: "Photo Views", 
@@ -170,8 +170,8 @@ const FacebookInsights = () => {
       change: "+25.4%", 
       trend: "up",
       icon: Eye, 
-      color: "from-violet-100 to-purple-100",
-      iconColor: "from-violet-400 to-purple-400"
+      color: "from-indigo-500/20 to-blue-500/20",
+      iconColor: "from-indigo-400 to-blue-500"
     },
     { 
       title: "Link Clicks", 
@@ -179,51 +179,58 @@ const FacebookInsights = () => {
       change: "+45.2%", 
       trend: "up",
       icon: MousePointer, 
-      color: "from-purple-100 to-indigo-100",
-      iconColor: "from-purple-400 to-indigo-400"
+      color: "from-cyan-500/20 to-teal-500/20",
+      iconColor: "from-cyan-400 to-teal-500"
     }
   ];
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 bg-gradient-to-br from-violet-50/50 via-purple-50/30 to-indigo-50/40 min-h-screen font-inter">
+    <div className="relative p-8 max-w-7xl mx-auto space-y-8 min-h-screen font-inter overflow-hidden">
+      {/* Animated Mesh Gradient Background */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+        <div className="absolute top-0 -left-4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+        <div className="absolute top-0 -right-4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style={{ animationDelay: '4s' }}></div>
+      </div>
+
       {/* Clean, Modern Header Section */}
-      <Card className="shadow-sm border-violet-100/50 transition-all duration-500 bg-white/80 backdrop-blur-sm hover:shadow-md hover:border-violet-200/60 animate-fade-in">
+      <Card className="border-white/20 shadow-xl transition-all duration-500 bg-white/40 backdrop-blur-xl hover:bg-white/50 animate-fade-in">
         <div className="p-8">
           <div className="flex items-start justify-between mb-8">
             <div className="flex items-center space-x-6">
               <div className="relative">
-                <div className="w-20 h-20 bg-gradient-to-br from-violet-100 to-purple-100 rounded-2xl overflow-hidden border border-violet-200/50 shadow-sm transition-transform duration-300 hover:scale-105">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-400/20 to-purple-400/20 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/30 shadow-lg transition-transform duration-300 hover:scale-105">
                   <img 
                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" 
                     alt="Profile" 
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white shadow-sm flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full animate-pulse-slow"></div>
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                 </div>
               </div>
               
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2 font-inter tracking-tight">Facebook Performance</h1>
-                <p className="text-base font-medium text-gray-600 mb-3 font-inter">{currentPage.name}</p>
+                <p className="text-base font-medium text-gray-700 mb-3 font-inter">{currentPage.name}</p>
                 <div className="flex items-center space-x-6">
-                  <div className="flex items-center space-x-2 transition-all duration-200 hover:translate-x-1">
-                    <Users className="w-4 h-4 text-violet-500" />
-                    <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.followers} followers</span>
+                  <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/40 backdrop-blur-sm rounded-full border border-white/30 transition-all duration-200 hover:bg-white/60">
+                    <Users className="w-4 h-4 text-blue-500" />
+                    <span className="text-gray-700 text-sm font-medium font-inter">{currentPage.followers} followers</span>
                   </div>
-                  <div className="flex items-center space-x-2 transition-all duration-200 hover:translate-x-1">
-                    <Heart className="w-4 h-4 text-purple-500" />
-                    <span className="text-gray-600 text-sm font-medium font-inter">{currentPage.engagement} engagement</span>
+                  <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/40 backdrop-blur-sm rounded-full border border-white/30 transition-all duration-200 hover:bg-white/60">
+                    <Heart className="w-4 h-4 text-pink-500" />
+                    <span className="text-gray-700 text-sm font-medium font-inter">{currentPage.engagement} engagement</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Page Selector */}
-            <div className="bg-gradient-to-br from-violet-50 to-purple-50 rounded-xl p-4 border border-violet-100/50 transition-all duration-300 hover:shadow-sm">
+            <div className="bg-white/30 backdrop-blur-md rounded-xl p-4 border border-white/40 transition-all duration-300 hover:bg-white/40">
               <Select value={selectedPage} onValueChange={setSelectedPage}>
-                <SelectTrigger className="w-64 bg-white/80 backdrop-blur-sm border-violet-200/50 text-gray-900 font-inter transition-all duration-200 hover:border-violet-300">
+                <SelectTrigger className="w-64 bg-white/60 backdrop-blur-sm border-white/50 text-gray-900 font-inter transition-all duration-200 hover:bg-white/80">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
@@ -248,50 +255,52 @@ const FacebookInsights = () => {
                 value: "1,175", 
                 sublabel: "Total audience", 
                 icon: Users,
-                color: "from-violet-100 to-purple-100",
-                iconColor: "from-violet-400 to-purple-500"
+                color: "from-blue-500/20 to-purple-500/20",
+                iconColor: "from-blue-500 to-purple-500"
               },
               { 
                 label: "Page Likes", 
                 value: "1,089", 
                 sublabel: "Total page likes", 
                 icon: Heart,
-                color: "from-purple-100 to-indigo-100",
-                iconColor: "from-purple-400 to-indigo-500"
+                color: "from-purple-500/20 to-pink-500/20",
+                iconColor: "from-purple-500 to-pink-500"
               },
               { 
                 label: "Posts", 
                 value: "87", 
                 sublabel: "This month", 
                 icon: MessageSquare,
-                color: "from-indigo-100 to-violet-100",
-                iconColor: "from-indigo-400 to-violet-500"
+                color: "from-pink-500/20 to-rose-500/20",
+                iconColor: "from-pink-500 to-rose-500"
               },
               { 
                 label: "Impressions", 
                 value: "45.2K", 
                 sublabel: "Monthly reach", 
                 icon: Eye,
-                color: "from-violet-100 to-purple-100",
-                iconColor: "from-violet-400 to-purple-500"
+                color: "from-indigo-500/20 to-blue-500/20",
+                iconColor: "from-indigo-500 to-blue-500"
               },
               { 
                 label: "Engagement Rate", 
                 value: "3.2%", 
                 sublabel: "Average interaction", 
                 icon: Heart,
-                color: "from-purple-100 to-indigo-100",
-                iconColor: "from-purple-400 to-indigo-500"
+                color: "from-cyan-500/20 to-teal-500/20",
+                iconColor: "from-cyan-500 to-teal-500"
               }
             ].map((stat, index) => (
-              <div key={index} className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-violet-100/50 hover:shadow-lg hover:border-violet-200 transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1 group animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+              <div key={index} className="bg-white/40 backdrop-blur-xl rounded-2xl p-6 border border-white/30 hover:bg-white/50 hover:border-white/40 transition-all duration-500 hover:scale-[1.05] hover:-translate-y-2 group animate-fade-in shadow-lg" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="text-center">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} mx-auto mb-4 flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-110`}>
-                    <stat.icon className={`w-6 h-6 bg-gradient-to-br ${stat.iconColor} bg-clip-text text-transparent`} style={{ WebkitTextFillColor: 'transparent', WebkitBackgroundClip: 'text' }} />
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} backdrop-blur-sm mx-auto mb-4 flex items-center justify-center shadow-md group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 border border-white/30`}>
+                    <div className={`w-6 h-6 bg-gradient-to-br ${stat.iconColor}`}>
+                      <stat.icon className="w-full h-full text-white drop-shadow-sm" />
+                    </div>
                   </div>
                   <div className="text-3xl font-bold text-gray-900 mb-1 font-inter tracking-tight">{stat.value}</div>
-                  <div className="text-sm text-gray-700 font-semibold mb-1 font-inter">{stat.label}</div>
-                  <div className="text-xs text-gray-500 font-inter">{stat.sublabel}</div>
+                  <div className="text-sm text-gray-800 font-semibold mb-1 font-inter">{stat.label}</div>
+                  <div className="text-xs text-gray-600 font-inter">{stat.sublabel}</div>
                 </div>
               </div>
             ))}
@@ -303,10 +312,10 @@ const FacebookInsights = () => {
       <div className="flex items-center justify-between animate-fade-in" style={{ animationDelay: '300ms' }}>
         <div>
           <h2 className="text-2xl font-bold text-gray-900 font-inter tracking-tight">Performance Analytics</h2>
-          <p className="text-gray-600 mt-1 font-inter text-sm">Detailed insights for the last 28 days</p>
+          <p className="text-gray-700 mt-1 font-inter text-sm">Detailed insights for the last 28 days</p>
         </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-500 font-inter bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-violet-100/50">
-          <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse-slow"></div>
+        <div className="flex items-center space-x-2 text-sm text-gray-700 font-inter bg-white/40 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/40 shadow-sm">
+          <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse shadow-sm"></div>
           <span>Live data • Updated 5 minutes ago</span>
         </div>
       </div>
@@ -314,20 +323,22 @@ const FacebookInsights = () => {
       {/* Discovery Section */}
       <div className="space-y-6 animate-fade-in" style={{ animationDelay: '400ms' }}>
         <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter tracking-tight">
-          <div className="w-1 h-6 bg-gradient-to-b from-violet-400 to-purple-500 rounded mr-3 shadow-sm"></div>
+          <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded mr-3 shadow-md"></div>
           Discovery & Reach
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {discoveryMetrics.map((metric, index) => (
-            <Card key={metric.title} className="group border-violet-100/50 shadow-sm hover:shadow-lg transition-all duration-500 bg-white/80 backdrop-blur-sm hover:scale-[1.03] hover:-translate-y-1 hover:border-violet-200" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
+            <Card key={metric.title} className="group border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-[1.05] hover:-translate-y-2 hover:border-white/50" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${metric.color} flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-110`}>
-                    <metric.icon className={`w-6 h-6 bg-gradient-to-br ${metric.iconColor} bg-clip-text text-transparent transition-transform duration-300 group-hover:scale-110`} style={{ WebkitTextFillColor: 'transparent', WebkitBackgroundClip: 'text' }} />
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${metric.color} backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 border border-white/40`}>
+                    <div className={`w-6 h-6 bg-gradient-to-br ${metric.iconColor}`}>
+                      <metric.icon className="w-full h-full text-white drop-shadow-md transition-transform duration-300 group-hover:scale-110" />
+                    </div>
                   </div>
-                  <div className={`px-3 py-1.5 rounded-full text-xs font-semibold font-inter transition-all duration-300 ${
-                    metric.trend === 'up' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'
+                  <div className={`px-3 py-1.5 rounded-full text-xs font-semibold font-inter transition-all duration-300 backdrop-blur-sm ${
+                    metric.trend === 'up' ? 'bg-emerald-400/30 text-emerald-700 border border-emerald-300/50' : 'bg-rose-400/30 text-rose-700 border border-rose-300/50'
                   }`}>
                     {metric.change}
                   </div>
@@ -336,18 +347,18 @@ const FacebookInsights = () => {
                 <div className="space-y-3">
                   <div>
                     <p className="text-2xl font-bold text-gray-900 font-inter tracking-tight">{metric.value}</p>
-                    <p className="text-sm text-gray-600 font-medium font-inter mt-1">{metric.title}</p>
+                    <p className="text-sm text-gray-700 font-medium font-inter mt-1">{metric.title}</p>
                   </div>
                   
                   {/* Progress Bar */}
                   <div className="space-y-2 pt-1">
                     <div className="flex justify-between text-xs font-inter">
-                      <span className="text-gray-500">Progress</span>
-                      <span className="text-gray-700 font-semibold">{metric.progress}%</span>
+                      <span className="text-gray-600">Progress</span>
+                      <span className="text-gray-800 font-semibold">{metric.progress}%</span>
                     </div>
-                    <div className="w-full bg-violet-50 rounded-full h-2 overflow-hidden">
+                    <div className="w-full bg-white/50 backdrop-blur-sm rounded-full h-2.5 overflow-hidden border border-white/30">
                       <div 
-                        className={`h-2 rounded-full bg-gradient-to-r ${metric.iconColor} transition-all duration-1000 ease-out shadow-sm`}
+                        className={`h-2.5 rounded-full bg-gradient-to-r ${metric.iconColor} transition-all duration-1000 ease-out shadow-md`}
                         style={{ width: `${metric.progress}%` }}
                       ></div>
                     </div>
@@ -362,21 +373,23 @@ const FacebookInsights = () => {
       {/* Interactions Section */}
       <div className="space-y-6 animate-fade-in" style={{ animationDelay: '500ms' }}>
         <h3 className="text-xl font-semibold text-gray-900 flex items-center font-inter tracking-tight">
-          <div className="w-1 h-6 bg-gradient-to-b from-purple-400 to-indigo-500 rounded mr-3 shadow-sm"></div>
+          <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-purple-500 rounded mr-3 shadow-md"></div>
           Engagement & Interactions
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           {interactionMetrics.map((metric, index) => (
-            <Card key={metric.title} className="group border-violet-100/50 shadow-sm hover:shadow-lg transition-all duration-500 bg-white/80 backdrop-blur-sm hover:scale-[1.03] hover:-translate-y-1 hover:border-violet-200" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
+            <Card key={metric.title} className="group border-white/30 shadow-xl hover:shadow-2xl transition-all duration-500 bg-white/40 backdrop-blur-xl hover:bg-white/50 hover:scale-[1.05] hover:-translate-y-2 hover:border-white/50" style={{ animationDelay: `${(index + 1) * 100}ms` }}>
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${metric.color} flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-110`}>
-                    <metric.icon className={`w-5 h-5 bg-gradient-to-br ${metric.iconColor} bg-clip-text text-transparent transition-transform duration-300 group-hover:scale-110`} style={{ WebkitTextFillColor: 'transparent', WebkitBackgroundClip: 'text' }} />
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${metric.color} backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110 border border-white/40`}>
+                    <div className={`w-5 h-5 bg-gradient-to-br ${metric.iconColor}`}>
+                      <metric.icon className="w-full h-full text-white drop-shadow-md transition-transform duration-300 group-hover:scale-110" />
+                    </div>
                   </div>
                   <div className="text-right">
-                    <div className={`px-2.5 py-1 rounded-full text-xs font-semibold font-inter transition-all duration-300 ${
-                      metric.trend === 'up' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'
+                    <div className={`px-2.5 py-1 rounded-full text-xs font-semibold font-inter transition-all duration-300 backdrop-blur-sm ${
+                      metric.trend === 'up' ? 'bg-emerald-400/30 text-emerald-700 border border-emerald-300/50' : 'bg-rose-400/30 text-rose-700 border border-rose-300/50'
                     }`}>
                       {metric.change}
                     </div>
@@ -385,15 +398,15 @@ const FacebookInsights = () => {
                 
                 <div className="space-y-2">
                   <p className="text-2xl font-bold text-gray-900 font-inter tracking-tight">{metric.value}</p>
-                  <p className="text-sm text-gray-600 font-medium font-inter">{metric.title}</p>
+                  <p className="text-sm text-gray-700 font-medium font-inter">{metric.title}</p>
                   
                   {/* Special breakdown for Reactions */}
                   {metric.breakdown && (
-                    <div className="mt-3 pt-3 space-y-1.5 border-t border-violet-100/50">
+                    <div className="mt-3 pt-3 space-y-1.5 border-t border-white/30">
                       {metric.breakdown.map((item, idx) => (
                         <div key={idx} className="flex justify-between text-xs font-inter group/item">
-                          <span className="text-gray-500 group-hover/item:text-gray-700 transition-colors duration-200">{item.type}</span>
-                          <span className="text-gray-700 font-semibold group-hover/item:text-gray-900 transition-colors duration-200">{item.count}</span>
+                          <span className="text-gray-600 group-hover/item:text-gray-800 transition-colors duration-200">{item.type}</span>
+                          <span className="text-gray-800 font-semibold group-hover/item:text-gray-900 transition-colors duration-200">{item.count}</span>
                         </div>
                       ))}
                     </div>
