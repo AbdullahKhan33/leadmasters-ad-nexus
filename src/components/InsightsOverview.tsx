@@ -78,198 +78,285 @@ function InsightsPlatformMenu({ activePlatform = "overview", onPlatformChange, o
 }
 
 const FacebookInsights = () => {
+  const metrics = [
+    { 
+      label: "Total Reach", 
+      value: "128,543", 
+      change: "+15.2%",
+      changeValue: "+16.5K",
+      period: "vs last 7 days",
+      trend: [45, 52, 48, 65, 59, 80, 81],
+      progress: 78,
+      icon: Eye,
+      color: "text-blue-600"
+    },
+    { 
+      label: "Engagement Rate", 
+      value: "8.42", 
+      suffix: "%",
+      change: "+2.3%",
+      changeValue: "+0.19%",
+      period: "vs last 7 days",
+      trend: [3.2, 4.1, 3.8, 5.2, 6.1, 7.8, 8.42],
+      progress: 65,
+      icon: Heart,
+      color: "text-rose-600"
+    },
+    { 
+      label: "Total Followers", 
+      value: "45,289", 
+      change: "+12.1%",
+      changeValue: "+4,892",
+      period: "vs last 30 days",
+      trend: [38, 39, 40, 41, 42, 44, 45],
+      progress: 92,
+      icon: Users,
+      color: "text-purple-600"
+    },
+    { 
+      label: "Post Impressions", 
+      value: "234,567", 
+      change: "+23.4%",
+      changeValue: "+44.5K",
+      period: "vs last 7 days",
+      trend: [180, 190, 195, 210, 215, 225, 235],
+      progress: 87,
+      icon: BarChart3,
+      color: "text-emerald-600"
+    }
+  ];
+
+  const detailedMetrics = [
+    { label: "Post Reach", value: "12,543", change: "+15.2%", trend: "up", sparkline: [8, 12, 10, 15, 13, 18, 19] },
+    { label: "Post Engagement", value: "892", change: "+8.4%", trend: "up", sparkline: [5, 7, 6, 9, 8, 12, 14] },
+    { label: "Page Likes", value: "156", change: "+23.1%", trend: "up", sparkline: [3, 4, 5, 6, 8, 10, 12] },
+    { label: "Page Followers", value: "89", change: "+12.8%", trend: "up", sparkline: [4, 5, 6, 7, 8, 10, 11] },
+    { label: "Comments", value: "387", change: "+12.3%", trend: "up", sparkline: [6, 7, 8, 9, 10, 11, 13] },
+    { label: "Shares", value: "156", change: "+7.8%", trend: "up", sparkline: [5, 6, 7, 8, 9, 10, 11] },
+    { label: "Photo Views", value: "3,421", change: "+25.4%", trend: "up", sparkline: [10, 12, 15, 18, 20, 25, 28] },
+    { label: "Link Clicks", value: "234", change: "+45.2%", trend: "up", sparkline: [3, 4, 6, 8, 10, 15, 18] }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-stone-50 to-neutral-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-white p-8">
+      <div className="max-w-[1600px] mx-auto space-y-6">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-semibold text-gray-900 mb-2">Facebook Insights</h1>
-          <p className="text-gray-600">Your performance at a glance</p>
+        <div className="border-b border-gray-200 pb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">Facebook Analytics</h1>
+              <p className="text-sm text-gray-600">Real-time performance metrics</p>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-emerald-700">Live</span>
+            </div>
+          </div>
         </div>
 
-        {/* Bento Grid Layout */}
-        <div className="grid grid-cols-12 gap-4 auto-rows-[140px]">
-          {/* Large Hero Card - Total Followers */}
-          <Card className="col-span-12 md:col-span-6 lg:col-span-4 row-span-2 bg-gradient-to-br from-blue-500 to-blue-600 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <CardContent className="p-8 h-full flex flex-col justify-between relative z-10">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <p className="text-blue-100 text-sm font-medium mb-2">Total Followers</p>
-              </div>
-              <div>
-                <h2 className="text-5xl font-bold text-white mb-2">45.2K</h2>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium">
-                    <TrendingUp className="w-3 h-3" />
-                    +12% this month
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Medium Card - Engagement Rate */}
-          <Card className="col-span-6 md:col-span-3 lg:col-span-4 row-span-2 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02] group">
-            <CardContent className="p-6 h-full flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-100 to-pink-100 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                  <Heart className="w-5 h-5 text-rose-500" />
-                </div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Engagement Rate</p>
-              </div>
-              <div>
-                <h3 className="text-4xl font-bold text-gray-900 mb-2">8.4%</h3>
-                <p className="text-sm text-emerald-600 font-medium">+2.3% vs last week</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Tall Card - Reach */}
-          <Card className="col-span-6 md:col-span-3 lg:col-span-4 row-span-2 bg-gradient-to-br from-purple-500 to-purple-600 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <CardContent className="p-6 h-full flex flex-col justify-between relative z-10">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                  <TrendingUp className="w-5 h-5 text-white" />
-                </div>
-                <p className="text-purple-100 text-sm font-medium mb-1">Total Reach</p>
-              </div>
-              <div>
-                <h3 className="text-4xl font-bold text-white mb-2">128K</h3>
-                <div className="flex items-center gap-2">
-                  <div className="px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium">
-                    +18% growth
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Small Cards Row */}
-          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-                  <Eye className="w-4 h-4 text-amber-600" />
-                </div>
-                <TrendingUp className="w-4 h-4 text-emerald-500" />
-              </div>
-              <p className="text-gray-600 text-xs font-medium mb-1">Page Views</p>
-              <h4 className="text-2xl font-bold text-gray-900">23.5K</h4>
-            </CardContent>
-          </Card>
-
-          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
-                  <MessageSquare className="w-4 h-4 text-emerald-600" />
-                </div>
-                <TrendingUp className="w-4 h-4 text-emerald-500" />
-              </div>
-              <p className="text-gray-600 text-xs font-medium mb-1">Comments</p>
-              <h4 className="text-2xl font-bold text-gray-900">1,234</h4>
-            </CardContent>
-          </Card>
-
-          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
-                  <Share2 className="w-4 h-4 text-blue-600" />
-                </div>
-                <TrendingUp className="w-4 h-4 text-emerald-500" />
-              </div>
-              <p className="text-gray-600 text-xs font-medium mb-1">Shares</p>
-              <h4 className="text-2xl font-bold text-gray-900">892</h4>
-            </CardContent>
-          </Card>
-
-          <Card className="col-span-6 md:col-span-4 lg:col-span-3 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500 hover:scale-[1.02]">
-            <CardContent className="p-5">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center">
-                  <ThumbsUp className="w-4 h-4 text-violet-600" />
-                </div>
-                <TrendingUp className="w-4 h-4 text-emerald-500" />
-              </div>
-              <p className="text-gray-600 text-xs font-medium mb-1">Reactions</p>
-              <h4 className="text-2xl font-bold text-gray-900">4.2K</h4>
-            </CardContent>
-          </Card>
-
-          {/* Wide Card - Top Posts */}
-          <Card className="col-span-12 lg:col-span-8 row-span-2 bg-white border-0 shadow-md hover:shadow-xl transition-all duration-500">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-xl font-semibold text-gray-900">Top Performing Posts</CardTitle>
-                  <p className="text-sm text-gray-500 mt-1">Your best content this week</p>
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5 text-blue-600" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {[
-                { title: "Summer Product Launch Post", engagement: "1.2K", comments: "234", type: "Photo" },
-                { title: "Behind the Scenes Video", engagement: "980", comments: "156", type: "Video" },
-                { title: "Customer Success Story", engagement: "756", comments: "89", type: "Link" }
-              ].map((post, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-stone-50 hover:from-gray-100 hover:to-stone-100 transition-all duration-300 border border-gray-100">
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
-                      #{i + 1}
+        {/* Main Metrics Grid with Radial Progress */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {metrics.map((metric, index) => {
+            const Icon = metric.icon;
+            const maxValue = Math.max(...metric.trend);
+            const normalizedTrend = metric.trend.map(v => (v / maxValue) * 100);
+            
+            return (
+              <Card key={index} className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:border-gray-300 group">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center group-hover:bg-gray-100 transition-colors`}>
+                        <Icon className={`w-5 h-5 ${metric.color}`} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{metric.label}</p>
+                        <div className="flex items-baseline gap-1 mt-1">
+                          <span className="text-3xl font-bold text-gray-900 font-mono">{metric.value}</span>
+                          {metric.suffix && <span className="text-lg font-semibold text-gray-600 font-mono">{metric.suffix}</span>}
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900 mb-1">{post.title}</p>
-                      <div className="flex items-center gap-4 text-xs text-gray-600">
-                        <span className="flex items-center gap-1">
-                          <Heart className="w-3 h-3" />
-                          {post.engagement}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MessageSquare className="w-3 h-3" />
-                          {post.comments}
-                        </span>
+                    
+                    {/* Radial Progress */}
+                    <div className="relative w-16 h-16">
+                      <svg className="w-16 h-16 transform -rotate-90">
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          className="text-gray-100"
+                        />
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="28"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                          strokeDasharray={`${2 * Math.PI * 28}`}
+                          strokeDashoffset={`${2 * Math.PI * 28 * (1 - metric.progress / 100)}`}
+                          className={metric.color}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-xs font-bold text-gray-700 font-mono">{metric.progress}%</span>
                       </div>
                     </div>
                   </div>
-                  <div className="px-3 py-1 rounded-full bg-gradient-to-r from-gray-100 to-stone-100 text-gray-700 text-xs font-medium">
-                    {post.type}
+
+                  {/* Inline Sparkline */}
+                  <div className="mb-3 h-12 flex items-end gap-1">
+                    {normalizedTrend.map((value, i) => (
+                      <div
+                        key={i}
+                        className={`flex-1 rounded-t transition-all duration-300 ${metric.color.replace('text-', 'bg-')} opacity-60 hover:opacity-100`}
+                        style={{ height: `${value}%` }}
+                      />
+                    ))}
                   </div>
-                </div>
-              ))}
+
+                  {/* Change Indicator */}
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 text-emerald-700">
+                        <TrendingUp className="w-3 h-3" />
+                        <span className="text-xs font-semibold font-mono">{metric.change}</span>
+                      </div>
+                      <span className="text-xs text-gray-500 font-mono">{metric.changeValue}</span>
+                    </div>
+                    <span className="text-xs text-gray-400">{metric.period}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Detailed Metrics Table */}
+        <Card className="border border-gray-200 shadow-sm">
+          <CardHeader className="border-b border-gray-100 bg-gray-50">
+            <CardTitle className="text-lg font-semibold text-gray-900">Detailed Metrics</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="divide-y divide-gray-100">
+              {detailedMetrics.map((metric, index) => {
+                const maxValue = Math.max(...metric.sparkline);
+                const normalizedSparkline = metric.sparkline.map(v => (v / maxValue) * 100);
+                
+                return (
+                  <div key={index} className="grid grid-cols-12 gap-4 items-center p-4 hover:bg-gray-50 transition-colors group">
+                    {/* Label */}
+                    <div className="col-span-3">
+                      <p className="text-sm font-medium text-gray-900">{metric.label}</p>
+                    </div>
+                    
+                    {/* Value */}
+                    <div className="col-span-2">
+                      <p className="text-xl font-bold text-gray-900 font-mono">{metric.value}</p>
+                    </div>
+                    
+                    {/* Sparkline */}
+                    <div className="col-span-4">
+                      <div className="h-8 flex items-end gap-0.5">
+                        {normalizedSparkline.map((value, i) => (
+                          <div
+                            key={i}
+                            className="flex-1 rounded-t bg-gray-300 group-hover:bg-blue-500 transition-all duration-200"
+                            style={{ height: `${value}%` }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Change */}
+                    <div className="col-span-2">
+                      <div className="flex items-center gap-1 px-2 py-1 rounded bg-emerald-50 text-emerald-700 w-fit">
+                        <TrendingUp className="w-3 h-3" />
+                        <span className="text-sm font-semibold font-mono">{metric.change}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Period */}
+                    <div className="col-span-1 text-right">
+                      <span className="text-xs text-gray-400">7d</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Engagement Breakdown with Heat Map */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className="border border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold text-gray-900">Engagement Breakdown</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {[
+                  { type: "Reactions", count: "4,234", percentage: 68, color: "bg-rose-500" },
+                  { type: "Comments", count: "1,892", percentage: 30, color: "bg-blue-500" },
+                  { type: "Shares", count: "892", percentage: 14, color: "bg-purple-500" }
+                ].map((item, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">{item.type}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg font-bold text-gray-900 font-mono">{item.count}</span>
+                        <span className="text-sm text-gray-500 font-mono w-12 text-right">{item.percentage}%</span>
+                      </div>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${item.color} transition-all duration-500`}
+                        style={{ width: `${item.percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
 
-          {/* Medium Card - Audience Growth */}
-          <Card className="col-span-12 md:col-span-6 lg:col-span-4 row-span-2 bg-gradient-to-br from-emerald-500 to-teal-600 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] group overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <CardContent className="p-6 h-full flex flex-col justify-between relative z-10">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Activity className="w-5 h-5 text-white" />
-                </div>
-                <p className="text-emerald-100 text-sm font-medium mb-2">Audience Growth</p>
-                <p className="text-emerald-50/80 text-xs">Past 30 days</p>
-              </div>
-              <div>
-                <h3 className="text-4xl font-bold text-white mb-2">+5,420</h3>
-                <p className="text-sm text-white/90 font-medium">New followers</p>
-                <div className="mt-4 pt-4 border-t border-white/20">
-                  <div className="flex items-center justify-between text-xs text-white/80">
-                    <span>Daily avg: +180</span>
-                    <span className="flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3" />
-                      +24%
-                    </span>
+          <Card className="border border-gray-200 shadow-sm">
+            <CardHeader className="border-b border-gray-100">
+              <CardTitle className="text-lg font-semibold text-gray-900">Top Posts Performance</CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {[
+                  { title: "Summer Launch", engagement: "2.4K", score: 95 },
+                  { title: "Behind the Scenes", engagement: "1.8K", score: 82 },
+                  { title: "Customer Story", engagement: "1.2K", score: 68 }
+                ].map((post, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-gray-100 hover:border-gray-200 hover:bg-gray-50 transition-all group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center">
+                        <span className="text-sm font-bold text-gray-700 font-mono">#{index + 1}</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{post.title}</p>
+                        <p className="text-xs text-gray-500 font-mono">{post.engagement} engagements</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                          style={{ width: `${post.score}%` }}
+                        />
+                      </div>
+                      <span className="text-sm font-bold text-gray-900 font-mono w-8">{post.score}</span>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>
