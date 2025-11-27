@@ -95,8 +95,8 @@ const FacebookInsights = () => {
       change: "+15.2%", 
       trend: "up",
       icon: Users, 
-      color: "from-blue-500 to-blue-600",
-      bgColor: "bg-blue-50",
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50",
       progress: 78
     },
     { 
@@ -105,8 +105,8 @@ const FacebookInsights = () => {
       change: "+8.4%", 
       trend: "up",
       icon: Heart, 
-      color: "from-pink-500 to-pink-600",
-      bgColor: "bg-pink-50",
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50",
       progress: 65
     },
     { 
@@ -115,8 +115,8 @@ const FacebookInsights = () => {
       change: "+23.1%", 
       trend: "up",
       icon: Heart, 
-      color: "from-purple-500 to-purple-600",
-      bgColor: "bg-purple-50",
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50",
       progress: 45
     },
     { 
@@ -125,8 +125,8 @@ const FacebookInsights = () => {
       change: "+12.8%", 
       trend: "up",
       icon: Users, 
-      color: "from-indigo-500 to-indigo-600",
-      bgColor: "bg-indigo-50",
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50",
       progress: 56
     }
   ];
@@ -138,8 +138,8 @@ const FacebookInsights = () => {
       change: "+18.5%", 
       trend: "up",
       icon: Heart, 
-      color: "from-red-500 to-red-600",
-      bgColor: "bg-red-50",
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50",
       breakdown: [
         { type: "Love", count: 567, percentage: 46 },
         { type: "Like", count: 445, percentage: 36 },
@@ -152,8 +152,8 @@ const FacebookInsights = () => {
       change: "+12.3%", 
       trend: "up",
       icon: MessageSquare, 
-      color: "from-blue-500 to-blue-600",
-      bgColor: "bg-blue-50"
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50"
     },
     { 
       title: "Shares", 
@@ -161,8 +161,8 @@ const FacebookInsights = () => {
       change: "+7.8%", 
       trend: "up",
       icon: Users, 
-      color: "from-green-500 to-green-600",
-      bgColor: "bg-green-50"
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50"
     },
     { 
       title: "Photo Views", 
@@ -170,8 +170,8 @@ const FacebookInsights = () => {
       change: "+25.4%", 
       trend: "up",
       icon: Eye, 
-      color: "from-orange-500 to-orange-600",
-      bgColor: "bg-orange-50"
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50"
     },
     { 
       title: "Link Clicks", 
@@ -179,8 +179,8 @@ const FacebookInsights = () => {
       change: "+45.2%", 
       trend: "up",
       icon: MousePointer, 
-      color: "from-purple-500 to-purple-600",
-      bgColor: "bg-purple-50"
+      color: "from-slate-600 to-slate-700",
+      bgColor: "bg-slate-50/50"
     }
   ];
 
@@ -248,45 +248,45 @@ const FacebookInsights = () => {
                 value: "1,175", 
                 sublabel: "Total audience", 
                 icon: Users,
-                color: "from-blue-500 to-blue-600",
-                bgColor: "bg-blue-50"
+                color: "from-slate-600 to-slate-700",
+                bgColor: "bg-white"
               },
               { 
                 label: "Page Likes", 
                 value: "1,089", 
                 sublabel: "Total page likes", 
                 icon: Heart,
-                color: "from-pink-500 to-pink-600",
-                bgColor: "bg-pink-50"
+                color: "from-slate-600 to-slate-700",
+                bgColor: "bg-white"
               },
               { 
                 label: "Posts", 
                 value: "87", 
                 sublabel: "This month", 
                 icon: MessageSquare,
-                color: "from-purple-500 to-purple-600",
-                bgColor: "bg-purple-50"
+                color: "from-slate-600 to-slate-700",
+                bgColor: "bg-white"
               },
               { 
                 label: "Impressions", 
                 value: "45.2K", 
                 sublabel: "Monthly reach", 
                 icon: Eye,
-                color: "from-indigo-500 to-indigo-600",
-                bgColor: "bg-indigo-50"
+                color: "from-slate-600 to-slate-700",
+                bgColor: "bg-white"
               },
               { 
                 label: "Engagement Rate", 
                 value: "3.2%", 
                 sublabel: "Average interaction", 
                 icon: Heart,
-                color: "from-pink-500 to-pink-600",
-                bgColor: "bg-pink-50"
+                color: "from-slate-600 to-slate-700",
+                bgColor: "bg-white"
               }
             ].map((stat, index) => (
-              <div key={index} className={`${stat.bgColor} rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105`}>
+              <div key={index} className={`${stat.bgColor} rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]`}>
                 <div className="text-center">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${stat.color} mx-auto mb-4 flex items-center justify-center shadow-lg`}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} mx-auto mb-4 flex items-center justify-center shadow-sm`}>
                     <stat.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-3xl font-bold text-gray-900 mb-1 font-inter">{stat.value}</div>
